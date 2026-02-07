@@ -136,6 +136,12 @@ main { background: var(--bg); }
   gap: 0.6rem;
 }
 
+/* Mobile header: keep homepage navbar minimal */
+@media (max-width: 739px) {
+  .home .header-cta .btn { display: none; }
+  .home .header-cta .btn-support { display: inline-flex; }
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
