@@ -1,16 +1,20 @@
 // Netlify Function: /.netlify/functions/support
+//
+// Email provider:
+// - SendGrid (preferred in this repo setup)
+//
 // Sends:
 // 1) Support request email to SUPPORT_TO_EMAIL (default support@wehale.io)
 // 2) Confirmation email to the user
 //
 // Requires env:
-// - POSTMARK_SERVER_TOKEN
-// - SUPPORT_FROM_EMAIL (must be verified in Postmark) e.g. support@wehale.io
+// - SENDGRID_API_KEY
+// - SUPPORT_FROM_EMAIL (must be verified/sender-authenticated in SendGrid) e.g. support@wehale.io
 // Optional env:
 // - SUPPORT_TO_EMAIL (default: support@wehale.io)
 // - SUPPORT_REPLY_TO (default: support@wehale.io)
 
-const POSTMARK_API = 'https://api.postmarkapp.com/email';
+const SENDGRID_API = 'https://api.sendgrid.com/v3/mail/send';
 
 function esc(s = '') {
   return String(s)
@@ -25,25 +29,23 @@ function isEmail(str = '') {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(str).trim());
 }
 
-async function postmarkSend({ token, payload }) {
-  const res = await fetch(POSTMARK_API, {
+async function sendgridSend({ apiKey, payload }) {
+  const res = await fetch(SENDGRID_API, {
     method: 'POST',
     headers: {
+      Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'X-Postmark-Server-Token': token,
     },
     body: JSON.stringify(payload),
   });
 
-  const text = await res.text();
-  if (!res.ok) throw new Error(`Postmark error ${res.status}: ${text}`);
-
-  try {
-    return JSON.parse(text);
-  } catch {
-    return { ok: true };
+  // SendGrid returns 202 Accepted on success (no body)
+  const text = await res.text().catch(() => '');
+  if (res.status !== 202) {
+    throw new Error(`SendGrid error ${res.status}: ${text}`);
   }
+
+  return { ok: true };
 }
 
 exports.handler = async (event) => {
@@ -51,12 +53,12 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const token = process.env.POSTMARK_SERVER_TOKEN;
+  const apiKey = process.env.SENDGRID_API_KEY;
   const from = process.env.SUPPORT_FROM_EMAIL || 'support@wehale.io';
   const to = process.env.SUPPORT_TO_EMAIL || 'support@wehale.io';
   const replyTo = process.env.SUPPORT_REPLY_TO || 'support@wehale.io';
 
-  if (!token) return { statusCode: 500, body: 'Missing POSTMARK_SERVER_TOKEN' };
+  if (!apiKey) return { statusCode: 500, body: 'Missing SENDGRID_API_KEY' };
 
   let body;
   try {
@@ -117,31 +119,41 @@ exports.handler = async (event) => {
   `.trim();
 
   try {
-    // 1) Send to support
-    await postmarkSend({
-      token,
+    // 1) Send to support (reply-to user)
+    await sendgridSend({
+      apiKey,
       payload: {
-        From: from,
-        To: to,
-        ReplyTo: email,
-        Subject: subject,
-        HtmlBody: supportHtml,
-        TextBody: `New support request\nRequest ID: ${requestId}\nTopic: ${topic}\nFrom: ${email}\n\n${message}`,
-        MessageStream: 'outbound',
+        personalizations: [
+          {
+            to: [{ email: to }],
+            subject,
+          },
+        ],
+        from: { email: from, name: 'WeHale Support' },
+        reply_to: { email },
+        content: [
+          { type: 'text/plain', value: `New support request\nRequest ID: ${requestId}\nTopic: ${topic}\nFrom: ${email}\n\n${message}` },
+          { type: 'text/html', value: supportHtml },
+        ],
       },
     });
 
-    // 2) Send confirmation to user
-    await postmarkSend({
-      token,
+    // 2) Send confirmation to user (reply-to support)
+    await sendgridSend({
+      apiKey,
       payload: {
-        From: from,
-        To: email,
-        ReplyTo: replyTo,
-        Subject: confirmSubject,
-        HtmlBody: confirmHtml,
-        TextBody: `We received your support request (${requestId}).\n\nTopic: ${topic}\n\n${message}\n\n— WeHale Support`,
-        MessageStream: 'outbound',
+        personalizations: [
+          {
+            to: [{ email }],
+            subject: confirmSubject,
+          },
+        ],
+        from: { email: from, name: 'WeHale Support' },
+        reply_to: { email: replyTo },
+        content: [
+          { type: 'text/plain', value: `We received your support request (${requestId}).\n\nTopic: ${topic}\n\n${message}\n\n— WeHale Support` },
+          { type: 'text/html', value: confirmHtml },
+        ],
       },
     });
 
