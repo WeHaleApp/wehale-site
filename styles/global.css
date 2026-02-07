@@ -127,6 +127,9 @@ main { background: var(--bg); }
   font-size: var(--step--1);
 }
 
+/* Hide homepage section nav completely (keep header minimal) */
+.home .nav { display: none !important; }
+
 .nav-link { opacity: 0.9; }
 .nav-link:hover { opacity: 1; }
 
