@@ -49,6 +49,35 @@
 
       .cta-box { border-radius: 22px; border: 1px solid rgba(255,255,255,.10); background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)); padding: 1.5rem; }
       @media (min-width: 900px) { .cta-box { padding: 2rem; } }
+
+      /* Form styles (match support page) */
+      .row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+      @media (min-width: 740px) { .row { grid-template-columns: 1fr 1fr; } }
+      .field { display: grid; gap: .5rem; margin-top: 1rem; }
+      .label { font-weight: 600; color: rgba(255,255,255,.88); }
+      .input, .textarea, .select {
+        width: 100%;
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 14px;
+        padding: .85rem 1rem;
+        color: rgba(255,255,255,.92);
+        outline: none;
+      }
+      .textarea { min-height: 160px; resize: vertical; }
+      .support-actions { display: flex; gap: .75rem; align-items: center; margin-top: 1.25rem; }
+      .hint { color: rgba(255,255,255,.65); font-size: .95rem; line-height: 1.45; }
+      .status {
+        margin-top: 1rem;
+        border-radius: 14px;
+        padding: 1rem 1rem;
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(255,255,255,.04);
+      }
+      .status[hidden] { display: none; }
+      .status-title { font-weight: 700; margin: 0 0 .25rem; }
+      .status-body { margin: 0; color: rgba(255,255,255,.75); }
+      .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
     </style>
   </head>
 
@@ -174,21 +203,120 @@
             </article>
           </div>
 
+          <div class="section-head" style="margin-top: 2.5rem;">
+            <h2 class="section-title">Pricing</h2>
+            <p class="section-subtitle">Simple tiers. Start small, expand when it works.</p>
+          </div>
+
+          <div class="grid3 max" role="list" aria-label="Pricing tiers">
+            <article class="biz-card" role="listitem">
+              <h3>Starter</h3>
+              <p>For small teams running a first pilot.</p>
+              <ul class="list">
+                <li>Access to the WeHale session library</li>
+                <li>Team onboarding basics</li>
+                <li>Aggregate usage insights</li>
+              </ul>
+              <p class="small" style="margin-top:.75rem;">Best for: 10–50 people</p>
+            </article>
+            <article class="biz-card" role="listitem">
+              <h3>Growth</h3>
+              <p>For teams that want measurable wellbeing and consistency.</p>
+              <ul class="list">
+                <li>Workforce wellbeing insights (aggregate)</li>
+                <li>Configurable pre/post questions (stress, focus, energy)</li>
+                <li>Custom branding layer</li>
+                <li>Courses for focus, reset, and recovery</li>
+              </ul>
+              <p class="small" style="margin-top:.75rem;">Best for: 50–500 people</p>
+            </article>
+            <article class="biz-card" role="listitem">
+              <h3>Enterprise</h3>
+              <p>For larger organizations with custom rollout needs.</p>
+              <ul class="list">
+                <li>Custom onboarding experience</li>
+                <li>Advanced reporting & rollout support</li>
+                <li>SSO / provisioning (roadmap / optional)</li>
+                <li>Dedicated success & support</li>
+              </ul>
+              <p class="small" style="margin-top:.75rem;">Best for: 500+ people</p>
+            </article>
+          </div>
+
           <section class="section" aria-label="Get started" id="get-started">
             <div class="max cta-box">
               <div class="section-head" style="margin-bottom: 1rem;">
-                <h2 class="section-title">WeHale for Business</h2>
-                <p class="section-subtitle">If you want, we’ll set up a demo and a pilot plan.</p>
+                <h2 class="section-title">Request a demo</h2>
+                <p class="section-subtitle">Tell us a bit about your team and we’ll get back to you.</p>
               </div>
 
-              <div style="display:flex; gap:.75rem; flex-wrap:wrap; align-items:center;">
-                <a class="btn btn-primary" href="mailto:business@wehale.io?subject=WeHale%20for%20Business%20%E2%80%94%20Request%20a%20demo">Email us: business@wehale.io</a>
-                <a class="btn btn-quiet" href="/support.html">Existing user? Contact support</a>
-              </div>
+              <form id="bizForm" novalidate>
+                <p class="visually-hidden">
+                  <label>
+                    Don’t fill this out if you’re human: <input name="bot-field" />
+                  </label>
+                </p>
 
-              <p class="small" style="margin: 1rem 0 0;">
-                Next up (if you want): we can add a dedicated “Request a demo” form and route it to your inbox with an auto-reply.
-              </p>
+                <div class="grid3" style="grid-template-columns: 1fr;">
+                  <div class="row" style="grid-template-columns: 1fr;">
+                    <div class="field">
+                      <label class="label" for="bizName">Name</label>
+                      <input class="input" id="bizName" name="name" type="text" autocomplete="name" placeholder="Your name" />
+                    </div>
+                    <div class="field">
+                      <label class="label" for="bizEmail">Work email</label>
+                      <input class="input" id="bizEmail" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+                    </div>
+                  </div>
+
+                  <div class="row" style="grid-template-columns: 1fr;">
+                    <div class="field">
+                      <label class="label" for="bizCompany">Company</label>
+                      <input class="input" id="bizCompany" name="company" type="text" autocomplete="organization" placeholder="Company name" required />
+                    </div>
+                    <div class="field">
+                      <label class="label" for="bizTeamSize">Team size</label>
+                      <select class="select" id="bizTeamSize" name="teamSize">
+                        <option value="" selected disabled>Select</option>
+                        <option value="1-10">1–10</option>
+                        <option value="10-50">10–50</option>
+                        <option value="50-200">50–200</option>
+                        <option value="200-500">200–500</option>
+                        <option value="500+">500+</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label" for="bizInterest">What are you looking for?</label>
+                    <select class="select" id="bizInterest" name="interest">
+                      <option value="" selected disabled>Choose one</option>
+                      <option value="Reduce stress">Reduce stress</option>
+                      <option value="Improve wellbeing">Improve wellbeing</option>
+                      <option value="Boost focus">Boost focus</option>
+                      <option value="Company-wide rollout">Company-wide rollout</option>
+                      <option value="Not sure yet">Not sure yet</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label class="label" for="bizMessage">Anything else we should know?</label>
+                    <textarea class="textarea" id="bizMessage" name="message" placeholder="Goals, rollout timeline, any requirements…"></textarea>
+                  </div>
+                </div>
+
+                <div class="support-actions">
+                  <button class="btn btn-primary" type="submit" id="bizSubmit">Send request</button>
+                  <span class="hint">We’ll respond by email.</span>
+                </div>
+
+                <div class="status" id="bizStatus" hidden role="status" aria-live="polite">
+                  <p class="status-title" id="bizStatusTitle">Sent</p>
+                  <p class="status-body" id="bizStatusBody">Thanks — your request has been submitted. We’ll get back to you soon.</p>
+                </div>
+
+                <p class="small" style="margin: .75rem 0 0;">Or email <a href="mailto:business@wehale.io">business@wehale.io</a>.</p>
+              </form>
             </div>
           </section>
         </div>
@@ -217,6 +345,61 @@
 
     <script>
       document.getElementById('year').textContent = new Date().getFullYear();
+
+      const form = document.getElementById('bizForm');
+      const submitBtn = document.getElementById('bizSubmit');
+      const statusBox = document.getElementById('bizStatus');
+      const statusTitle = document.getElementById('bizStatusTitle');
+      const statusBody = document.getElementById('bizStatusBody');
+
+      function setBizStatus(kind, title, body) {
+        statusTitle.textContent = title;
+        statusBody.textContent = body;
+        statusBox.hidden = false;
+        statusBox.style.borderColor = kind === 'error' ? 'rgba(255,120,120,.35)' : 'rgba(255,255,255,.12)';
+      }
+
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+        statusBox.hidden = true;
+
+        try {
+          const data = {
+            name: form.name.value,
+            email: form.email.value,
+            company: form.company.value,
+            teamSize: form.teamSize.value,
+            interest: form.interest.value,
+            message: form.message.value,
+            botField: form['bot-field'].value,
+            userAgent: navigator.userAgent,
+            page: location.href,
+          };
+
+          const res = await fetch('/.netlify/functions/business', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+
+          if (!res.ok) {
+            const text = await res.text().catch(() => '');
+            throw new Error(text || 'Request failed');
+          }
+
+          form.reset();
+          setBizStatus('ok', 'Request sent', 'Thanks — your request has been submitted. We’ll get back to you soon.');
+        } catch (err) {
+          setBizStatus('error', 'Something went wrong', 'We couldn’t submit your request. Please try again, or email business@wehale.io.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send request';
+        }
+      });
     </script>
   </body>
 </html>
