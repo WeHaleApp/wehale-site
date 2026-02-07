@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+
+    <title>WeHale Support</title>
+    <meta name="description" content="Contact WeHale support." />
+
+    <link rel="icon" href="/assets/images/favicon.png" />
+    <link rel="preload" href="/styles/global.css" as="style" />
+    <link rel="stylesheet" href="/styles/global.css" />
+    <link rel="stylesheet" href="/styles/animate.css" />
+
+    <style>
+      /* Small page-local tweaks to keep this self-contained */
+      .support-wrap { padding-top: 4.5rem; }
+      .support-card { max-width: 760px; margin: 0 auto; }
+      .field { display: grid; gap: .5rem; margin-top: 1rem; }
+      .label { font-weight: 600; color: rgba(255,255,255,.88); }
+      .input, .textarea, .select {
+        width: 100%;
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 14px;
+        padding: .85rem 1rem;
+        color: rgba(255,255,255,.92);
+        outline: none;
+      }
+      .textarea { min-height: 180px; resize: vertical; }
+      .hint { color: rgba(255,255,255,.65); font-size: .95rem; line-height: 1.45; }
+      .row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+      @media (min-width: 740px) { .row { grid-template-columns: 1fr 1fr; } }
+      .support-actions { display: flex; gap: .75rem; align-items: center; margin-top: 1.25rem; }
+      .status {
+        margin-top: 1rem;
+        border-radius: 14px;
+        padding: 1rem 1rem;
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(255,255,255,.04);
+      }
+      .status[hidden] { display: none; }
+      .status-title { font-weight: 700; margin: 0 0 .25rem; }
+      .status-body { margin: 0; color: rgba(255,255,255,.75); }
+      .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    </style>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" role="banner">
+      <div class="container header-inner">
+        <a class="brand" href="/" aria-label="WeHale home">
+          <span class="brand-mark" aria-hidden="true">◦</span>
+          <span class="brand-name">WeHale</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/support.html" aria-current="page">Support</a>
+        </nav>
+
+        <div class="header-cta">
+          <a class="btn btn-quiet" href="/">Back</a>
+          <a class="btn btn-primary" href="https://apps.apple.com/se/app/wehale/id6739413667" target="_blank" rel="noreferrer noopener">Download app</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" class="support-wrap">
+      <section class="section" aria-label="Support">
+        <div class="container">
+          <div class="section-head">
+            <h1 class="section-title">Support</h1>
+            <p class="section-subtitle">Tell us what’s going on and we’ll get back to you.</p>
+          </div>
+
+          <div class="card support-card">
+            <form id="supportForm" name="support" method="post" novalidate>
+              <!-- Honeypot (spam) -->
+              <p class="visually-hidden">
+                <label>
+                  Don’t fill this out if you’re human: <input name="bot-field" />
+                </label>
+              </p>
+
+              <div class="row">
+                <div class="field">
+                  <label class="label" for="topic">Topic</label>
+                  <select class="select" id="topic" name="topic" required>
+                    <option value="" selected disabled>Choose a topic</option>
+                    <option value="Account">Account</option>
+                    <option value="Subscription">Subscription</option>
+                    <option value="Audio / Sessions">Audio / Sessions</option>
+                    <option value="Bug">Bug</option>
+                    <option value="Feedback">Feedback</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <p class="hint">Pick what best matches your request.</p>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="email">Your email</label>
+                  <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+                  <p class="hint">We’ll reply here.</p>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="message">What do you need help with?</label>
+                <textarea class="textarea" id="message" name="message" placeholder="Describe what happened, what you expected, and anything you tried." required></textarea>
+                <p class="hint">Include any error messages if you have them.</p>
+              </div>
+
+              <div class="support-actions">
+                <button class="btn btn-primary" type="submit" id="submitBtn">Send to support</button>
+                <span class="hint" id="privacyHint">We’ll only use your email to respond to this request.</span>
+              </div>
+
+              <div class="status" id="statusBox" hidden role="status" aria-live="polite">
+                <p class="status-title" id="statusTitle">Sent</p>
+                <p class="status-body" id="statusBody">Your request has been submitted. You’ll receive a confirmation email shortly.</p>
+              </div>
+            </form>
+          </div>
+
+          <p class="hint" style="max-width: 760px; margin: 1rem auto 0;">
+            Prefer email? Write us at <a href="mailto:support@wehale.io">support@wehale.io</a>.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <span class="brand-name">WeHale</span>
+          <p class="footer-tagline">Guided breathwork for calm, clarity, and connection.</p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="/support.html">Support</a>
+          <a href="mailto:support@wehale.io">support@wehale.io</a>
+        </nav>
+
+        <div class="footer-meta">
+          <p class="small">© <span id="year">2026</span> WeHale</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      const form = document.getElementById('supportForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const statusBox = document.getElementById('statusBox');
+      const statusTitle = document.getElementById('statusTitle');
+      const statusBody = document.getElementById('statusBody');
+
+      function setStatus(kind, title, body) {
+        statusTitle.textContent = title;
+        statusBody.textContent = body;
+        statusBox.hidden = false;
+        statusBox.style.borderColor = kind === 'error' ? 'rgba(255,120,120,.35)' : 'rgba(255,255,255,.12)';
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!form.reportValidity()) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+        statusBox.hidden = true;
+
+        try {
+          const data = {
+            topic: form.topic.value,
+            email: form.email.value,
+            message: form.message.value,
+            botField: form['bot-field'].value,
+            userAgent: navigator.userAgent,
+            page: location.href,
+          };
+
+          const res = await fetch('/.netlify/functions/support', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+
+          if (!res.ok) {
+            const text = await res.text().catch(() => '');
+            throw new Error(text || 'Request failed');
+          }
+
+          form.reset();
+          setStatus('ok', 'Request sent', 'Your request has been submitted. You’ll receive a confirmation email shortly.');
+        } catch (err) {
+          setStatus('error', 'Something went wrong', 'We couldn’t submit your request. Please try again, or email support@wehale.io.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send to support';
+        }
+      });
+    </script>
+  </body>
+</html>
