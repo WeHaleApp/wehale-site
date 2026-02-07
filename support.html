@@ -219,6 +219,13 @@
             throw new Error(text || 'Request failed');
           }
 
+          // Fire GTM/GA4 event
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: 'support_submit_success',
+            support_topic: data.topic,
+          });
+
           form.reset();
           setStatus('ok', 'Request sent', 'Your request has been submitted. You’ll receive a confirmation email shortly.');
         } catch (err) {
