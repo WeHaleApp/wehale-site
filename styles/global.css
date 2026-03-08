@@ -292,6 +292,8 @@ main { background: var(--bg); }
 .hero-media {
   position: absolute;
   inset: 0;
+  /* Prevent flash of underlying content while media/background loads */
+  background-color: rgba(7, 9, 13, 1);
   /* Fallback background if video fails */
   background:
     radial-gradient(1200px 700px at 20% 10%, rgba(245, 174, 70, 0.10), transparent 55%),
@@ -300,6 +302,16 @@ main { background: var(--bg); }
   background-size: cover;
   background-position: center;
   overflow: hidden;
+}
+
+/* Fade in videos only when the browser has decoded enough to render */
+.media-fade {
+  opacity: 0;
+  transition: opacity 600ms ease;
+  will-change: opacity;
+}
+.media-ready .media-fade {
+  opacity: 1;
 }
 
 .hero-video {

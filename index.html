@@ -75,7 +75,7 @@
       <section id="top" class="hero" aria-label="WeHale introduction">
         <!-- Cinematic hero background: silent video texture (fallback handled in CSS) -->
         <div class="hero-media" aria-hidden="true">
-          <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.png">
+          <video class="hero-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.png">
             <source src="/assets/video/enc/brandmovie-loop-12s.mp4" type="video/mp4" />
           </video>
           <div class="hero-overlay" aria-hidden="true"></div>
@@ -217,7 +217,7 @@
 
           <div class="preview">
             <div class="preview-media" aria-label="WeHale brand video">
-              <video class="brand-video" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.png">
+              <video class="brand-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.png">
                 <source src="/assets/video/enc/brandmovie-loop-12s.mp4" type="video/mp4" />
               </video>
               <div class="video-overlay" aria-hidden="true"></div>
@@ -338,6 +338,21 @@
     <script>
       // Non-essential. Keeps footer year current.
       document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Media: fade videos in only once decoded enough to render.
+      function wireVideo(sel) {
+        const video = document.querySelector(sel);
+        if (!video) return;
+        const parent = video.parentElement;
+        const markReady = () => parent && parent.classList.add('media-ready');
+        video.addEventListener('canplay', markReady, { once: true });
+        video.addEventListener('loadeddata', markReady, { once: true });
+        const p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+        setTimeout(markReady, 1200);
+      }
+      wireVideo('.hero-video');
+      wireVideo('.brand-video');
     </script>
     <script src="/components/reveal.js"></script>
   </body>

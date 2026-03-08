@@ -215,8 +215,16 @@
           });
 
           if (!res.ok) {
-            const text = await res.text().catch(() => '');
-            throw new Error(text || 'Request failed');
+            // Try to surface a meaningful error from the function
+            let msg = 'Request failed';
+            try {
+              const j = await res.json();
+              if (j && (j.error || j.message)) msg = j.error || j.message;
+            } catch {
+              const text = await res.text().catch(() => '');
+              if (text) msg = text;
+            }
+            throw new Error(msg);
           }
 
           // Fire GTM/GA4 event
@@ -229,7 +237,8 @@
           form.reset();
           setStatus('ok', 'Request sent', 'Your request has been submitted. You’ll receive a confirmation email shortly.');
         } catch (err) {
-          setStatus('error', 'Something went wrong', 'We couldn’t submit your request. Please try again, or email support@wehale.io.');
+          const details = (err && err.message) ? ` (${err.message})` : '';
+          setStatus('error', 'Something went wrong', `We couldn’t submit your request${details}. Please try again, or email support@wehale.io.`);
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Send to support';
