@@ -56,7 +56,10 @@ exports.handler = async (event) => {
   }
 
   const token = process.env.POSTMARK_SERVER_TOKEN;
-  const from = process.env.SUPPORT_FROM_EMAIL || 'support@wehale.io';
+  const fromEmail = process.env.SUPPORT_FROM_EMAIL || 'support@wehale.io';
+  const fromName = process.env.SUPPORT_FROM_NAME || 'WeHale Support';
+  const from = `${fromName} <${fromEmail}>`;
+
   const to = process.env.SUPPORT_TO_EMAIL || 'support@wehale.io';
   const replyTo = process.env.SUPPORT_REPLY_TO || 'support@wehale.io';
 
@@ -90,33 +93,53 @@ exports.handler = async (event) => {
   const subject = `[Support] ${topic} (${requestId})`;
 
   const supportHtml = `
-    <div style="font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial; color: #111;">
-      <h2 style="margin: 0 0 12px;">New support request</h2>
-      <p style="margin: 0 0 8px;"><b>Request ID:</b> ${esc(requestId)}</p>
-      <p style="margin: 0 0 8px;"><b>Topic:</b> ${esc(topic)}</p>
-      <p style="margin: 0 0 8px;"><b>From:</b> ${esc(email)}</p>
-      <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
-      <pre style="white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; background: #f9fafb; padding: 12px; border-radius: 12px; border: 1px solid #e5e7eb;">${esc(message)}</pre>
-      <p style="color: #6b7280; font-size: 12px; margin: 16px 0 0;">Submitted from ${esc(body.page || 'unknown page')} · UA: ${esc(body.userAgent || '')}</p>
+    <div style="font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial; color: #0f172a; line-height: 1.45;">
+      <div style="padding: 18px 18px 0;">
+        <div style="font-weight: 800; letter-spacing: 0.2px; font-size: 18px;">WeHale Support</div>
+        <div style="color:#64748b; font-size: 13px; margin-top: 2px;">New support request</div>
+      </div>
+
+      <div style="padding: 18px;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px;">
+          <div style="margin: 0 0 6px;"><b>Request ID:</b> ${esc(requestId)}</div>
+          <div style="margin: 0 0 6px;"><b>Topic:</b> ${esc(topic)}</div>
+          <div style="margin: 0;"><b>From:</b> ${esc(email)}</div>
+        </div>
+
+        <h3 style="margin: 16px 0 10px; font-size: 14px;">Message</h3>
+        <div style="white-space: pre-wrap; background: #ffffff; padding: 14px; border-radius: 14px; border: 1px solid #e2e8f0; color:#0f172a;">${esc(message)}</div>
+
+        <div style="color: #64748b; font-size: 12px; margin: 14px 0 0;">
+          Submitted from ${esc(body.page || 'unknown page')} · UA: ${esc(body.userAgent || '')}
+        </div>
+      </div>
     </div>
   `.trim();
 
   const confirmSubject = `We received your support request (${requestId})`;
   const confirmHtml = `
-    <div style="font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial; color: #111;">
-      <p style="margin: 0 0 12px;">Hi,</p>
-      <p style="margin: 0 0 12px;">Thanks for reaching out. We’ve received your support request and will get back to you as soon as we can.</p>
-      <div style="background: #0b1220; color: #f8fafc; padding: 16px; border-radius: 14px;">
-        <p style="margin: 0 0 8px;"><b>Request ID:</b> ${esc(requestId)}</p>
-        <p style="margin: 0 0 8px;"><b>Topic:</b> ${esc(topic)}</p>
-        <p style="margin: 0 0 0;"><b>Your email:</b> ${esc(email)}</p>
+    <div style="font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial; color: #0f172a; line-height: 1.45;">
+      <div style="padding: 18px 18px 0;">
+        <div style="font-weight: 800; letter-spacing: 0.2px; font-size: 18px;">WeHale Support</div>
+        <div style="color:#64748b; font-size: 13px; margin-top: 2px;">We’ve received your request</div>
       </div>
-      <h3 style="margin: 18px 0 10px;">Your message</h3>
-      <div style="background: #f9fafb; padding: 12px; border-radius: 12px; border: 1px solid #e5e7eb;">
-        <pre style="white-space: pre-wrap; margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;">${esc(message)}</pre>
+
+      <div style="padding: 18px;">
+        <p style="margin: 0 0 12px;">Hi,</p>
+        <p style="margin: 0 0 14px;">Thanks for reaching out. We’ve received your support request and will get back to you as soon as we can.</p>
+
+        <div style="background: #0b1220; color: #f8fafc; padding: 16px; border-radius: 14px;">
+          <div style="margin: 0 0 8px;"><b>Request ID:</b> ${esc(requestId)}</div>
+          <div style="margin: 0 0 8px;"><b>Topic:</b> ${esc(topic)}</div>
+          <div style="margin: 0;"><b>Your email:</b> ${esc(email)}</div>
+        </div>
+
+        <h3 style="margin: 18px 0 10px; font-size: 14px;">Your message</h3>
+        <div style="white-space: pre-wrap; background: #ffffff; padding: 14px; border-radius: 14px; border: 1px solid #e2e8f0;">${esc(message)}</div>
+
+        <p style="margin: 16px 0 0; color: #64748b; font-size: 12px;">If you didn’t submit this request, you can ignore this email.</p>
+        <p style="margin: 12px 0 0; color: #64748b; font-size: 12px;">— WeHale Support</p>
       </div>
-      <p style="margin: 16px 0 0; color: #6b7280; font-size: 12px;">If you didn’t submit this request, you can ignore this email.</p>
-      <p style="margin: 12px 0 0; color: #6b7280; font-size: 12px;">— WeHale Support</p>
     </div>
   `.trim();
 
