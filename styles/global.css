@@ -104,6 +104,17 @@ main { background: var(--bg); }
   letter-spacing: 0.2px;
 }
 
+/* Optional logo image. If present, it replaces the dot+wordmark. */
+.brand-logo {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+.brand.has-logo .brand-mark,
+.brand.has-logo .brand-name {
+  display: none;
+}
+
 .brand-mark {
   width: 26px;
   height: 26px;
