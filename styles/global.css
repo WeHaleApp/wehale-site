@@ -12,9 +12,9 @@
   --text: rgba(255, 255, 255, 0.92);
   --muted: rgba(255, 255, 255, 0.68);
   --faint: rgba(255, 255, 255, 0.48);
-  --accent: #bfe6ff; /* cold, restrained */
-  --accent-2: #93c9ff;
-  --warm: #f5ae46;   /* app/store CTA accent */
+  --accent: #96C9B8; /* sage — matches app */
+  --accent-2: #7CB5A2;
+  --warm: #E8A84E;   /* gold — matches app */
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
 
   --radius: 18px;
@@ -224,7 +224,7 @@ main { background: var(--bg); }
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(900px 520px at 15% 20%, rgba(147, 201, 255, 0.05), transparent 60%),
+    radial-gradient(900px 520px at 15% 20%, rgba(124, 181, 162, 0.05), transparent 60%),
     radial-gradient(700px 420px at 85% 10%, rgba(245, 174, 70, 0.035), transparent 62%),
     linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.0) 28%, rgba(0,0,0,0.0) 72%, rgba(0,0,0,0.25));
   opacity: 0.55;
@@ -233,7 +233,7 @@ main { background: var(--bg); }
 /* Alternate sections: slightly cooler + darker wash, still very subtle. */
 .section.section-alt::before {
   background:
-    radial-gradient(1000px 560px at 18% 18%, rgba(147, 201, 255, 0.03), transparent 62%),
+    radial-gradient(1000px 560px at 18% 18%, rgba(124, 181, 162, 0.03), transparent 62%),
     radial-gradient(760px 420px at 82% 30%, rgba(255,255,255,0.014), transparent 64%),
     linear-gradient(180deg, rgba(11, 15, 23, 0.26), rgba(7, 9, 13, 0.0) 42%, rgba(7, 9, 13, 0.20));
   opacity: 0.75;
@@ -340,7 +340,7 @@ main { background: var(--bg); }
   inset: 0;
   /* Stronger overlay at bottom for legibility */
   background:
-    radial-gradient(900px 520px at 25% 20%, rgba(191, 230, 255, 0.10), transparent 55%),
+    radial-gradient(900px 520px at 25% 20%, rgba(124, 181, 162, 0.10), transparent 55%),
     linear-gradient(180deg, rgba(7, 9, 13, 0.20) 0%, rgba(7, 9, 13, 0.72) 62%, rgba(7, 9, 13, 0.94) 100%);
 }
 
@@ -418,7 +418,7 @@ main { background: var(--bg); }
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: rgba(191,230,255,0.55);
+  background: rgba(124,181,162,0.55);
 }
 
 /* Pillars */
@@ -641,7 +641,7 @@ main { background: var(--bg); }
 .quote {
   border-radius: var(--radius);
   border: 1px solid rgba(255,255,255,0.10);
-  background: linear-gradient(180deg, rgba(147,201,255,0.08), rgba(255,255,255,0.02));
+  background: linear-gradient(180deg, rgba(124,181,162,0.08), rgba(255,255,255,0.02));
   padding: var(--card-pad-lg);
 }
 
@@ -694,7 +694,7 @@ main { background: var(--bg); }
   inset: 0;
   /* No zoomed-in UI screenshot here — keep the final CTA clean and calm. */
   background:
-    radial-gradient(900px 520px at 18% 25%, rgba(147, 201, 255, 0.07), transparent 60%),
+    radial-gradient(900px 520px at 18% 25%, rgba(124, 181, 162, 0.07), transparent 60%),
     radial-gradient(720px 460px at 82% 20%, rgba(245, 174, 70, 0.045), transparent 62%),
     linear-gradient(180deg, rgba(7, 9, 13, 0.72) 0%, rgba(7, 9, 13, 0.90) 55%, rgba(7, 9, 13, 0.96) 100%);
   background-size: cover;
