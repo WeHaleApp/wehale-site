@@ -620,12 +620,18 @@ main { background: var(--bg); }
   font-size: var(--step--1);
 }
 
+/* Horizontal scroll strip on mobile, 4-up grid on desktop */
 .shots {
-  display: grid;
-  /* 2-up screenshots on very small screens feels cramped; keep it single column first */
-  grid-template-columns: 1fr;
+  display: flex;
   gap: 0.9rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
+  /* Hide scrollbar but keep scrollability */
+  scrollbar-width: none;
 }
+.shots::-webkit-scrollbar { display: none; }
 
 .shot {
   margin: 0;
@@ -635,6 +641,10 @@ main { background: var(--bg); }
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.02);
+  scroll-snap-align: start;
+  /* Fixed width for scroll strip on mobile */
+  min-width: 200px;
+  flex: 0 0 65%;
 }
 
 .shot picture { display: contents; }
@@ -642,10 +652,9 @@ main { background: var(--bg); }
 .shot img {
   width: 100%;
   display: block;
-  /* Keep tall phone screenshots visually consistent */
-  aspect-ratio: 9 / 16;
+  aspect-ratio: 9 / 13;
   object-fit: cover;
-  object-position: 50% 25%;
+  object-position: 50% 15%;
 }
 
 .shot figcaption {
@@ -808,7 +817,7 @@ main { background: var(--bg); }
 
 /* Responsive */
 @media (min-width: 560px) {
-  .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .shot { flex: 0 0 42%; }
 }
 
 @media (min-width: 780px) {
@@ -816,9 +825,14 @@ main { background: var(--bg); }
   .pillars { grid-template-columns: repeat(3, 1fr); }
   .usecases { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(3, 1fr); }
-  /* Preview: video full-width, screenshots 4-up below, capped height */
-  .shots { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .shot img { aspect-ratio: 9 / 14; }
+  /* Screenshots: 4-up grid, no horizontal scroll */
+  .shots {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow: visible;
+  }
+  .shot { flex: none; min-width: 0; }
+  .shot img { aspect-ratio: 9 / 12; object-position: 50% 12%; }
   .two-col { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
   .stories { grid-template-columns: repeat(3, 1fr); }
   .footer-inner { grid-template-columns: 1.4fr 1fr 0.8fr; align-items: start; }
