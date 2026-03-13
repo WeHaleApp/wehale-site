@@ -79,7 +79,7 @@
         <!-- Cinematic hero background: silent video texture (fallback handled in CSS) -->
         <div class="hero-media" aria-hidden="true">
           <video class="hero-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.png">
-            <source src="/assets/video/enc/hero-northern-lights.mp4" type="video/mp4" />
+            <source src="/assets/video/enc/brandfilm-hero.mp4" type="video/mp4" />
           </video>
           <div class="hero-overlay" aria-hidden="true"></div>
         </div>
@@ -119,7 +119,7 @@
       <!-- Component: Pillars -->
       <section class="section" aria-label="Benefits">
         <div class="container">
-          <div class="section-head">
+          <div class="section-head reveal-head" data-reveal>
             <h2 class="section-title">Three ways to practice.</h2>
             <p class="section-subtitle">
               Every session is designed around how you want to feel — not a one-size-fits-all routine.
@@ -146,7 +146,7 @@
       <!-- Component: UseCases -->
       <section class="section section-alt" id="sessions" aria-label="Use cases">
         <div class="container">
-          <div class="section-head">
+          <div class="section-head reveal-head" data-reveal>
             <h2 class="section-title">Fits into your day.</h2>
             <p class="section-subtitle">
               No hour-long commitments. Pick a moment, press play, and breathe.
@@ -181,7 +181,7 @@
       <!-- Component: HowItWorks -->
       <section class="section" id="how" aria-label="How it works">
         <div class="container">
-          <div class="section-head">
+          <div class="section-head reveal-head" data-reveal>
             <h2 class="section-title">How it works.</h2>
             <p class="section-subtitle">
               No learning curve. No equipment. Just you and a few minutes.
@@ -189,21 +189,21 @@
           </div>
 
           <ol class="steps">
-            <li class="step">
+            <li class="step reveal" data-reveal>
               <h3 class="step-title">Choose how you want to feel</h3>
               <p class="step-body">Browse sessions by category — Activate, Balance, or Calm — or start a multi-day journey.</p>
             </li>
-            <li class="step">
+            <li class="step reveal reveal-delay-1" data-reveal>
               <h3 class="step-title">Follow the guide</h3>
               <p class="step-body">A narrator walks you through each breath. Warm instruction, minimal words, space to settle in.</p>
             </li>
-            <li class="step">
+            <li class="step reveal reveal-delay-2" data-reveal>
               <h3 class="step-title">Track your rhythm</h3>
               <p class="step-body">Set a weekly goal. See your streak build. The practice compounds — even five minutes a day.</p>
             </li>
           </ol>
 
-          <div class="note">
+          <div class="note reveal" data-reveal>
             <p class="note-title">Safety note</p>
             <p class="note-body">Some techniques involve breath holds or rapid breathing. Always stay within your comfort zone. If you have a medical condition, consult a clinician before starting.</p>
           </div>
@@ -213,13 +213,13 @@
       <!-- Component: ProductPreview (uses provided screenshots + brand movie) -->
       <section class="section section-alt" id="product" aria-label="Product preview">
         <div class="container">
-          <div class="section-head">
+          <div class="section-head reveal-head" data-reveal>
             <h2 class="section-title">Inside the app.</h2>
             <p class="section-subtitle">Designed to feel calm from the first tap. Dark interface, cinematic backgrounds, no clutter.</p>
           </div>
 
           <div class="preview">
-            <div class="preview-media" aria-label="WeHale brand video">
+            <div class="preview-media reveal-scale" data-reveal aria-label="WeHale brand video">
               <video class="brand-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.png">
                 <source src="/assets/video/enc/hero-sunset-river.mp4" type="video/mp4" />
               </video>
@@ -228,19 +228,19 @@
             </div>
 
             <div class="shots" aria-label="App screenshots">
-              <figure class="shot">
+              <figure class="shot reveal-scale" data-reveal>
                 <img src="/assets/images/ui/home-feed.png" alt="WeHale home screen with weekly progress ring and daily session card." loading="lazy" />
                 <figcaption>Your weekly goal and today’s session — front and center.</figcaption>
               </figure>
-              <figure class="shot">
+              <figure class="shot reveal-scale reveal-delay-1" data-reveal>
                 <img src="/assets/images/ui/daily-practice.png" alt="Browse sessions by category: Activate, Balance, Calm." loading="lazy" />
                 <figcaption>Browse by category. Filter by what you need right now.</figcaption>
               </figure>
-              <figure class="shot">
+              <figure class="shot reveal-scale reveal-delay-2" data-reveal>
                 <img src="/assets/images/ui/session-details.png" alt="Session detail showing description, duration, and breath hold data." loading="lazy" />
                 <figcaption>Know what to expect before you press play.</figcaption>
               </figure>
-              <figure class="shot">
+              <figure class="shot reveal-scale reveal-delay-3" data-reveal>
                 <img src="/assets/images/ui/playlist-overview.png" alt="Multi-day journey overview with session progression." loading="lazy" />
                 <figcaption>Follow a journey over days to build a deeper practice.</figcaption>
               </figure>
@@ -252,13 +252,13 @@
       <!-- Component: WhyBreathwork -->
       <section class="section section-alt" id="why" aria-label="Why breathwork">
         <div class="container">
-          <div class=”section-head”>
+          <div class=”section-head reveal-head” data-reveal>
             <h2 class=”section-title”>Why breathwork?</h2>
             <p class=”section-subtitle”>Your breath is the one thing your nervous system responds to immediately. And it's always with you.</p>
           </div>
 
           <div class=”two-col”>
-            <div class=”bullets”>
+            <div class=”bullets reveal” data-reveal>
               <ul class=”list”>
                 <li>Slow the exhale and your heart rate follows. Anxiety drops in real time.</li>
                 <li>Rhythmic breathing sharpens focus — better than another cup of coffee.</li>
@@ -266,7 +266,7 @@
                 <li>A few minutes a day builds a steadiness that compounds over weeks.</li>
               </ul>
             </div>
-            <div class=”quote” aria-label=”What makes WeHale different”>
+            <div class=”quote reveal reveal-delay-1” data-reveal aria-label=”What makes WeHale different”>
               <p class=”quote-body”>WeHale isn't a meditation app with breathing added on. Every session is built from the breath up — technique-first, with real physiological intent behind each pattern.</p>
               <p class=”quote-meta”>— The WeHale approach</p>
             </div>
@@ -277,21 +277,21 @@
       <!-- Component: Stories -->
       <section class="section" id="stories" aria-label="Stories">
         <div class="container">
-          <div class=”section-head”>
+          <div class=”section-head reveal-head” data-reveal>
             <h2 class=”section-title”>What people notice.</h2>
             <p class=”section-subtitle”>From early users who built a daily practice.</p>
           </div>
 
           <div class=”stories”>
-            <article class=”story”>
+            <article class=”story reveal” data-reveal>
               <p class=”story-quote”>”I use it between calls. It’s the difference between reacting and responding.”</p>
               <p class=”story-meta”>— Early user, Stockholm</p>
             </article>
-            <article class=”story”>
+            <article class=”story reveal reveal-delay-1” data-reveal>
               <p class=”story-quote”>”I don’t feel ‘fixed’. I feel present. That’s enough.”</p>
               <p class=”story-meta”>— Early user, Berlin</p>
             </article>
-            <article class=”story”>
+            <article class=”story reveal reveal-delay-2” data-reveal>
               <p class=”story-quote”>”The voice is calm, the sessions are well-paced. It doesn’t try too hard.”</p>
               <p class=”story-meta”>— Early user, London</p>
             </article>
@@ -321,7 +321,7 @@
       <div class="container footer-inner">
         <div class="footer-brand">
           <span class="brand-name">WeHale</span>
-          <p class="footer-tagline">Guided breathwork for calm, clarity, and connection.</p>
+          <p class="footer-tagline">Guided breathwork. Anywhere. Anytime.</p>
         </div>
 
         <nav class="footer-nav" aria-label="Footer">

@@ -1,17 +1,47 @@
 /*
-  Lightweight motion: reveal-on-scroll + subtle hover.
-  Goal: "alive" without loud motion. Respects prefers-reduced-motion.
+  WeHale — Premium motion system
+  Calm, cinematic transitions. Respects prefers-reduced-motion.
 */
 
+/* ─── Smooth scroll ─── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ─── Hero entrance sequence ─── */
+.hero-inner .eyebrow,
+.hero-inner .hero-title,
+.hero-inner .hero-subtitle,
+.hero-inner .hero-actions,
+.hero-inner .hero-trust {
+  opacity: 0;
+  transform: translateY(22px);
+  animation: heroEntrance 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-inner .eyebrow        { animation-delay: 200ms; }
+.hero-inner .hero-title      { animation-delay: 400ms; }
+.hero-inner .hero-subtitle   { animation-delay: 600ms; }
+.hero-inner .hero-actions    { animation-delay: 800ms; }
+.hero-inner .hero-trust      { animation-delay: 1000ms; }
+
+@keyframes heroEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Reveal on scroll — base ─── */
 .reveal {
   opacity: 0;
-  transform: translateY(14px);
-  filter: blur(0.2px);
+  transform: translateY(18px);
+  filter: blur(0.5px);
   transition:
-    opacity 600ms ease,
-    transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    filter 700ms ease;
-  will-change: opacity, transform;
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 800ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 800ms ease;
+  will-change: opacity, transform, filter;
 }
 
 .reveal.in {
@@ -20,15 +50,302 @@
   filter: none;
 }
 
-.reveal-delay-1 { transition-delay: 70ms; }
-.reveal-delay-2 { transition-delay: 140ms; }
-.reveal-delay-3 { transition-delay: 210ms; }
+/* Stagger delays */
+.reveal-delay-1 { transition-delay: 90ms; }
+.reveal-delay-2 { transition-delay: 180ms; }
+.reveal-delay-3 { transition-delay: 270ms; }
+.reveal-delay-4 { transition-delay: 360ms; }
 
+/* Variant: scale-up reveal (for screenshots, video) */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.97) translateY(12px);
+  filter: blur(0.8px);
+  transition:
+    opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 900ms ease;
+  will-change: opacity, transform, filter;
+}
+
+.reveal-scale.in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* Variant: section heads — elegant text entrance */
+.reveal-head {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-head.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─── Card hover glow ─── */
+.card {
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 320ms ease,
+    background 320ms ease,
+    box-shadow 320ms ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(124, 181, 162, 0.06);
+}
+
+/* ─── Screenshot hover ─── */
+.shot {
+  transition:
+    transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 400ms ease,
+    box-shadow 400ms ease;
+}
+
+.shot:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(124, 181, 162, 0.05);
+}
+
+.shot img {
+  transition: filter 500ms ease, transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.shot:hover img {
+  filter: brightness(1.06);
+  transform: scale(1.015);
+}
+
+/* ─── Use-case card hover ─── */
+.usecase {
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 320ms ease,
+    background 320ms ease;
+}
+
+.usecase:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ─── Step card hover ─── */
+.step {
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 320ms ease,
+    background 320ms ease;
+}
+
+.step:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+/* ─── Story card hover ─── */
+.story {
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 320ms ease,
+    box-shadow 320ms ease;
+}
+
+.story:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* ─── Quote card ─── */
+.quote {
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 320ms ease;
+}
+
+.quote:hover {
+  transform: translateY(-2px);
+  border-color: rgba(124, 181, 162, 0.18);
+}
+
+/* ─── CTA primary button — subtle breathing pulse ─── */
+.cta .btn-primary {
+  animation: ctaPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes ctaPulse {
+  0%, 100% {
+    box-shadow: 0 10px 40px rgba(232, 168, 78, 0.12);
+  }
+  50% {
+    box-shadow: 0 14px 50px rgba(232, 168, 78, 0.22), 0 0 20px rgba(232, 168, 78, 0.08);
+  }
+}
+
+/* ─── App Store button — subtle shine sweep ─── */
+.btn-appstore {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-appstore::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(255, 255, 255, 0.10) 50%,
+    rgba(255, 255, 255, 0.06) 55%,
+    transparent 60%
+  );
+  transform: skewX(-25deg);
+  animation: btnShine 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes btnShine {
+  0%, 65% {
+    left: -75%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+/* ─── Video fade-in (enhanced) ─── */
+.media-fade {
+  opacity: 0;
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity;
+}
+
+.media-ready .media-fade {
+  opacity: 1;
+}
+
+/* ─── Preview video hover ─── */
+.preview-media {
+  transition: box-shadow 400ms ease;
+}
+
+.preview-media:hover {
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(124, 181, 162, 0.04);
+}
+
+/* ─── Header scroll state (added via JS) ─── */
+.site-header {
+  transition: background 300ms ease, border-color 300ms ease;
+}
+
+.site-header.scrolled {
+  background: rgba(9, 15, 29, 0.88);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Link underline animation ─── */
+.footer-nav a,
+.nav-link {
+  position: relative;
+  text-decoration: none !important;
+}
+
+.footer-nav a::after,
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-nav a:hover::after,
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ─── Note card entrance ─── */
+.note {
+  transition: border-color 300ms ease;
+}
+
+.note:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* ─── Reduced motion: disable everything gracefully ─── */
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  html { scroll-behavior: auto; }
+
+  .hero-inner .eyebrow,
+  .hero-inner .hero-title,
+  .hero-inner .hero-subtitle,
+  .hero-inner .hero-actions,
+  .hero-inner .hero-trust {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .reveal,
+  .reveal-scale,
+  .reveal-head {
     opacity: 1;
     transform: none;
     filter: none;
+    transition: none;
+  }
+
+  .card, .shot, .usecase, .step, .story, .quote, .note, .preview-media {
+    transition: none;
+  }
+
+  .card:hover, .shot:hover, .usecase:hover, .step:hover,
+  .story:hover, .quote:hover {
+    transform: none;
+  }
+
+  .shot:hover img {
+    filter: none;
+    transform: none;
+  }
+
+  .cta .btn-primary {
+    animation: none;
+  }
+
+  .btn-appstore::after {
+    animation: none;
+    display: none;
+  }
+
+  .media-fade {
+    opacity: 1;
     transition: none;
   }
 }

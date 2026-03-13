@@ -320,15 +320,7 @@ main { background: var(--bg); }
   overflow: hidden;
 }
 
-/* Fade in videos only when the browser has decoded enough to render */
-.media-fade {
-  opacity: 0;
-  transition: opacity 600ms ease;
-  will-change: opacity;
-}
-.media-ready .media-fade {
-  opacity: 1;
-}
+/* .media-fade transitions are in animate.css */
 
 .hero-video {
   position: absolute;
@@ -697,13 +689,14 @@ main { background: var(--bg); }
 .cta-media {
   position: absolute;
   inset: 0;
-  /* No zoomed-in UI screenshot here — keep the final CTA clean and calm. */
+  /* Marketing photography backdrop with deep overlay */
   background:
     radial-gradient(900px 520px at 18% 25%, rgba(124, 181, 162, 0.07), transparent 60%),
     radial-gradient(720px 460px at 82% 20%, rgba(232, 168, 78, 0.045), transparent 62%),
-    linear-gradient(180deg, rgba(9, 15, 29, 0.72) 0%, rgba(9, 15, 29, 0.90) 55%, rgba(9, 15, 29, 0.96) 100%);
+    linear-gradient(180deg, rgba(9, 15, 29, 0.78) 0%, rgba(9, 15, 29, 0.88) 45%, rgba(9, 15, 29, 0.96) 100%),
+    url('/assets/images/cta-bg.jpg');
   background-size: cover;
-  background-position: center;
+  background-position: center 30%;
 }
 
 .cta-grain {
