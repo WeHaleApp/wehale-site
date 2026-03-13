@@ -816,7 +816,8 @@ main { background: var(--bg); }
   .pillars { grid-template-columns: repeat(3, 1fr); }
   .usecases { grid-template-columns: repeat(2, 1fr); }
   .steps { grid-template-columns: repeat(3, 1fr); }
-  .preview { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
+  /* Preview: video full-width, screenshots 4-up below */
+  .shots { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .two-col { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
   .stories { grid-template-columns: repeat(3, 1fr); }
   .footer-inner { grid-template-columns: 1.4fr 1fr 0.8fr; align-items: start; }
