@@ -138,8 +138,10 @@ main { background: var(--bg); }
   font-size: var(--step--1);
 }
 
-/* Hide homepage section nav completely (keep header minimal) */
-.home .nav { display: none !important; }
+/* Show homepage section nav on desktop only */
+@media (min-width: 780px) {
+  .home .nav { display: inline-flex; }
+}
 
 .nav-link { opacity: 0.9; }
 .nav-link:hover { opacity: 1; }
