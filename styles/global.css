@@ -4,20 +4,23 @@
 */
 
 :root {
-  --bg: #07090d;
-  --bg-2: #0b0f17;
+  /* Backgrounds — matched to app tokens (colors.ts) */
+  --bg: #090F1D;
+  --bg-2: #0E1529;
   --card: rgba(255, 255, 255, 0.04);
   --card-2: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.10);
-  --text: rgba(255, 255, 255, 0.92);
-  --muted: rgba(255, 255, 255, 0.68);
-  --faint: rgba(255, 255, 255, 0.48);
-  --accent: #96C9B8; /* sage — matches app */
-  --accent-2: #7CB5A2;
+  --border: rgba(255, 255, 255, 0.08);
+  /* Text — warm off-white to match app (#F2F0ED) */
+  --text: #F2F0ED;
+  --muted: rgba(242, 240, 237, 0.55);
+  --faint: rgba(242, 240, 237, 0.35);
+  --accent: #96C9B8; /* sage light — matches app accentLight */
+  --accent-2: #7CB5A2; /* sage — matches app accent */
   --warm: #E8A84E;   /* gold — matches app */
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
 
-  --radius: 18px;
+  /* Radii — matched to app (16px card, 12px button) */
+  --radius: 16px;
   --radius-sm: 12px;
   --max: 1120px;
 
@@ -46,7 +49,7 @@ html, body { height: 100%; }
 
 body {
   margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: "Avenir Next", "Avenir", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   line-height: 1.5;
   /* Single, calm base below hero; hero provides the drama. */
   background: var(--bg);
@@ -68,7 +71,7 @@ main { background: var(--bg); }
   left: -9999px;
   top: 0;
   padding: 0.75rem 1rem;
-  background: #111827;
+  background: #0E1529;
   border: 1px solid var(--border);
   border-radius: 999px;
 }
@@ -80,7 +83,7 @@ main { background: var(--bg); }
   top: 0;
   z-index: 50;
   backdrop-filter: blur(12px);
-  background: rgba(7, 9, 13, 0.62);
+  background: rgba(9, 15, 29, 0.62);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -175,26 +178,26 @@ main { background: var(--bg); }
 .btn:hover { text-decoration: none; }
 
 .btn-primary {
-  border-color: rgba(245, 174, 70, 0.45);
-  background: linear-gradient(180deg, rgba(245, 174, 70, 0.22), rgba(245, 174, 70, 0.10));
-  box-shadow: 0 10px 40px rgba(245, 174, 70, 0.12);
+  border-color: rgba(232, 168, 78, 0.45);
+  background: linear-gradient(180deg, rgba(232, 168, 78, 0.22), rgba(232, 168, 78, 0.10));
+  box-shadow: 0 10px 40px rgba(232, 168, 78, 0.12);
 }
 
 .btn-primary:hover {
-  border-color: rgba(245, 174, 70, 0.70);
-  background: linear-gradient(180deg, rgba(245, 174, 70, 0.26), rgba(245, 174, 70, 0.10));
+  border-color: rgba(232, 168, 78, 0.70);
+  background: linear-gradient(180deg, rgba(232, 168, 78, 0.26), rgba(232, 168, 78, 0.10));
 }
 
 /* App Store CTA: same warmth, slightly more "badge" feel */
 .btn-appstore {
-  border-color: rgba(245, 174, 70, 0.55);
-  background: linear-gradient(180deg, rgba(245, 174, 70, 0.26), rgba(245, 174, 70, 0.12));
-  box-shadow: 0 14px 50px rgba(245, 174, 70, 0.14);
+  border-color: rgba(232, 168, 78, 0.55);
+  background: linear-gradient(180deg, rgba(232, 168, 78, 0.26), rgba(232, 168, 78, 0.12));
+  box-shadow: 0 14px 50px rgba(232, 168, 78, 0.14);
 }
 
 .btn-appstore:hover {
-  border-color: rgba(245, 174, 70, 0.80);
-  background: linear-gradient(180deg, rgba(245, 174, 70, 0.30), rgba(245, 174, 70, 0.12));
+  border-color: rgba(232, 168, 78, 0.80);
+  background: linear-gradient(180deg, rgba(232, 168, 78, 0.30), rgba(232, 168, 78, 0.12));
 }
 
 .btn-icon {
@@ -227,7 +230,7 @@ main { background: var(--bg); }
   pointer-events: none;
   background:
     radial-gradient(900px 520px at 15% 20%, rgba(124, 181, 162, 0.05), transparent 60%),
-    radial-gradient(700px 420px at 85% 10%, rgba(245, 174, 70, 0.035), transparent 62%),
+    radial-gradient(700px 420px at 85% 10%, rgba(232, 168, 78, 0.035), transparent 62%),
     linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.0) 28%, rgba(0,0,0,0.0) 72%, rgba(0,0,0,0.25));
   opacity: 0.55;
 }
@@ -237,7 +240,7 @@ main { background: var(--bg); }
   background:
     radial-gradient(1000px 560px at 18% 18%, rgba(124, 181, 162, 0.03), transparent 62%),
     radial-gradient(760px 420px at 82% 30%, rgba(255,255,255,0.014), transparent 64%),
-    linear-gradient(180deg, rgba(11, 15, 23, 0.26), rgba(7, 9, 13, 0.0) 42%, rgba(7, 9, 13, 0.20));
+    linear-gradient(180deg, rgba(14, 21, 41, 0.26), rgba(9, 15, 29, 0.0) 42%, rgba(9, 15, 29, 0.20));
   opacity: 0.75;
 }
 
@@ -306,11 +309,11 @@ main { background: var(--bg); }
   position: absolute;
   inset: 0;
   /* Prevent flash of underlying content while media/background loads */
-  background-color: rgba(7, 9, 13, 1);
+  background-color: rgba(9, 15, 29, 1);
   /* Fallback background if video fails */
   background:
-    radial-gradient(1200px 700px at 20% 10%, rgba(245, 174, 70, 0.10), transparent 55%),
-    linear-gradient(180deg, rgba(7, 9, 13, 0.35) 0%, rgba(7, 9, 13, 0.74) 60%, rgba(7, 9, 13, 0.93) 100%),
+    radial-gradient(1200px 700px at 20% 10%, rgba(232, 168, 78, 0.10), transparent 55%),
+    linear-gradient(180deg, rgba(9, 15, 29, 0.35) 0%, rgba(9, 15, 29, 0.74) 60%, rgba(9, 15, 29, 0.93) 100%),
     url('/assets/images/ui/home-feed.png');
   background-size: cover;
   background-position: center;
@@ -343,7 +346,7 @@ main { background: var(--bg); }
   /* Stronger overlay at bottom for legibility */
   background:
     radial-gradient(900px 520px at 25% 20%, rgba(124, 181, 162, 0.10), transparent 55%),
-    linear-gradient(180deg, rgba(7, 9, 13, 0.20) 0%, rgba(7, 9, 13, 0.72) 62%, rgba(7, 9, 13, 0.94) 100%);
+    linear-gradient(180deg, rgba(9, 15, 29, 0.20) 0%, rgba(9, 15, 29, 0.72) 62%, rgba(9, 15, 29, 0.94) 100%);
 }
 
 .hero-grain {
@@ -431,7 +434,7 @@ main { background: var(--bg); }
 
 .card {
   border-radius: var(--radius);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.08);
   background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
   box-shadow: var(--shadow);
   padding: var(--card-pad);
@@ -440,8 +443,8 @@ main { background: var(--bg); }
 
 .card:hover {
   transform: translateY(-2px);
-  border-color: rgba(245, 174, 70, 0.22);
-  background: linear-gradient(180deg, rgba(245,174,70,0.06), rgba(255,255,255,0.03));
+  border-color: rgba(232, 168, 78, 0.22);
+  background: linear-gradient(180deg, rgba(232,168,78,0.06), rgba(255,255,255,0.03));
 }
 
 .card-title {
@@ -498,7 +501,7 @@ main { background: var(--bg); }
 
 .step {
   border-radius: var(--radius);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.03);
   padding: var(--card-pad);
   position: relative;
@@ -523,7 +526,7 @@ main { background: var(--bg); }
 .step-title::before {
   counter-increment: step;
   content: counter(step) ". ";
-  color: rgba(245,174,70,0.78);
+  color: rgba(232,168,78,0.78);
   font-weight: 700;
 }
 
@@ -563,7 +566,7 @@ main { background: var(--bg); }
   position: relative;
   border-radius: var(--radius);
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.03);
   box-shadow: var(--shadow);
   /* Prevent awkward tall blocks; keeps the section tidy */
@@ -582,7 +585,7 @@ main { background: var(--bg); }
 .video-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(7,9,13,0.20) 0%, rgba(7,9,13,0.60) 70%, rgba(7,9,13,0.86) 100%);
+  background: linear-gradient(180deg, rgba(9,15,29,0.20) 0%, rgba(9,15,29,0.60) 70%, rgba(9,15,29,0.86) 100%);
 }
 
 .preview-caption {
@@ -607,7 +610,7 @@ main { background: var(--bg); }
   grid-template-rows: auto 1fr;
   border-radius: var(--radius);
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.02);
 }
 
@@ -642,7 +645,7 @@ main { background: var(--bg); }
 
 .quote {
   border-radius: var(--radius);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.08);
   background: linear-gradient(180deg, rgba(124,181,162,0.08), rgba(255,255,255,0.02));
   padding: var(--card-pad-lg);
 }
@@ -667,7 +670,7 @@ main { background: var(--bg); }
 
 .story {
   border-radius: var(--radius);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.03);
   padding: var(--card-pad-lg); /* 36px — more air for emotional content */
 }
@@ -688,7 +691,7 @@ main { background: var(--bg); }
   position: relative;
   padding-block: clamp(4.6rem, 7vw, 6.2rem);
   overflow: hidden;
-  border-top: 1px solid rgba(255,255,255,0.10);
+  border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .cta-media {
@@ -697,8 +700,8 @@ main { background: var(--bg); }
   /* No zoomed-in UI screenshot here — keep the final CTA clean and calm. */
   background:
     radial-gradient(900px 520px at 18% 25%, rgba(124, 181, 162, 0.07), transparent 60%),
-    radial-gradient(720px 460px at 82% 20%, rgba(245, 174, 70, 0.045), transparent 62%),
-    linear-gradient(180deg, rgba(7, 9, 13, 0.72) 0%, rgba(7, 9, 13, 0.90) 55%, rgba(7, 9, 13, 0.96) 100%);
+    radial-gradient(720px 460px at 82% 20%, rgba(232, 168, 78, 0.045), transparent 62%),
+    linear-gradient(180deg, rgba(9, 15, 29, 0.72) 0%, rgba(9, 15, 29, 0.90) 55%, rgba(9, 15, 29, 0.96) 100%);
   background-size: cover;
   background-position: center;
 }
