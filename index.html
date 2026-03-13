@@ -78,7 +78,7 @@
       <section id="top" class="hero" aria-label="WeHale introduction">
         <!-- Cinematic hero background: silent video texture (fallback handled in CSS) -->
         <div class="hero-media" aria-hidden="true">
-          <video class="hero-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.png">
+          <video class="hero-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.jpg">
             <source src="/assets/video/enc/brandfilm-hero.mp4" type="video/mp4" />
           </video>
           <div class="hero-overlay" aria-hidden="true"></div>
@@ -220,7 +220,7 @@
 
           <div class="preview">
             <div class="preview-media reveal-scale" data-reveal aria-label="WeHale brand video">
-              <video class="brand-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.png">
+              <video class="brand-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.jpg">
                 <source src="/assets/video/enc/hero-sunset-river.mp4" type="video/mp4" />
               </video>
               <div class="video-overlay" aria-hidden="true"></div>
@@ -229,19 +229,31 @@
 
             <div class="shots" aria-label="App screenshots">
               <figure class="shot reveal-scale" data-reveal>
-                <img src="/assets/images/ui/home-feed.png" alt="WeHale home screen with weekly progress ring and daily session card." loading="lazy" />
+                <picture>
+                  <source srcset="/assets/images/ui/home-feed.webp" type="image/webp" />
+                  <img src="/assets/images/ui/home-feed.jpg" alt="WeHale home screen with weekly progress ring and daily session card." loading="lazy" width="585" height="1194" />
+                </picture>
                 <figcaption>Your weekly goal and today’s session — front and center.</figcaption>
               </figure>
               <figure class="shot reveal-scale reveal-delay-1" data-reveal>
-                <img src="/assets/images/ui/daily-practice.png" alt="Browse sessions by category: Activate, Balance, Calm." loading="lazy" />
+                <picture>
+                  <source srcset="/assets/images/ui/daily-practice.webp" type="image/webp" />
+                  <img src="/assets/images/ui/daily-practice.jpg" alt="Browse sessions by category: Activate, Balance, Calm." loading="lazy" width="585" height="1194" />
+                </picture>
                 <figcaption>Browse by category. Filter by what you need right now.</figcaption>
               </figure>
               <figure class="shot reveal-scale reveal-delay-2" data-reveal>
-                <img src="/assets/images/ui/session-details.png" alt="Session detail showing description, duration, and breath hold data." loading="lazy" />
+                <picture>
+                  <source srcset="/assets/images/ui/session-details.webp" type="image/webp" />
+                  <img src="/assets/images/ui/session-details.jpg" alt="Session detail showing description, duration, and breath hold data." loading="lazy" width="585" height="1194" />
+                </picture>
                 <figcaption>Know what to expect before you press play.</figcaption>
               </figure>
               <figure class="shot reveal-scale reveal-delay-3" data-reveal>
-                <img src="/assets/images/ui/playlist-overview.png" alt="Multi-day journey overview with session progression." loading="lazy" />
+                <picture>
+                  <source srcset="/assets/images/ui/playlist-overview.webp" type="image/webp" />
+                  <img src="/assets/images/ui/playlist-overview.jpg" alt="Multi-day journey overview with session progression." loading="lazy" width="585" height="1194" />
+                </picture>
                 <figcaption>Follow a journey over days to build a deeper practice.</figcaption>
               </figure>
             </div>

@@ -314,7 +314,7 @@ main { background: var(--bg); }
   background:
     radial-gradient(1200px 700px at 20% 10%, rgba(232, 168, 78, 0.10), transparent 55%),
     linear-gradient(180deg, rgba(9, 15, 29, 0.35) 0%, rgba(9, 15, 29, 0.74) 60%, rgba(9, 15, 29, 0.93) 100%),
-    url('/assets/images/ui/home-feed.png');
+    url('/assets/images/ui/home-feed.jpg');
   background-size: cover;
   background-position: center;
   overflow: hidden;
@@ -605,6 +605,8 @@ main { background: var(--bg); }
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.02);
 }
+
+.shot picture { display: contents; }
 
 .shot img {
   width: 100%;
