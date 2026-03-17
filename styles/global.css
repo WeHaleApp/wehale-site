@@ -607,38 +607,39 @@ main { background: var(--bg); }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(1rem, 3vw, 2rem);
+  gap: clamp(1rem, 2.5vw, 2rem);
   position: relative;
   z-index: 1;
 }
 
 .slider-stage {
-  flex: 0 0 clamp(220px, 30vw, 300px);
+  width: clamp(180px, 22vw, 260px);
+  flex-shrink: 0;
 }
 
 /* Phone device frame */
 .phone-frame-hero {
   position: relative;
-  background: #1a1a1e;
-  border-radius: clamp(32px, 4.5vw, 48px);
-  padding: clamp(8px, 1.2vw, 14px);
+  background: #1c1c22;
+  border-radius: clamp(28px, 3.5vw, 40px);
+  padding: clamp(6px, 0.8vw, 10px);
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.08),
-    0 30px 100px rgba(0,0,0,0.6),
-    0 10px 40px rgba(0,0,0,0.4),
-    0 0 80px rgba(124,181,162,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.06);
+    0 0 0 1px rgba(255,255,255,0.12),
+    0 0 0 3px rgba(255,255,255,0.04),
+    0 30px 80px rgba(0,0,0,0.6),
+    0 10px 30px rgba(0,0,0,0.4),
+    0 0 60px rgba(124,181,162,0.06);
   overflow: hidden;
 }
 
 /* Dynamic Island notch */
 .phone-notch {
   position: absolute;
-  top: clamp(12px, 1.8vw, 22px);
+  top: clamp(10px, 1.4vw, 16px);
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(60px, 9vw, 96px);
-  height: clamp(18px, 2.5vw, 30px);
+  width: clamp(48px, 7vw, 72px);
+  height: clamp(14px, 2vw, 22px);
   background: #000;
   border-radius: 999px;
   z-index: 3;
@@ -647,7 +648,7 @@ main { background: var(--bg); }
 /* Slider track */
 .slider-track {
   position: relative;
-  border-radius: clamp(24px, 3.5vw, 38px);
+  border-radius: clamp(22px, 2.8vw, 32px);
   overflow: hidden;
   aspect-ratio: 9 / 19.5;
 }
@@ -740,8 +741,12 @@ main { background: var(--bg); }
 }
 
 @media (max-width: 559px) {
-  .slider-arrow { width: 40px; height: 40px; }
-  .slider-arrow svg { width: 16px; height: 16px; }
+  .slider-arrow { width: 36px; height: 36px; }
+  .slider-arrow svg { width: 14px; height: 14px; }
+}
+
+@media (max-width: 400px) {
+  .slider-arrow { display: none; }
 }
 
 /* Two-col */
