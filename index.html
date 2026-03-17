@@ -219,53 +219,52 @@
         </div>
       </section>
 
-      <!-- Component: ProductPreview (uses provided screenshots + brand movie) -->
-      <section class="section section-alt" id="product" aria-label="Product preview">
+      <!-- Component: ProductShowcase — Interactive phone slideshow -->
+      <section class="section section-showcase" id="product" aria-label="Product preview">
+        <div class="showcase-glow" aria-hidden="true"></div>
         <div class="container">
-          <div class="section-head reveal-head" data-reveal>
+          <div class="section-head section-head-center reveal-head" data-reveal>
             <h2 class="section-title">Inside the app.</h2>
             <p class="section-subtitle">Designed to feel calm from the first tap. Dark interface, cinematic backgrounds, no clutter.</p>
           </div>
 
-          <div class="preview">
-            <div class="preview-media reveal-scale" data-reveal aria-label="WeHale brand video">
-              <video class="brand-video media-fade" autoplay muted loop playsinline preload="metadata" poster="/assets/images/ui/home-feed.jpg">
-                <source src="/assets/video/enc/hero-sunset-river.mp4" type="video/mp4" />
-              </video>
-              <div class="video-overlay" aria-hidden="true"></div>
-              <p class="preview-caption">Every session opens with a cinematic background.</p>
+          <div class="phone-slider" data-reveal>
+            <button class="slider-arrow slider-prev" aria-label="Previous screen">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+
+            <div class="slider-stage">
+              <div class="phone-frame phone-frame-hero">
+                <div class="phone-notch" aria-hidden="true"></div>
+                <div class="slider-track">
+                  <div class="slider-slide active" data-caption="Your daily practice — front and center">
+                    <picture><source srcset="/assets/images/ui/home-feed.webp" type="image/webp" /><img src="/assets/images/ui/home-feed.jpg" alt="WeHale home screen" loading="lazy" width="585" height="1194" /></picture>
+                  </div>
+                  <div class="slider-slide" data-caption="Browse sessions by category and intensity">
+                    <picture><source srcset="/assets/images/ui/daily-practice.webp" type="image/webp" /><img src="/assets/images/ui/daily-practice.jpg" alt="Practice tab with session grid" loading="lazy" width="585" height="1194" /></picture>
+                  </div>
+                  <div class="slider-slide" data-caption="Every detail before you press play">
+                    <picture><source srcset="/assets/images/ui/session-details.webp" type="image/webp" /><img src="/assets/images/ui/session-details.jpg" alt="Session detail screen" loading="lazy" width="585" height="1194" /></picture>
+                  </div>
+                  <div class="slider-slide" data-caption="Follow a journey over days to go deeper">
+                    <picture><source srcset="/assets/images/ui/playlist-overview.webp" type="image/webp" /><img src="/assets/images/ui/playlist-overview.jpg" alt="Breath journeys overview" loading="lazy" width="585" height="1194" /></picture>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="shots" aria-label="App screenshots">
-              <figure class="shot reveal-scale" data-reveal>
-                <picture>
-                  <source srcset="/assets/images/ui/home-feed.webp" type="image/webp" />
-                  <img src="/assets/images/ui/home-feed.jpg" alt="WeHale home screen with weekly progress ring and daily session card." loading="lazy" width="585" height="1194" />
-                </picture>
-                <figcaption>Your weekly goal and today’s session — front and center.</figcaption>
-              </figure>
-              <figure class="shot reveal-scale reveal-delay-1" data-reveal>
-                <picture>
-                  <source srcset="/assets/images/ui/daily-practice.webp" type="image/webp" />
-                  <img src="/assets/images/ui/daily-practice.jpg" alt="Browse sessions by category: Activate, Balance, Calm." loading="lazy" width="585" height="1194" />
-                </picture>
-                <figcaption>Browse by category. Filter by what you need right now.</figcaption>
-              </figure>
-              <figure class="shot reveal-scale reveal-delay-2" data-reveal>
-                <picture>
-                  <source srcset="/assets/images/ui/session-details.webp" type="image/webp" />
-                  <img src="/assets/images/ui/session-details.jpg" alt="Session detail showing description, duration, and breath hold data." loading="lazy" width="585" height="1194" />
-                </picture>
-                <figcaption>Know what to expect before you press play.</figcaption>
-              </figure>
-              <figure class="shot reveal-scale reveal-delay-3" data-reveal>
-                <picture>
-                  <source srcset="/assets/images/ui/playlist-overview.webp" type="image/webp" />
-                  <img src="/assets/images/ui/playlist-overview.jpg" alt="Multi-day journey overview with session progression." loading="lazy" width="585" height="1194" />
-                </picture>
-                <figcaption>Follow a journey over days to build a deeper practice.</figcaption>
-              </figure>
-            </div>
+            <button class="slider-arrow slider-next" aria-label="Next screen">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+
+          <p class="slider-caption" id="sliderCaption">Your daily practice — front and center</p>
+
+          <div class="slider-dots" role="tablist" aria-label="App screens">
+            <button class="slider-dot active" role="tab" aria-selected="true" aria-label="Home screen"></button>
+            <button class="slider-dot" role="tab" aria-selected="false" aria-label="Practice tab"></button>
+            <button class="slider-dot" role="tab" aria-selected="false" aria-label="Session detail"></button>
+            <button class="slider-dot" role="tab" aria-selected="false" aria-label="Breath journeys"></button>
           </div>
         </div>
       </section>
@@ -295,30 +294,37 @@
         </div>
       </section>
 
-      <!-- Component: Stories -->
-      <section class="section" id="stories" aria-label="Stories">
-        <div class="container">
-          <div class=”section-head reveal-head” data-reveal>
+      <!-- Component: Stories — rotating testimonial -->
+      <section class=”section” id=”stories” aria-label=”Stories”>
+        <div class=”container”>
+          <div class=”section-head section-head-center reveal-head” data-reveal>
             <h2 class=”section-title”>What people notice.</h2>
             <p class=”section-subtitle”>From early users who built a daily practice.</p>
           </div>
 
-          <div class=”stories”>
-            <article class=”story reveal” data-reveal>
-              <span class=”story-mark” aria-hidden=”true”>”</span>
-              <p class=”story-quote”>I use it between calls. It’s the difference between reacting and responding.</p>
-              <p class=”story-meta”>— Early user, Stockholm</p>
-            </article>
-            <article class=”story reveal reveal-delay-1” data-reveal>
-              <span class=”story-mark” aria-hidden=”true”>”</span>
-              <p class=”story-quote”>I don’t feel ‘fixed’. I feel present. That’s enough.</p>
-              <p class=”story-meta”>— Early user, Berlin</p>
-            </article>
-            <article class=”story reveal reveal-delay-2” data-reveal>
-              <span class=”story-mark” aria-hidden=”true”>”</span>
-              <p class=”story-quote”>The voice is calm, the sessions are well-paced. It doesn’t try too hard.</p>
-              <p class=”story-meta”>— Early user, London</p>
-            </article>
+          <div class=”testimonial” data-reveal>
+            <div class=”testimonial-inner”>
+              <span class=”testimonial-mark” aria-hidden=”true”>”</span>
+              <div class=”testimonial-track”>
+                <blockquote class=”testimonial-slide active”>
+                  <p class=”testimonial-quote”>I use it between calls. It’s the difference between reacting and responding.</p>
+                  <footer class=”testimonial-meta”>Early user, Stockholm</footer>
+                </blockquote>
+                <blockquote class=”testimonial-slide”>
+                  <p class=”testimonial-quote”>I don’t feel ‘fixed’. I feel present. That’s enough.</p>
+                  <footer class=”testimonial-meta”>Early user, Berlin</footer>
+                </blockquote>
+                <blockquote class=”testimonial-slide”>
+                  <p class=”testimonial-quote”>The voice is calm, the sessions are well-paced. It doesn’t try too hard.</p>
+                  <footer class=”testimonial-meta”>Early user, London</footer>
+                </blockquote>
+              </div>
+            </div>
+            <div class=”testimonial-dots” role=”tablist” aria-label=”Testimonials”>
+              <button class=”testimonial-dot active” role=”tab” aria-selected=”true” aria-label=”Quote 1”></button>
+              <button class=”testimonial-dot” role=”tab” aria-selected=”false” aria-label=”Quote 2”></button>
+              <button class=”testimonial-dot” role=”tab” aria-selected=”false” aria-label=”Quote 3”></button>
+            </div>
           </div>
         </div>
       </section>
@@ -379,7 +385,74 @@
         setTimeout(markReady, 1200);
       }
       wireVideo('.hero-video');
-      wireVideo('.brand-video');
+
+      // Phone Slideshow
+      (function () {
+        var slides = document.querySelectorAll('.slider-slide');
+        var dots = document.querySelectorAll('.slider-dot');
+        var caption = document.getElementById('sliderCaption');
+        var prevBtn = document.querySelector('.slider-prev');
+        var nextBtn = document.querySelector('.slider-next');
+        var current = 0;
+        var total = slides.length;
+        var timer;
+
+        function goTo(idx) {
+          slides[current].classList.remove('active');
+          dots[current].classList.remove('active');
+          dots[current].setAttribute('aria-selected', 'false');
+          current = (idx + total) % total;
+          slides[current].classList.add('active');
+          dots[current].classList.add('active');
+          dots[current].setAttribute('aria-selected', 'true');
+          if (caption) caption.textContent = slides[current].getAttribute('data-caption') || '';
+          resetTimer();
+        }
+
+        function resetTimer() {
+          clearInterval(timer);
+          timer = setInterval(function () { goTo(current + 1); }, 5000);
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
+        if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
+        dots.forEach(function (dot, i) {
+          dot.addEventListener('click', function () { goTo(i); });
+        });
+
+        resetTimer();
+      })();
+
+      // Testimonial Carousel
+      (function () {
+        var slides = document.querySelectorAll('.testimonial-slide');
+        var dots = document.querySelectorAll('.testimonial-dot');
+        var current = 0;
+        var total = slides.length;
+        var timer;
+
+        function goTo(idx) {
+          slides[current].classList.remove('active');
+          dots[current].classList.remove('active');
+          dots[current].setAttribute('aria-selected', 'false');
+          current = (idx + total) % total;
+          slides[current].classList.add('active');
+          dots[current].classList.add('active');
+          dots[current].setAttribute('aria-selected', 'true');
+          resetTimer();
+        }
+
+        function resetTimer() {
+          clearInterval(timer);
+          timer = setInterval(function () { goTo(current + 1); }, 6000);
+        }
+
+        dots.forEach(function (dot, i) {
+          dot.addEventListener('click', function () { goTo(i); });
+        });
+
+        resetTimer();
+      })();
     </script>
     <script src="/components/reveal.js"></script>
   </body>
