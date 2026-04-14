@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wehale.io/sitemap.xml
