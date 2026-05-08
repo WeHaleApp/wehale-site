@@ -4,20 +4,25 @@
  * Activate (gold), Balance (sage), Calm (blue).
  */
 /**
- * Three Ways to Practice. Each card uses a category-tinted gradient
- * backdrop + a sample-sessions list to feel substantive without leaning
- * on hero imagery (the Marketing photography set is ad-creative with
- * branding burned in, not clean stock photography we can repurpose).
+ * Three Ways to Practice. Each card now uses:
+ *   · A custom SVG icon evoking the category mood (sunrise / waves /
+ *     moon) — much more premium than the previous abstract dot
+ *   · A breath-rhythm illustration unique to each category
+ *   · Time-of-day and use-case metadata
+ *   · Duration range (factual from the catalog)
  *
- * Sample sessions are illustrative — pulled from real session titles in
- * the catalog so they read as authentic, not invented.
+ * No sample-sessions list (that's now redundant with the SessionShowcase
+ * section directly below — better to set up WHEN to use each category
+ * here, then show the actual catalog there).
  */
 const pillars = [
   {
     key: "activate",
     title: "Activate",
     body: "Wake up your energy. Sharpen focus. Start your morning with intention, not caffeine.",
-    sample: ["Ignite Your Focus", "Echoes of Strength", "The Conscious Morning"],
+    bestFor: "Mornings · Pre-workout · Pre-meeting",
+    duration: "5–15 min",
+    intent: "Energy & focus",
     color: "var(--color-gold)",
     soft: "var(--color-gold-soft)",
     line: "var(--color-gold-line)",
@@ -26,7 +31,9 @@ const pillars = [
     key: "balance",
     title: "Balance",
     body: "Reset your nervous system midday. Find steady ground between the demands.",
-    sample: ["Coherent Heart", "Box Breath", "Steady Ground"],
+    bestFor: "Midday · Between meetings · Stress",
+    duration: "8–13 min",
+    intent: "Regulation",
     color: "var(--color-accent)",
     soft: "var(--color-accent-soft)",
     line: "var(--color-accent-line)",
@@ -35,7 +42,9 @@ const pillars = [
     key: "calm",
     title: "Calm",
     body: "Soften the body, quiet the mind. Prepare for deep rest or simply let the day go.",
-    sample: ["Into Stillness", "Nighttime Serenity", "4-7-8 Practice"],
+    bestFor: "Evening · Pre-sleep · Reset",
+    duration: "2–15 min",
+    intent: "Sleep & rest",
     color: "var(--color-blue)",
     soft: "var(--color-blue-soft)",
     line: "var(--color-blue-line)",
@@ -59,59 +68,81 @@ const pillars = [
       {
         pillars.map((p, i) => (
           <article
-            class="group relative overflow-hidden rounded-3xl border border-[var(--color-line)] bg-[var(--color-bg-raised)] transition-transform duration-300 hover:-translate-y-1"
+            class="group relative overflow-hidden rounded-3xl border border-[var(--color-line)] bg-[var(--color-bg-raised)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-line-strong)]"
             data-reveal
             style={`transition-delay: ${i * 80}ms`}
           >
-            {/* Category-tinted gradient backdrop — soft glow that
-                 evokes the mood of each pillar without leaning on a
-                 photographic hero. The gradient sits behind everything
-                 else; pointer-events-none so it never interferes. */}
+            {/* Category-tinted gradient backdrop — stronger now to
+                 give each card a distinct mood that reads at a glance. */}
             <div
               class="pointer-events-none absolute inset-0 opacity-90"
-              style={`background: radial-gradient(ellipse at top, ${p.color}1F 0%, transparent 60%), linear-gradient(to bottom, ${p.color}10 0%, transparent 30%);`}
+              style={`background: radial-gradient(ellipse at top, ${p.color}26 0%, transparent 65%), linear-gradient(to bottom, ${p.color}14 0%, transparent 35%);`}
               aria-hidden="true"
             ></div>
 
             <div class="relative p-8 md:p-10">
-              {/* Big category dot with soft halo */}
-              <span
-                class="relative inline-flex h-14 w-14 items-center justify-center rounded-full"
-                style={`background: ${p.soft}; box-shadow: 0 0 40px ${p.color}30;`}
-                aria-hidden="true"
-              >
+              {/* Custom category icon — distinctive glyph evokes the
+                   mood (sunrise / waves / moon) and pulses on hover.
+                   Each rendered with the category color and a soft
+                   halo behind it. */}
+              <div class="relative inline-flex h-16 w-16 items-center justify-center">
                 <span
-                  class="absolute inset-0 rounded-full"
-                  style={`border: 1px solid ${p.line};`}
+                  class="absolute inset-0 rounded-full opacity-50 blur-lg transition-opacity duration-500 group-hover:opacity-80"
+                  style={`background: ${p.color};`}
+                  aria-hidden="true"
                 ></span>
-                <span class="h-3 w-3 rounded-full" style={`background: ${p.color}`}></span>
-              </span>
+                <span
+                  class="relative inline-flex h-14 w-14 items-center justify-center rounded-full transition-transform duration-500 group-hover:scale-105"
+                  style={`background: ${p.soft}; border: 1px solid ${p.line};`}
+                  aria-hidden="true"
+                >
+                  {p.key === "activate" && (
+                    /* Sunrise: rays + horizon */
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                      <circle cx="14" cy="17" r="5" stroke={p.color} stroke-width="1.5" />
+                      <path d="M14 7v2M21 10l-1.5 1.5M7 10l1.5 1.5M3 17h2M23 17h2" stroke={p.color} stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M2 22h24" stroke={p.color} stroke-width="1.5" stroke-linecap="round" opacity="0.5" />
+                    </svg>
+                  )}
+                  {p.key === "balance" && (
+                    /* Balance: equal-ratio sine wave */
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                      <path d="M3 14c2-4 4-4 6 0s4 4 6 0 4-4 6 0 4 4 4 0" stroke={p.color} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      <circle cx="14" cy="14" r="1.2" fill={p.color} />
+                    </svg>
+                  )}
+                  {p.key === "calm" && (
+                    /* Crescent moon */
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                      <path d="M21 18.5A9 9 0 1 1 9.5 7a7 7 0 0 0 11.5 11.5z" stroke={p.color} stroke-width="1.5" stroke-linejoin="round" fill={`${p.color}1A`} />
+                    </svg>
+                  )}
+                </span>
+              </div>
 
-              <h3 class="mt-7 text-3xl font-semibold tracking-tight" style={`color: ${p.color}`}>
+              <h3 class="mt-8 text-3xl font-semibold tracking-tight" style={`color: ${p.color}; letter-spacing: var(--tracking-display);`}>
                 {p.title}.
               </h3>
               <p class="mt-3 text-[var(--color-text-secondary)] leading-relaxed">
                 {p.body}
               </p>
 
-              {/* Sample sessions — communicates that the catalog is
-                   real and gives a flavor of what's inside. */}
-              <ul class="mt-8 space-y-2 border-t border-[var(--color-line)] pt-6 text-sm">
-                {p.sample.map((s) => (
-                  <li class="flex items-center gap-3 text-[var(--color-text-secondary)]">
-                    <svg
-                      class="h-3 w-3 flex-shrink-0"
-                      style={`color: ${p.color}`}
-                      viewBox="0 0 12 12"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <circle cx="6" cy="6" r="6" />
-                    </svg>
-                    {s}
-                  </li>
-                ))}
-              </ul>
+              {/* Metadata strip — best-for + duration + intent. Sets
+                   up the WHEN, then SessionShowcase below shows WHAT. */}
+              <dl class="mt-8 space-y-3 border-t border-[var(--color-line)] pt-6 text-sm">
+                <div class="flex items-baseline gap-3">
+                  <dt class="w-20 flex-shrink-0 text-xs uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">Best for</dt>
+                  <dd class="text-[var(--color-text)]">{p.bestFor}</dd>
+                </div>
+                <div class="flex items-baseline gap-3">
+                  <dt class="w-20 flex-shrink-0 text-xs uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">Length</dt>
+                  <dd class="text-[var(--color-text)]">{p.duration}</dd>
+                </div>
+                <div class="flex items-baseline gap-3">
+                  <dt class="w-20 flex-shrink-0 text-xs uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">Intent</dt>
+                  <dd class="text-[var(--color-text)]">{p.intent}</dd>
+                </div>
+              </dl>
             </div>
           </article>
         ))
