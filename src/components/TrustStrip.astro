@@ -12,18 +12,44 @@ const showPress = false;
 ---
 
 <section class="border-y border-[var(--color-line)] bg-[var(--color-bg-alt)]">
-  <div class="mx-auto flex max-w-6xl flex-col items-center justify-center gap-6 px-6 py-8 md:flex-row md:gap-12">
-    <div class="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
-      <svg class="h-4 w-4 text-[var(--color-gold)]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-      </svg>
-      <span class="font-medium text-[var(--color-text)]">{RATING_PLACEHOLDER}</span>
+  <div class="mx-auto flex max-w-6xl flex-col items-center justify-center gap-6 px-6 py-10 md:flex-row md:gap-16 md:py-8">
+    <!-- App Store rating tile (placeholder until we earn one) -->
+    <div class="flex items-center gap-3">
+      <div class="flex">
+        {[0, 1, 2, 3, 4].map(() => (
+          <svg class="h-4 w-4 text-[var(--color-gold)]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+          </svg>
+        ))}
+      </div>
+      <span class="text-sm font-medium text-[var(--color-text)]">
+        {RATING_PLACEHOLDER}
+      </span>
     </div>
+
+    <!-- Vertical divider on desktop -->
+    <span class="hidden h-6 w-px bg-[var(--color-line-strong)] md:block" aria-hidden="true"></span>
+
+    <!-- Pillar callouts to set up what's coming -->
+    <ul class="flex items-center gap-6 text-xs uppercase tracking-[0.14em] text-[var(--color-text-tertiary)] md:gap-8">
+      <li class="flex items-center gap-2">
+        <span class="h-1.5 w-1.5 rounded-full bg-[var(--color-gold)]" aria-hidden="true"></span>
+        Activate
+      </li>
+      <li class="flex items-center gap-2">
+        <span class="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" aria-hidden="true"></span>
+        Balance
+      </li>
+      <li class="flex items-center gap-2">
+        <span class="h-1.5 w-1.5 rounded-full bg-[var(--color-blue)]" aria-hidden="true"></span>
+        Calm
+      </li>
+    </ul>
 
     {showPress && (
       <>
-        <span class="hidden h-px w-12 bg-[var(--color-line-strong)] md:block" aria-hidden="true"></span>
-        <p class="text-xs uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">As seen in</p>
+        <span class="hidden h-6 w-px bg-[var(--color-line-strong)] md:block" aria-hidden="true"></span>
+        <p class="text-xs uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">As seen in</p>
         {/* Press logos go here */}
       </>
     )}
