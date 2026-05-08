@@ -7,26 +7,35 @@
  * already optimized (webp + jpg). Swap to AppStoreNew renders later for
  * higher-fidelity captures.
  */
+// Fresh App Store-grade screenshots from 00-Inbox/AppStoreNew at 1320×2868.
+// Aspect ratio matches iPhone 17 Pro Max (the device they were captured on)
+// — 1320/2868 ≈ 0.46. The frame below uses that ratio so screens fit edge
+// to edge with no clipping.
 const slides = [
   {
-    src: "/assets/images/ui/home-feed",
-    alt: "WeHale home screen",
+    src: "/assets/images/screens/01-home.png",
+    alt: "WeHale home — your daily practice",
     caption: "Your daily practice — front and center",
   },
   {
-    src: "/assets/images/ui/daily-practice",
-    alt: "Practice tab",
-    caption: "Browse sessions by category and intensity",
+    src: "/assets/images/screens/02-practice.png",
+    alt: "Practice tab — browse the session library",
+    caption: "Twenty-five guided sessions, all in one place",
   },
   {
-    src: "/assets/images/ui/session-details",
-    alt: "Session detail screen",
-    caption: "Every detail before you press play",
+    src: "/assets/images/screens/03-player.png",
+    alt: "Player — full-bleed cinematic backgrounds",
+    caption: "Press play. Cinematic. Distraction-free.",
   },
   {
-    src: "/assets/images/ui/playlist-overview",
-    alt: "Multi-day journeys",
-    caption: "Follow a journey over days to go deeper",
+    src: "/assets/images/screens/04-progress.png",
+    alt: "Progress — weekly goal ring and streak",
+    caption: "Track your rhythm without the streak guilt",
+  },
+  {
+    src: "/assets/images/screens/05-mood.png",
+    alt: "Home — mood-based session recommendations",
+    caption: "Tell it how you feel. It picks the right session.",
   },
 ];
 ---
@@ -50,26 +59,27 @@ const slides = [
     </header>
 
     <div class="mt-16 flex flex-col items-center" data-reveal data-phone-slider>
-      <div class="relative aspect-[585/1194] w-[260px] md:w-[300px] rounded-[44px] border border-[var(--color-line-strong)] bg-[var(--color-bg-raised)] p-2 shadow-2xl">
-        <div class="absolute left-1/2 top-2 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-black/80" aria-hidden="true"></div>
-        <div class="relative h-full w-full overflow-hidden rounded-[36px]">
+      <!-- Phone frame: aspect ratio matches iPhone 17 Pro Max screenshots
+           (1320×2868) so the screens display edge to edge with no
+           cropping at the top or bottom. The dynamic-island pill is
+           subtle — it sits inside the screen viewport, not over the
+           image, because real device captures already include it. -->
+      <div class="relative aspect-[1320/2868] w-[280px] md:w-[340px] rounded-[52px] border border-[var(--color-line-strong)] bg-[var(--color-bg-raised)] p-[6px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]">
+        <div class="relative h-full w-full overflow-hidden rounded-[46px] bg-black">
           {
             slides.map((s, i) => (
-              <picture>
-                <source srcset={`${s.src}.webp`} type="image/webp" />
-                <img
-                  src={`${s.src}.jpg`}
-                  alt={s.alt}
-                  width="585"
-                  height="1194"
-                  loading={i === 0 ? "eager" : "lazy"}
-                  class:list={[
-                    "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
-                    i === 0 ? "opacity-100" : "opacity-0",
-                  ]}
-                  data-slide-index={i}
-                />
-              </picture>
+              <img
+                src={s.src}
+                alt={s.alt}
+                width="1320"
+                height="2868"
+                loading={i === 0 ? "eager" : "lazy"}
+                class:list={[
+                  "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
+                  i === 0 ? "opacity-100" : "opacity-0",
+                ]}
+                data-slide-index={i}
+              />
             ))
           }
         </div>
