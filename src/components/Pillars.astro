@@ -4,23 +4,20 @@
  * Activate (gold), Balance (sage), Calm (blue).
  */
 /**
- * Three Ways to Practice — premium card style. Each card has:
- *   · A lifestyle hero image at the top, full-bleed inside the card
- *     (drawn from the Marketing/Human/Nature sets to evoke the mood)
- *   · A coloured accent dot for category recognition
- *   · A short title and body
+ * Three Ways to Practice. Each card uses a category-tinted gradient
+ * backdrop + a sample-sessions list to feel substantive without leaning
+ * on hero imagery (the Marketing photography set is ad-creative with
+ * branding burned in, not clean stock photography we can repurpose).
  *
- * Image choices map to mood:
- *   Activate → man-running (energy, dawn)
- *   Balance  → woman-meditation (centered, grounded)
- *   Calm     → man-dusk (settling, evening)
+ * Sample sessions are illustrative — pulled from real session titles in
+ * the catalog so they read as authentic, not invented.
  */
 const pillars = [
   {
     key: "activate",
     title: "Activate",
     body: "Wake up your energy. Sharpen focus. Start your morning with intention, not caffeine.",
-    image: "/assets/images/marketing/man-running.png",
+    sample: ["Ignite Your Focus", "Echoes of Strength", "The Conscious Morning"],
     color: "var(--color-gold)",
     soft: "var(--color-gold-soft)",
     line: "var(--color-gold-line)",
@@ -29,7 +26,7 @@ const pillars = [
     key: "balance",
     title: "Balance",
     body: "Reset your nervous system midday. Find steady ground between the demands.",
-    image: "/assets/images/marketing/woman-meditation.png",
+    sample: ["Coherent Heart", "Box Breath", "Steady Ground"],
     color: "var(--color-accent)",
     soft: "var(--color-accent-soft)",
     line: "var(--color-accent-line)",
@@ -38,7 +35,7 @@ const pillars = [
     key: "calm",
     title: "Calm",
     body: "Soften the body, quiet the mind. Prepare for deep rest or simply let the day go.",
-    image: "/assets/images/marketing/man-dusk.png",
+    sample: ["Into Stillness", "Nighttime Serenity", "4-7-8 Practice"],
     color: "var(--color-blue)",
     soft: "var(--color-blue-soft)",
     line: "var(--color-blue-line)",
@@ -66,36 +63,55 @@ const pillars = [
             data-reveal
             style={`transition-delay: ${i * 80}ms`}
           >
-            {/* Lifestyle hero — full-bleed top of card with gradient
-                 fade into the card body for legibility. */}
-            <div class="relative aspect-[4/3] overflow-hidden">
-              <img
-                src={p.image}
-                alt=""
-                loading="lazy"
-                class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div
-                class="absolute inset-0"
-                style={`background: linear-gradient(to bottom, transparent 40%, ${p.color}15 70%, var(--color-bg-raised));`}
-              ></div>
-              {/* Category eyebrow inside image, top-left */}
-              <span
-                class="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em]"
-                style={`background: rgba(9,15,29,0.65); color: ${p.color}; backdrop-filter: blur(8px);`}
-              >
-                <span class="h-1.5 w-1.5 rounded-full" style={`background: ${p.color}`}></span>
-                {p.title}
-              </span>
-            </div>
+            {/* Category-tinted gradient backdrop — soft glow that
+                 evokes the mood of each pillar without leaning on a
+                 photographic hero. The gradient sits behind everything
+                 else; pointer-events-none so it never interferes. */}
+            <div
+              class="pointer-events-none absolute inset-0 opacity-90"
+              style={`background: radial-gradient(ellipse at top, ${p.color}1F 0%, transparent 60%), linear-gradient(to bottom, ${p.color}10 0%, transparent 30%);`}
+              aria-hidden="true"
+            ></div>
 
-            <div class="px-7 pb-8 pt-5">
-              <h3 class="text-2xl font-semibold" style={`color: ${p.color}`}>
+            <div class="relative p-8 md:p-10">
+              {/* Big category dot with soft halo */}
+              <span
+                class="relative inline-flex h-14 w-14 items-center justify-center rounded-full"
+                style={`background: ${p.soft}; box-shadow: 0 0 40px ${p.color}30;`}
+                aria-hidden="true"
+              >
+                <span
+                  class="absolute inset-0 rounded-full"
+                  style={`border: 1px solid ${p.line};`}
+                ></span>
+                <span class="h-3 w-3 rounded-full" style={`background: ${p.color}`}></span>
+              </span>
+
+              <h3 class="mt-7 text-3xl font-semibold tracking-tight" style={`color: ${p.color}`}>
                 {p.title}.
               </h3>
               <p class="mt-3 text-[var(--color-text-secondary)] leading-relaxed">
                 {p.body}
               </p>
+
+              {/* Sample sessions — communicates that the catalog is
+                   real and gives a flavor of what's inside. */}
+              <ul class="mt-8 space-y-2 border-t border-[var(--color-line)] pt-6 text-sm">
+                {p.sample.map((s) => (
+                  <li class="flex items-center gap-3 text-[var(--color-text-secondary)]">
+                    <svg
+                      class="h-3 w-3 flex-shrink-0"
+                      style={`color: ${p.color}`}
+                      viewBox="0 0 12 12"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <circle cx="6" cy="6" r="6" />
+                    </svg>
+                    {s}
+                  </li>
+                ))}
+              </ul>
             </div>
           </article>
         ))
