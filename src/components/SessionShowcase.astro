@@ -1,0 +1,148 @@
+---
+/**
+ * Session showcase — replaces the abstract "use cases" section with
+ * cards that look like the app's actual session cards. Cover image,
+ * category pill, duration, title, and one-line description.
+ *
+ * Six real sessions pulled from the live catalog, balanced across the
+ * three categories. Cover images downloaded from Supabase Storage and
+ * served from /assets/images/sessions/.
+ *
+ * Editing this list: cover images live in public/assets/images/sessions/.
+ * To swap a session: replace the .webp at the given slug + update the
+ * matching entry below.
+ */
+const sessions = [
+  {
+    slug: "01-box-breath",
+    title: "Box Breath",
+    category: "Balance",
+    color: "var(--color-accent)",
+    duration: "8 min",
+    technique: "Box Breathing",
+    description: "Equal-ratio breathing. Steady ground when stress spikes.",
+    isFree: true,
+  },
+  {
+    slug: "03-echoes-of-strength",
+    title: "Echoes of Strength",
+    category: "Activate",
+    color: "var(--color-gold)",
+    duration: "9 min",
+    technique: "Breath of Fire",
+    description: "Builds from steady breaths into Breath of Fire. Sharp, anchored.",
+    isFree: false,
+  },
+  {
+    slug: "05-into-stillness",
+    title: "Into Stillness",
+    category: "Calm",
+    color: "var(--color-blue)",
+    duration: "10 min",
+    technique: "4-7-8 Relaxation",
+    description: "Slow exhales for the wind-down. Prep for deep rest.",
+    isFree: false,
+  },
+  {
+    slug: "02-coherent-heart",
+    title: "Coherent Heart",
+    category: "Balance",
+    color: "var(--color-accent)",
+    duration: "12 min",
+    technique: "Coherence Breathing",
+    description: "Sync breath with heart rhythm. Reset midday.",
+    isFree: false,
+  },
+  {
+    slug: "04-conscious-morning",
+    title: "The Conscious Morning",
+    category: "Activate",
+    color: "var(--color-gold)",
+    duration: "12 min",
+    technique: "Balancing Breath",
+    description: "Wake the body without caffeine. Start with intention.",
+    isFree: false,
+  },
+  {
+    slug: "06-nighttime-serenity",
+    title: "Nighttime Serenity",
+    category: "Calm",
+    color: "var(--color-blue)",
+    duration: "9 min",
+    technique: "Guided Relaxation",
+    description: "Soften the body. Quiet the mind. Let the day go.",
+    isFree: true,
+  },
+];
+---
+
+<section class="bg-[var(--color-bg-alt)] py-24 md:py-32" id="sessions">
+  <div class="mx-auto max-w-6xl px-6">
+    <header class="mx-auto max-w-2xl text-center" data-reveal>
+      <p class="eyebrow">The catalog</p>
+      <h2 class="mt-4 text-4xl font-semibold tracking-tight md:text-6xl" style="letter-spacing: var(--tracking-display);">
+        Real sessions.<br />Real techniques.
+      </h2>
+      <p class="mt-6 text-base text-[var(--color-text-secondary)] md:text-lg">
+        Twenty-five guided sessions across three categories. Five to forty-five
+        minutes. Every one built around a real breathwork technique with intent.
+      </p>
+    </header>
+
+    <div class="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        sessions.map((s, i) => (
+          <article
+            class="group relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg)] transition-transform duration-300 hover:-translate-y-1"
+            data-reveal
+            style={`transition-delay: ${(i % 3) * 60}ms`}
+          >
+            {/* Cover image — full-bleed top, 4:3 aspect, with category
+                 pill overlay in top-left and duration in top-right. */}
+            <div class="relative aspect-[4/3] overflow-hidden">
+              <img
+                src={`/assets/images/sessions/${s.slug}.webp`}
+                alt={`${s.title} — ${s.category} session cover`}
+                loading="lazy"
+                class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div
+                class="absolute inset-0"
+                style="background: linear-gradient(to bottom, rgba(9,15,29,0) 50%, rgba(9,15,29,0.85) 100%);"
+              ></div>
+              <span
+                class="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em]"
+                style={`background: rgba(9,15,29,0.6); color: ${s.color}; backdrop-filter: blur(8px); border: 1px solid ${s.color}40;`}
+              >
+                <span class="h-1.5 w-1.5 rounded-full" style={`background: ${s.color}`}></span>
+                {s.category}
+              </span>
+              {s.isFree && (
+                <span class="absolute right-4 top-4 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--color-text)]" style="background: rgba(9,15,29,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15);">
+                  Free
+                </span>
+              )}
+            </div>
+
+            <div class="p-6">
+              <div class="flex items-baseline justify-between gap-3">
+                <h3 class="text-xl font-semibold leading-tight">{s.title}</h3>
+                <span class="flex-shrink-0 text-xs text-[var(--color-text-tertiary)]">{s.duration}</span>
+              </div>
+              <p class="mt-2 text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                {s.description}
+              </p>
+              <p class="mt-4 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">
+                {s.technique}
+              </p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="mt-16 text-center text-sm text-[var(--color-text-tertiary)]" data-reveal>
+      And nineteen more, with new sessions added every month.
+    </p>
+  </div>
+</section>
