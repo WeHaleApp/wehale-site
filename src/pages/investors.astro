@@ -12,13 +12,45 @@ const stats = [
   { label: "Launch", value: "May 2026", note: "iOS — Android in roadmap" },
 ];
 
-const team = [
-  { initial: "I", name: "Isak Gustafsson", role: "Founder", description: "Product, vision, day-to-day", color: "var(--color-accent)" },
-  { initial: "J", name: "Joe", role: "Design", description: "UX, visual, brand expression in product", color: "var(--color-blue)" },
-  { initial: "M", name: "Martin Wikfalk", role: "Brand & copy", description: "Brand voice, positioning, messaging", color: "var(--color-gold)" },
-  { initial: "E", name: "Edvin", role: "Content", description: "Session curation, community, copy", color: "var(--color-accent)" },
-  { initial: "P", name: "Philip Sigfridsson", role: "Strategy", description: "Operations and partnerships", color: "var(--color-blue)" },
-  { initial: "S", name: "Simon & Sergej", role: "Creative", description: "Social and creative production", color: "var(--color-gold)" },
+// Team is 3 founders + 1 advisor. Each role label is the literal title;
+// each blurb is a factual signal of what they bring (no superlatives,
+// no 'best-in-class' framing — that violates the brand voice).
+const founders = [
+  {
+    initial: "I",
+    name: "Isak Gustafsson",
+    role: "Founder",
+    description:
+      "Computer science background, ten years scaling digital products at Precis — Sweden's largest media-tech agency, working with global app teams. Builds the app and runs growth.",
+    color: "var(--color-accent)",
+  },
+  {
+    initial: "E",
+    name: "Edvin",
+    role: "Founder",
+    description:
+      "Years of personal breathwork practice and live group sessions. Curates the catalog and teaches the techniques behind it.",
+    color: "var(--color-blue)",
+  },
+  {
+    initial: "P",
+    name: "Philip Sigfridsson",
+    role: "Founder",
+    description:
+      "Years of breathwork practice and group facilitation. Anchors the product to the practice as it actually works.",
+    color: "var(--color-gold)",
+  },
+];
+
+const advisors = [
+  {
+    initial: "M",
+    name: "Martin Wikfalk",
+    role: "Advisor",
+    description:
+      "Founded and exited Mindfullnessappen, the original Swedish meditation app. Advises on brand, voice, and the playbook for retention in the wellness category.",
+    color: "var(--color-accent)",
+  },
 ];
 
 const differentiators = [
@@ -33,9 +65,9 @@ const differentiators = [
       "We don't promise transformation. We don't shout. The brand reads like the practice itself: warm, grounded, restrained. That tone is rare in this category and a real differentiator.",
   },
   {
-    title: "Science-led, accessibly",
+    title: "Practitioner + operator team",
     body:
-      "Real citations, real mechanisms (HRV, vagal tone, parasympathetic activation), explained in plain language. We over-deliver on credibility while staying readable.",
+      "Most apps in this space are built by pure operators with no practice or pure practitioners with no operator chops. We're both — deep practice plus ten years of digital growth experience, with an advisor who already exited the closest analog in our market.",
   },
 ];
 ---
@@ -131,13 +163,14 @@ const differentiators = [
       <header class="mx-auto max-w-2xl text-center" data-reveal>
         <h2 class="text-3xl font-semibold tracking-tight md:text-5xl">The team.</h2>
         <p class="mt-4 text-base text-[var(--color-text-secondary)]">
-          Small, focused, all in.
+          Three founders. One advisor. The combination is the differentiator.
         </p>
       </header>
 
-      <div class="mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3" data-reveal>
+      <!-- Founders: three across on desktop -->
+      <div class="mt-16 grid gap-6 md:grid-cols-3" data-reveal>
         {
-          team.map((m) => (
+          founders.map((m) => (
             <article
               class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg)] p-6"
               data-placeholder="team-photo"
@@ -151,9 +184,38 @@ const differentiators = [
               </span>
               <h3 class="mt-4 text-lg font-semibold">{m.name}</h3>
               <p class="text-sm text-[var(--color-text-tertiary)]">{m.role}</p>
-              <p class="mt-3 text-sm text-[var(--color-text-secondary)]">
+              <p class="mt-3 text-sm text-[var(--color-text-secondary)] leading-relaxed">
                 {m.description}
               </p>
+            </article>
+          ))
+        }
+      </div>
+
+      <!-- Advisor: separate row, narrower so it reads as supporting cast -->
+      <div class="mx-auto mt-6 max-w-xl" data-reveal>
+        {
+          advisors.map((m) => (
+            <article
+              class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg)] p-6"
+              data-placeholder="team-photo"
+            >
+              <div class="flex items-start gap-4">
+                <span
+                  class="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-lg font-semibold text-[var(--color-bg)]"
+                  style={`background: ${m.color}`}
+                  aria-hidden="true"
+                >
+                  {m.initial}
+                </span>
+                <div>
+                  <h3 class="text-lg font-semibold">{m.name}</h3>
+                  <p class="text-sm text-[var(--color-text-tertiary)]">{m.role}</p>
+                  <p class="mt-3 text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                    {m.description}
+                  </p>
+                </div>
+              </div>
             </article>
           ))
         }

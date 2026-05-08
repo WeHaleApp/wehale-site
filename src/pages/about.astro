@@ -15,12 +15,10 @@ const founder = {
 
 // PLACEHOLDER avatars for V1. Real photos slot in later.
 const team = [
-  { initial: "I", name: "Isak Gustafsson", role: "Founder & product", color: "var(--color-accent)" },
-  { initial: "J", name: "Joe", role: "UX & visual design", color: "var(--color-blue)" },
-  { initial: "M", name: "Martin Wikfalk", role: "Brand & copy", color: "var(--color-gold)" },
-  { initial: "E", name: "Edvin", role: "Content & community", color: "var(--color-accent)" },
-  { initial: "P", name: "Philip Sigfridsson", role: "Strategy", color: "var(--color-blue)" },
-  { initial: "S", name: "Simon & Sergej", role: "Social & creative", color: "var(--color-gold)" },
+  { initial: "I", name: "Isak Gustafsson", role: "Founder", color: "var(--color-accent)" },
+  { initial: "E", name: "Edvin", role: "Founder", color: "var(--color-blue)" },
+  { initial: "P", name: "Philip Sigfridsson", role: "Founder", color: "var(--color-gold)" },
+  { initial: "M", name: "Martin Wikfalk", role: "Advisor", color: "var(--color-accent)" },
 ];
 ---
 
@@ -105,7 +103,7 @@ const team = [
         </p>
       </header>
 
-      <div class="mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3" data-reveal>
+      <div class="mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-4" data-reveal>
         {
           team.map((m) => (
             <article
