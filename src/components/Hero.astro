@@ -1,0 +1,84 @@
+---
+/**
+ * Hero — full-bleed cinematic video background, single primary CTA.
+ *
+ * Video sources: WH_16x9.mp4 (desktop), WH_9x16.mp4 (mobile portrait).
+ * For now we use the existing brandfilm-hero.mp4 in /assets/video/enc/
+ * which is already optimized. Replace later with the unencoded versions
+ * if we want a different cut.
+ *
+ * Reduced-motion users get a static poster instead of the video.
+ */
+const APP_STORE_URL = "https://apps.apple.com/se/app/wehale/id6739413667";
+---
+
+<section class="relative isolate overflow-hidden" aria-label="WeHale introduction" id="top">
+  <!-- Video background. Muted + autoplay + loop. Accessibility: aria-hidden + reduced-motion fallback. -->
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <video
+      class="h-full w-full object-cover motion-reduce:hidden"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/assets/images/ui/home-feed.jpg"
+    >
+      <source src="/assets/video/enc/brandfilm-hero.mp4" type="video/mp4" />
+    </video>
+    <img
+      class="hidden h-full w-full object-cover motion-reduce:block"
+      src="/assets/images/ui/home-feed.jpg"
+      alt=""
+      aria-hidden="true"
+    />
+    <!-- Gradient overlay for legibility -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/30 via-[var(--color-bg)]/60 to-[var(--color-bg)]"></div>
+  </div>
+
+  <div class="mx-auto flex min-h-[88dvh] max-w-6xl flex-col justify-end px-6 pb-24 pt-40 md:min-h-[100dvh] md:justify-center md:pb-0 md:pt-0">
+    <p class="eyebrow" data-reveal>Guided breathwork for iOS</p>
+
+    <h1
+      class="mt-6 max-w-3xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl lg:text-8xl"
+      style="letter-spacing: var(--tracking-display);"
+      data-reveal
+    >
+      Come back<br />to yourself.
+    </h1>
+
+    <p class="mt-6 max-w-xl text-lg text-[var(--color-text-secondary)] md:text-xl" data-reveal>
+      Audio-guided breathwork sessions to activate your energy, find balance, or
+      settle into calm. Five minutes is enough to feel the shift.
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal>
+      <a
+        href={APP_STORE_URL}
+        target="_blank"
+        rel="noreferrer noopener"
+        class="inline-flex items-center gap-2 rounded-full bg-[var(--color-text)] px-6 py-3 text-sm font-semibold text-[var(--color-bg)] hover:bg-[var(--color-accent)] transition-colors"
+      >
+        <svg class="h-4 w-4" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+          <path fill="currentColor" d="M12.6 8.5c0-1.7 1.4-2.5 1.5-2.6-.8-1.2-2.1-1.4-2.5-1.4-1.1-.1-2.1.7-2.6.7-.5 0-1.3-.7-2.2-.7-1.1 0-2.2.7-2.8 1.7-1.2 2.1-.3 5.2.8 6.9.5.8 1.1 1.7 2 1.7.8 0 1.1-.5 2.1-.5 1 0 1.3.5 2.2.5.9 0 1.5-.8 2-1.6.6-.9.8-1.8.8-1.8-.1 0-1.5-.6-1.5-2.9z" />
+          <path fill="currentColor" d="M10.7 2.7c.4-.5.7-1.2.6-1.9-.6 0-1.3.4-1.7.9-.4.5-.7 1.2-.6 1.9.6 0 1.3-.4 1.7-.9z" />
+        </svg>
+        Download on the App Store
+      </a>
+      <a
+        href="#sessions"
+        class="inline-flex items-center gap-2 rounded-full border border-[var(--color-line-strong)] px-6 py-3 text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-bg-raised)] transition-colors"
+      >
+        Explore sessions
+      </a>
+    </div>
+
+    <ul class="mt-12 flex flex-wrap gap-x-8 gap-y-2 text-sm text-[var(--color-text-tertiary)]" data-reveal>
+      <li>25+ guided sessions</li>
+      <li class="hidden md:list-item">·</li>
+      <li>5–20 minutes each</li>
+      <li class="hidden md:list-item">·</li>
+      <li>Multi-day journeys</li>
+    </ul>
+  </div>
+</section>

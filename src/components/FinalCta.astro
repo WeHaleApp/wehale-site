@@ -1,0 +1,52 @@
+---
+/**
+ * Final CTA — full-bleed, brand-defining sign-off. Closes the home page.
+ * Uses one of the human/dusk lifestyle images as the bg, with a heavy
+ * gradient for legibility.
+ */
+const APP_STORE_URL = "https://apps.apple.com/se/app/wehale/id6739413667";
+---
+
+<section class="relative overflow-hidden py-32 md:py-48">
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <img
+      src="/assets/images/marketing/man-dusk.png"
+      alt=""
+      class="h-full w-full object-cover"
+      loading="lazy"
+    />
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/60 via-[var(--color-bg)]/70 to-[var(--color-bg)]"
+    >
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-3xl px-6 text-center">
+    <h2
+      class="text-4xl font-semibold tracking-tight md:text-7xl"
+      style="letter-spacing: var(--tracking-display);"
+      data-reveal
+    >
+      Come back<br />to yourself.
+    </h2>
+
+    <p class="mx-auto mt-6 max-w-xl text-base text-[var(--color-text-secondary)] md:text-lg" data-reveal>
+      Five minutes. No equipment. Just you, your breath, and a calmer nervous
+      system on the other side.
+    </p>
+
+    <a
+      href={APP_STORE_URL}
+      target="_blank"
+      rel="noreferrer noopener"
+      class="mt-10 inline-flex items-center gap-2 rounded-full bg-[var(--color-text)] px-7 py-4 text-base font-semibold text-[var(--color-bg)] hover:bg-[var(--color-accent)] transition-colors"
+      data-reveal
+    >
+      <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+        <path fill="currentColor" d="M12.6 8.5c0-1.7 1.4-2.5 1.5-2.6-.8-1.2-2.1-1.4-2.5-1.4-1.1-.1-2.1.7-2.6.7-.5 0-1.3-.7-2.2-.7-1.1 0-2.2.7-2.8 1.7-1.2 2.1-.3 5.2.8 6.9.5.8 1.1 1.7 2 1.7.8 0 1.1-.5 2.1-.5 1 0 1.3.5 2.2.5.9 0 1.5-.8 2-1.6.6-.9.8-1.8.8-1.8-.1 0-1.5-.6-1.5-2.9z" />
+        <path fill="currentColor" d="M10.7 2.7c.4-.5.7-1.2.6-1.9-.6 0-1.3.4-1.7.9-.4.5-.7 1.2-.6 1.9.6 0 1.3-.4 1.7-.9z" />
+      </svg>
+      Download on the App Store
+    </a>
+  </div>
+</section>

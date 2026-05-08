@@ -1,0 +1,164 @@
+---
+/**
+ * Inside the App — phone slider. Auto-advances, pauses on hover/focus.
+ * Pure-vanilla JS for now (no React/Svelte island needed at this scale).
+ *
+ * Screenshots: pulled from the existing site's UI assets which are
+ * already optimized (webp + jpg). Swap to AppStoreNew renders later for
+ * higher-fidelity captures.
+ */
+const slides = [
+  {
+    src: "/assets/images/ui/home-feed",
+    alt: "WeHale home screen",
+    caption: "Your daily practice — front and center",
+  },
+  {
+    src: "/assets/images/ui/daily-practice",
+    alt: "Practice tab",
+    caption: "Browse sessions by category and intensity",
+  },
+  {
+    src: "/assets/images/ui/session-details",
+    alt: "Session detail screen",
+    caption: "Every detail before you press play",
+  },
+  {
+    src: "/assets/images/ui/playlist-overview",
+    alt: "Multi-day journeys",
+    caption: "Follow a journey over days to go deeper",
+  },
+];
+---
+
+<section class="relative overflow-hidden py-24 md:py-32" id="product">
+  <!-- Soft glow behind the phone -->
+  <div
+    class="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-3xl"
+    style="background: radial-gradient(circle, var(--color-accent-soft), transparent 70%);"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="mx-auto max-w-6xl px-6">
+    <header class="mx-auto max-w-2xl text-center" data-reveal>
+      <h2 class="text-3xl font-semibold tracking-tight md:text-5xl">Inside the app.</h2>
+      <p class="mt-4 text-base text-[var(--color-text-secondary)] md:text-lg">
+        Designed to feel calm from the first tap. Dark interface, cinematic
+        backgrounds, no clutter.
+      </p>
+    </header>
+
+    <div class="mt-16 flex flex-col items-center" data-reveal data-phone-slider>
+      <div class="relative aspect-[585/1194] w-[260px] md:w-[300px] rounded-[44px] border border-[var(--color-line-strong)] bg-[var(--color-bg-raised)] p-2 shadow-2xl">
+        <div class="absolute left-1/2 top-2 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-black/80" aria-hidden="true"></div>
+        <div class="relative h-full w-full overflow-hidden rounded-[36px]">
+          {
+            slides.map((s, i) => (
+              <picture>
+                <source srcset={`${s.src}.webp`} type="image/webp" />
+                <img
+                  src={`${s.src}.jpg`}
+                  alt={s.alt}
+                  width="585"
+                  height="1194"
+                  loading={i === 0 ? "eager" : "lazy"}
+                  class:list={[
+                    "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
+                    i === 0 ? "opacity-100" : "opacity-0",
+                  ]}
+                  data-slide-index={i}
+                />
+              </picture>
+            ))
+          }
+        </div>
+      </div>
+
+      <p class="mt-8 min-h-[1.5rem] text-sm text-[var(--color-text-secondary)]" data-slide-caption>
+        {slides[0].caption}
+      </p>
+
+      <div class="mt-4 flex items-center gap-2" role="tablist" aria-label="App screens">
+        {
+          slides.map((_, i) => (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={i === 0 ? "true" : "false"}
+              aria-label={`Show screen ${i + 1}`}
+              data-slide-dot={i}
+              class:list={[
+                "h-1.5 rounded-full transition-all duration-300",
+                i === 0
+                  ? "w-8 bg-[var(--color-text)]"
+                  : "w-2 bg-[var(--color-text-muted)] hover:bg-[var(--color-text-tertiary)]",
+              ]}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script
+  is:inline
+  define:vars={{ captions: slides.map((s) => s.caption) }}
+>
+  (function () {
+    const slider = document.querySelector("[data-phone-slider]");
+    if (!slider) return;
+    const slides = slider.querySelectorAll("[data-slide-index]");
+    const dots = slider.querySelectorAll("[data-slide-dot]");
+    const captionEl = slider.querySelector("[data-slide-caption]");
+    let active = 0;
+    let timer = 0;
+    const interval = 4500;
+
+    function show(i) {
+      slides.forEach((el, idx) => {
+        el.classList.toggle("opacity-100", idx === i);
+        el.classList.toggle("opacity-0", idx !== i);
+      });
+      dots.forEach((dot, idx) => {
+        const on = idx === i;
+        dot.setAttribute("aria-selected", on ? "true" : "false");
+        dot.classList.toggle("w-8", on);
+        dot.classList.toggle("bg-[var(--color-text)]", on);
+        dot.classList.toggle("w-2", !on);
+        dot.classList.toggle("bg-[var(--color-text-muted)]", !on);
+      });
+      if (captionEl) captionEl.textContent = captions[i] || "";
+      active = i;
+    }
+
+    function next() {
+      show((active + 1) % slides.length);
+    }
+
+    function start() {
+      stop();
+      timer = window.setInterval(next, interval);
+    }
+    function stop() {
+      if (timer) clearInterval(timer);
+      timer = 0;
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => {
+        show(i);
+        start();
+      });
+    });
+    slider.addEventListener("mouseenter", stop);
+    slider.addEventListener("mouseleave", start);
+    slider.addEventListener("focusin", stop);
+    slider.addEventListener("focusout", start);
+
+    // Respect reduced-motion
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced) start();
+  })();
+</script>

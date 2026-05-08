@@ -1,0 +1,70 @@
+---
+/**
+ * Use cases — moment-driven framing. Maps each card to a category
+ * (Activate / Balance / Calm) so the user can map intent → category.
+ */
+const cases = [
+  {
+    title: "Before the day starts",
+    body: "Set your nervous system before your inbox does.",
+    duration: "5–8 min",
+    category: "Activate",
+    color: "var(--color-gold)",
+  },
+  {
+    title: "When stress spikes",
+    body: "Slow the exhale. Widen the space between stimulus and response.",
+    duration: "3–6 min",
+    category: "Balance",
+    color: "var(--color-accent)",
+  },
+  {
+    title: "Between meetings",
+    body: "Close one chapter cleanly. Open the next with presence.",
+    duration: "4–7 min",
+    category: "Balance",
+    color: "var(--color-accent)",
+  },
+  {
+    title: "Winding down",
+    body: "Prepare the body for rest. Let go of what the day carried in.",
+    duration: "8–15 min",
+    category: "Calm",
+    color: "var(--color-blue)",
+  },
+];
+---
+
+<section class="bg-[var(--color-bg-alt)] py-24 md:py-32" id="sessions">
+  <div class="mx-auto max-w-6xl px-6">
+    <header class="mx-auto max-w-2xl text-center" data-reveal>
+      <h2 class="text-3xl font-semibold tracking-tight md:text-5xl">
+        Fits into your day.
+      </h2>
+      <p class="mt-4 text-base text-[var(--color-text-secondary)] md:text-lg">
+        No hour-long commitments. Pick a moment, press play, and breathe.
+      </p>
+    </header>
+
+    <div class="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {
+        cases.map((c, i) => (
+          <article
+            class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg)] p-6 transition-transform hover:-translate-y-1"
+            data-reveal
+            style={`transition-delay: ${i * 60}ms`}
+          >
+            <h3 class="text-lg font-semibold">{c.title}</h3>
+            <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{c.body}</p>
+            <div class="mt-6 flex items-center gap-2 text-xs text-[var(--color-text-tertiary)]">
+              <span class="h-2 w-2 rounded-full" style={`background: ${c.color}`}></span>
+              <span>
+                {c.duration} · {c.category}
+              </span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

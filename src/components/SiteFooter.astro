@@ -1,0 +1,62 @@
+---
+/**
+ * Comprehensive footer. Four columns: Product, Company, Legal, Connect.
+ * Newsletter signup lives here as the secondary owned-audience CTA.
+ */
+import NewsletterForm from "./NewsletterForm.astro";
+
+const APP_STORE_URL = "https://apps.apple.com/se/app/wehale/id6739413667";
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--color-line)] bg-[var(--color-bg-alt)]">
+  <div class="mx-auto max-w-6xl px-6 py-16">
+    <div class="grid grid-cols-2 gap-12 md:grid-cols-5">
+      <!-- Brand block -->
+      <div class="col-span-2 md:col-span-2">
+        <a href="/" class="flex items-center gap-2" aria-label="WeHale home">
+          <img src="/assets/images/logo.svg" alt="WeHale" width="120" height="22" class="h-[22px] w-auto" />
+        </a>
+        <p class="mt-4 max-w-sm text-sm text-[var(--color-text-secondary)]">
+          Audio-guided breathwork for activation, balance, and calm. Five minutes
+          is enough to feel the shift.
+        </p>
+        <div class="mt-6 max-w-sm">
+          <NewsletterForm compact />
+        </div>
+      </div>
+
+      <!-- Columns -->
+      <div>
+        <h3 class="eyebrow">Product</h3>
+        <ul class="mt-4 space-y-3 text-sm text-[var(--color-text-secondary)]">
+          <li><a href={APP_STORE_URL} target="_blank" rel="noreferrer noopener" class="hover:text-[var(--color-text)] transition-colors">Download</a></li>
+          <li><a href="/#sessions" class="hover:text-[var(--color-text)] transition-colors">Sessions</a></li>
+          <li><a href="/#why" class="hover:text-[var(--color-text)] transition-colors">Why breathwork</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="eyebrow">Company</h3>
+        <ul class="mt-4 space-y-3 text-sm text-[var(--color-text-secondary)]">
+          <li><a href="/about" class="hover:text-[var(--color-text)] transition-colors">About</a></li>
+          <li><a href="/investors" class="hover:text-[var(--color-text)] transition-colors">Investors</a></li>
+          <li><a href="mailto:hello@wehale.io" class="hover:text-[var(--color-text)] transition-colors">hello@wehale.io</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="eyebrow">Legal</h3>
+        <ul class="mt-4 space-y-3 text-sm text-[var(--color-text-secondary)]">
+          <li><a href="/privacy" class="hover:text-[var(--color-text)] transition-colors">Privacy</a></li>
+          <li><a href="/terms" class="hover:text-[var(--color-text)] transition-colors">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-16 flex flex-col gap-4 border-t border-[var(--color-line)] pt-8 text-xs text-[var(--color-text-tertiary)] md:flex-row md:items-center md:justify-between">
+      <p>© {year} Andningsappen Varberg AB. All rights reserved.</p>
+      <p>Made with care in Sweden.</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,31 @@
+---
+/**
+ * Trust strip — App Store rating + "as seen in" press logos.
+ * For V1: rating displayed as a placeholder ("New on the App Store"),
+ * press section hidden until we earn placement. Slot stays in the IA.
+ *
+ * To populate post-launch: edit the rating value + flip showPress=true
+ * once we have at least 3 logos.
+ */
+const RATING_PLACEHOLDER = "New on the App Store";
+const showPress = false;
+---
+
+<section class="border-y border-[var(--color-line)] bg-[var(--color-bg-alt)]">
+  <div class="mx-auto flex max-w-6xl flex-col items-center justify-center gap-6 px-6 py-8 md:flex-row md:gap-12">
+    <div class="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+      <svg class="h-4 w-4 text-[var(--color-gold)]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+      </svg>
+      <span class="font-medium text-[var(--color-text)]">{RATING_PLACEHOLDER}</span>
+    </div>
+
+    {showPress && (
+      <>
+        <span class="hidden h-px w-12 bg-[var(--color-line-strong)] md:block" aria-hidden="true"></span>
+        <p class="text-xs uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">As seen in</p>
+        {/* Press logos go here */}
+      </>
+    )}
+  </div>
+</section>

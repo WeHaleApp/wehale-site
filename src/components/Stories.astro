@@ -1,0 +1,87 @@
+---
+/**
+ * Stories — testimonials.
+ *
+ * V1 ships with PLACEHOLDER content using single-initial names + city +
+ * role. These are dev-grade stand-ins — every quote is marked in code as
+ * placeholder and MUST be swapped before launch with real beta-tester
+ * quotes harvested via the email in site-content-inventory.md § 9.
+ *
+ * Avatar uses a brand-color circle with the initial — not a fake photo.
+ */
+// PLACEHOLDER — replace with real testimonials from beta testers before launch
+const stories = [
+  {
+    quote:
+      "I use it between calls. It's the difference between reacting and responding.",
+    initial: "M",
+    name: "M.",
+    city: "Stockholm",
+    role: "designer",
+    color: "var(--color-accent)",
+  },
+  {
+    quote:
+      "I tried meditation apps for years. WeHale is the first one I keep coming back to.",
+    initial: "A",
+    name: "A.",
+    city: "Malmö",
+    role: "physician",
+    color: "var(--color-gold)",
+  },
+  {
+    quote:
+      "The 4-7-8 session before bed has changed how I sleep. Not a small claim.",
+    initial: "J",
+    name: "J.",
+    city: "Gothenburg",
+    role: "engineer",
+    color: "var(--color-blue)",
+  },
+];
+---
+
+<section class="bg-[var(--color-bg-alt)] py-24 md:py-32" id="stories">
+  <div class="mx-auto max-w-6xl px-6">
+    <header class="mx-auto max-w-2xl text-center" data-reveal>
+      <h2 class="text-3xl font-semibold tracking-tight md:text-5xl">
+        What people notice.
+      </h2>
+      <p class="mt-4 text-base text-[var(--color-text-secondary)] md:text-lg">
+        From early users who built a daily practice.
+      </p>
+    </header>
+
+    <div class="mt-16 grid gap-6 md:grid-cols-3">
+      {
+        stories.map((s, i) => (
+          <figure
+            class="rounded-3xl border border-[var(--color-line)] bg-[var(--color-bg)] p-8"
+            data-reveal
+            style={`transition-delay: ${i * 80}ms`}
+            data-placeholder="testimonial"
+          >
+            <blockquote class="text-lg leading-relaxed text-[var(--color-text)]">
+              "{s.quote}"
+            </blockquote>
+            <figcaption class="mt-8 flex items-center gap-3">
+              <span
+                class="inline-flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold text-[var(--color-bg)]"
+                style={`background: ${s.color}`}
+                aria-hidden="true"
+              >
+                {s.initial}
+              </span>
+              <div class="text-sm">
+                <div class="font-medium text-[var(--color-text)]">{s.name}</div>
+                <div class="text-[var(--color-text-tertiary)]">
+                  {s.city} · {s.role}
+                </div>
+              </div>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>

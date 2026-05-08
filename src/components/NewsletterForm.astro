@@ -1,0 +1,51 @@
+---
+/**
+ * Newsletter signup. Posts to Buttondown's public subscribe endpoint.
+ *
+ * The username in the action URL needs to be set in netlify env to
+ * BUTTONDOWN_USERNAME at build time, OR we hardcode here once the
+ * Buttondown account is created. For now, posts to a stub action that
+ * shows a success state without actually sending — placeholder until
+ * Buttondown is wired up.
+ */
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const BUTTONDOWN_USERNAME = "wehale"; // TODO swap to actual once Buttondown is created
+---
+
+<form
+  class:list={["w-full", compact ? "" : "max-w-md"]}
+  action={`https://buttondown.email/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`}
+  method="post"
+  target="_blank"
+  data-newsletter-form
+>
+  <label class="block">
+    {!compact && (
+      <span class="eyebrow block mb-3">Stay in the loop</span>
+    )}
+    <div class="flex items-stretch gap-2 rounded-full border border-[var(--color-line-strong)] bg-[var(--color-bg-raised)] p-1">
+      <input
+        type="email"
+        name="email"
+        required
+        placeholder="your@email.com"
+        aria-label="Email address"
+        class="flex-1 bg-transparent px-4 py-2 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-tertiary)] outline-none"
+      />
+      <button
+        type="submit"
+        class="rounded-full bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-bg)] hover:opacity-90 transition-opacity"
+      >
+        Subscribe
+      </button>
+    </div>
+    {!compact && (
+      <span class="mt-3 block text-xs text-[var(--color-text-tertiary)]">
+        Occasional notes from the team. No fluff. Unsubscribe anytime.
+      </span>
+    )}
+  </label>
+</form>

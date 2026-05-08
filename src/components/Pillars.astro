@@ -1,0 +1,70 @@
+---
+/**
+ * Three Ways to Practice. Mirrors the app's category pillars exactly:
+ * Activate (gold), Balance (sage), Calm (blue).
+ */
+const pillars = [
+  {
+    key: "activate",
+    title: "Activate",
+    body: "Wake up your energy. Sharpen focus. Start your morning with intention, not caffeine.",
+    color: "var(--color-gold)",
+    soft: "var(--color-gold-soft)",
+    line: "var(--color-gold-line)",
+  },
+  {
+    key: "balance",
+    title: "Balance",
+    body: "Reset your nervous system midday. Find steady ground between the demands.",
+    color: "var(--color-accent)",
+    soft: "var(--color-accent-soft)",
+    line: "var(--color-accent-line)",
+  },
+  {
+    key: "calm",
+    title: "Calm",
+    body: "Soften the body, quiet the mind. Prepare for deep rest or simply let the day go.",
+    color: "var(--color-blue)",
+    soft: "var(--color-blue-soft)",
+    line: "var(--color-blue-line)",
+  },
+];
+---
+
+<section class="py-24 md:py-32" id="practice">
+  <div class="mx-auto max-w-6xl px-6">
+    <header class="mx-auto max-w-2xl text-center" data-reveal>
+      <h2 class="text-3xl font-semibold tracking-tight md:text-5xl">
+        Three ways to practice.
+      </h2>
+      <p class="mt-4 text-base text-[var(--color-text-secondary)] md:text-lg">
+        Every session is built around how you want to feel — not a one-size-fits-all
+        routine.
+      </p>
+    </header>
+
+    <div class="mt-16 grid gap-6 md:grid-cols-3">
+      {
+        pillars.map((p, i) => (
+          <article
+            class="group relative overflow-hidden rounded-3xl border border-[var(--color-line)] bg-[var(--color-bg-raised)] p-8 transition-transform duration-200 hover:-translate-y-1"
+            data-reveal
+            style={`transition-delay: ${i * 80}ms`}
+          >
+            <span
+              class="inline-flex h-12 w-12 items-center justify-center rounded-full"
+              style={`background: ${p.soft}; border: 1px solid ${p.line};`}
+              aria-hidden="true"
+            >
+              <span class="h-2 w-2 rounded-full" style={`background: ${p.color}`}></span>
+            </span>
+            <h3 class="mt-6 text-2xl font-semibold" style={`color: ${p.color}`}>
+              {p.title}
+            </h3>
+            <p class="mt-3 text-[var(--color-text-secondary)]">{p.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

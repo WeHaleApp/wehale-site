@@ -1,0 +1,73 @@
+---
+/**
+ * Site header — fixed, transparent over hero, solid on scroll.
+ * On non-hero pages, pass solid=true to start solid immediately.
+ */
+interface Props {
+  solid?: boolean;
+}
+const { solid = false } = Astro.props;
+const APP_STORE_URL =
+  "https://apps.apple.com/se/app/wehale/id6739413667";
+---
+
+<header
+  class:list={[
+    "fixed top-0 inset-x-0 z-50 transition-colors duration-300",
+    solid ? "bg-[var(--color-bg)]/80 backdrop-blur" : "bg-transparent",
+  ]}
+  data-site-header
+  data-solid={solid ? "true" : "false"}
+>
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+    <a href="/" class="flex items-center gap-2 text-[var(--color-text)] no-underline" aria-label="WeHale home">
+      <img
+        src="/assets/images/logo.svg"
+        alt="WeHale"
+        width="120"
+        height="22"
+        class="h-[22px] w-auto"
+      />
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8 text-sm" aria-label="Primary">
+      <a href="/#sessions" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors">Sessions</a>
+      <a href="/#why" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors">Why breathwork</a>
+      <a href="/#stories" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors">Stories</a>
+      <a href="/about" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors">About</a>
+      <a href="/investors" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors">Investors</a>
+    </nav>
+
+    <a
+      href={APP_STORE_URL}
+      target="_blank"
+      rel="noreferrer noopener"
+      class="rounded-full bg-[var(--color-text)] px-4 py-2 text-sm font-semibold text-[var(--color-bg)] hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] transition-colors"
+    >
+      Download
+    </a>
+  </div>
+</header>
+
+<script is:inline>
+  // Scroll-aware solid background unless already explicitly solid.
+  (function () {
+    const header = document.querySelector("[data-site-header]");
+    if (!header || header.dataset.solid === "true") return;
+    let raf = 0;
+    function update() {
+      raf = 0;
+      const scrolled = window.scrollY > 24;
+      header.classList.toggle("bg-[var(--color-bg)]/80", scrolled);
+      header.classList.toggle("backdrop-blur", scrolled);
+    }
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!raf) raf = requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
+    update();
+  })();
+</script>

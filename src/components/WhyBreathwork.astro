@@ -1,0 +1,81 @@
+---
+/**
+ * Why breathwork — science-led. Includes inline citations to satisfy
+ * the "convince the skeptic" JTBD. Citations link out to peer-reviewed
+ * sources. Don't fabricate — only cite what's real.
+ */
+const points = [
+  {
+    text: "Slow exhale lengthens the parasympathetic response. Heart rate follows breath; anxiety drops in real time.",
+    citation: { label: "Brown 2009", href: "https://pubmed.ncbi.nlm.nih.gov/19393982/" },
+  },
+  {
+    text: "Rhythmic breathing improves attention and working memory more reliably than caffeine without the rebound.",
+    citation: null,
+  },
+  {
+    text: "Controlled breath holds train tolerance to CO2 — calmer baseline under pressure, better recovery from stress.",
+    citation: { label: "Russo 2017", href: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5709795/" },
+  },
+  {
+    text: "Daily practice as short as five minutes builds compounding nervous-system resilience over weeks.",
+    citation: null,
+  },
+];
+---
+
+<section class="py-24 md:py-32" id="why">
+  <div class="mx-auto max-w-6xl px-6">
+    <header class="mx-auto max-w-2xl text-center" data-reveal>
+      <h2 class="text-3xl font-semibold tracking-tight md:text-5xl">
+        Why breathwork?
+      </h2>
+      <p class="mt-4 text-base text-[var(--color-text-secondary)] md:text-lg">
+        Your breath is the one thing your nervous system responds to immediately.
+        And it's always with you.
+      </p>
+    </header>
+
+    <div class="mt-16 grid gap-12 lg:grid-cols-2">
+      <ul class="space-y-6" data-reveal>
+        {
+          points.map((p) => (
+            <li class="flex gap-4">
+              <span
+                class="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-[var(--color-accent)]"
+                aria-hidden="true"
+              />
+              <p class="text-[var(--color-text-secondary)]">
+                {p.text}{" "}
+                {p.citation && (
+                  <a
+                    href={p.citation.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    class="text-xs text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)] transition-colors"
+                  >
+                    [{p.citation.label}]
+                  </a>
+                )}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <aside
+        class="rounded-3xl border border-[var(--color-line)] bg-[var(--color-bg-raised)] p-8 md:p-10"
+        data-reveal
+      >
+        <p class="text-xl font-medium leading-relaxed text-[var(--color-text)] md:text-2xl">
+          WeHale isn't a meditation app with breathing added on. Every session is
+          built from the breath up — technique-first, with real physiological
+          intent behind each pattern.
+        </p>
+        <p class="mt-6 text-sm uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">
+          The WeHale approach
+        </p>
+      </aside>
+    </div>
+  </div>
+</section>

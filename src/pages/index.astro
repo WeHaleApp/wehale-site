@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import TrustStrip from "../components/TrustStrip.astro";
+import Pillars from "../components/Pillars.astro";
+import UseCases from "../components/UseCases.astro";
+import PhoneSlider from "../components/PhoneSlider.astro";
+import WhyBreathwork from "../components/WhyBreathwork.astro";
+import Stories from "../components/Stories.astro";
+import FinalCta from "../components/FinalCta.astro";
+
+const title = "WeHale — Come back to yourself";
+const description =
+  "Audio-guided breathwork sessions for activation, balance, and calm. Twenty-five sessions, multi-day journeys, five to forty-five minutes each.";
+---
+
+<BaseLayout title={title} description={description}>
+  <Hero />
+  <TrustStrip />
+  <Pillars />
+  <UseCases />
+  <PhoneSlider />
+  <WhyBreathwork />
+  <Stories />
+  <FinalCta />
+
+  <!-- JSON-LD: MobileApplication schema for the App Store listing -->
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MobileApplication",
+      name: "WeHale",
+      operatingSystem: "iOS",
+      applicationCategory: "HealthApplication",
+      description:
+        "Audio-guided breathwork sessions for activation, balance, and calm.",
+      url: "https://wehale.io",
+      downloadUrl: "https://apps.apple.com/se/app/wehale/id6739413667",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      publisher: {
+        "@type": "Organization",
+        name: "WeHale",
+        url: "https://wehale.io",
+        email: "hello@wehale.io",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://wehale.io/assets/images/favicon.png",
+        },
+      },
+    })}
+  />
+</BaseLayout>

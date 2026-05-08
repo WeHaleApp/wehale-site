@@ -1,0 +1,140 @@
+---
+/**
+ * Base layout — every page extends this.
+ *
+ * Carries the global head (meta, OG, schema), font preload, GTM, the
+ * skip-link, the SiteHeader, the page slot, and the SiteFooter. All
+ * pages get the same base experience and can override `title`,
+ * `description`, `ogImage`, and `pathname` via props.
+ */
+import "../styles/global.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  pathname?: string;
+  /** When true, header background goes solid immediately. Use on non-hero pages. */
+  solidHeader?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogImage = "/assets/images/og.jpg",
+  pathname = Astro.url.pathname,
+  solidHeader = false,
+} = Astro.props;
+
+const canonical = `https://wehale.io${pathname === "/" ? "/" : pathname.replace(/\/$/, "")}`;
+const fullOg = ogImage.startsWith("http") ? ogImage : `https://wehale.io${ogImage}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#090f1d" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={fullOg} />
+    <meta property="og:site_name" content="WeHale" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOg} />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/images/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/images/favicon.png" />
+
+    <!-- Inter via Google Fonts. Self-host later if performance demands. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    />
+
+    <!-- Google Tag Manager -->
+    <script is:inline>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-NCPSJ2QF");
+    </script>
+  </head>
+
+  <body class="bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NCPSJ2QF"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden;"
+      ></iframe>
+    </noscript>
+
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <SiteHeader solid={solidHeader} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <SiteFooter />
+
+    <!-- Scroll-reveal observer. Cheap, no JS framework needed. -->
+    <script is:inline>
+      (function () {
+        if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const els = document.querySelectorAll("[data-reveal]");
+        if (reduced) {
+          els.forEach((el) => el.classList.add("is-visible"));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add("is-visible");
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: "0px 0px -10% 0px", threshold: 0.05 }
+        );
+        els.forEach((el) => io.observe(el));
+      })();
+    </script>
+  </body>
+</html>
