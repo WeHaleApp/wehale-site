@@ -6,24 +6,43 @@ const title = "About WeHale";
 const description =
   "The team and conviction behind WeHale, a breathwork app for people who don't meditate.";
 
-// PLACEHOLDER — swap with real founder bio + photo before launch.
-const founder = {
-  initial: "I",
-  name: "Isak Gustafsson",
-  bio: "Isak founded WeHale after years of practicing breathwork and noticing how few apps treated the technique seriously. Before WeHale he built and shipped products in adjacent spaces. He lives in Varberg, Sweden, and starts most days with a five-minute Activate session.",
-};
+// Three co-founders — equal billing. Bios mirror the investor page but
+// in a slightly warmer register for the public site.
+const founders = [
+  {
+    initial: "I",
+    name: "Isak Gustafsson",
+    role: "Co-founder",
+    bio: "Computer science background and ten years at Precis, Sweden's largest media-tech agency, working with global app teams. Builds the app and runs growth.",
+    color: "var(--color-accent)",
+  },
+  {
+    initial: "E",
+    name: "Edvin",
+    role: "Co-founder",
+    bio: "Years of personal breathwork practice and live group sessions. Curates the catalog and teaches the techniques behind it.",
+    color: "var(--color-blue)",
+  },
+  {
+    initial: "P",
+    name: "Philip Sigfridsson",
+    role: "Co-founder",
+    bio: "Years of breathwork practice and group facilitation. Anchors the product to the practice as it actually works.",
+    color: "var(--color-gold)",
+  },
+];
 
-// PLACEHOLDER avatars for V1. Real photos slot in later.
+// Full lineup grid below: founders + advisor, compact (no bios).
 const team = [
-  { initial: "I", name: "Isak Gustafsson", role: "Founder", color: "var(--color-accent)" },
-  { initial: "E", name: "Edvin", role: "Founder", color: "var(--color-blue)" },
-  { initial: "P", name: "Philip Sigfridsson", role: "Founder", color: "var(--color-gold)" },
+  { initial: "I", name: "Isak Gustafsson", role: "Co-founder", color: "var(--color-accent)" },
+  { initial: "E", name: "Edvin", role: "Co-founder", color: "var(--color-blue)" },
+  { initial: "P", name: "Philip Sigfridsson", role: "Co-founder", color: "var(--color-gold)" },
   { initial: "M", name: "Martin Wikfalk", role: "Advisor", color: "var(--color-accent)" },
 ];
 ---
 
 <BaseLayout title={title} description={description} solidHeader>
-  <!-- Section 1: Founder story -->
+  <!-- Section 1: Founders — three co-founders, equal billing -->
   <section class="pt-32 pb-24 md:pt-44 md:pb-32">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow" data-reveal>About</p>
@@ -34,39 +53,49 @@ const team = [
       >
         Built from the breath up.
       </h1>
+      <p class="mt-6 max-w-2xl text-lg text-[var(--color-text-secondary)] md:text-xl" data-reveal>
+        Three co-founders started WeHale because the breathwork app we wanted
+        didn't exist — credible, calm, technique-first.
+      </p>
 
-      <div class="mt-16 grid gap-12 md:grid-cols-[280px_1fr] md:gap-16">
-        <!-- Founder avatar — placeholder shape until real photo arrives -->
-        <div
-          class="aspect-square w-full max-w-[280px] rounded-3xl border border-[var(--color-line)] bg-gradient-to-br from-[var(--color-accent-soft)] via-[var(--color-bg-raised)] to-[var(--color-bg)] flex items-center justify-center"
-          data-reveal
-          data-placeholder="founder-photo"
-        >
-          <span class="text-6xl font-semibold text-[var(--color-accent)]" aria-hidden="true">
-            {founder.initial}
-          </span>
-        </div>
-
-        <div data-reveal>
-          <h2 class="text-2xl font-semibold">{founder.name}</h2>
-          <p class="mt-1 text-sm uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">
-            Founder
-          </p>
-          <p class="mt-6 text-lg leading-relaxed text-[var(--color-text-secondary)]">
-            {founder.bio}
-          </p>
-          <p class="mt-6 text-sm text-[var(--color-text-tertiary)]">
-            Reach him at{" "}
-            <a
-              href="mailto:isak@wehale.io"
-              class="text-[var(--color-accent)] hover:underline"
+      <div class="mt-16 grid gap-6 md:grid-cols-3">
+        {
+          founders.map((m, i) => (
+            <article
+              class="rounded-3xl border border-[var(--color-line)] bg-[var(--color-bg-raised)] p-6 md:p-8"
+              data-reveal
+              style={`transition-delay: ${i * 80}ms`}
+              data-placeholder="founder-photo"
             >
-              isak@wehale.io
-            </a>
-            .
-          </p>
-        </div>
+              <span
+                class="inline-flex h-14 w-14 items-center justify-center rounded-full text-xl font-semibold text-[var(--color-bg)]"
+                style={`background: ${m.color}`}
+                aria-hidden="true"
+              >
+                {m.initial}
+              </span>
+              <h2 class="mt-5 text-xl font-semibold">{m.name}</h2>
+              <p class="text-sm uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">
+                {m.role}
+              </p>
+              <p class="mt-4 text-base leading-relaxed text-[var(--color-text-secondary)]">
+                {m.bio}
+              </p>
+            </article>
+          ))
+        }
       </div>
+
+      <p class="mt-10 text-sm text-[var(--color-text-tertiary)]" data-reveal>
+        Reach the team at{" "}
+        <a
+          href="mailto:hello@wehale.io"
+          class="text-[var(--color-accent)] hover:underline"
+        >
+          hello@wehale.io
+        </a>
+        .
+      </p>
     </div>
   </section>
 
