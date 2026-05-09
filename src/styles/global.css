@@ -2,7 +2,7 @@
 
 /* ───────────────────────────────────────────────────────────────────────
    WeHale brand tokens. Sourced from 02-Design/brand-guidelines.md and
-   site-strategy.md §8. Defines the design system in one place — every
+   site-strategy.md §8. Defines the design system in one place: every
    component reads from these via Tailwind utilities or var() refs.
    ─────────────────────────────────────────────────────────────────── */
 
@@ -84,7 +84,7 @@ body {
   }
 }
 
-/* Focus ring — accessible and brand-consistent. */
+/* Focus ring: accessible and brand-consistent. */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
@@ -93,7 +93,7 @@ body {
 
 /* Utility: skip link for accessibility.
    Uses the bulletproof visually-hidden pattern (1px clipped) to avoid
-   any border peeking below the viewport — the older `top: -40px`
+   any border peeking below the viewport: the older `top: -40px`
    approach leaked ~2px of the sage border at the top-left. */
 .skip-link {
   position: absolute;
@@ -139,7 +139,7 @@ body {
   transform: translateY(0);
 }
 
-/* Eyebrow caps — small all-caps labels above headlines. */
+/* Eyebrow caps: small all-caps labels above headlines. */
 .eyebrow {
   font-size: 12px;
   font-weight: 600;

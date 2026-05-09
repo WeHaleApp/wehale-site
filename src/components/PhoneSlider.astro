@@ -1,6 +1,6 @@
 ---
 /**
- * Inside the App — phone slider. Auto-advances, pauses on hover/focus.
+ * Inside the App: phone slider. Auto-advances, pauses on hover/focus.
  * Pure-vanilla JS for now (no React/Svelte island needed at this scale).
  *
  * Screenshots: pulled from the existing site's UI assets which are
@@ -8,8 +8,8 @@
  * higher-fidelity captures.
  */
 // Fresh App Store-grade screenshots from 00-Inbox/AppStoreNew at 1320×2868.
-// Aspect ratio matches iPhone 17 Pro Max (the device they were captured on)
-// — 1320/2868 ≈ 0.46. The frame below uses that ratio so screens fit edge
+// Aspect ratio matches iPhone 17 Pro Max (the device they were captured on),
+// 1320/2868 ≈ 0.46. The frame below uses that ratio so screens fit edge
 // to edge with no clipping.
 const slides = [
   {
@@ -80,7 +80,7 @@ const slides = [
          center phone is the only interactive one (slides via dots).
          Decorative phones are aria-hidden + lower opacity. -->
     <div class="relative mt-20 flex items-center justify-center" data-reveal data-phone-slider>
-      <!-- Decorative phone — left, behind -->
+      <!-- Decorative phone: left, behind -->
       <div
         class="hidden lg:block pointer-events-none absolute left-[6%] top-[8%] aspect-[1320/2868] w-[300px] -rotate-[8deg] overflow-hidden rounded-[42px] border border-[var(--color-line-strong)] bg-[var(--color-bg-raised)] p-[5px] opacity-50 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
         aria-hidden="true"
@@ -90,7 +90,7 @@ const slides = [
         </div>
       </div>
 
-      <!-- Decorative phone — right, behind -->
+      <!-- Decorative phone: right, behind -->
       <div
         class="hidden lg:block pointer-events-none absolute right-[6%] top-[10%] aspect-[1320/2868] w-[300px] rotate-[8deg] overflow-hidden rounded-[42px] border border-[var(--color-line-strong)] bg-[var(--color-bg-raised)] p-[5px] opacity-50 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
         aria-hidden="true"
@@ -100,7 +100,7 @@ const slides = [
         </div>
       </div>
 
-      <!-- Hero phone — interactive, center, sized larger for impact -->
+      <!-- Hero phone: interactive, center, sized larger for impact -->
       <div class="relative aspect-[1320/2868] w-[300px] md:w-[400px] rounded-[56px] border border-[var(--color-line-strong)] bg-[var(--color-bg-raised)] p-[7px] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.8)] z-10">
         <div class="relative h-full w-full overflow-hidden rounded-[49px] bg-black">
           {
@@ -204,7 +204,7 @@ const slides = [
     slider.addEventListener("focusin", stop);
     slider.addEventListener("focusout", start);
 
-    // Manual swipe support — Edvin flagged on May 9 that you couldn't
+    // Manual swipe support: Edvin flagged on May 9 that you couldn't
     // scroll between screens by hand. Touch + pointer events advance one
     // slide per swipe over a 40px threshold. Auto-advance stops while
     // swiping and resumes on release.

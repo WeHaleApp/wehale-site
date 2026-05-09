@@ -6,13 +6,13 @@
 /**
  * Three Ways to Practice. Each card now uses:
  *   · A custom SVG icon evoking the category mood (sunrise / waves /
- *     moon) — much more premium than the previous abstract dot
+ *     moon): much more premium than the previous abstract dot
  *   · A breath-rhythm illustration unique to each category
  *   · Time-of-day and use-case metadata
  *   · Duration range (factual from the catalog)
  *
  * No sample-sessions list (that's now redundant with the SessionShowcase
- * section directly below — better to set up WHEN to use each category
+ * section directly below: better to set up WHEN to use each category
  * here, then show the actual catalog there).
  */
 const pillars = [
@@ -72,7 +72,7 @@ const pillars = [
             data-reveal
             style={`transition-delay: ${i * 80}ms`}
           >
-            {/* Category-tinted gradient backdrop — stronger now to
+            {/* Category-tinted gradient backdrop: stronger now to
                  give each card a distinct mood that reads at a glance. */}
             <div
               class="pointer-events-none absolute inset-0 opacity-90"
@@ -81,7 +81,7 @@ const pillars = [
             ></div>
 
             <div class="relative p-8 md:p-10">
-              {/* Custom category icon — distinctive glyph evokes the
+              {/* Custom category icon: distinctive glyph evokes the
                    mood (sunrise / waves / moon) and pulses on hover.
                    Each rendered with the category color and a soft
                    halo behind it. */}
@@ -127,7 +127,7 @@ const pillars = [
                 {p.body}
               </p>
 
-              {/* Metadata strip — best-for + duration + intent. Sets
+              {/* Metadata strip: best-for + duration + intent. Sets
                    up the WHEN, then SessionShowcase below shows WHAT. */}
               <dl class="mt-8 space-y-3 border-t border-[var(--color-line)] pt-6 text-sm">
                 <div class="flex items-baseline gap-3">

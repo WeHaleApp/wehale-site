@@ -1,6 +1,6 @@
 ---
 /**
- * Session showcase — replaces the abstract "use cases" section with
+ * Session showcase: replaces the abstract "use cases" section with
  * cards that look like the app's actual session cards. Cover image,
  * category pill, duration, title, and one-line description.
  *
@@ -97,12 +97,12 @@ const sessions = [
             data-reveal
             style={`transition-delay: ${(i % 3) * 60}ms`}
           >
-            {/* Cover image — full-bleed top, 4:3 aspect, with category
+            {/* Cover image: full-bleed top, 4:3 aspect, with category
                  pill overlay in top-left and duration in top-right. */}
             <div class="relative aspect-[4/3] overflow-hidden">
               <img
                 src={`/assets/images/sessions/${s.slug}.webp`}
-                alt={`${s.title} — ${s.category} session cover`}
+                alt={`${s.title}: ${s.category} session cover`}
                 loading="lazy"
                 class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
