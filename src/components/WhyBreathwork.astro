@@ -4,18 +4,28 @@
  * the "convince the skeptic" JTBD. Citations link out to peer-reviewed
  * sources. Don't fabricate — only cite what's real.
  */
+// Single verified citation used twice — Russo et al 2017 "The physiological
+// effects of slow breathing in the healthy human" covers both the slow-
+// exhale parasympathetic mechanism and breath-hold CO2 tolerance. A
+// previous draft cited "Brown 2009" which Edvin flagged on May 9 as
+// pointing at a paper about food transport in ants. Removed.
+const RUSSO_2017 = {
+  label: "Russo 2017",
+  href: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5709795/",
+};
+
 const points = [
   {
     text: "Slow exhale lengthens the parasympathetic response. Heart rate follows breath; anxiety drops in real time.",
-    citation: { label: "Brown 2009", href: "https://pubmed.ncbi.nlm.nih.gov/19393982/" },
+    citation: RUSSO_2017,
   },
   {
     text: "Rhythmic breathing improves attention and working memory more reliably than caffeine without the rebound.",
     citation: null,
   },
   {
-    text: "Controlled breath holds train tolerance to CO2 — calmer baseline under pressure, better recovery from stress.",
-    citation: { label: "Russo 2017", href: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5709795/" },
+    text: "Controlled breath holds train tolerance to CO2. A calmer baseline under pressure and better recovery from stress.",
+    citation: RUSSO_2017,
   },
   {
     text: "Daily practice as short as five minutes builds compounding nervous-system resilience over weeks.",
@@ -69,7 +79,7 @@ const points = [
       >
         <p class="text-xl font-medium leading-relaxed text-[var(--color-text)] md:text-2xl">
           WeHale isn't a meditation app with breathing added on. Every session is
-          built from the breath up — technique-first, with real physiological
+          built from the breath up. Technique-first, with real physiological
           intent behind each pattern.
         </p>
         <p class="mt-6 text-sm uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">
