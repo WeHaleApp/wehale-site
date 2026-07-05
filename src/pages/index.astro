@@ -8,6 +8,7 @@ import PhoneSlider from "../components/PhoneSlider.astro";
 import WhyBreathwork from "../components/WhyBreathwork.astro";
 import Stories from "../components/Stories.astro";
 import FinalCta from "../components/FinalCta.astro";
+import NewsletterForm from "../components/NewsletterForm.astro";
 
 const title = "WeHale · Come back to yourself";
 const description =
@@ -23,6 +24,13 @@ const description =
   <WhyBreathwork />
   <Stories />
   <FinalCta />
+
+  <!-- Email capture: catches visitors who aren't ready to install yet. -->
+  <section class="bg-[var(--color-bg-alt)] pb-24 md:pb-32">
+    <div class="mx-auto flex max-w-6xl flex-col items-center px-6">
+      <NewsletterForm />
+    </div>
+  </section>
 
   <!-- JSON-LD: MobileApplication schema for the App Store listing -->
   <script

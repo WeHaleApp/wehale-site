@@ -1,26 +1,21 @@
 ---
 /**
- * Newsletter signup. Posts to Buttondown's public subscribe endpoint.
- *
- * The username in the action URL needs to be set in netlify env to
- * BUTTONDOWN_USERNAME at build time, OR we hardcode here once the
- * Buttondown account is created. For now, posts to a stub action that
- * shows a success state without actually sending: placeholder until
- * Buttondown is wired up.
+ * Newsletter signup. Posts to the WeHale API (/marketing/subscribe),
+ * which upserts the contact into Loops with marketing consent.
+ * Replaces the earlier Buttondown stub that never delivered emails.
  */
 interface Props {
   compact?: boolean;
 }
 const { compact = false } = Astro.props;
-const BUTTONDOWN_USERNAME = "wehale"; // TODO swap to actual once Buttondown is created
+const SUBSCRIBE_URL = "https://wehale-app-production.up.railway.app/marketing/subscribe";
 ---
 
 <form
   class:list={["w-full", compact ? "" : "max-w-md"]}
-  action={`https://buttondown.email/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`}
-  method="post"
-  target="_blank"
   data-newsletter-form
+  data-endpoint={SUBSCRIBE_URL}
+  novalidate
 >
   <label class="block">
     {!compact && (
@@ -42,10 +37,39 @@ const BUTTONDOWN_USERNAME = "wehale"; // TODO swap to actual once Buttondown is 
         Subscribe
       </button>
     </div>
-    {!compact && (
-      <span class="mt-3 block text-xs text-[var(--color-text-tertiary)]">
-        Occasional notes from the team. No fluff. Unsubscribe anytime.
-      </span>
-    )}
+    <span class="mt-3 block text-xs text-[var(--color-text-tertiary)]" data-newsletter-status>
+      {!compact && "Occasional notes from the team. No fluff. Unsubscribe anytime."}
+    </span>
   </label>
 </form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>("[data-newsletter-form]").forEach((form) => {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const input = form.querySelector<HTMLInputElement>('input[name="email"]');
+      const status = form.querySelector<HTMLElement>("[data-newsletter-status]");
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const email = input?.value.trim() ?? "";
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        if (status) status.textContent = "Please enter a valid email address.";
+        return;
+      }
+      if (button) { button.disabled = true; button.textContent = "…"; }
+      try {
+        const res = await fetch(form.dataset.endpoint!, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        if (!res.ok) throw new Error();
+        if (status) status.textContent = "You're in. Welcome — first note coming soon.";
+        if (input) input.value = "";
+        if (button) button.textContent = "Done ✓";
+      } catch {
+        if (status) status.textContent = "Something went wrong — please try again.";
+        if (button) { button.disabled = false; button.textContent = "Subscribe"; }
+      }
+    });
+  });
+</script>
