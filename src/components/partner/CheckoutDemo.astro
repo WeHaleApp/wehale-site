@@ -14,15 +14,29 @@ const accent = p.accent ?? "#0f766e";
 ---
 
 <div
-  class="mx-auto w-full max-w-[380px] overflow-hidden rounded-[28px] bg-white text-[#111827] shadow-[0_30px_80px_rgba(0,0,0,.45)]"
+  class="mx-auto w-full max-w-[400px]"
   data-checkout
   data-price={p.avgOrder}
   data-disc-month={p.guestDiscountMonthly}
   data-disc-year={p.guestDiscountAnnual}
   style={`--pa:${accent}`}
 >
+  <!-- The phone: a bezel, a screen, a status bar and a browser address bar with the partner's
+       checkout domain. Everything below scrolls inside the screen, like the real thing. -->
+  <div class="relative rounded-[30px] border border-white/10 bg-[#0b0f19] p-[4px] shadow-[0_40px_100px_rgba(0,0,0,.55)] md:rounded-[52px] md:p-[10px]">
+    <div class="relative flex h-[min(78vh,780px)] flex-col overflow-hidden rounded-[27px] bg-white text-[#111827] md:rounded-[42px]">
+      <div class="pointer-events-none absolute left-1/2 top-2.5 z-20 hidden h-[26px] w-[96px] -translate-x-1/2 rounded-full bg-[#0b0f19] md:block" aria-hidden="true"></div>
+      <div class="flex items-center justify-between px-7 pt-3.5 text-[12px] font-semibold text-[#111827]" aria-hidden="true">
+        <span>9:41</span>
+        <span class="flex items-center gap-1"><svg viewBox="0 0 16 12" class="h-3 w-4"><path d="M1 9h2v3H1zM5 6h2v6H5zM9 3h2v9H9zM13 0h2v12h-2z" fill="currentColor"/></svg><svg viewBox="0 0 24 12" class="h-3 w-6"><rect x="1" y="1" width="19" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="2.6" y="2.6" width="14" height="6.8" rx="1.2" fill="currentColor"/><path d="M21.5 4v4a1.6 1.6 0 0 0 0-4z" fill="currentColor"/></svg></span>
+      </div>
+      <div class="mx-4 mt-2 flex items-center justify-center gap-1.5 rounded-xl bg-[#eef0f3] py-1.5 text-[11px] text-[#374151]" aria-hidden="true">
+        <svg viewBox="0 0 12 12" class="h-3 w-3"><rect x="2" y="5" width="8" height="6" rx="1.2" fill="currentColor"/><path d="M4 5V3.6a2 2 0 0 1 4 0V5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+        <span>{p.checkoutDomain}</span>
+      </div>
+      <div class="relative flex-1 overflow-y-auto [scrollbar-width:thin]" data-scroller>
   <!-- ─── Checkout view ─── -->
-  <div data-view="checkout" class="relative" data-trial={p.guestTrialDays}>
+  <div data-view="checkout" data-trial={p.guestTrialDays}>
     <div class="flex items-center justify-between px-5 pt-5">
       {p.logo
         ? <img src={p.logo} alt={p.name} class="h-8 w-auto" />
@@ -131,49 +145,6 @@ const accent = p.accent ?? "#0f766e";
       <p class="mt-3 text-center text-[9px] text-[#9ca3af]">Prototyp. Inget dras. Kortnumret är ett testkort.</p>
     </div>
 
-    <!-- The "Vad är WeHale?" sheet: fixed height, never covers the partner's header. -->
-    <!-- Mirrors the Figma frame 537:2025: warm fade, wordmark, partner lockup, a taste of the
-         library, the gift's state, one way back and a quiet decline. -->
-    <div class="absolute inset-x-0 bottom-0 hidden max-h-[calc(100%-2.75rem)] flex-col overflow-hidden rounded-t-[26px] bg-[#0b1220] text-[#f2f0ed] shadow-[0_-20px_60px_rgba(0,0,0,.35)]" data-sheet>
-      <div class="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#b4471c]/80 via-[#5b2416]/40 to-transparent" aria-hidden="true"></div>
-      <div class="pointer-events-none absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-white/30" aria-hidden="true"></div>
-      <div class="relative px-5 pt-9">
-        <img src="/assets/images/logo.svg" alt="WeHale" class="h-7 w-auto" />
-        <div class="mt-4 flex items-center gap-2 text-[11px] text-white/70">
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-2 py-1 text-[#111827]">
-            <span class="grid h-4 w-4 place-items-center rounded-full text-[8px] font-bold text-white" style={`background:${accent}`}>{p.name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</span>
-            <span class="text-[10px] font-semibold">{p.name}</span>
-          </span>
-          <span>har valt WeHale för sina gäster</span>
-        </div>
-        <p class="mt-4 text-[19px] font-medium leading-tight">Andning du märker att den fungerar.</p>
-        <p class="mt-2 text-[11.5px] leading-relaxed text-white/70">Guidade andningsövningar på 5 till 25 minuter för lugn, fokus och sömn.</p>
-        <div class="-mx-5 mt-4 flex gap-2.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
-          {[
-            ["/assets/images/sessions/04-conscious-morning.webp", "Conscious Morning", "Activate"],
-            ["/assets/images/sessions/02-coherent-heart.webp", "Coherent Heart", "Balance"],
-            ["/assets/images/sessions/05-into-stillness.webp", "Into Stillness", "Calm"],
-            ["/assets/images/sessions/06-nighttime-serenity.webp", "Nighttime Serenity", "Sömn"],
-          ].map(([src, title, meta]) => (
-            <figure class="relative h-[118px] w-[112px] shrink-0 overflow-hidden rounded-xl">
-              <img src={src} alt="" class="h-full w-full object-cover" />
-              <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-2">
-                <p class="text-[11px] font-semibold leading-tight">{title}</p>
-                <p class="text-[9px] text-white/70">{meta}</p>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-        <div class="mt-4 rounded-xl border border-[#4fcbd6]/60 bg-[#4fcbd6]/10 p-3">
-          <p class="text-[12.5px] font-semibold leading-snug" data-sheet-gift-title>Din gåva: {p.guestTrialDays} dagar gratis + {p.guestDiscountMonthly} kr rabatt nu</p>
-          <p class="mt-1 text-[10.5px] text-white/70" data-sheet-gift-sub>0 kr i dag · {p.monthlyPrice} kr/mån efter · avbryt när du vill</p>
-        </div>
-      </div>
-      <div class="relative px-5 pb-4 pt-3">
-        <button type="button" class="w-full rounded-xl bg-white py-3 text-[13px] font-semibold text-[#0b1220]" data-close-sheet>Tillbaka till kassan</button>
-        <button type="button" class="mt-2 w-full py-1.5 text-center text-[11px] text-white/60 underline decoration-white/30 underline-offset-2" data-decline>Fortsätt utan erbjudandet</button>
-      </div>
-    </div>
   </div>
 
   <!-- ─── Receipt view ─── -->
@@ -205,6 +176,52 @@ const accent = p.accent ?? "#0f766e";
 
     <div class="px-5 pb-5 pt-6 text-center">
       <button type="button" class="text-[12px] underline decoration-[#cbd5e1] underline-offset-2" data-reset>Börja om</button>
+    </div>
+  </div>
+      </div>
+    <!-- The "Vad är WeHale?" sheet: fixed height, never covers the partner's header. -->
+      <!-- Mirrors the Figma frame 537:2025: warm fade, wordmark, partner lockup, a taste of the
+           library, the gift's state, one way back and a quiet decline. -->
+      <div class="absolute inset-x-0 bottom-0 hidden max-h-[calc(100%-2.75rem)] flex-col overflow-hidden rounded-t-[26px] bg-[#0b1220] text-[#f2f0ed] shadow-[0_-20px_60px_rgba(0,0,0,.35)]" data-sheet>
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#b4471c]/80 via-[#5b2416]/40 to-transparent" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-white/30" aria-hidden="true"></div>
+        <div class="relative px-5 pt-9">
+          <img src="/assets/images/logo.svg" alt="WeHale" class="h-7 w-auto" />
+          <div class="mt-4 flex items-center gap-2 text-[11px] text-white/70">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-2 py-1 text-[#111827]">
+              <span class="grid h-4 w-4 place-items-center rounded-full text-[8px] font-bold text-white" style={`background:${accent}`}>{p.name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</span>
+              <span class="text-[10px] font-semibold">{p.name}</span>
+            </span>
+            <span>har valt WeHale för sina gäster</span>
+          </div>
+          <p class="mt-4 text-[19px] font-medium leading-tight">Andning du märker att den fungerar.</p>
+          <p class="mt-2 text-[11.5px] leading-relaxed text-white/70">Guidade andningsövningar på 5 till 25 minuter för lugn, fokus och sömn.</p>
+          <div class="-mx-5 mt-4 flex gap-2.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
+            {[
+              ["/assets/images/sessions/04-conscious-morning.webp", "Conscious Morning", "Activate"],
+              ["/assets/images/sessions/02-coherent-heart.webp", "Coherent Heart", "Balance"],
+              ["/assets/images/sessions/05-into-stillness.webp", "Into Stillness", "Calm"],
+              ["/assets/images/sessions/06-nighttime-serenity.webp", "Nighttime Serenity", "Sömn"],
+            ].map(([src, title, meta]) => (
+              <figure class="relative h-[118px] w-[112px] shrink-0 overflow-hidden rounded-xl">
+                <img src={src} alt="" class="h-full w-full object-cover" />
+                <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-2">
+                  <p class="text-[11px] font-semibold leading-tight">{title}</p>
+                  <p class="text-[9px] text-white/70">{meta}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <div class="mt-4 rounded-xl border border-[#4fcbd6]/60 bg-[#4fcbd6]/10 p-3">
+            <p class="text-[12.5px] font-semibold leading-snug" data-sheet-gift-title>Din gåva: {p.guestTrialDays} dagar gratis + {p.guestDiscountMonthly} kr rabatt nu</p>
+            <p class="mt-1 text-[10.5px] text-white/70" data-sheet-gift-sub>0 kr i dag · {p.monthlyPrice} kr/mån efter · avbryt när du vill</p>
+          </div>
+        </div>
+        <div class="relative px-5 pb-4 pt-3">
+          <button type="button" class="w-full rounded-xl bg-white py-3 text-[13px] font-semibold text-[#0b1220]" data-close-sheet>Tillbaka till kassan</button>
+          <button type="button" class="mt-2 w-full py-1.5 text-center text-[11px] text-white/60 underline decoration-white/30 underline-offset-2" data-decline>Fortsätt utan erbjudandet</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -280,7 +297,7 @@ const accent = p.accent ?? "#0f766e";
       }
       views.checkout.classList.add("hidden");
       views.receipt.classList.remove("hidden");
-      root.scrollIntoView({ behavior: "smooth", block: "center" });
+      q<HTMLElement>("[data-scroller]")?.scrollTo({ top: 0, behavior: "smooth" });
     });
     q("[data-reset]")?.addEventListener("click", () => {
       check.checked = false;
@@ -288,6 +305,7 @@ const accent = p.accent ?? "#0f766e";
       render();
       views.receipt.classList.add("hidden");
       views.checkout.classList.remove("hidden");
+      q<HTMLElement>("[data-scroller]")?.scrollTo({ top: 0 });
     });
     render();
   });

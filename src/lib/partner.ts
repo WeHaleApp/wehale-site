@@ -67,6 +67,8 @@ export interface Partner {
   /** The line under the purchase in the checkout mock. */
   purchaseNote: string;
   checkoutSystem?: string;
+  /** What the browser bar shows in the checkout mock. */
+  checkoutDomain: string;
   /** Optional branding for the checkout mock. */
   logo?: string;
   accent?: string;
@@ -98,6 +100,7 @@ export const GENERIC: Partner = {
   guestsPerMonth: 300,
   commonPurchase: "Yoga · 10-klippkort",
   purchaseNote: "Gäller 6 månader · alla klasser",
+  checkoutDomain: "kassa.dinstudio.se",
   accent: "#0f766e",
 };
 
