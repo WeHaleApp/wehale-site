@@ -69,9 +69,14 @@ export interface Partner {
   checkoutSystem?: string;
   /** What the browser bar shows in the checkout mock. */
   checkoutDomain: string;
-  /** Optional branding for the checkout mock. */
+  /** Their logo, shown in its own colours on a light tile (hero) and as a white silhouette in the
+   *  header and cards. Most studio logos are dark-on-light; `logoOnDark: "keep"` opts out of the
+   *  silhouette for a logo that already reads on dark. */
   logo?: string;
+  logoOnDark?: "invert" | "keep";
+  /** Their colour: the checkout mock's buttons, and a quiet tint behind the hero and the cards. */
   accent?: string;
+  /** Their own line about themselves, shown under the logo in the hero. */
   quote?: string;
 }
 

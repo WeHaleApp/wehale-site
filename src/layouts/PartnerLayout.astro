@@ -7,22 +7,27 @@
  * The `gated` class hides scroll until Gate.astro has checked the shared password.
  */
 import "../styles/global.css";
+import type { Partner } from "../lib/partner";
 
 interface Props {
   title: string;
   description: string;
-  /** Right-hand header label, e.g. "För Studio Frid". */
+  /** Right-hand header label when there is no partner logo, e.g. "För Studio Frid". */
   label?: string;
+  /** The named partner: their logo joins ours in the header, their colour tints the page. */
+  partner?: Partner;
 }
 
-const { title, description, label = "" } = Astro.props;
+const { title, description, label = "", partner } = Astro.props;
+const silhouette = partner?.logoOnDark === "keep" ? "" : "filter:brightness(0) invert(1);opacity:.92";
+const tint = partner?.accent ?? "#4fcbd6";
 ---
 
 <!doctype html>
 <html
   lang="sv"
   class="gated"
-  style="--color-accent:#4fcbd6;--color-accent-soft:rgba(79,203,214,.16);--color-accent-line:rgba(79,203,214,.5);--font-sans:'Nunito Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;--font-display:'Nunito Sans',ui-sans-serif,system-ui,sans-serif;"
+  style={`--color-accent:#4fcbd6;--color-accent-soft:rgba(79,203,214,.16);--color-accent-line:rgba(79,203,214,.5);--partner:${tint};--font-sans:'Nunito Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;--font-display:'Nunito Sans',ui-sans-serif,system-ui,sans-serif;`}
 >
   <head>
     <meta charset="utf-8" />
@@ -65,7 +70,16 @@ const { title, description, label = "" } = Astro.props;
         <a href="/" aria-label="WeHale" class="flex items-center">
           <img src="/assets/images/logo.svg" alt="WeHale" class="h-6 w-auto" />
         </a>
-        {label && <span class="max-w-[55%] truncate text-sm text-[var(--color-text-secondary)]">{label}</span>}
+        {partner?.logo ? (
+          <div class="flex items-center gap-3 md:gap-4">
+            <span class="hidden text-sm text-[var(--color-text-tertiary)] sm:inline">tillsammans med</span>
+            <img src={partner.logo} alt={partner.name} class="h-9 w-auto max-w-[44vw] md:h-11" style={silhouette} />
+          </div>
+        ) : partner ? (
+          <span class="text-sm font-semibold">{partner.name}</span>
+        ) : label ? (
+          <span class="max-w-[55%] truncate text-sm text-[var(--color-text-secondary)]">{label}</span>
+        ) : null}
       </div>
     </header>
 
@@ -75,7 +89,7 @@ const { title, description, label = "" } = Astro.props;
 
     <footer class="border-t border-[var(--color-line)]">
       <div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-[var(--color-text-tertiary)] md:flex-row md:justify-between">
-        <span>WeHale · wehale.io</span>
+        <span>{partner ? `WeHale × ${partner.name}` : "WeHale · wehale.io"}</span>
         <span>Den här sidan är en inbjudan, inte en offentlig sida. Dela den inte vidare.</span>
       </div>
     </footer>

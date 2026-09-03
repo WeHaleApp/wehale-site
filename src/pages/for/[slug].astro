@@ -17,6 +17,7 @@ const { partner } = Astro.props;
   title={`WeHale för ${partner.name}`}
   description={`Ett förslag från WeHale till ${partner.name}: en gåva i er kassa som vi betalar.`}
   label={`För ${partner.name}`}
+  partner={partner}
 >
   <Gate />
   <PartnerPage partner={partner} />
