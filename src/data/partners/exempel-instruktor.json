@@ -4,13 +4,17 @@
   "kind": "andningslärare",
   "contactName": "Lisa",
   "ourContactName": "Philip",
-  "models": ["referral", "gift"],
+  "models": [
+    "referral",
+    "gift"
+  ],
   "ownerCode": "LISA-OWNER",
   "teamCode": "LISA-TEAM",
   "teamCodeDays": 90,
-  "referralOffer": "annual50",
   "commissionPercent": 20,
   "commissionMonths": 12,
   "guestsPerMonth": 500,
-  "quote": "Andningen är det mina elever tar med sig hem."
+  "quote": "Andningen är det mina elever tar med sig hem.",
+  "payoutPerAnnualSale": 400,
+  "annualSalesPerYear": 1000
 }

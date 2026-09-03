@@ -26,7 +26,7 @@ const greeting = !generic && p.contactName ? `Hej ${p.contactName}.` : null;
 const mailto = p.ourContactEmail
   ? `mailto:${p.ourContactEmail}?subject=${encodeURIComponent(`WeHale och ${p.name}`)}`
   : null;
-const offer = p.referralOffer === "annual50" ? "50 % på årsabonnemanget" : `${p.teamCodeDays} dagar gratis`;
+const annualHalf = Math.round(p.annualPrice / 2);
 const guestCodeExample = p.teamCode.replace(/-TEAM$/i, "");
 
 const covers = [
@@ -39,8 +39,8 @@ const covers = [
 const terms: [string, string][] = [];
 if (has("checkout")) terms.push(["Gästens rabatt", `${p.guestDiscountMonthly} kr på månadsplan (${p.guestTrialDays} dagar gratis) · ${p.guestDiscountAnnual} kr på årsplan (${kr(p.annualPrice)}, betalas direkt). Vi står för rabatten. Du får fullt pris.`]);
 if (has("referral")) {
-  terms.push(["Din provision", `${p.commissionPercent} % av det gästen betalar oss, i ${p.commissionMonths} månader från första köpet.`]);
-  terms.push(["Erbjudandet", `Sätts per partner. I dag: ${offer}. Kan bytas mellan kampanjer.`]);
+  terms.push(["Din ersättning", `${p.payoutPerAnnualSale} kr per sålt årsmedlemskap, utbetald månaden efter köpet. Väljer någon månadsplan: ${p.commissionPercent} % av betalningarna i ${p.commissionMonths} månader.`]);
+  terms.push(["Erbjudandet till dina följare", `50 % på årsmedlemskapet, ${annualHalf} kr i stället för ${kr(p.annualPrice)}. Aktiveras med din länk eller din kod. Rabatten står vi för.`]);
 }
 if (has("gift")) terms.push(["Gästkoden", `${p.teamCodeDays} dagar WeHale Pro till dina gäster, i ditt namn. Inga pengar åt något håll.`]);
 if (has("checkout") || has("referral")) terms.push(["Utbetalning och redovisning", "Månadsvis via Stripe, redovisad i din egen vy."]);
@@ -283,10 +283,10 @@ const timelineMode = has("checkout") ? "checkout" : "share";
 {has("referral") && (
   <section class:list={["border-y border-[var(--color-line)]", has("checkout") ? "bg-[var(--color-bg-alt)]" : ""]} id="rekommendation">
     <div class="mx-auto max-w-6xl px-6 py-20 md:py-24">
-      <p class="p-eyebrow" data-reveal>Sätt 2 · Rekommendation med provision</p>
-      <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>Du rekommenderar. Vi sköter resten. Du får {p.commissionPercent} % av allt de köper.</h2>
+      <p class="p-eyebrow" data-reveal>Sätt 2 · Rekommendation med ersättning</p>
+      <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>Du når många. Vi gör erbjudandet. Du får {p.payoutPerAnnualSale} kr för varje sålt årsmedlemskap.</h2>
       <p class="p-body mt-6 max-w-2xl" data-reveal>
-        Erbjudandet till dina gäster sätter vi ihop per partner, i dag {offer}. De aktiverar det med din länk eller din kod, i ditt namn. Allt de sedan betalar oss i {p.commissionMonths} månader ger dig {p.commissionPercent} %. Räkna på det här, med dina siffror.
+        Dina följare får 50 % på årsmedlemskapet, {annualHalf} kr i stället för {kr(p.annualPrice)}, med din länk eller din kod. Varje sålt årsmedlemskap ger dig {p.payoutPerAnnualSale} kr, utbetalt månaden efter. Säljer du tusen om året är det {(p.payoutPerAnnualSale * 1000).toLocaleString("sv-SE")} kr. Räkna på det här, med dina siffror.
       </p>
       <div class="mt-10" data-reveal>
         <ReferralCalculator partner={p} />

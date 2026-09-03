@@ -8,9 +8,6 @@ import type { Partner, PartnerModel } from "../../lib/partner";
 interface Props { partner: Partner; generic?: boolean }
 const { partner: p, generic = false } = Astro.props;
 
-const offer = p.referralOffer === "annual50"
-  ? `50 % på årsabonnemanget`
-  : `${p.teamCodeDays} dagar gratis`;
 
 const cards: { key: PartnerModel; n: string; tag: string; title: string; body: string; who: string; href: string }[] = [
   {
@@ -26,9 +23,9 @@ const cards: { key: PartnerModel; n: string; tag: string; title: string; body: s
     key: "referral",
     n: "2",
     tag: "En ny intäktsrad",
-    title: "Rekommendation med provision",
-    body: `Du rekommenderar WeHale till dina gäster med ett erbjudande vi sätter ihop, till exempel ${offer}. Blir de betalande får du ${p.commissionPercent} % av allt de köper hos oss, i ${p.commissionMonths} månader.`,
-    who: "För dig med en publik: nyhetsbrev, klasser, retreats, podd.",
+    title: "Rekommendation med ersättning",
+    body: `För dig som når många. Dina följare får 50 % på årsmedlemskapet, ${Math.round(p.annualPrice / 2)} kr i stället för ${p.annualPrice} kr, med din länk eller din kod. Du får ${p.payoutPerAnnualSale} kr för varje sålt årsmedlemskap. Tusen om året är ${(p.payoutPerAnnualSale * 1000).toLocaleString("sv-SE")} kr till dig.`,
+    who: "För nyhetsbrev, communities, poddar och plattformar med räckvidd.",
     href: "#rekommendation",
   },
   {

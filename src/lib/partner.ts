@@ -7,13 +7,13 @@
  * Three ways to work together (Isak, 2026-09-03), selectable per partner:
  *   checkout  We finance a discount on THEIR products; the guest gets WeHale Pro; they get a
  *             conversion lift at zero cost. No kick-back.
- *   referral  They recommend WeHale with an offer we configure (90 days free, or 50 % off the
- *             annual plan); when a guest becomes paying they get X % of everything that guest
- *             buys, for N months. Martin's model.
+ *   referral  For reach: newsletters, communities, influencers, platforms. Their audience gets
+ *             50 % off the annual plan; they get a fixed payout per annual membership sold
+ *             (Isak's example 2026-09-03: 1 000 a year × 400 kr = 400 000 kr). Martin's model.
+ *             Monthly plans, if any, pay X % of payments for N months.
  *   gift      Pure value-add: 90 days of WeHale Pro to their guests, in their name. No money.
  */
 export type PartnerModel = "checkout" | "referral" | "gift";
-export type ReferralOffer = "trial90" | "annual50";
 
 export interface Partner {
   /** URL segment. Unguessable enough for an invitation link: use the studio name, not a number. */
@@ -40,8 +40,9 @@ export interface Partner {
   guestTrialDays: number;
   annualPrice: number;
   monthlyPrice: number;
-  /** The referral model: offer shape, commission. Mirrors partners.commission_percent / _months. */
-  referralOffer: ReferralOffer;
+  /** The referral model: a fixed payout per annual membership sold, and X % / N months on monthly plans. */
+  payoutPerAnnualSale: number;
+  annualSalesPerYear: number;
   commissionPercent: number;
   commissionMonths: number;
   /** Their numbers, for the calculators and the checkout mock. Editable on the page. */
@@ -70,7 +71,8 @@ export const GENERIC: Partner = {
   guestTrialDays: 30,
   annualPrice: 999,
   monthlyPrice: 179,
-  referralOffer: "trial90",
+  payoutPerAnnualSale: 400,
+  annualSalesPerYear: 300,
   commissionPercent: 20,
   commissionMonths: 12,
   avgOrder: 795,
