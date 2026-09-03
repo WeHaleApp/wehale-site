@@ -125,19 +125,22 @@ const timelineMode = has("checkout") ? "checkout" : "share";
     <p class="mx-auto max-w-3xl text-center text-[clamp(1.75rem,4vw,3rem)] font-medium leading-[1.15]" data-reveal>
       Ingen hype. Inga floskler. Ingen skuld när man missar en dag.
     </p>
-    <p class="mt-5 text-center text-[var(--color-text-secondary)]" data-reveal>Mindre press ger mer närvaro. Det är hela idén.</p>
-    <div class="mx-auto mt-14 grid max-w-4xl gap-4 md:grid-cols-3 md:gap-6" data-reveal>
+    <p class="mt-5 text-center text-[var(--color-text-secondary)]" data-reveal>Mindre press ger mer närvaro. Det är hela idén, och det är vad du sätter ditt namn på.</p>
+    <div class="mx-auto mt-14 grid max-w-5xl gap-4 md:grid-cols-3 md:gap-6" data-reveal>
       <div class="p-card p-6">
-        <p class="font-semibold">Vi säljer inte medicin.</p>
-        <p class="p-body mt-2 text-base">WeHale påstår inte att den mäter din kropp eller botar något. Den hjälper dig andas.</p>
+        <p class="p-eyebrow">Din verksamhet</p>
+        <p class="mt-3 font-semibold">Den leder tillbaka till dig.</p>
+        <p class="p-body mt-2 text-base">Andningen är det dina gäster minns bäst från en klass, och det de har svårast att göra hemma. WeHale är det som händer mellan klasserna: fem minuter på tunnelbanan, tio före sömnen. Den ersätter inte salen. Den bygger vanan som tar gästen tillbaka dit.</p>
       </div>
       <div class="p-card p-6">
-        <p class="font-semibold">Vi luras inte.</p>
-        <p class="p-body mt-2 text-base">Inga förvalda rutor, inga dolda kostnader. Påminnelse en vecka innan något kostar, avbryt i appen med två tryck.</p>
+        <p class="p-eyebrow">Ditt namn</p>
+        <p class="mt-3 font-semibold">Innehåll du kan stå för i salen.</p>
+        <p class="p-body mt-2 text-base">Andning som lärs ut som andning, för lugn, fokus och sömn, i ett tempo man kan följa. Byggd med lärare, med samma omsorg som en bra klass. Inga löften om mätvärden eller botemedel som du sedan får förklara för en gäst.</p>
       </div>
       <div class="p-card p-6">
-        <p class="font-semibold">Tre sessioner är gratis för alltid.</p>
-        <p class="p-body mt-2 text-base">Också för den som aldrig betalar. Det finns alltid någonstans att andas.</p>
+        <p class="p-eyebrow">Dina gäster</p>
+        <p class="mt-3 font-semibold">Behandlas som vuxna.</p>
+        <p class="p-body mt-2 text-base">Inget förvalt, inget dolt. En påminnelse innan något kostar och avbryt i appen med två tryck. Din rekommendation ska aldrig kosta dig förtroende, för det är ditt förtroende gästen lånar oss.</p>
       </div>
     </div>
   </div>
@@ -146,8 +149,21 @@ const timelineMode = has("checkout") ? "checkout" : "share";
 <!-- ─── Content ─── -->
 <section class="mx-auto max-w-6xl px-6 py-20 md:py-24" id="innehall">
   <p class="p-eyebrow" data-reveal>Innehållet</p>
-  <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>46 sessioner. Tre kurser. Tre av dem gratis för alltid.</h2>
-  <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4" data-reveal>
+  <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>Sessioner man kommer tillbaka till.</h2>
+  <p class="p-body mt-6 max-w-2xl" data-reveal>Varje session är skriven och inläst av människor som undervisar andning, för ett tillfälle och ett behov: morgonen, lunchrasten, kvällen, natten. Det är omsorgen i inspelningen som gör att man kommer tillbaka, och det är den användarna skriver om.</p>
+  <div class="mt-10 grid gap-4 md:grid-cols-2" data-reveal>
+    <figure class="p-card p-6">
+      <p class="text-[var(--color-gold)]" aria-label="Fem av fem stjärnor">★★★★★</p>
+      <blockquote class="mt-3 text-lg leading-relaxed">"I tried meditation apps for years. WeHale is the first one I keep coming back to."</blockquote>
+      <figcaption class="mt-4 text-sm text-[var(--color-text-tertiary)]">App Store-recension</figcaption>
+    </figure>
+    <figure class="p-card p-6">
+      <p class="text-[var(--color-gold)]" aria-label="Fem av fem stjärnor">★★★★★</p>
+      <blockquote class="mt-3 text-lg leading-relaxed">"Good app for stress management, I like that there are different sessions depending on what outcome you're after."</blockquote>
+      <figcaption class="mt-4 text-sm text-[var(--color-text-tertiary)]">App Store-recension</figcaption>
+    </figure>
+  </div>
+  <div class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4" data-reveal>
     {covers.map((c) => (
       <figure class="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-md)] md:rounded-[var(--radius-lg)]">
         <img src={c.src} alt={c.title} class="h-full w-full object-cover" loading="lazy" />
