@@ -1,14 +1,14 @@
 // Netlify Function: /.netlify/functions/partner-interest
 //
-// The partner pages' "I want to be contacted" form. Same transport as support.js (Postmark), so a
-// submission lands in the inbox the team already reads. Sends:
+// The partner pages' "I want to be contacted" form. Mails through Resend, the same provider the
+// API server uses (server/src/lib/email.ts), so one account and one verified sender. Sends:
 // 1) the interest to PARTNER_TO_EMAIL (default: SUPPORT_TO_EMAIL, default support@wehale.io)
 // 2) a short confirmation to the sender
 //
-// Requires env: POSTMARK_SERVER_TOKEN, SUPPORT_FROM_EMAIL (verified in Postmark)
-// Optional env: PARTNER_TO_EMAIL, SUPPORT_TO_EMAIL, SUPPORT_REPLY_TO, SUPPORT_FROM_NAME
+// Requires env (Netlify → Site configuration → Environment variables): RESEND_API_KEY
+// Optional env: RESEND_FROM_EMAIL (default "WeHale <noreply@wehale.io>"), PARTNER_TO_EMAIL,
+//               SUPPORT_TO_EMAIL, SUPPORT_REPLY_TO
 
-const POSTMARK_API = 'https://api.postmarkapp.com/email';
 
 function esc(s = '') {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -16,15 +16,17 @@ function esc(s = '') {
 function isEmail(str = '') {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(str).trim());
 }
-async function postmarkSend({ token, payload }) {
-  const res = await fetch(POSTMARK_API, {
+const RESEND_API = 'https://api.resend.com/emails';
+
+async function sendMail({ apiKey, from, to, replyTo, subject, html, text }) {
+  const res = await fetch(RESEND_API, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Postmark-Server-Token': token },
-    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ from, to: [to], reply_to: replyTo, subject, html, text }),
   });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`Postmark error ${res.status}: ${text}`);
-  try { return JSON.parse(text); } catch { return { ok: true }; }
+  const body = await res.text();
+  if (!res.ok) throw new Error(`Resend error ${res.status}: ${body}`);
+  try { return JSON.parse(body); } catch { return { ok: true }; }
 }
 
 const MODEL_LABELS = { checkout: 'Gåvan i kassan', referral: 'Ambassadör', gift: 'Gästkoden' };
@@ -32,13 +34,11 @@ const MODEL_LABELS = { checkout: 'Gåvan i kassan', referral: 'Ambassadör', gif
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
 
-  const token = process.env.POSTMARK_SERVER_TOKEN;
-  const fromEmail = process.env.SUPPORT_FROM_EMAIL || 'support@wehale.io';
-  const fromName = process.env.SUPPORT_FROM_NAME || 'WeHale';
-  const from = `${fromName} <${fromEmail}>`;
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM_EMAIL || 'WeHale <noreply@wehale.io>';
   const to = process.env.PARTNER_TO_EMAIL || process.env.SUPPORT_TO_EMAIL || 'support@wehale.io';
   const replyTo = process.env.SUPPORT_REPLY_TO || 'support@wehale.io';
-  if (!token) return { statusCode: 500, body: 'Missing POSTMARK_SERVER_TOKEN' };
+  if (!apiKey) return { statusCode: 500, body: 'Missing RESEND_API_KEY' };
 
   let body;
   try { body = JSON.parse(event.body || '{}'); } catch { return { statusCode: 400, body: 'Invalid JSON' }; }
@@ -68,13 +68,13 @@ export const handler = async (event) => {
     </div>`;
 
   try {
-    await postmarkSend({ token, payload: { From: from, To: to, ReplyTo: email, Subject: subject, HtmlBody: html, TextBody: rows.map(([k, v]) => `${k}: ${v}`).join('\n') + (message ? `\n\n${message}` : ''), MessageStream: 'outbound' } });
-    await postmarkSend({ token, payload: {
-      From: from, To: email, ReplyTo: replyTo,
-      Subject: 'Tack, vi hör av oss inom två dagar',
-      TextBody: `Hej ${name},\n\nTack för ditt intresse för ett samarbete med WeHale. Vi läser det du skrev och hör av oss inom två arbetsdagar med ett förslag på hur det skulle kunna se ut hos dig.\n\nVänliga hälsningar\nWeHale`,
-      MessageStream: 'outbound',
-    } });
+    await sendMail({ apiKey, from, to, replyTo: email, subject, html, text: rows.map(([k, v]) => `${k}: ${v}`).join('\n') + (message ? `\n\n${message}` : '') });
+    await sendMail({
+      apiKey, from, to: email, replyTo,
+      subject: 'Tack, vi hör av oss inom två dagar',
+      text: `Hej ${name},\n\nTack för ditt intresse för ett samarbete med WeHale. Vi läser det du skrev och hör av oss inom två arbetsdagar med ett förslag på hur det skulle kunna se ut hos dig.\n\nVänliga hälsningar\nWeHale`,
+      html: `<p>Hej ${esc(name)},</p><p>Tack för ditt intresse för ett samarbete med WeHale. Vi läser det du skrev och hör av oss inom två arbetsdagar med ett förslag på hur det skulle kunna se ut hos dig.</p><p>Vänliga hälsningar<br>WeHale</p>`,
+    });
   } catch (err) {
     console.error('partner-interest', err);
     return { statusCode: 502, body: 'Kunde inte skicka just nu. Försök igen om en stund.' };
