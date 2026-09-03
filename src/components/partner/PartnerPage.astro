@@ -1,19 +1,21 @@
 ---
 /**
  * The whole partner page in one component, one story: the product, then "try it yourself"
- * (the owner's lifetime QR), then the three ways to work together, then the detail of each way
- * the page proposes (checkout mock + calculator; referral calculator; the gift), then how to
- * start, the terms, the next step. Every string that names the partner comes from the JSON; the
- * generic page passes GENERIC and `generic`, and shows all three ways.
+ * (the owner's lifetime QR), then the ways to work together as a menu, then ONE CHAPTER PER WAY
+ * the page proposes, each complete in itself (what it is, how it looks, the numbers, how to start,
+ * the pilot, the terms for that way), then what is common to all, then the next step. Every string
+ * that names the partner comes from the JSON; the generic page passes GENERIC and `generic`.
  */
 import type { Partner } from "../../lib/partner";
-import { APP_STORE_URL, codeLink, kr } from "../../lib/partner";
+import { APP_STORE_URL, MODEL_NAMES, codeLink, kr } from "../../lib/partner";
 import CheckoutDemo from "./CheckoutDemo.astro";
 import Calculator from "./Calculator.astro";
 import ReferralCalculator from "./ReferralCalculator.astro";
 import Models from "./Models.astro";
 import Timeline from "./Timeline.astro";
 import OwnerQr from "./OwnerQr.astro";
+import ChapterHeader from "./ChapterHeader.astro";
+import InterestForm from "./InterestForm.astro";
 
 interface Props { partner: Partner; generic?: boolean }
 const { partner: p, generic = false } = Astro.props;
@@ -26,8 +28,10 @@ const greeting = !generic && p.contactName ? `Hej ${p.contactName}.` : null;
 const mailto = p.ourContactEmail
   ? `mailto:${p.ourContactEmail}?subject=${encodeURIComponent(`WeHale och ${p.name}`)}`
   : null;
-const annualHalf = Math.round(p.annualPrice / 2);
+const annualHalf = Math.floor(p.annualPrice / 2);
+const offerText = p.referralOffer === "annual50" ? `50 % på årsmedlemskapet, ${annualHalf} kr i stället för ${kr(p.annualPrice)}` : `${p.teamCodeDays} dagar gratis, sedan ${kr(p.monthlyPrice)} per månad`;
 const guestCodeExample = p.teamCode.replace(/-TEAM$/i, "");
+const waysWord = p.models.length === 3 ? "tre sätt" : p.models.length === 2 ? "två sätt" : "ett sätt";
 
 const covers = [
   { src: "/assets/images/sessions/01-box-breath.webp", title: "Box Breath", meta: "Calm" },
@@ -35,20 +39,6 @@ const covers = [
   { src: "/assets/images/sessions/03-echoes-of-strength.webp", title: "Echoes of Strength", meta: "Activate" },
   { src: "/assets/images/sessions/06-nighttime-serenity.webp", title: "Nighttime Serenity", meta: "Sömn" },
 ];
-
-const terms: [string, string][] = [];
-if (has("checkout")) terms.push(["Gästens rabatt", `${p.guestDiscountMonthly} kr på månadsplan (${p.guestTrialDays} dagar gratis) · ${p.guestDiscountAnnual} kr på årsplan (${kr(p.annualPrice)}, betalas direkt). Vi står för rabatten. Du får fullt pris.`]);
-if (has("referral")) {
-  terms.push(["Din ersättning", `${p.payoutPerAnnualSale} kr per sålt årsmedlemskap, utbetald månaden efter köpet. Väljer någon månadsplan: ${p.commissionPercent} % av betalningarna i ${p.commissionMonths} månader.`]);
-  terms.push(["Erbjudandet till dina följare", `50 % på årsmedlemskapet, ${annualHalf} kr i stället för ${kr(p.annualPrice)}. Aktiveras med din länk eller din kod. Rabatten står vi för.`]);
-}
-if (has("gift")) terms.push(["Gästkoden", `${p.teamCodeDays} dagar WeHale Pro till dina gäster, i ditt namn. Inga pengar åt något håll.`]);
-if (has("checkout") || has("referral")) terms.push(["Utbetalning och redovisning", "Månadsvis via Stripe, redovisad i din egen vy."]);
-terms.push(["Bindning", "Ingen. Pausa eller avsluta när som helst."]);
-terms.push(["Exklusivitet", "Vi kan lova att vara den enda appen hos dig. Vi ber inte om motsvarande."]);
-terms.push(["Gästens skydd", "Inget är förvalt. Påminnelse en vecka före första dragningen. Avbryt i appen med två tryck."]);
-
-const timelineMode = has("checkout") ? "checkout" : "share";
 ---
 
 <!-- ─── Hero ─── -->
@@ -78,7 +68,7 @@ const timelineMode = has("checkout") ? "checkout" : "share";
       Andning som dina gäster tar med sig hem.
     </h1>
     <p class="p-body mt-6 max-w-xl" data-reveal>
-      Först en app vi vill att du provar själv, för att avgöra om den är något du vill sätta ditt namn bakom. Sedan {generic ? "tre sätt" : p.models.length === 1 ? "ett sätt" : "några sätt"} att låta dina gäster få den, som gynnar dig också. Du väljer ordning och takt.
+      Först en app vi vill att du provar själv, för att avgöra om den är något du vill sätta ditt namn bakom. Sedan {waysWord} att låta dina gäster få den, som gynnar dig också. Du väljer ordning och takt.
     </p>
     <div class="mt-10 flex flex-col gap-3 sm:flex-row" data-reveal>
       <a href="#prova" class="p-btn">Prova appen</a>
@@ -191,68 +181,96 @@ const timelineMode = has("checkout") ? "checkout" : "share";
       </div>
       <p class="mt-4 text-sm text-[var(--color-text-tertiary)]" data-reveal>Android är i beta på Google Play, {p.ourContactName} skickar länken.</p>
     </div>
-    <div class="flex flex-col items-start gap-6 md:items-center" data-reveal>
-      <div class="hidden flex-col items-center md:flex">
-        <OwnerQr code={p.ownerCode} />
-        <p class="mt-3 text-sm text-[var(--color-text-secondary)]">Skanna för livstid · en gång · {p.ownerCode}</p>
+    <div class="grid gap-4" data-reveal>
+      <!-- The lifetime card: looks like the thing it is, a personal membership card. -->
+      <div class="relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-[#1b2848] via-[#141c33] to-[#0f182b] p-6 shadow-[0_30px_80px_rgba(0,0,0,.45)] md:p-7">
+        <div class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[var(--color-accent)]/10 blur-3xl" aria-hidden="true"></div>
+        <div class="flex items-start justify-between gap-6">
+          <div class="min-w-0">
+            <img src="/assets/images/logo.svg" alt="WeHale" class="h-5 w-auto" />
+            <p class="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-accent)]">WeHale Pro · för alltid</p>
+            <p class="mt-2 truncate text-2xl font-medium">{generic ? "Ditt namn här" : p.name}</p>
+            <p class="mt-1 text-sm text-[var(--color-text-secondary)]">Personligt. En skanning, inget slutdatum.</p>
+            <p class="mt-6 font-mono text-xs tracking-[0.12em] text-[var(--color-text-tertiary)]">{p.ownerCode}</p>
+          </div>
+          <div class="hidden shrink-0 md:block">
+            <OwnerQr code={p.ownerCode} />
+          </div>
+        </div>
+        <div class="mt-6 md:hidden"><a href={codeLink(p.ownerCode)} class="p-btn w-full">Öppna WeHale med min kod</a></div>
       </div>
-      <div class="p-card w-full p-5 md:max-w-xs">
-        <p class="text-xs uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">Teamkod · {p.teamCodeDays} dagar</p>
-        <p class="mt-2 inline-block rounded-[var(--radius-sm)] border border-[var(--color-accent-line)] bg-[var(--color-accent-soft)] px-4 py-2 text-lg font-extrabold tracking-[0.08em] text-[var(--color-accent)]">{p.teamCode}</p>
-        <p class="mt-3 text-sm text-[var(--color-text-tertiary)]">Skriv den när kontot skapas. Inget kort behövs.</p>
+
+      <!-- The team code: a ticket, with a copy button. -->
+      <div class="relative rounded-[20px] border border-dashed border-[var(--color-accent-line)] bg-[var(--color-accent-soft)]/40 p-5" data-copy-card>
+        <div class="flex items-center justify-between gap-4">
+          <div class="min-w-0">
+            <p class="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-accent)]">Teamkod · {p.teamCodeDays} dagar · alla som undervisar hos dig</p>
+            <p class="mt-2 font-mono text-2xl font-semibold tracking-[0.14em]" data-copy-text>{p.teamCode}</p>
+            <p class="mt-2 text-sm text-[var(--color-text-tertiary)]">Skriv den när kontot skapas. Inget kort behövs.</p>
+          </div>
+          <button type="button" class="p-btn-ghost shrink-0 px-4 py-2 text-sm" data-copy>Kopiera</button>
+        </div>
       </div>
     </div>
   </div>
 </section>
+<script>
+  document.querySelectorAll<HTMLElement>("[data-copy-card]").forEach((card) => {
+    const btn = card.querySelector<HTMLButtonElement>("[data-copy]");
+    const text = card.querySelector<HTMLElement>("[data-copy-text]")?.textContent?.trim() ?? "";
+    btn?.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(text); btn.textContent = "Kopierad"; setTimeout(() => (btn.textContent = "Kopiera"), 1600); } catch { btn.textContent = text; }
+    });
+  });
+</script>
 
-<!-- ─── The ways to work together ─── -->
+<!-- ─── The ways to work together: the menu ─── -->
 <section class="mx-auto max-w-6xl px-6 py-20 md:py-24" id="modeller">
   <p class="p-eyebrow" data-reveal>{p.models.length === 3 ? "Tre sätt att samarbeta" : p.models.length === 2 ? "Två sätt att samarbeta" : "Så här kan vi samarbeta"}</p>
   <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>Ett samarbete, i den form som passar din verksamhet.</h2>
-  <p class="p-body mt-6 max-w-2xl" data-reveal>Gemensamt för alla: dina gäster får WeHale i ditt namn, du bestämmer takten, och du kan pausa när du vill. Skillnaden är var värdet landar.</p>
+  <p class="p-body mt-6 max-w-2xl" data-reveal>Gemensamt för alla: dina gäster får WeHale i ditt namn, du bestämmer takten, och du kan pausa när du vill. Skillnaden är var värdet landar. Varje sätt har sitt eget kapitel nedan, med allt som hör till det.</p>
   <div class="mt-10" data-reveal>
     <Models partner={p} generic={generic} />
   </div>
 </section>
 
 {has("checkout") && (
-  <>
-    <!-- ─── In the checkout ─── -->
-    <section class="border-y border-[var(--color-line)] bg-[var(--color-bg-alt)]" id="kassa">
-      <div class="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-24">
-        <div>
-          <p class="p-eyebrow" data-reveal>Sätt 1 · I din kassa</p>
-          <h2 class="p-h2 mt-4" data-reveal>Ditt namn på gåvan. Dina ord om varför.</h2>
-          <p class="p-body mt-6" data-reveal>
-            En kryssruta efter kort och e-post, inga nya fält. Gästen väljer själv. Kryssar de i får de {p.guestDiscountMonthly} kr av köpet och {p.guestTrialDays} dagar WeHale Pro, och kopplar gåvan till dig, inte till oss.
-          </p>
-          <ul class="mt-8 grid gap-4" data-reveal>
-            <li class="flex gap-4">
-              <span class="p-eyebrow mt-1 w-16 shrink-0">Kassan</span>
-              <span class="p-body text-base">Två rader under kortfälten. Obockad tills gästen väljer. Två planer att välja mellan när rutan öppnas.</span>
-            </li>
-            <li class="flex gap-4">
-              <span class="p-eyebrow mt-1 w-16 shrink-0">Sheeten</span>
-              <span class="p-body text-base">"Vad är WeHale?" öppnar en kort presentation över kassan, och en enda väg tillbaka.</span>
-            </li>
-            <li class="flex gap-4">
-              <span class="p-eyebrow mt-1 w-16 shrink-0">Kvittot</span>
-              <span class="p-body text-base">Gåvan är aktiv. En knapp öppnar appen direkt på gästens konto. Ingen kod att skriva.</span>
-            </li>
-          </ul>
-          <p class="mt-8 text-sm text-[var(--color-text-tertiary)]" data-reveal>Testa själv: bocka i rutan, byt plan, öppna "Vad är WeHale?", betala.</p>
-        </div>
-        <div data-reveal>
-          <CheckoutDemo partner={p} />
-        </div>
-      </div>
-    </section>
+  <!-- ─── Chapter 1: in the checkout ─── -->
+  <section class="border-t border-[var(--color-line)] bg-[var(--color-bg-alt)]" id="kassa">
+    <ChapterHeader n="1" title={MODEL_NAMES.checkout} promise={`Vi finansierar en rabatt på dina produkter. Gästen ser ${p.guestDiscountMonthly} kr rabatt i sista steget och får ${p.guestTrialDays} dagar WeHale Pro. Du får fullt pris, och fler som slutför köpet.`} />
 
-    <!-- ─── The numbers, checkout ─── -->
-    <section class="mx-auto max-w-6xl px-6 py-20 md:py-24" id="rakna">
+    <div class="mx-auto grid max-w-6xl items-start gap-12 px-6 py-16 md:grid-cols-2 md:py-20" id="kassa-demo">
+      <div class="md:sticky md:top-24">
+        <p class="p-eyebrow" data-reveal>Så ser det ut</p>
+        <h3 class="p-h3 mt-4" data-reveal>Ditt namn på gåvan. Dina ord om varför.</h3>
+        <p class="p-body mt-6" data-reveal>
+          En kryssruta efter kort och e-post, inga nya fält. Gästen väljer själv. Kryssar de i får de {p.guestDiscountMonthly} kr av köpet och {p.guestTrialDays} dagar WeHale Pro, och kopplar gåvan till dig, inte till oss.
+        </p>
+        <ul class="mt-8 grid gap-4" data-reveal>
+          <li class="flex gap-4">
+            <span class="p-eyebrow mt-1 w-16 shrink-0">Kassan</span>
+            <span class="p-body text-base">Två rader under kortfälten. Obockad tills gästen väljer. Två planer att välja mellan när rutan öppnas.</span>
+          </li>
+          <li class="flex gap-4">
+            <span class="p-eyebrow mt-1 w-16 shrink-0">Sheeten</span>
+            <span class="p-body text-base">"Vad är WeHale?" öppnar en kort presentation över kassan, och en enda väg tillbaka.</span>
+          </li>
+          <li class="flex gap-4">
+            <span class="p-eyebrow mt-1 w-16 shrink-0">Kvittot</span>
+            <span class="p-body text-base">Gåvan är aktiv. En knapp öppnar appen direkt på gästens konto. Ingen kod att skriva.</span>
+          </li>
+        </ul>
+        <p class="mt-8 text-sm text-[var(--color-text-tertiary)]" data-reveal>Testa själv: bocka i rutan, byt plan, öppna "Vad är WeHale?", betala.</p>
+      </div>
+      <div data-reveal>
+        <CheckoutDemo partner={p} />
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-6xl px-6 pb-16 md:pb-20" id="kassa-varde">
       <p class="p-eyebrow" data-reveal>Vad det gör för din kassa</p>
-      <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>Rabatten som räddar köpet betalar någon annan.</h2>
-      <div class="mt-10 grid gap-4 md:grid-cols-3 md:gap-6" data-reveal>
+      <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Rabatten som räddar köpet betalar någon annan.</h3>
+      <div class="mt-8 grid gap-4 md:grid-cols-3 md:gap-6" data-reveal>
         <div class="p-card p-6">
           <p class="p-num">{p.guestDiscountMonthly} kr</p>
           <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">av köpet, till gästen</p>
@@ -269,73 +287,110 @@ const timelineMode = has("checkout") ? "checkout" : "share";
           <p class="p-body mt-2 text-sm">Gästen ser {p.guestDiscountMonthly} kr rabatt och slutför köpet. Du får hela beloppet. Skillnaden betalar vi.</p>
         </div>
       </div>
-      <div class="mt-16">
-        <p class="p-eyebrow" data-reveal>Räkneexemplet · ett antagande, dina siffror</p>
-        <h3 class="p-h2 mt-4 max-w-2xl" data-reveal>Fler slutför köpet när kassan visar en rabatt. Rabatten betalar vi.</h3>
-        <div class="mt-8" data-reveal>
-          <Calculator partner={p} />
-        </div>
+    </div>
+
+    <div class="mx-auto max-w-6xl px-6 pb-16 md:pb-20" id="kassa-rakna">
+      <p class="p-eyebrow" data-reveal>Räkneexemplet · ett antagande, dina siffror</p>
+      <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Fler slutför köpet när kassan visar en rabatt. Rabatten betalar vi.</h3>
+      <div class="mt-8" data-reveal>
+        <Calculator partner={p} />
       </div>
-    </section>
-  </>
+    </div>
+
+    <div class="mx-auto max-w-6xl px-6 pb-16 md:pb-20" id="kassa-start">
+      <p class="p-eyebrow" data-reveal>Så här kommer vi igång</p>
+      <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>En timme. Eller ingen alls.</h3>
+      <div class="mt-10" data-reveal>
+        <Timeline partner={p} mode="checkout" />
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-6xl px-6 pb-20 md:pb-24" id="kassa-villkor">
+      <p class="p-eyebrow" data-reveal>Villkoren för det här sättet</p>
+      <dl class="p-terms mt-6" data-reveal>
+        <div><dt>Gästens rabatt</dt><dd>{p.guestDiscountMonthly} kr på månadsplan ({p.guestTrialDays} dagar gratis) · {p.guestDiscountAnnual} kr på årsplan ({kr(p.annualPrice)}, betalas direkt). Vi står för rabatten. Du får fullt pris.</dd></div>
+        <div><dt>Din vy</dt><dd>Aktiveringar, andel av dina köp, betalande, och din kassakonvertering med och utan rutan. Uppdateras månadsvis.</dd></div>
+        <div><dt>Piloten</dt><dd>Åtta veckor med ett tak vi sätter tillsammans. Avstämning vecka 6. Pausa när du vill.</dd></div>
+      </dl>
+    </div>
+  </section>
 )}
 
 {has("referral") && (
-  <section class:list={["border-y border-[var(--color-line)]", has("checkout") ? "bg-[var(--color-bg-alt)]" : ""]} id="rekommendation">
-    <div class="mx-auto max-w-6xl px-6 py-20 md:py-24">
-      <p class="p-eyebrow" data-reveal>Sätt 2 · Rekommendation med ersättning</p>
-      <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>Du når många. Vi gör erbjudandet. Du får {p.payoutPerAnnualSale} kr för varje sålt årsmedlemskap.</h2>
+  <!-- ─── Chapter 2: reach, paid per annual membership ─── -->
+  <section class="border-t border-[var(--color-line)]" id="rekommendation">
+    <ChapterHeader n="2" title={MODEL_NAMES.referral} promise={`Du når många. Vi gör erbjudandet. Du får ${p.commissionPercent} % av allt en värvad kund betalar under sitt första år.`} />
+
+    <div class="mx-auto max-w-6xl px-6 py-16 md:py-20" id="rekommendation-rakna">
+      <p class="p-eyebrow" data-reveal>Så funkar det</p>
+      <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Dina följare får erbjudandet. Du får din andel av allt de betalar, i tolv månader.</h3>
       <p class="p-body mt-6 max-w-2xl" data-reveal>
-        Dina följare får 50 % på årsmedlemskapet, {annualHalf} kr i stället för {kr(p.annualPrice)}, med din länk eller din kod. Varje sålt årsmedlemskap ger dig {p.payoutPerAnnualSale} kr, utbetalt månaden efter. Säljer du tusen om året är det {(p.payoutPerAnnualSale * 1000).toLocaleString("sv-SE")} kr. Räkna på det här, med dina siffror.
+        Dina följare får {offerText}, med din länk eller din kod. Varje gäst som blir kund ger dig {p.commissionPercent} % av det de betalar oss under sina första {p.commissionMonths} månader, efter butikens andel. Årsmedlemskap och månadsplan räknas båda. Utbetalt månadsvis. Räkna på det här, med dina siffror.
       </p>
       <div class="mt-10" data-reveal>
         <ReferralCalculator partner={p} />
       </div>
     </div>
+
+    <div class="mx-auto max-w-6xl px-6 pb-16 md:pb-20" id="rekommendation-start">
+      <p class="p-eyebrow" data-reveal>Så här kommer vi igång</p>
+      <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>En kvart från oss. Resten är ditt tempo.</h3>
+      <div class="mt-10" data-reveal>
+        <Timeline partner={p} mode="share" />
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-6xl px-6 pb-20 md:pb-24" id="rekommendation-villkor">
+      <p class="p-eyebrow" data-reveal>Villkoren för det här sättet</p>
+      <dl class="p-terms mt-6" data-reveal>
+        <div><dt>Din ersättning</dt><dd>{p.commissionPercent} % av nettot, efter butikens andel på {p.storeSharePercent} %, av allt en värvad kund betalar under sina första {p.commissionMonths} månader. Årsmedlemskap och månadsplan räknas båda. Utbetalt månadsvis, efter butikens returfönster.</dd></div>
+        <div><dt>Erbjudandet till dina följare</dt><dd>{offerText}. Aktiveras med din länk eller din kod. Sätts per partner och kan bytas mellan kampanjer.</dd></div>
+        <div><dt>Din vy</dt><dd>Aktiveringar, betalande kunder och din ersättning, redovisad per månad. Kohorter, aldrig namn.</dd></div>
+        <div><dt>Piloten</dt><dd>Åtta veckor med ett tak vi sätter tillsammans. Avstämning vecka 6. Pausa när du vill.</dd></div>
+      </dl>
+    </div>
   </section>
 )}
 
 {has("gift") && (
-  <section class="mx-auto max-w-6xl px-6 py-20 md:py-24" id="gava">
-    <div class="grid items-center gap-12 md:grid-cols-[1.2fr_1fr]">
+  <!-- ─── Chapter 3: the gift ─── -->
+  <section class="border-t border-[var(--color-line)] bg-[var(--color-bg-alt)]" id="gava">
+    <ChapterHeader n="3" title={MODEL_NAMES.gift} promise={`${p.teamCodeDays} dagar WeHale Pro till dina gäster, i ditt namn. Inga pengar åt något håll, inget att integrera.`} />
+
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-6 py-16 md:grid-cols-[1.2fr_1fr] md:py-20" id="gava-hur">
       <div>
-        <p class="p-eyebrow" data-reveal>Sätt 3 · Mervärde till dina gäster</p>
-        <h2 class="p-h2 mt-4" data-reveal>{p.teamCodeDays} dagar WeHale Pro till dina gäster. I ditt namn.</h2>
+        <p class="p-eyebrow" data-reveal>Så funkar det</p>
+        <h3 class="p-h3 mt-4" data-reveal>En kod, en länk, ditt namn i appen.</h3>
         <p class="p-body mt-6" data-reveal>
-          Du får en kod och en länk att dela: i klassen, i nyhetsbrevet, på kvittot. Gästen skapar ett konto, skriver koden och ser att {p.name} har valt WeHale för sina gäster. Inga pengar åt något håll, inget att integrera. Vill du mer senare finns de andra sätten.
+          Du får en kod och en länk att dela: i klassen, i nyhetsbrevet, på kvittot. Gästen skapar ett konto, skriver koden och ser att {p.name} har valt WeHale för sina gäster. För dig som tycker appen är bra och vill ge bort den. Vill du mer senare finns de andra sätten.
         </p>
       </div>
       <div class="p-card p-6 md:p-8" data-reveal>
         <p class="text-xs uppercase tracking-[0.12em] text-[var(--color-text-tertiary)]">Så kan gästkoden se ut</p>
         <p class="mt-3 inline-block rounded-[var(--radius-sm)] border border-[var(--color-accent-line)] bg-[var(--color-accent-soft)] px-4 py-2 text-lg font-extrabold tracking-[0.08em] text-[var(--color-accent)]">{guestCodeExample}</p>
-        <p class="mt-4 text-sm text-[var(--color-text-secondary)]">Vi skapar den tillsammans, med en rad i ditt namn som gästen ser i appen. En kod per tillfälle om du vill veta vad som gav vad: en för klassen, en för nyhetsbrevet.</p>
+        <p class="mt-4 text-sm text-[var(--color-text-secondary)]">Vi skapar den tillsammans, med raden gästen ser i appen. En kod per tillfälle om du vill veta vad som gav vad.</p>
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-6xl px-6 pb-20 md:pb-24" id="gava-start">
+      <p class="p-eyebrow" data-reveal>Så här kommer vi igång</p>
+      <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Klart samma dag. Ingen pilot behövs när inga pengar rör sig.</h3>
+      <div class="mt-10 max-w-2xl" data-reveal>
+        <Timeline partner={p} mode="gift" />
       </div>
     </div>
   </section>
 )}
 
-<!-- ─── Getting started + the pilot ─── -->
-<section class="border-t border-[var(--color-line)] bg-[var(--color-bg-alt)]" id="igang">
-  <div class="mx-auto max-w-6xl px-6 py-20 md:py-24">
-    <p class="p-eyebrow" data-reveal>Så här kommer vi igång</p>
-    <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>{timelineMode === "checkout" ? "En timme. Eller ingen alls." : "En kvart från oss. Resten är ditt tempo."}</h2>
-    <div class="mt-12" data-reveal>
-      <Timeline partner={p} mode={timelineMode} />
-    </div>
-  </div>
-</section>
-
-<!-- ─── Terms ─── -->
+<!-- ─── Common to every way ─── -->
 <section class="border-t border-[var(--color-line)]" id="villkor">
   <div class="mx-auto max-w-6xl px-6 py-20 md:py-24">
-    <p class="p-eyebrow" data-reveal>Villkoren, i korthet</p>
-    <dl class="mt-8 divide-y divide-[var(--color-line)]" data-reveal>
-      {terms.map(([k, v]) => (
-        <div class="grid gap-1 py-5 md:grid-cols-[14rem_1fr] md:gap-2">
-          <dt class="font-semibold">{k}</dt>
-          <dd class="text-[var(--color-text-secondary)]">{v}</dd>
-        </div>
-      ))}
+    <p class="p-eyebrow" data-reveal>Gemensamt för {p.models.length === 1 ? "samarbetet" : "alla sätt"}</p>
+    <dl class="p-terms mt-6" data-reveal>
+      {(has("checkout") || has("referral")) && <div><dt>Utbetalning och redovisning</dt><dd>Månadsvis via Stripe, redovisad i din egen vy.</dd></div>}
+      <div><dt>Bindning</dt><dd>Ingen. Pausa eller avsluta när som helst.</dd></div>
+      <div><dt>Exklusivitet</dt><dd>Vi kan lova att vara den enda appen hos dig. Vi ber inte om motsvarande.</dd></div>
+      <div><dt>Gästens skydd</dt><dd>Inget är förvalt. Påminnelse en vecka före första dragningen. Avbryt i appen med två tryck.</dd></div>
     </dl>
   </div>
 </section>
@@ -349,12 +404,10 @@ const timelineMode = has("checkout") ? "checkout" : "share";
   <div class="mx-auto max-w-3xl px-6 py-24 text-center md:py-28">
     <p class="p-eyebrow" data-reveal>Nästa steg</p>
     <h2 class="p-h2 mt-4" data-reveal>Femton minuter, och ett färdigt förslag med ditt namn inom två dagar.</h2>
-    <p class="p-body mt-6" data-reveal>Berätta hur dina gäster bokar och betalar i dag, så kommer vi tillbaka med exakt hur det skulle se ut hos dig. Sedan bestämmer du.</p>
-    <div class="mt-10 flex flex-col items-center gap-4" data-reveal>
-      {mailto
-        ? <a href={mailto} class="p-btn">Boka 15 minuter med {p.ourContactName}</a>
-        : <p class="text-[var(--color-text-secondary)]">Svara på meddelandet du fick länken i, så bokar {p.ourContactName} en tid.</p>}
-      <p class="text-sm text-[var(--color-text-tertiary)]">{p.ourContactName} · WeHale · wehale.io</p>
+    <p class="p-body mt-6" data-reveal>Berätta vem du är och hur dina gäster bokar och betalar i dag, så kommer vi tillbaka med exakt hur det skulle se ut hos dig. Sedan bestämmer du.</p>
+    <div class="mt-10" data-reveal>
+      <InterestForm partner={p} generic={generic} />
     </div>
+    <p class="mt-6 text-sm text-[var(--color-text-tertiary)]" data-reveal>{mailto ? <>Hellre mejl? <a href={mailto} class="underline">Skriv till {p.ourContactName}</a>.</> : <>{p.ourContactName} · WeHale · wehale.io</>}</p>
   </div>
 </section>

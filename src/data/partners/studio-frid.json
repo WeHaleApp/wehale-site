@@ -27,6 +27,6 @@
   "checkoutSystem": "Bokadirekt",
   "accent": "#0f766e",
   "quote": "Vi ger WeHale till alla våra gäster.",
-  "payoutPerAnnualSale": 400,
-  "annualSalesPerYear": 100
+  "referralOffer": "trial90",
+  "recruitsPerYear": 100
 }

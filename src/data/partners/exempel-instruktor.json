@@ -15,6 +15,6 @@
   "commissionMonths": 12,
   "guestsPerMonth": 500,
   "quote": "Andningen är det mina elever tar med sig hem.",
-  "payoutPerAnnualSale": 400,
-  "annualSalesPerYear": 1000
+  "referralOffer": "annual50",
+  "recruitsPerYear": 1000
 }

@@ -1,0 +1,20 @@
+---
+/**
+ * A chapter opener for one way of working together. Everything about that way lives under it:
+ * what it is, how it looks, the numbers, how to start, the terms for that way (Isak, 2026-09-03:
+ * "tydligare sektioner för respektive modell").
+ */
+interface Props { n: string; title: string; promise: string }
+const { n, title, promise } = Astro.props;
+---
+
+<div class="border-b border-[var(--color-line)]">
+  <div class="mx-auto flex max-w-6xl items-start gap-5 px-6 py-8 md:items-center md:gap-8 md:py-10">
+    <span class="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-[var(--color-accent-line)] bg-[var(--color-accent-soft)] text-lg font-semibold text-[var(--color-accent)]">{n}</span>
+    <div>
+      <p class="p-eyebrow">Sätt {n}</p>
+      <h2 class="mt-1 text-2xl font-semibold md:text-3xl">{title}</h2>
+      <p class="mt-2 max-w-2xl text-[var(--color-text-secondary)]">{promise}</p>
+    </div>
+  </div>
+</div>
