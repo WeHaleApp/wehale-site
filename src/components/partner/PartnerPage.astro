@@ -51,7 +51,7 @@ const covers = [
   <div class="absolute inset-0 -z-10 bg-[var(--color-bg)]" aria-hidden="true">
     <!-- A still from the brand film (WH_16x9, 39 s): the closed eyes are the brand's calm.
          Mobile: a top band, text beneath it. Desktop: the right 62 %, text to its left. -->
-    <div class="absolute inset-x-0 top-0 h-[52%] md:inset-y-0 md:left-[38%] md:h-auto">
+    <div class="absolute inset-x-0 top-0 h-[58%] md:inset-y-0 md:left-[38%] md:h-auto">
       <img
         src="/assets/images/partner/hero-eyes-closed-1920.webp"
         srcset="/assets/images/partner/hero-eyes-closed-1920.webp 1920w, /assets/images/partner/hero-eyes-closed.webp 2560w"
@@ -62,7 +62,8 @@ const covers = [
         fetchpriority="high"
       />
       <div class="absolute inset-0 hidden bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/10 to-transparent md:block" style="width: 55%;"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/25 via-transparent to-[var(--color-bg)] md:hidden"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/25 via-transparent to-transparent md:hidden"></div>
+      <div class="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-b from-transparent via-[var(--color-bg)]/70 to-[var(--color-bg)] md:hidden"></div>
       <div class="absolute inset-0 bg-[var(--color-bg)]/10 md:bg-[var(--color-bg)]/15"></div>
     </div>
     <div class="absolute inset-0 hidden bg-gradient-to-b from-[var(--color-bg)]/30 via-transparent to-[var(--color-bg)] md:block"></div>
@@ -70,7 +71,7 @@ const covers = [
       <div class="pointer-events-none absolute -left-32 bottom-0 h-[70%] w-[70%] rounded-full opacity-35 blur-3xl md:-left-20 md:h-[80%] md:w-[55%]" style="background:radial-gradient(closest-side, var(--partner), transparent 70%)" aria-hidden="true"></div>
     )}
   </div>
-  <div class="mx-auto flex min-h-[92dvh] max-w-6xl flex-col justify-end px-6 pb-14 pt-[50dvh] md:min-h-[78dvh] md:pb-20 md:pt-32">
+  <div class="mx-auto flex min-h-[92dvh] max-w-6xl flex-col justify-end px-6 pb-14 pt-[50dvh] md:min-h-[78dvh] md:pb-28 md:pt-32">
     {generic ? (
       <p class="hero-in p-eyebrow" style="--d:0ms">{eyebrow}</p>
     ) : (
@@ -201,7 +202,7 @@ const covers = [
         <span class="hidden md:inline">Skanna kortet med telefonen. </span><span class="md:hidden">Tryck på knappen i kortet. </span>Koden är din, går att använda en gång och har inget slutdatum.
       </p>
       <div class="mt-6 hidden md:flex md:items-center md:gap-3" data-reveal>
-        <a href={APP_STORE_URL} target="_blank" rel="noreferrer noopener" class="p-btn-ghost whitespace-nowrap">Ladda ner på App Store</a>
+        <a href={APP_STORE_URL} target="_blank" rel="noreferrer noopener" class="p-btn whitespace-nowrap">Ladda ner på App Store</a>
       </div>
       <p class="mt-4 text-sm text-[var(--color-text-tertiary)]" data-reveal>Android är i beta på Google Play, vi skickar länken.</p>
     </div>
@@ -214,12 +215,11 @@ const covers = [
           <div class="min-w-0">
             <div class="flex items-center gap-3">
               <img src="/assets/images/logo.svg" alt="WeHale" class="h-5 w-auto" />
-              {!generic && p.logo && <><span class="text-[var(--color-text-tertiary)]" aria-hidden="true">×</span><img src={p.logo} alt={p.name} class="h-7 w-auto" style={silhouette} /></>}
             </div>
             <p class="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-accent)]">WeHale Pro · för alltid</p>
             <p class="mt-2 truncate text-2xl font-medium">{generic ? "Ditt namn här" : p.name}</p>
             <p class="mt-1 text-sm text-[var(--color-text-secondary)]">Personligt. En skanning, inget slutdatum.</p>
-            <p class="mt-6 text-xs text-[var(--color-text-tertiary)]">Din kod <span class="ml-1 font-mono tracking-[0.12em] text-[var(--color-text-secondary)]">{p.ownerCode}</span></p>
+            <p class="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-[var(--color-text-tertiary)]">Din kod <span class="font-mono tracking-[0.12em] text-[var(--color-text)]">{p.ownerCode}</span></p>
           </div>
           <div class="hidden shrink-0 md:block">
             <OwnerQr code={p.ownerCode} />
@@ -284,16 +284,16 @@ const covers = [
           En kryssruta efter kort och e-post, inga nya fält. Gästen väljer själv. Kryssar de i får de {p.guestDiscountMonthly} kr av köpet och {p.guestTrialDays} dagar WeHale Pro, och kopplar gåvan till dig, inte till oss.
         </p>
         <ul class="mt-8 grid gap-4" data-reveal>
-          <li class="flex gap-4">
-            <span class="p-eyebrow mt-1 w-16 shrink-0">Kassan</span>
+          <li class="flex flex-col gap-1 sm:flex-row sm:gap-4">
+            <span class="p-eyebrow mt-1 w-24 shrink-0">Kassan</span>
             <span class="p-body text-base">Två rader under kortfälten. Obockad tills gästen väljer. Två planer att välja mellan när rutan öppnas.</span>
           </li>
-          <li class="flex gap-4">
-            <span class="p-eyebrow mt-1 w-16 shrink-0">Infobladet</span>
+          <li class="flex flex-col gap-1 sm:flex-row sm:gap-4">
+            <span class="p-eyebrow mt-1 w-24 shrink-0">Infobladet</span>
             <span class="p-body text-base">"Vad är WeHale?" öppnar ett kort blad över kassan, med en enda väg tillbaka.</span>
           </li>
-          <li class="flex gap-4">
-            <span class="p-eyebrow mt-1 w-16 shrink-0">Kvittot</span>
+          <li class="flex flex-col gap-1 sm:flex-row sm:gap-4">
+            <span class="p-eyebrow mt-1 w-24 shrink-0">Kvittot</span>
             <span class="p-body text-base">Gåvan är aktiv. En knapp öppnar appen direkt på gästens konto. Ingen kod att skriva.</span>
           </li>
         </ul>
@@ -347,24 +347,24 @@ const covers = [
       <div class="mt-8 grid gap-4 md:grid-cols-3 md:gap-6" data-reveal>
         <div class="p-card p-6">
           <p class="p-num">{p.guestDiscountMonthly} kr</p>
-          <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">av köpet, till gästen</p>
+          <p class="mt-2 text-sm font-semibold">av köpet, till gästen</p>
           <p class="p-body mt-2 text-sm">Rabatter som dyker upp i kassan är det starkaste enskilda medlet mot avbrutna köp. Här är din marginal orörd: vi står för hela rabatten.</p>
         </div>
         <div class="p-card p-6">
           <p class="p-num">0 kr</p>
-          <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">kostnad för dig</p>
+          <p class="mt-2 text-sm font-semibold">kostnad för dig</p>
           <p class="p-body mt-2 text-sm">Vi betalar rabatten, kontot, faktureringen och supporten. Integrationen tar en timme, eller ingen alls.</p>
         </div>
         <div class="p-card p-6">
           <p class="p-num" style="font-size: 2rem; line-height: 1.2">Fullt pris</p>
-          <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">på varje köp rabatten räddar</p>
+          <p class="mt-2 text-sm font-semibold">på varje köp rabatten räddar</p>
           <p class="p-body mt-2 text-sm">Gästen ser {p.guestDiscountMonthly} kr rabatt och slutför köpet. Du får hela beloppet. Skillnaden betalar vi.</p>
         </div>
       </div>
     </div>
 
     <div class="mx-auto max-w-6xl px-6 pb-12 md:pb-20" id="kassa-rakna">
-      <p class="p-eyebrow" data-reveal>Räkneexemplet · ett antagande, dina siffror</p>
+      <p class="p-eyebrow" data-reveal>Räkneexemplet</p>
       <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Fler slutför köpet när kassan visar en rabatt. Rabatten betalar vi.</h3>
       <div class="mt-8" data-reveal>
         <Calculator partner={p} />
@@ -373,7 +373,7 @@ const covers = [
 
     <div class="mx-auto max-w-6xl px-6 pb-12 md:pb-20" id="kassa-start">
       <p class="p-eyebrow" data-reveal>Så här kommer vi igång</p>
-      <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>En timme. Eller ingen alls.</h3>
+      <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Femton minuter. Eller en timme.</h3>
       <div class="mt-10" data-reveal>
         <Timeline partner={p} mode="checkout" />
       </div>
@@ -383,7 +383,7 @@ const covers = [
       <p class="p-eyebrow" data-reveal>Villkoren för det här sättet</p>
       <dl class="p-terms mt-6" data-reveal>
         <div><dt>Gästens rabatt</dt><dd>{p.guestDiscountMonthly} kr på månadsplan ({p.guestTrialDays} dagar gratis) · {p.guestDiscountAnnual} kr på årsplan ({kr(p.annualPrice)}, betalas direkt). Vi står för rabatten. Du får fullt pris.</dd></div>
-        <div><dt>Din vy</dt><dd>Aktiveringar, andel av dina köp, betalande, och din kassakonvertering med och utan rutan. Uppdateras månadsvis.</dd></div>
+        <div><dt>Din rapport</dt><dd>Aktiveringar, andel av dina köp, betalande, och din kassakonvertering med och utan rutan. Uppdateras månadsvis.</dd></div>
         <div><dt>Piloten</dt><dd>Åtta veckor med ett tak vi sätter tillsammans. Avstämning vecka 6. Pausa när du vill.</dd></div>
       </dl>
     </div>
@@ -395,7 +395,7 @@ const covers = [
         </div>
         <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
           <a href="#nasta" class="p-btn">Boka 15 minuter</a>
-          <a href="#modeller" class="p-btn-ghost">Se de andra sätten</a>
+          <a href="#modeller" class="p-link self-center">Se de andra sätten</a>
         </div>
       </div>
     </div>
@@ -411,7 +411,7 @@ const covers = [
       <p class="p-eyebrow" data-reveal>Räkneexemplet · dina siffror</p>
       <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Dina följare får erbjudandet. Du får din andel av allt de betalar, i tolv månader.</h3>
       <p class="p-body mt-6 max-w-2xl" data-reveal>
-        Dina följare får {offerText}, med din länk eller din kod. Du får {p.commissionPercent} % av allt de betalar under sina första {p.commissionMonths} månader, årsplan som månadsplan, utbetalt månadsvis.
+        Dina följare får {offerText}, med din länk eller din kod. Du får {p.commissionPercent} % av allt de betalar under sina första {p.commissionMonths} månader, årsplan som månadsplan, utbetalt månadsvis efter Apples och Googles avgift.
       </p>
       <div class="mt-10" data-reveal>
         <ReferralCalculator partner={p} />
@@ -431,7 +431,7 @@ const covers = [
       <dl class="p-terms mt-6" data-reveal>
         <div><dt>Din ersättning</dt><dd>{p.commissionPercent} % av nettot, efter butikens andel på {p.storeSharePercent} %, av allt en värvad kund betalar under sina första {p.commissionMonths} månader. Årsmedlemskap och månadsplan räknas båda. Utbetalt månadsvis, efter butikens returfönster.</dd></div>
         <div><dt>Erbjudandet till dina följare</dt><dd>{offerText}. Aktiveras med din länk eller din kod. Sätts per partner och kan bytas mellan kampanjer.</dd></div>
-        <div><dt>Din vy</dt><dd>Aktiveringar, betalande kunder och din ersättning, redovisad per månad. Kohorter, aldrig namn.</dd></div>
+        <div><dt>Din rapport</dt><dd>Aktiveringar, betalande kunder och din ersättning, redovisad per månad. Grupper, aldrig namn.</dd></div>
         <div><dt>Piloten</dt><dd>Åtta veckor med ett tak vi sätter tillsammans. Avstämning vecka 6. Pausa när du vill.</dd></div>
       </dl>
     </div>
@@ -443,7 +443,7 @@ const covers = [
         </div>
         <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
           <a href="#nasta" class="p-btn">Boka 15 minuter</a>
-          <a href="#modeller" class="p-btn-ghost">Se de andra sätten</a>
+          <a href="#modeller" class="p-link self-center">Se de andra sätten</a>
         </div>
       </div>
     </div>
@@ -473,8 +473,15 @@ const covers = [
     <div class="mx-auto max-w-6xl px-6 pb-14 md:pb-24" id="gava-start">
       <p class="p-eyebrow" data-reveal>Så här kommer vi igång</p>
       <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Klart samma dag. Ingen pilot behövs när inga pengar rör sig.</h3>
-      <div class="mt-10 max-w-2xl" data-reveal>
+      <div class="mt-10 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center" data-reveal>
         <Timeline partner={p} mode="gift" />
+        <div class="relative mx-auto hidden w-full max-w-xs md:block">
+          <img src="/assets/images/screens/01-home.webp" alt="WeHale, hemskärmen" class="w-full rounded-[2rem] shadow-[0_30px_80px_rgba(0,0,0,.5)]" loading="lazy" />
+          <div class="absolute -left-6 bottom-10 rounded-xl border border-white/15 bg-[#0b1220]/95 p-3 text-sm shadow-[0_20px_50px_rgba(0,0,0,.45)]">
+            <p class="text-xs text-[var(--color-accent)]">Gästkod inlöst</p>
+            <p class="mt-1 font-medium">{p.name} har valt WeHale för sina gäster.</p>
+          </div>
+        </div>
       </div>
     </div>
     <div class="mx-auto max-w-6xl px-6 pb-14 md:pb-20">
@@ -485,7 +492,7 @@ const covers = [
         </div>
         <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
           <a href="#nasta" class="p-btn">Boka 15 minuter</a>
-          <a href="#modeller" class="p-btn-ghost">Se de andra sätten</a>
+          <a href="#modeller" class="p-link self-center">Se de andra sätten</a>
         </div>
       </div>
     </div>
@@ -520,7 +527,7 @@ const covers = [
     <dl class="p-terms mt-6" data-reveal>
       {(has("checkout") || has("referral")) && <div><dt>Utbetalning och redovisning</dt><dd>Månadsvis via Stripe, redovisad i din egen vy.</dd></div>}
       <div><dt>Bindning</dt><dd>Ingen. Pausa eller avsluta när som helst.</dd></div>
-      <div><dt>Exklusivitet</dt><dd>Vi kan lova att vara den enda appen hos dig. Vi ber inte om motsvarande.</dd></div>
+      <div><dt>Exklusivitet</dt><dd>Vi lovar att vara den enda appen hos dig. Du lovar ingenting.</dd></div>
       <div><dt>Gästens skydd</dt><dd>Inget är förvalt. Påminnelse en vecka före första dragningen. Avbryt i appen med två tryck.</dd></div>
     </dl>
   </div>
@@ -530,7 +537,7 @@ const covers = [
 <section class="relative isolate overflow-hidden" id="nasta">
   <div class="absolute inset-0 -z-10" aria-hidden="true">
     <img src="/assets/images/sessions/02-coherent-heart.webp" alt="" class="h-full w-full object-cover object-center" data-parallax loading="lazy" />
-    <div class="absolute inset-0 bg-[var(--color-bg)]/75"></div>
+    <div class="absolute inset-0 bg-[var(--color-bg)]/82"></div>
     <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[var(--color-bg)] to-transparent"></div>
   </div>
   <div class="mx-auto max-w-3xl px-6 py-24 text-center md:py-28">

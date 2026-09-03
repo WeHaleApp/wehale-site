@@ -34,12 +34,12 @@ const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
     <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5">
       <p class="text-xs text-[var(--color-text-tertiary)]">per värvad kund som väljer årsmedlemskap</p>
       <p class="p-num mt-2 text-[var(--color-accent)]">{perAnnual} kr</p>
-      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av {annualPaid} kr efter butikens {p.storeSharePercent} %. Betalas ut efter köpet. Förnyar kunden inom de {p.commissionMonths} månaderna räknas det med.</p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av {annualPaid} kr efter Apples och Googles avgift på {p.storeSharePercent} %. Betalas ut efter köpet. Förnyar kunden inom de {p.commissionMonths} månaderna räknas det med.</p>
     </div>
     <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5">
       <p class="text-xs text-[var(--color-text-tertiary)]">per värvad kund som väljer månadsplan</p>
-      <p class="p-num mt-2 text-[var(--color-accent)]">{perMonth} kr <span class="text-xl">per månad</span></p>
-      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av {p.monthlyPrice} kr efter butikens {p.storeSharePercent} %, varje månad de stannar, i upp till {p.commissionMonths} månader.</p>
+      <p class="p-num mt-2 text-[var(--color-accent)]">{perMonth} kr <span class="text-base font-normal text-[var(--color-text-secondary)]">per månad</span></p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av {p.monthlyPrice} kr efter Apples och Googles avgift på {p.storeSharePercent} %, varje månad de stannar, i upp till {p.commissionMonths} månader.</p>
     </div>
   </div>
 
@@ -47,17 +47,17 @@ const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Kunder du värvar per år</span>
       <input class="p-input mt-2" type="number" inputmode="numeric" min="0" step="10" value={p.recruitsPerYear} data-recruits />
-      <span class="mt-1 block text-xs text-[var(--color-text-tertiary)]">Betalande, inte nedladdningar. En till tre procent av dem du når regelbundet är en vanlig tumregel.</span>
+      <span class="mt-1 block text-sm text-[var(--color-text-secondary)]">Betalande, inte nedladdningar. En till tre procent av dem du når regelbundet är en vanlig tumregel.</span>
     </label>
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Andel som väljer årsmedlemskap, %</span>
       <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max="100" value={D.annualShare} data-annual-share />
-      <span class="mt-1 block text-xs text-[var(--color-text-tertiary)]">Resten väljer månadsplan.</span>
+      <span class="mt-1 block text-sm text-[var(--color-text-secondary)]">Resten väljer månadsplan.</span>
     </label>
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Månader en månadskund stannar, i snitt</span>
       <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max={p.commissionMonths} value={D.stay} data-stay-months />
-      <span class="mt-1 block text-xs text-[var(--color-text-tertiary)]">Av de första {p.commissionMonths}. Det här mäter vi tillsammans.</span>
+      <span class="mt-1 block text-sm text-[var(--color-text-secondary)]">Av de första {p.commissionMonths}. Det här mäter vi tillsammans.</span>
     </label>
   </div>
 
@@ -68,7 +68,7 @@ const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">utbetalt månadsvis under de tolv månader kunderna betalar</p>
     </div>
     <div>
-      <p class="text-xs text-[var(--color-text-tertiary)]">i snitt per månad</p>
+      <p class="text-sm text-[var(--color-text-secondary)]">i snitt per månad</p>
       <p class="p-num mt-2" data-out="month">{krs(year0 / 12)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">och varje nytt års kunder lägger på ett år till</p>
     </div>
@@ -76,7 +76,7 @@ const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
 
   <div class="mt-8 border-t border-[var(--color-line)] pt-5 text-sm text-[var(--color-text-secondary)]">
     <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain">{int(annuals0)} årskunder × {krs(perAnnual)} + {int(monthlies0)} månadskunder × {krs(perMonth)} × {D.stay} månader = {krs(year0)}.</span></p>
-    <p class="mt-2">Ersättningen räknas på det kunden faktiskt betalar oss under sina första {p.commissionMonths} månader, efter butikens andel. Byter kunden plan följer ersättningen med. Återbetalas ett köp dras det av.</p>
+    <p class="mt-2">Ersättningen räknas på det kunden faktiskt betalar oss under sina första {p.commissionMonths} månader, efter Apples och Googles avgift. Byter kunden plan följer ersättningen med. Återbetalas ett köp dras det av.</p>
   </div>
 </div>
 

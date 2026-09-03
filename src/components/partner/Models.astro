@@ -82,12 +82,12 @@ const cols = shown.length === 1 ? "md:grid-cols-1 md:max-w-2xl" : shown.length =
         )}
       </div>
       <div class="flex flex-1 flex-col p-5 md:p-6">
-        <p class="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-gold)]">{c.tag}</p>
+        <p class="p-eyebrow">{c.tag}</p>
         <h3 class="mt-2 text-xl font-semibold">{c.title}</h3>
         <p class="p-body mt-2 flex-1 text-[15px] md:text-base">{c.body}</p>
         <p class="mt-4 text-sm text-[var(--color-text-tertiary)]">{c.who}</p>
         <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent)]">
-          <span class="group-aria-selected:hidden">Visa det här sättet</span><span class="hidden group-aria-selected:inline">Visas nedan</span>
+          <span class="group-aria-selected:hidden">Se hur det fungerar</span><span class="hidden group-aria-selected:inline">Visas nedan</span>
           <svg viewBox="0 0 16 16" class="h-3.5 w-3.5 transition-transform group-aria-selected:rotate-90" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </div>

@@ -13,9 +13,9 @@ const { partner: p, mode } = Astro.props;
 
 const steps = mode === "checkout"
   ? [
-      { time: "15 min", title: "På tacksidan eller i kvittomejlet", body: `Ett block vi skriver, du klistrar in. Fungerar med alla bokningssystem${p.checkoutSystem ? `, ${p.checkoutSystem} också` : ""}.` },
-      { time: "1 timme", title: "Direkt i kassan", body: "En rad kod eller ett plugin. Rabatten läggs på automatiskt. Vi sitter med." },
+      { time: "15 min", title: "På tacksidan eller i kvittomejlet", body: `Ett block vi skriver, du klistrar in. Fungerar med alla bokningssystem${p.checkoutSystem ? `, även ${p.checkoutSystem}` : ""}.` },
       { time: "30 min", title: "Direkt i kassan, med Stripe", body: "Koppla ditt Stripe med ett klick. Gästen behöver aldrig ange kortet igen." },
+      { time: "1 timme", title: "Direkt i kassan", body: "En rad kod eller ett plugin. Rabatten läggs på automatiskt. Vi sitter med." },
     ]
   : mode === "share"
     ? [

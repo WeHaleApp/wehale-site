@@ -46,15 +46,18 @@ const pct1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString("sv-SE");
     </label>
   </div>
 
-  <div class="mt-8 rounded-[var(--radius-md)] bg-[var(--color-accent-soft)] p-5 md:flex md:max-w-3xl md:items-center md:gap-8">
+  <div class="mt-8 rounded-[var(--radius-md)] bg-[var(--color-accent-soft)] p-5 md:flex md:items-center md:gap-8">
     <div class="md:max-w-xl">
       <p class="font-semibold">Antagandet, det enda</p>
       <p class="mt-1 text-sm text-[var(--color-text-secondary)]">Av dem som tvekar i sista steget slutför så här många när kassan visar {p.guestDiscountMonthly} kr rabatt. Det är siffran piloten mäter. Byt den.</p>
     </div>
-    <label class="mt-4 flex items-center gap-3 md:mt-0">
-      <input class="p-input w-24 text-center text-lg" type="number" inputmode="numeric" min="0" max="100" value={D.recover} data-recover />
-      <span class="text-sm text-[var(--color-text-secondary)]">%</span>
-    </label>
+    <div class="mt-4 flex flex-wrap items-center gap-4 md:mt-0 md:ml-auto md:shrink-0">
+      <label class="flex items-center gap-2">
+        <input class="p-input w-20 text-lg" type="number" inputmode="numeric" min="0" max="100" value={D.recover} data-recover />
+        <span class="text-sm text-[var(--color-text-secondary)]">%</span>
+      </label>
+      <p class="text-sm text-[var(--color-text-secondary)]">ger <span class="font-semibold text-[var(--color-accent)]" data-out="recovered">+{int(recovered)}</span> köp och <span class="font-semibold text-[var(--color-accent)]" data-out="revenue">+{krs(recovered * p.avgOrder)}</span> per månad</p>
+    </div>
   </div>
 
   <div class="mt-8 grid gap-6 md:grid-cols-3">
@@ -70,12 +73,12 @@ const pct1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString("sv-SE");
     </div>
     <div>
       <p class="text-sm text-[var(--color-text-secondary)]">rabatten på de köpen</p>
-      <p class="p-num mt-2" data-out="discount">{krs(recovered * p.guestDiscountMonthly)}</p>
+      <p class="p-num mt-2" style="font-size: 2rem; line-height: 1.2" data-out="discount">{krs(recovered * p.guestDiscountMonthly)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">per månad. Den betalar vi, inte du.</p>
     </div>
   </div>
 
-  <div class="mt-8 max-w-3xl border-t border-[var(--color-line)] pt-5 text-sm leading-relaxed text-[var(--color-text-secondary)]">
+  <div class="mt-8 border-t border-[var(--color-line)] pt-5 text-sm leading-relaxed text-[var(--color-text-secondary)] [&>p]:max-w-3xl">
     <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain">{int(p.ordersPerMonth)} köp i dag och {int(abandoned)} avbrutna, så {int(started)} påbörjade. {D.recover} % av de avbrutna slutför med rabatten: {int(recovered)} köp till, à {krs(p.avgOrder)} till dig. Rabatten, {int(recovered)} × {p.guestDiscountMonthly} kr, står vi för.</span></p>
     <p class="mt-2">Gäster som ändå skulle ha köpt får också gåvan. Det kostar dig inget, och det räknar vi inte som intäkt här. Årsplanen ({p.guestDiscountAnnual} kr rabatt, betalas direkt) är inte med i räkningen.</p>
   </div>
