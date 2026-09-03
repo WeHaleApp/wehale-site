@@ -32,13 +32,13 @@ const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
 >
   <div class="grid gap-4 md:grid-cols-2">
     <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5">
-      <p class="text-xs text-[var(--color-text-tertiary)]">per värvad kund som väljer årsmedlemskap</p>
+      <p class="p-eyebrow">per värvad kund som väljer årsmedlemskap</p>
       <p class="p-num mt-2 text-[var(--color-accent)]">{perAnnual} kr</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av {annualPaid} kr efter Apples och Googles avgift på {p.storeSharePercent} %. Betalas ut efter köpet. Förnyar kunden inom de {p.commissionMonths} månaderna räknas det med.</p>
     </div>
     <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5">
-      <p class="text-xs text-[var(--color-text-tertiary)]">per värvad kund som väljer månadsplan</p>
-      <p class="p-num mt-2 text-[var(--color-accent)]">{perMonth} kr <span class="text-base font-normal text-[var(--color-text-secondary)]">per månad</span></p>
+      <p class="p-eyebrow">per värvad kund som väljer månadsplan</p>
+      <p class="p-num mt-2 flex items-baseline gap-2 text-[var(--color-accent)]">{perMonth} kr <span class="text-base font-normal text-[var(--color-text-secondary)]">per månad</span></p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av {p.monthlyPrice} kr efter Apples och Googles avgift på {p.storeSharePercent} %, varje månad de stannar, i upp till {p.commissionMonths} månader.</p>
     </div>
   </div>
@@ -63,7 +63,7 @@ const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
 
   <div class="mt-8 grid gap-6 md:grid-cols-2">
     <div>
-      <p class="text-xs text-[var(--color-text-tertiary)]">till dig, från ett års värvade kunder</p>
+      <p class="p-eyebrow">till dig, från ett års värvade kunder</p>
       <p class="p-num mt-2 text-[var(--color-accent)]" data-out="year">{krs(year0)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">utbetalt månadsvis under de tolv månader kunderna betalar</p>
     </div>

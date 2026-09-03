@@ -51,7 +51,7 @@ const covers = [
   <div class="absolute inset-0 -z-10 bg-[var(--color-bg)]" aria-hidden="true">
     <!-- A still from the brand film (WH_16x9, 39 s): the closed eyes are the brand's calm.
          Mobile: a top band, text beneath it. Desktop: the right 62 %, text to its left. -->
-    <div class="absolute inset-x-0 top-0 h-[58%] md:inset-y-0 md:left-[38%] md:h-auto">
+    <div class="absolute inset-x-0 top-0 h-[58%] overflow-hidden md:inset-y-0 md:left-[38%] md:h-auto">
       <img
         src="/assets/images/partner/hero-eyes-closed-1920.webp"
         srcset="/assets/images/partner/hero-eyes-closed-1920.webp 1920w, /assets/images/partner/hero-eyes-closed.webp 2560w"
@@ -61,9 +61,9 @@ const covers = [
         data-parallax
         fetchpriority="high"
       />
-      <div class="absolute inset-0 hidden bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/10 to-transparent md:block" style="width: 55%;"></div>
+      <div class="absolute inset-0 hidden bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/45 to-transparent md:block" style="width: 62%;"></div>
       <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/25 via-transparent to-transparent md:hidden"></div>
-      <div class="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-b from-transparent via-[var(--color-bg)]/70 to-[var(--color-bg)] md:hidden"></div>
+      <div class="absolute inset-x-0 bottom-0 h-[62%] bg-gradient-to-b from-transparent via-[var(--color-bg)]/75 to-[var(--color-bg)] md:hidden"></div>
       <div class="absolute inset-0 bg-[var(--color-bg)]/10 md:bg-[var(--color-bg)]/15"></div>
     </div>
     <div class="absolute inset-0 hidden bg-gradient-to-b from-[var(--color-bg)]/30 via-transparent to-[var(--color-bg)] md:block"></div>
@@ -71,7 +71,7 @@ const covers = [
       <div class="pointer-events-none absolute -left-32 bottom-0 h-[70%] w-[70%] rounded-full opacity-35 blur-3xl md:-left-20 md:h-[80%] md:w-[55%]" style="background:radial-gradient(closest-side, var(--partner), transparent 70%)" aria-hidden="true"></div>
     )}
   </div>
-  <div class="mx-auto flex min-h-[92dvh] max-w-6xl flex-col justify-end px-6 pb-14 pt-[50dvh] md:min-h-[78dvh] md:pb-28 md:pt-32">
+  <div class="mx-auto flex min-h-[92dvh] max-w-6xl flex-col justify-end px-6 pb-12 pt-[50dvh] md:min-h-[78dvh] md:pb-28 md:pt-32">
     {generic ? (
       <p class="hero-in p-eyebrow" style="--d:0ms">{eyebrow}</p>
     ) : (
@@ -90,12 +90,12 @@ const covers = [
     <h1 class="hero-in mt-4 max-w-3xl text-[clamp(2.25rem,6vw,5rem)] font-medium leading-[1.05] tracking-tight" style="--d:160ms">
       {generic ? "Andning att ge vidare. I ditt namn." : `Andning som dina ${aud} tar med sig hem.`}
     </h1>
-    <p class="hero-in p-body mt-5 max-w-xl" style="--d:320ms">
+    <p class="hero-in p-body order-3 mt-6 max-w-xl md:order-none md:mt-5" style="--d:320ms">
       {generic
         ? "Guidad andning som dem du når tar med sig in i vardagen, kopplad till dig. Prova appen själv först. Sedan tre sätt att låta dina gäster, elever eller följare få den, som gynnar dig också."
         : `Andningen är det dina ${aud} minns bäst från en klass, och det de har svårast att göra hemma. WeHale är det som händer mellan klasserna. Prova appen själv först. Sedan ${waysWord} att låta dina ${aud} få den, som gynnar dig också.`}
     </p>
-    <div class="hero-in mt-9 flex flex-col gap-3 sm:flex-row" style="--d:440ms">
+    <div class="hero-in order-2 mt-7 flex flex-col gap-3 sm:flex-row md:order-none md:mt-9" style="--d:440ms">
       <a href="#nasta" class="p-btn">Boka 15 minuter</a>
       <a href="#prova" class="p-btn-ghost">Prova appen först</a>
     </div>
@@ -121,7 +121,7 @@ const covers = [
     </div>
     <div class="relative mx-auto flex w-full max-w-md items-start justify-center gap-4 md:block" data-reveal>
       <img src="/assets/images/screens/01-home.webp" alt="WeHale, hemskärmen" class="w-[46%] rounded-[1.6rem] shadow-[0_30px_80px_rgba(0,0,0,.5)] md:w-[58%] md:rounded-[2rem]" loading="lazy" />
-      <img src="/assets/images/screens/03-player.webp" alt="WeHale, en session spelas" class="mt-10 w-[46%] rounded-[1.6rem] shadow-[0_30px_80px_rgba(0,0,0,.5)] md:absolute md:-right-2 md:top-16 md:mt-0 md:w-[58%] md:rounded-[2rem]" loading="lazy" />
+      <img src="/assets/images/screens/03-player.webp" alt="WeHale, en session spelas" class="mt-10 w-[46%] rounded-[1.6rem] shadow-[0_30px_80px_rgba(0,0,0,.5)] md:absolute md:-right-8 md:top-28 md:mt-0 md:w-[54%] md:rounded-[2rem]" loading="lazy" />
     </div>
   </div>
 </section>
@@ -129,12 +129,12 @@ const covers = [
 <!-- ─── What we believe ─── -->
 <section class="relative isolate overflow-hidden" id="tro">
   <div class="absolute inset-0 -z-10" aria-hidden="true">
-    <img src="/assets/images/partner/forest-dawn.webp" alt="" class="h-full w-full object-cover object-center" data-parallax loading="lazy" />
+    <div class="absolute inset-0 overflow-hidden"><img src="/assets/images/partner/forest-dawn.webp" alt="" class="h-full w-full object-cover object-center" data-parallax loading="lazy" /></div>
     <div class="absolute inset-0 bg-[var(--color-bg)]/60"></div>
   </div>
   <div class="mx-auto max-w-6xl px-6 py-16 md:py-28">
     <p class="max-w-3xl text-[clamp(1.625rem,4vw,3rem)] font-medium leading-[1.15]" data-reveal>
-      Ingen hype. Inga floskler. Ingen skuld när man missar en dag.
+      Ingen hype. Inga floskler.<br class="hidden md:inline" /> Ingen skuld när man missar en dag.
     </p>
     <p class="p-body mt-4 max-w-xl" data-reveal>Mindre press ger mer närvaro. Det är hela idén, och det är vad du sätter ditt namn på.</p>
     <div class="mt-10 grid gap-4 md:mt-14 md:grid-cols-3 md:gap-6" data-stagger>
@@ -216,10 +216,10 @@ const covers = [
             <div class="flex items-center gap-3">
               <img src="/assets/images/logo.svg" alt="WeHale" class="h-5 w-auto" />
             </div>
-            <p class="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-accent)]">WeHale Pro · för alltid</p>
+            <p class="mt-6 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-accent)]">Din personliga kod</p>
             <p class="mt-2 truncate text-2xl font-medium">{generic ? "Ditt namn här" : p.name}</p>
-            <p class="mt-1 text-sm text-[var(--color-text-secondary)]">Personligt. En skanning, inget slutdatum.</p>
-            <p class="mt-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-[var(--color-text-tertiary)]">Din kod <span class="font-mono tracking-[0.12em] text-[var(--color-text)]">{p.ownerCode}</span></p>
+            <p class="mt-1 text-sm text-[var(--color-text-secondary)]">WeHale Pro för alltid. <span class="hidden md:inline">En skanning</span><span class="md:hidden">Ett tryck</span>, inget slutdatum.</p>
+            <p class="mt-6 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-[var(--color-text-tertiary)]">Kod <span class="font-mono tracking-[0.1em] text-[var(--color-text)]">{p.ownerCode}</span></p>
           </div>
           <div class="hidden shrink-0 md:block">
             <OwnerQr code={p.ownerCode} />
@@ -262,7 +262,7 @@ const covers = [
 
 <!-- The chapter room: one of the ways at a time. The bar sticks under the header so the reader can
      switch without scrolling back to the cards. -->
-<div class="sticky z-30 border-y border-[var(--color-line)] bg-[var(--color-bg)]/85 backdrop-blur" style="top: var(--header-h, 57px)" data-chapter-nav>
+<div class="sticky z-30 border-y border-[var(--color-line)] bg-[var(--color-bg)]/95 backdrop-blur" style="top: var(--header-h, 57px)" data-chapter-nav>
   <div class="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-2 [scrollbar-width:none] md:px-6">
     {p.models.map((m) => (
       <button type="button" role="tab" class="p-tab" aria-selected={m === first ? "true" : "false"} data-select={m}>{MODEL_NAMES[m]}</button>
@@ -473,7 +473,7 @@ const covers = [
     <div class="mx-auto max-w-6xl px-6 pb-14 md:pb-24" id="gava-start">
       <p class="p-eyebrow" data-reveal>Så här kommer vi igång</p>
       <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Klart samma dag. Ingen pilot behövs när inga pengar rör sig.</h3>
-      <div class="mt-10 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center" data-reveal>
+      <div class="mt-10 grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-start" data-reveal>
         <Timeline partner={p} mode="gift" />
         <div class="relative mx-auto hidden w-full max-w-xs md:block">
           <img src="/assets/images/screens/01-home.webp" alt="WeHale, hemskärmen" class="w-full rounded-[2rem] shadow-[0_30px_80px_rgba(0,0,0,.5)]" loading="lazy" />
@@ -537,10 +537,10 @@ const covers = [
 <section class="relative isolate overflow-hidden" id="nasta">
   <div class="absolute inset-0 -z-10" aria-hidden="true">
     <img src="/assets/images/sessions/02-coherent-heart.webp" alt="" class="h-full w-full object-cover object-center" data-parallax loading="lazy" />
-    <div class="absolute inset-0 bg-[var(--color-bg)]/82"></div>
+    <div class="absolute inset-0 bg-[var(--color-bg)]/88"></div>
     <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[var(--color-bg)] to-transparent"></div>
   </div>
-  <div class="mx-auto max-w-3xl px-6 py-24 text-center md:py-28">
+  <div class="mx-auto max-w-3xl px-6 pb-16 pt-10 text-center md:py-28">
     <p class="p-eyebrow" data-reveal>Nästa steg</p>
     <h2 class="p-h2 mt-4" data-reveal>Femton minuter, och ett färdigt förslag med ditt namn inom två dagar.</h2>
     <p class="p-body mt-6" data-reveal>Berätta vem du är och hur dina gäster bokar och betalar i dag, så kommer vi tillbaka med exakt hur det skulle se ut hos dig. Sedan bestämmer du.</p>

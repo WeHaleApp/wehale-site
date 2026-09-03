@@ -15,7 +15,7 @@ const steps = mode === "checkout"
   ? [
       { time: "15 min", title: "På tacksidan eller i kvittomejlet", body: `Ett block vi skriver, du klistrar in. Fungerar med alla bokningssystem${p.checkoutSystem ? `, även ${p.checkoutSystem}` : ""}.` },
       { time: "30 min", title: "Direkt i kassan, med Stripe", body: "Koppla ditt Stripe med ett klick. Gästen behöver aldrig ange kortet igen." },
-      { time: "1 timme", title: "Direkt i kassan", body: "En rad kod eller ett plugin. Rabatten läggs på automatiskt. Vi sitter med." },
+      { time: "1 timme", title: "Direkt i kassan, i ditt eget system", body: "En rad kod eller ett plugin. Rabatten läggs på automatiskt. Vi sitter med." },
     ]
   : mode === "share"
     ? [
@@ -40,7 +40,7 @@ const pilot = [
 
 <div class:list={["grid gap-14", showPilot ? "lg:grid-cols-[1.1fr_1fr] lg:gap-16" : ""]}>
   <div>
-    <p class="text-sm text-[var(--color-text-secondary)]">{mode === "checkout" ? "Tre vägar in. Välj en, vi gör resten." : "Tre steg. Det första gör vi."}</p>
+    <p class="p-body">{mode === "checkout" ? "Tre vägar in. Välj en, vi gör resten." : "Tre steg. Det första gör vi."}</p>
     <ol class="relative mt-8 pl-8">
       {steps.map((s, i) => (
         <li class:list={["relative", i < steps.length - 1 ? "border-l border-[var(--color-line-strong)] pb-10" : ""]} style="margin-left: -1px">

@@ -17,7 +17,7 @@ const { partner: p } = Astro.props;
 const D = { abandon: 30, recover: 15 };
 const started = p.ordersPerMonth / (1 - D.abandon / 100);
 const abandoned = started - p.ordersPerMonth;
-const recovered = abandoned * (D.recover / 100);
+const recovered = Math.round(abandoned * (D.recover / 100));
 const convBefore = (p.ordersPerMonth / started) * 100;
 const convAfter = ((p.ordersPerMonth + recovered) / started) * 100;
 const int = (n: number) => Math.round(n).toLocaleString("sv-SE");
@@ -46,17 +46,14 @@ const pct1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString("sv-SE");
     </label>
   </div>
 
-  <div class="mt-8 rounded-[var(--radius-md)] bg-[var(--color-accent-soft)] p-5 md:flex md:items-center md:gap-8">
-    <div class="md:max-w-xl">
-      <p class="font-semibold">Antagandet, det enda</p>
-      <p class="mt-1 text-sm text-[var(--color-text-secondary)]">Av dem som tvekar i sista steget slutför så här många när kassan visar {p.guestDiscountMonthly} kr rabatt. Det är siffran piloten mäter. Byt den.</p>
-    </div>
-    <div class="mt-4 flex flex-wrap items-center gap-4 md:mt-0 md:ml-auto md:shrink-0">
-      <label class="flex items-center gap-2">
-        <input class="p-input w-20 text-lg" type="number" inputmode="numeric" min="0" max="100" value={D.recover} data-recover />
-        <span class="text-sm text-[var(--color-text-secondary)]">%</span>
+  <div class="mt-8 rounded-[var(--radius-md)] bg-[var(--color-accent-soft)] p-5 md:p-6">
+    <p class="text-lg font-semibold md:text-xl"><span class="text-[var(--color-accent)]" data-out="recovered">+{int(recovered)}</span> köp och <span class="text-[var(--color-accent)]" data-out="revenue">+{krs(recovered * p.avgOrder)}</span> per månad, till fullt pris.</p>
+    <div class="mt-4 gap-6 md:flex md:items-center">
+      <p class="text-sm text-[var(--color-text-secondary)] md:max-w-xl">Antagandet, det enda: av dem som tvekar i sista steget slutför så här många när kassan visar {p.guestDiscountMonthly} kr rabatt. Det är siffran piloten mäter. Byt den.</p>
+      <label class="mt-3 flex items-center gap-2 md:mt-0 md:ml-auto md:shrink-0">
+        <span class="text-sm text-[var(--color-text-secondary)]">Slutför</span>
+        <span class="relative"><input class="p-input w-24 pr-8 text-lg" type="number" inputmode="numeric" min="0" max="100" value={D.recover} data-recover /><span class="pointer-events-none absolute inset-y-0 right-3 grid place-items-center text-sm text-[var(--color-text-secondary)]">%</span></span>
       </label>
-      <p class="text-sm text-[var(--color-text-secondary)]">ger <span class="font-semibold text-[var(--color-accent)]" data-out="recovered">+{int(recovered)}</span> köp och <span class="font-semibold text-[var(--color-accent)]" data-out="revenue">+{krs(recovered * p.avgOrder)}</span> per månad</p>
     </div>
   </div>
 
@@ -99,7 +96,7 @@ const pct1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString("sv-SE");
       const recover = Math.min(100, Math.max(0, num("[data-recover]"))) / 100;
       const started = abandon < 1 ? orders / (1 - abandon) : orders;
       const abandoned = started - orders;
-      const recovered = abandoned * recover;
+      const recovered = Math.round(abandoned * recover);
       const convBefore = started > 0 ? (orders / started) * 100 : 0;
       const convAfter = started > 0 ? ((orders + recovered) / started) * 100 : 0;
       set("recovered", `+${int(recovered)}`);

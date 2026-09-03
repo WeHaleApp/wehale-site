@@ -31,6 +31,7 @@ const cols = shown.length === 1 ? "md:grid-cols-1 md:max-w-2xl" : shown.length =
     <button type="button" role="tab" aria-selected={i === 0 ? "true" : "false"} aria-controls={`kapitel-${c.key}`} data-select={c.key} data-reveal style={`--i:${i}`}
       class="p-card group flex flex-col overflow-hidden text-left transition-[border-color,box-shadow] duration-300 aria-selected:border-[var(--color-accent-line)] aria-selected:shadow-[0_0_0_1px_var(--color-accent-line),0_24px_60px_rgba(0,0,0,.35)]">
       <div class="relative h-48 overflow-hidden border-b border-[var(--color-line)]" aria-hidden="true">
+        <span class="absolute left-4 top-4 z-10 hidden rounded-full bg-[var(--color-text)] px-2.5 py-1 text-[11px] font-semibold text-[var(--color-bg)] group-aria-selected:inline-block">Visas nedan</span>
         {c.key === "checkout" && (
           <div class="absolute inset-0 bg-[#f4f6f8]">
             <div class="absolute left-5 right-5 top-5 rounded-xl bg-white p-3 text-[#111827] shadow-[0_10px_30px_rgba(0,0,0,.12)]">

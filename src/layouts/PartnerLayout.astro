@@ -85,6 +85,27 @@ const tint = partner?.accent ?? "#4fcbd6";
       .p-num { font-size: clamp(2.25rem, 4vw, 3.25rem); font-weight: 300; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
       .p-input { width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--color-line-strong); background: var(--color-bg); color: var(--color-text); padding: .65rem .8rem; font-size: 1rem; font-variant-numeric: tabular-nums; outline: none; }
       .p-input:focus { border-color: var(--color-accent); }
+      .p-input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+      .p-input[type="number"]::-webkit-inner-spin-button, .p-input[type="number"]::-webkit-outer-spin-button { appearance: none; margin: 0; }
+      /* On small screens the header slides away while reading down and returns on the way up, so the
+         fixed chrome never takes half the screen. The chapter bar follows --header-h. */
+      [data-site-header] { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+      [data-site-header].is-away { transform: translateY(-100%); }
+      [data-chapter-nav] { transition: top .35s cubic-bezier(.2,.7,.2,1); }
+      .p-input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+      .p-input[type="number"]::-webkit-inner-spin-button, .p-input[type="number"]::-webkit-outer-spin-button { appearance: none; margin: 0; }
+      /* On small screens the header slides away while reading down and returns on the way up, so the
+         fixed chrome never takes half the screen. The chapter bar follows --header-h. */
+      [data-site-header] { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+      [data-site-header].is-away { transform: translateY(-100%); }
+      [data-chapter-nav] { transition: top .35s cubic-bezier(.2,.7,.2,1); }
+      .p-input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+      .p-input[type="number"]::-webkit-inner-spin-button, .p-input[type="number"]::-webkit-outer-spin-button { appearance: none; margin: 0; }
+      /* On small screens the header slides away while reading down and returns on the way up, so the
+         fixed chrome never takes half the screen. The chapter bar follows --header-h. */
+      [data-site-header] { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+      [data-site-header].is-away { transform: translateY(-100%); }
+      [data-chapter-nav] { transition: top .35s cubic-bezier(.2,.7,.2,1); }
       [data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity .6s var(--ease-out-soft), transform .6s var(--ease-out-soft); }
       [data-reveal].is-visible { opacity: 1; transform: none; }
       [data-reveal] { transition-duration: .9s; transition-timing-function: cubic-bezier(.2,.7,.2,1); }
@@ -126,6 +147,15 @@ const tint = partner?.accent ?? "#4fcbd6";
       const hdr = document.querySelector<HTMLElement>("[data-site-header]");
       const setH = () => { if (hdr) document.documentElement.style.setProperty("--header-h", `${hdr.offsetHeight}px`); };
       setH(); window.addEventListener("resize", setH); if ("ResizeObserver" in window && hdr) new ResizeObserver(setH).observe(hdr);
+      let lastY = window.scrollY;
+      const small = window.matchMedia("(max-width: 767px)");
+      window.addEventListener("scroll", () => {
+        if (!hdr || !small.matches) return;
+        const y = window.scrollY, down = y > lastY + 4, up = y < lastY - 4;
+        if (down && y > 240 && !hdr.classList.contains("is-away")) { hdr.classList.add("is-away"); document.documentElement.style.setProperty("--header-h", "0px"); }
+        else if ((up || y < 120) && hdr.classList.contains("is-away")) { hdr.classList.remove("is-away"); setH(); }
+        lastY = y;
+      }, { passive: true });
       if ("IntersectionObserver" in window) {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const els = document.querySelectorAll("[data-reveal]");
