@@ -1,0 +1,96 @@
+---
+/**
+ * Layout for the invitation-only partner pages (/for, /for/<slug>).
+ *
+ * Differs from BaseLayout on purpose: Swedish, noindex, no marketing header or GTM, Nunito Sans
+ * (the app's face since 2.7.7) and the app's aurora accent instead of the site's older green.
+ * The `gated` class hides scroll until Gate.astro has checked the shared password.
+ */
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Right-hand header label, e.g. "För Studio Frid". */
+  label?: string;
+}
+
+const { title, description, label = "" } = Astro.props;
+---
+
+<!doctype html>
+<html
+  lang="sv"
+  class="gated"
+  style="--color-accent:#4fcbd6;--color-accent-soft:rgba(79,203,214,.16);--color-accent-line:rgba(79,203,214,.5);--font-sans:'Nunito Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;--font-display:'Nunito Sans',ui-sans-serif,system-ui,sans-serif;"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#090f1d" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/images/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/images/favicon.png" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/nunito-sans/nunito-sans-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/nunito-sans.css" />
+    <style is:global>
+      html.gated { overflow: hidden; }
+      .p-eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); }
+      .p-h2 { font-size: clamp(1.75rem, 3.6vw, 2.75rem); font-weight: 500; line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
+      .p-body { color: var(--color-text-secondary); font-size: 1.0625rem; line-height: 1.65; }
+      .p-card { background: var(--color-bg-raised); border: 1px solid var(--color-line); border-radius: var(--radius-lg); }
+      .p-btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: 999px; background: var(--color-text); color: var(--color-bg); padding: .9rem 1.5rem; font-weight: 600; font-size: .95rem; transition: background-color .2s; }
+      .p-btn:hover { background: var(--color-accent); }
+      .p-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: 999px; border: 1px solid var(--color-line-strong); color: var(--color-text); padding: .9rem 1.5rem; font-weight: 500; font-size: .95rem; transition: background-color .2s; }
+      .p-btn-ghost:hover { background: var(--color-bg-raised); }
+      .p-num { font-size: clamp(2.25rem, 4vw, 3.25rem); font-weight: 300; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+      .p-input { width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--color-line-strong); background: var(--color-bg); color: var(--color-text); padding: .65rem .8rem; font-size: 1rem; font-variant-numeric: tabular-nums; outline: none; }
+      .p-input:focus { border-color: var(--color-accent); }
+      [data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity .6s var(--ease-out-soft), transform .6s var(--ease-out-soft); }
+      [data-reveal].is-visible { opacity: 1; transform: none; }
+    </style>
+  </head>
+
+  <body class="bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+    <header class="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[var(--color-bg)]/80 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <a href="/" aria-label="WeHale" class="flex items-center">
+          <img src="/assets/images/logo.svg" alt="WeHale" class="h-6 w-auto" />
+        </a>
+        {label && <span class="text-sm text-[var(--color-text-secondary)]">{label}</span>}
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="border-t border-[var(--color-line)]">
+      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-[var(--color-text-tertiary)] md:flex-row md:justify-between">
+        <span>WeHale · wehale.io</span>
+        <span>Den här sidan är en inbjudan, inte en offentlig sida. Dela den inte vidare.</span>
+      </div>
+    </footer>
+
+    <script>
+      if ("IntersectionObserver" in window) {
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const els = document.querySelectorAll("[data-reveal]");
+        if (reduced) els.forEach((el) => el.classList.add("is-visible"));
+        else {
+          const io = new IntersectionObserver(
+            (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); } }),
+            { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
+          );
+          els.forEach((el) => io.observe(el));
+        }
+      } else {
+        document.querySelectorAll("[data-reveal]").forEach((el) => el.classList.add("is-visible"));
+      }
+    </script>
+  </body>
+</html>

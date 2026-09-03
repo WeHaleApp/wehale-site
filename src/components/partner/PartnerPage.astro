@@ -1,0 +1,291 @@
+---
+/**
+ * The whole partner page in one component: the product first (what Philip wants them to feel),
+ * then the deal (what it does for their checkout). Every string that names the partner comes
+ * from the JSON; the generic page passes GENERIC and `generic`.
+ */
+import type { Partner } from "../../lib/partner";
+import { APP_STORE_URL, kr } from "../../lib/partner";
+import CheckoutDemo from "./CheckoutDemo.astro";
+import Calculator from "./Calculator.astro";
+
+interface Props { partner: Partner; generic?: boolean }
+const { partner: p, generic = false } = Astro.props;
+
+const eyebrow = generic
+  ? "Ett förslag från WeHale · för studios, lärare och plattformar"
+  : `För ${p.name} · ett förslag från WeHale`;
+const greeting = !generic && p.contactName ? `Hej ${p.contactName}.` : null;
+const mailto = p.ourContactEmail
+  ? `mailto:${p.ourContactEmail}?subject=${encodeURIComponent(`WeHale i vår kassa (${p.name})`)}`
+  : null;
+
+const covers = [
+  { src: "/assets/images/sessions/01-box-breath.webp", title: "Box Breath", meta: "Calm" },
+  { src: "/assets/images/sessions/02-coherent-heart.webp", title: "Coherent Heart", meta: "Balance" },
+  { src: "/assets/images/sessions/03-echoes-of-strength.webp", title: "Echoes of Strength", meta: "Activate" },
+  { src: "/assets/images/sessions/06-nighttime-serenity.webp", title: "Nighttime Serenity", meta: "Sömn" },
+];
+---
+
+<!-- ─── Hero ─── -->
+<section class="relative isolate overflow-hidden" id="top">
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <img src="/assets/images/sessions/05-into-stillness.webp" alt="" class="h-full w-full object-cover object-center" />
+    <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/30 via-[var(--color-bg)]/65 to-[var(--color-bg)]"></div>
+  </div>
+  <div class="mx-auto flex min-h-[78dvh] max-w-6xl flex-col justify-end px-6 pb-20 pt-32">
+    <p class="p-eyebrow" data-reveal>{eyebrow}</p>
+    {greeting && <p class="mt-6 text-lg text-[var(--color-text-secondary)]" data-reveal>{greeting}</p>}
+    <h1 class="mt-4 max-w-3xl text-[clamp(2.5rem,6vw,5rem)] font-medium leading-[1.05] tracking-tight" data-reveal>
+      Andning som dina gäster tar med sig hem.
+    </h1>
+    <p class="p-body mt-6 max-w-xl" data-reveal>
+      Det här är inte en affärsidé i första hand. Det är en app vi vill att du provar själv, för att avgöra om den är något du vill sätta ditt namn bakom. Affären finns längre ner, om du gillar det du ser.
+    </p>
+    <div class="mt-10 flex flex-col gap-3 sm:flex-row" data-reveal>
+      <a href="#prova" class="p-btn">Prova appen</a>
+      <a href="#kassa" class="p-btn-ghost">Se det i din kassa</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── The app ─── -->
+<section class="mx-auto max-w-6xl px-6 py-24" id="app">
+  <div class="grid items-center gap-12 md:grid-cols-2">
+    <div>
+      <p class="p-eyebrow" data-reveal>Vad WeHale är</p>
+      <h2 class="p-h2 mt-4" data-reveal>Guidad andning. Fem till tjugofem minuter. Byggd med samma omsorg som en bra klass.</h2>
+      <div class="mt-10 grid gap-6" data-reveal>
+        <div>
+          <p class="font-semibold">Sessioner</p>
+          <p class="p-body mt-1 text-base">Tre kategorier: Calm, Balance och Activate. En morgon, en lunchrast, en kväll. Guidade av röst, i ett tempo man kan följa.</p>
+        </div>
+        <div>
+          <p class="font-semibold">Startkurs</p>
+          <p class="p-body mt-1 text-base">Fem dagar, en övning om dagen, korta lektioner före varje session. För den som aldrig andats medvetet.</p>
+        </div>
+        <div>
+          <p class="font-semibold">Hållning</p>
+          <p class="p-body mt-1 text-base">Ingen hype. Inga floskler. Ingen skuld när man missar en dag. Tre sessioner är alltid gratis.</p>
+        </div>
+      </div>
+    </div>
+    <div class="relative mx-auto flex w-full max-w-md justify-center" data-reveal>
+      <img src="/assets/images/screens/01-home.webp" alt="WeHale, hemskärmen" class="w-[58%] rounded-[2rem] shadow-[0_30px_80px_rgba(0,0,0,.5)]" loading="lazy" />
+      <img src="/assets/images/screens/03-player.webp" alt="WeHale, en session spelas" class="absolute -right-2 top-16 w-[58%] rounded-[2rem] shadow-[0_30px_80px_rgba(0,0,0,.5)]" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- ─── What we believe ─── -->
+<section class="relative isolate overflow-hidden" id="tro">
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <img src="/assets/images/sessions/06-nighttime-serenity.webp" alt="" class="h-full w-full object-cover object-center" loading="lazy" />
+    <div class="absolute inset-0 bg-[var(--color-bg)]/65"></div>
+  </div>
+  <div class="mx-auto max-w-6xl px-6 py-28">
+    <p class="mx-auto max-w-3xl text-center text-[clamp(1.75rem,4vw,3rem)] font-medium leading-[1.15]" data-reveal>
+      Ingen hype. Inga floskler. Ingen skuld när man missar en dag.
+    </p>
+    <p class="mt-5 text-center text-[var(--color-text-secondary)]" data-reveal>Mindre press ger mer närvaro. Det är hela idén.</p>
+    <div class="mx-auto mt-14 grid max-w-4xl gap-6 md:grid-cols-3" data-reveal>
+      <div class="p-card p-6">
+        <p class="font-semibold">Vi säljer inte medicin.</p>
+        <p class="p-body mt-2 text-base">WeHale påstår inte att den mäter din kropp eller botar något. Den hjälper dig andas.</p>
+      </div>
+      <div class="p-card p-6">
+        <p class="font-semibold">Vi luras inte.</p>
+        <p class="p-body mt-2 text-base">Inga förvalda rutor, inga dolda kostnader. Påminnelse en vecka innan något kostar, avbryt i appen med två tryck.</p>
+      </div>
+      <div class="p-card p-6">
+        <p class="font-semibold">Tre sessioner är gratis för alltid.</p>
+        <p class="p-body mt-2 text-base">Också för den som aldrig betalar. Det finns alltid någonstans att andas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Content ─── -->
+<section class="mx-auto max-w-6xl px-6 py-24" id="innehall">
+  <p class="p-eyebrow" data-reveal>Innehållet</p>
+  <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>46 sessioner. Tre kurser. Tre av dem gratis för alltid.</h2>
+  <div class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4" data-reveal>
+    {covers.map((c) => (
+      <figure class="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)]">
+        <img src={c.src} alt={c.title} class="h-full w-full object-cover" loading="lazy" />
+        <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+          <p class="font-semibold">{c.title}</p>
+          <p class="text-xs text-white/70">{c.meta}</p>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+</section>
+
+<!-- ─── In the checkout ─── -->
+<section class="border-y border-[var(--color-line)] bg-[var(--color-bg-alt)]" id="kassa">
+  <div class="mx-auto grid max-w-6xl items-center gap-12 px-6 py-24 md:grid-cols-2">
+    <div>
+      <p class="p-eyebrow" data-reveal>Så ser det ut i din kassa</p>
+      <h2 class="p-h2 mt-4" data-reveal>Ditt namn på gåvan. Dina ord om varför.</h2>
+      <p class="p-body mt-6" data-reveal>
+        En kryssruta efter kort och e-post, inga nya fält. Gästen väljer själv. Kryssar de i får de {p.guestDiscountMonthly} kr av köpet och {p.guestTrialDays} dagar WeHale Pro, och kopplar gåvan till dig, inte till oss.
+      </p>
+      <ul class="mt-8 grid gap-4" data-reveal>
+        <li class="flex gap-4">
+          <span class="p-eyebrow mt-1 w-16 shrink-0">Kassan</span>
+          <span class="p-body text-base">Två rader under kortfälten. Obockad tills gästen väljer. Två planer att välja mellan när rutan öppnas.</span>
+        </li>
+        <li class="flex gap-4">
+          <span class="p-eyebrow mt-1 w-16 shrink-0">Sheeten</span>
+          <span class="p-body text-base">"Vad är WeHale?" öppnar en kort presentation över kassan, och en enda väg tillbaka.</span>
+        </li>
+        <li class="flex gap-4">
+          <span class="p-eyebrow mt-1 w-16 shrink-0">Kvittot</span>
+          <span class="p-body text-base">Gåvan är aktiv. En knapp öppnar appen direkt på gästens konto. Ingen kod att skriva.</span>
+        </li>
+      </ul>
+      <p class="mt-8 text-sm text-[var(--color-text-tertiary)]" data-reveal>Testa själv till höger: bocka i rutan, byt plan, öppna "Vad är WeHale?", betala.</p>
+    </div>
+    <div data-reveal>
+      <CheckoutDemo partner={p} />
+    </div>
+  </div>
+</section>
+
+<!-- ─── The numbers ─── -->
+<section class="mx-auto max-w-6xl px-6 py-24" id="rakna">
+  <p class="p-eyebrow" data-reveal>Vad det gör för din kassa</p>
+  <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>Rabatten som räddar köpet betalar någon annan.</h2>
+  <div class="mt-10 grid gap-6 md:grid-cols-3" data-reveal>
+    <div class="p-card p-6">
+      <p class="p-num">{p.guestDiscountMonthly} kr</p>
+      <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">av köpet, till gästen</p>
+      <p class="p-body mt-2 text-sm">Rabatter som dyker upp i kassan är det starkaste enskilda medlet mot avbrutna köp. Här är din marginal orörd: vi står för hela rabatten.</p>
+    </div>
+    <div class="p-card p-6">
+      <p class="p-num">0 kr</p>
+      <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">kostnad för dig</p>
+      <p class="p-body mt-2 text-sm">Vi betalar rabatten, kontot, faktureringen och supporten. Integrationen tar en timme, eller ingen alls.</p>
+    </div>
+    <div class="p-card p-6">
+      <p class="p-num">{p.commissionPercent} %</p>
+      <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">av nettot, i {p.commissionMonths} månader</p>
+      <p class="p-body mt-2 text-sm">Provision på varje gäst som blir betalande. Månadsvis, redovisad i din egen vy. En ny intäktsrad.</p>
+    </div>
+  </div>
+
+  <div class="mt-16">
+    <p class="p-eyebrow" data-reveal>Ett räkneexempel · med antagandena synliga</p>
+    <h3 class="p-h2 mt-4 max-w-2xl" data-reveal>Byt siffrorna mot dina egna. Vi räknar gärna tillsammans.</h3>
+    <div class="mt-8" data-reveal>
+      <Calculator partner={p} />
+    </div>
+  </div>
+</section>
+
+<!-- ─── Try it ─── -->
+<section class="border-y border-[var(--color-line)] bg-[var(--color-bg-alt)]" id="prova">
+  <div class="mx-auto max-w-6xl px-6 py-24">
+    <div class="grid items-start gap-10 md:grid-cols-2">
+      <div>
+        <p class="p-eyebrow" data-reveal>Prova först. Ingen förpliktelse.</p>
+        <h2 class="p-h2 mt-4" data-reveal>{p.teamCodeDays} dagar WeHale Pro för dig och alla som undervisar hos dig.</h2>
+        <p class="p-body mt-6" data-reveal>Ladda ner appen, skapa ett konto och skriv koden. Inget kort behövs. Prova i lugn och ro i två veckor innan vi pratar om något annat.</p>
+      </div>
+      <div class="p-card p-8" data-reveal>
+        <p class="text-sm text-[var(--color-text-secondary)]">Din kod</p>
+        <p class="mt-3 inline-block rounded-[var(--radius-sm)] border border-[var(--color-accent-line)] bg-[var(--color-accent-soft)] px-5 py-3 text-2xl font-extrabold tracking-[0.08em] text-[var(--color-accent)]">{p.teamCode}</p>
+        <p class="mt-4 text-sm text-[var(--color-text-tertiary)]">Koden är personlig för {generic ? "din studio" : p.name} och lever i {p.teamCodeDays} dagar. Skriv den när du skapar kontot.</p>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+          <a href={APP_STORE_URL} target="_blank" rel="noreferrer noopener" class="p-btn">Ladda ner på App Store</a>
+        </div>
+        <p class="mt-4 text-sm text-[var(--color-text-tertiary)]">Android är i beta på Google Play. {p.ourContactName} skickar länken.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Getting started + the pilot ─── -->
+<section class="mx-auto max-w-6xl px-6 py-24" id="igang">
+  <div class="grid gap-12 md:grid-cols-[1.2fr_1fr]">
+    <div>
+      <p class="p-eyebrow" data-reveal>Så här kommer vi igång</p>
+      <h2 class="p-h2 mt-4" data-reveal>En timme. Eller ingen alls.</h2>
+      <div class="mt-10 grid gap-8" data-reveal>
+        <div class="grid grid-cols-[5rem_1fr] gap-4">
+          <p class="text-xl text-[var(--color-accent)]">15 min</p>
+          <div>
+            <p class="font-semibold">På tacksidan eller i kvittomejlet</p>
+            <p class="p-body mt-1 text-base">Ett block vi skriver, du klistrar in. Fungerar med alla bokningssystem{p.checkoutSystem ? `, ${p.checkoutSystem} också` : ""}.</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-[5rem_1fr] gap-4">
+          <p class="text-xl text-[var(--color-accent)]">1 timme</p>
+          <div>
+            <p class="font-semibold">Direkt i kassan</p>
+            <p class="p-body mt-1 text-base">En rad kod eller ett plugin. Rabatten läggs på automatiskt. Vi sitter med.</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-[5rem_1fr] gap-4">
+          <p class="text-xl text-[var(--color-accent)]">30 min</p>
+          <div>
+            <p class="font-semibold">Direkt i kassan, med Stripe</p>
+            <p class="p-body mt-1 text-base">Koppla ditt Stripe med ett klick. Gästen behöver aldrig ange kortet igen.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p-card p-8" data-reveal>
+      <p class="p-eyebrow" style="color: var(--color-gold)">Piloten</p>
+      <ul class="mt-4 grid gap-3 text-[var(--color-text-secondary)]">
+        <li>Åtta veckor, med ett tak vi sätter tillsammans. Rabatterna stannar när taket nås.</li>
+        <li>Din egen vy: aktiveringar, andel av dina köp, betalande, provision, och din kassakonvertering med och utan rutan.</li>
+        <li>Avstämning vecka 6. Fortsätt, justera eller avsluta. Ditt beslut.</li>
+        <li>Pausa när du vill, utan förklaring.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Terms ─── -->
+<section class="border-t border-[var(--color-line)]" id="villkor">
+  <div class="mx-auto max-w-6xl px-6 py-24">
+    <p class="p-eyebrow" data-reveal>Villkoren, i korthet</p>
+    <dl class="mt-8 divide-y divide-[var(--color-line)]" data-reveal>
+      {[
+        ["Gästens rabatt", `${p.guestDiscountMonthly} kr på månadsplan (${p.guestTrialDays} dagar gratis) · ${p.guestDiscountAnnual} kr på årsplan (${kr(p.annualPrice)}, betalas direkt). Vi står för rabatten.`],
+        ["Din provision", `${p.commissionPercent} % av nettot på varje betalande gäst, i ${p.commissionMonths} månader.`],
+        ["Utbetalning", "Månadsvis via Stripe. Rabatterna räknas av mot provisionen i samma avräkning."],
+        ["Bindning", "Ingen. Pausa eller avsluta när som helst."],
+        ["Exklusivitet", "Vi kan lova att vara den enda appen i din kassa. Vi ber inte om motsvarande."],
+        ["Gästens skydd", "Rutan är obockad tills gästen väljer. Påminnelse en vecka före första dragningen. Avbryt i appen."],
+      ].map(([k, v]) => (
+        <div class="grid gap-2 py-5 md:grid-cols-[12rem_1fr]">
+          <dt class="font-semibold">{k}</dt>
+          <dd class="text-[var(--color-text-secondary)]">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<!-- ─── Next step ─── -->
+<section class="relative isolate overflow-hidden" id="nasta">
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <img src="/assets/images/sessions/02-coherent-heart.webp" alt="" class="h-full w-full object-cover object-center" loading="lazy" />
+    <div class="absolute inset-0 bg-[var(--color-bg)]/70"></div>
+  </div>
+  <div class="mx-auto max-w-3xl px-6 py-28 text-center">
+    <p class="p-eyebrow" data-reveal>Nästa steg</p>
+    <h2 class="p-h2 mt-4" data-reveal>Femton minuter, och ett färdigt block med ditt namn inom två dagar.</h2>
+    <p class="p-body mt-6" data-reveal>Vilken kassa kör du, och vad kostar ditt vanligaste köp? Inom 48 timmar får du tillbaka exakt hur rutan skulle se ut hos dig. Sedan bestämmer du.</p>
+    <div class="mt-10 flex flex-col items-center gap-4" data-reveal>
+      {mailto
+        ? <a href={mailto} class="p-btn">Boka 15 minuter med {p.ourContactName}</a>
+        : <p class="text-[var(--color-text-secondary)]">Svara på meddelandet du fick länken i, så bokar {p.ourContactName} en tid.</p>}
+      <p class="text-sm text-[var(--color-text-tertiary)]">{p.ourContactName} · WeHale · wehale.io</p>
+    </div>
+  </div>
+</section>

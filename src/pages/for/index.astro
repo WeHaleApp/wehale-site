@@ -1,0 +1,16 @@
+---
+/** The generic partner page: everything a named page has, with nobody's name on it. */
+import PartnerLayout from "../../layouts/PartnerLayout.astro";
+import Gate from "../../components/partner/Gate.astro";
+import PartnerPage from "../../components/partner/PartnerPage.astro";
+import { GENERIC } from "../../lib/partner";
+---
+
+<PartnerLayout
+  title="WeHale för din studio"
+  description="Ett förslag från WeHale till studios, lärare och plattformar: en gåva i din kassa som vi betalar."
+  label="För studios och lärare"
+>
+  <Gate />
+  <PartnerPage partner={GENERIC} generic />
+</PartnerLayout>

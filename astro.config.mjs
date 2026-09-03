@@ -17,6 +17,8 @@ export default defineConfig({
     sitemap({
       changefreq: "weekly",
       priority: 0.7,
+      // Partner pages (/for, /for/<slug>) are invitation-only: never in the sitemap.
+      filter: (page) => !page.includes("/for"),
     }),
   ],
   vite: {

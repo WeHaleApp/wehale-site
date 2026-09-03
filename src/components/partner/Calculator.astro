@@ -1,0 +1,113 @@
+---
+/**
+ * The business case with the assumptions on the table (CR-0.20 ruling: ranges with visible
+ * assumptions, never a single number). Two scenarios side by side, every input editable,
+ * prefilled with the partner's own numbers.
+ */
+import type { Partner } from "../../lib/partner";
+
+interface Props { partner: Partner }
+const { partner: p } = Astro.props;
+
+const scenarios = [
+  { key: "low", label: "Försiktigt", activation: 5, stay: 30 },
+  { key: "mid", label: "Rimligt", activation: 10, stay: 40 },
+];
+---
+
+<div
+  class="p-card p-6 md:p-8"
+  data-calc
+  data-price={p.monthlyPrice}
+  data-disc={p.guestDiscountMonthly}
+  data-pct={p.commissionPercent}
+>
+  <div class="grid gap-6 md:grid-cols-2">
+    <label class="block">
+      <span class="text-sm text-[var(--color-text-secondary)]">Köp i kassan per månad</span>
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" step="10" value={p.ordersPerMonth} data-orders />
+    </label>
+    <label class="block">
+      <span class="text-sm text-[var(--color-text-secondary)]">Ditt vanligaste köp, kr</span>
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" step="5" value={p.avgOrder} data-avg />
+    </label>
+  </div>
+
+  <div class="mt-8 grid gap-4 md:grid-cols-2">
+    {scenarios.map((s) => (
+      <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5" data-scenario={s.key}>
+        <p class="p-eyebrow" style={s.key === "mid" ? "color: var(--color-gold)" : ""}>{s.label}</p>
+
+        <div class="mt-4 grid grid-cols-2 gap-3">
+          <label class="block">
+            <span class="text-xs text-[var(--color-text-tertiary)]">tar gåvan, %</span>
+            <input class="p-input mt-1 py-2 text-sm" type="number" inputmode="numeric" min="0" max="100" value={s.activation} data-activation />
+          </label>
+          <label class="block">
+            <span class="text-xs text-[var(--color-text-tertiary)]">stannar efter {p.guestTrialDays} dagar, %</span>
+            <input class="p-input mt-1 py-2 text-sm" type="number" inputmode="numeric" min="0" max="100" value={s.stay} data-stay />
+          </label>
+        </div>
+
+        <dl class="mt-6 grid gap-4">
+          <div>
+            <dt class="text-xs text-[var(--color-text-tertiary)]">gåvor per månad</dt>
+            <dd class="p-num mt-1" data-out="gifts">0</dd>
+            <dd class="mt-1 text-xs text-[var(--color-text-secondary)]">rabatt vi står för: <span data-out="cost">0 kr</span> per månad. Våra pengar.</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-[var(--color-text-tertiary)]">betalande efter {p.guestTrialDays} dagar</dt>
+            <dd class="p-num mt-1" data-out="paying">0</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-[var(--color-text-tertiary)]">din provision från en månads gäster</dt>
+            <dd class="p-num mt-1 text-[var(--color-accent)]" data-out="commission">0 kr</dd>
+            <dd class="mt-1 text-xs text-[var(--color-text-secondary)]">per månad, {p.commissionPercent} % av {p.monthlyPrice} kr, så länge de stannar</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-[var(--color-text-tertiary)]">i månad tolv, när tolv månaders gäster lagts på varandra</dt>
+            <dd class="p-num mt-1 text-[var(--color-accent)]" data-out="month12">0 kr</dd>
+            <dd class="mt-1 text-xs text-[var(--color-text-secondary)]">antagande: 15 % av de betalande lämnar varje månad</dd>
+          </div>
+        </dl>
+      </div>
+    ))}
+  </div>
+
+  <p class="mt-6 text-sm text-[var(--color-text-secondary)]">
+    Plus varje övergivet köp som rabatten räddade. Den siffran är din, och den mäter vi tillsammans i piloten.
+    Ingen av siffrorna ovan är ett löfte. Alla är antaganden att byta ut, och årsplanen (500 kr rabatt, 999 kr direkt) är inte med i räkningen.
+  </p>
+</div>
+
+<script>
+  const fmt = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
+  const int = (n: number) => Math.round(n).toLocaleString("sv-SE");
+  document.querySelectorAll<HTMLElement>("[data-calc]").forEach((root) => {
+    const price = Number(root.dataset.price);
+    const disc = Number(root.dataset.disc);
+    const pct = Number(root.dataset.pct) / 100;
+    const orders = root.querySelector<HTMLInputElement>("[data-orders]")!;
+    const render = () => {
+      const o = Math.max(0, Number(orders.value) || 0);
+      root.querySelectorAll<HTMLElement>("[data-scenario]").forEach((sc) => {
+        const act = Math.min(100, Math.max(0, Number(sc.querySelector<HTMLInputElement>("[data-activation]")!.value) || 0)) / 100;
+        const stay = Math.min(100, Math.max(0, Number(sc.querySelector<HTMLInputElement>("[data-stay]")!.value) || 0)) / 100;
+        const gifts = o * act;
+        const paying = gifts * stay;
+        const monthly = paying * price * pct;
+        // Twelve cohorts stacked, each keeping 85 % of the previous month's payers.
+        const churn = 0.15;
+        const month12 = monthly * (1 - Math.pow(1 - churn, 12)) / churn;
+        const set = (k: string, v: string) => { const el = sc.querySelector<HTMLElement>(`[data-out="${k}"]`); if (el) el.textContent = v; };
+        set("gifts", int(gifts));
+        set("cost", fmt(gifts * disc));
+        set("paying", int(paying));
+        set("commission", fmt(monthly));
+        set("month12", fmt(month12));
+      });
+    };
+    root.querySelectorAll("input").forEach((i) => i.addEventListener("input", render));
+    render();
+  });
+</script>

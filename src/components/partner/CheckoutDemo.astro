@@ -1,0 +1,264 @@
+---
+/**
+ * The partner's checkout, as a working mock: the WeHale block after card and e-mail, unchecked
+ * until the guest chooses (consumer law: no pre-ticked paid add-on), two plans on expand, the
+ * "Vad är WeHale?" sheet over the checkout, and the receipt with one button into the app.
+ * Mirrors the Figma prototype on the App-file page "Partner checkout (CR-0.20)".
+ */
+import type { Partner } from "../../lib/partner";
+import { kr } from "../../lib/partner";
+
+interface Props { partner: Partner }
+const { partner: p } = Astro.props;
+const accent = p.accent ?? "#0f766e";
+---
+
+<div
+  class="mx-auto w-full max-w-[380px] overflow-hidden rounded-[28px] bg-white text-[#111827] shadow-[0_30px_80px_rgba(0,0,0,.45)]"
+  data-checkout
+  data-price={p.avgOrder}
+  data-disc-month={p.guestDiscountMonthly}
+  data-disc-year={p.guestDiscountAnnual}
+  style={`--pa:${accent}`}
+>
+  <!-- ─── Checkout view ─── -->
+  <div data-view="checkout" class="relative">
+    <div class="flex items-center justify-between px-5 pt-5">
+      {p.logo
+        ? <img src={p.logo} alt={p.name} class="h-6 w-auto" />
+        : <span class="text-[13px] font-extrabold uppercase tracking-[0.14em]" style={`color:${accent}`}>{p.name}</span>}
+      <span class="text-[11px] text-[#6b7280]">Kassa · 2/2</span>
+    </div>
+
+    <div class="mx-5 mt-4 flex items-center justify-between rounded-2xl border border-[#e5e7eb] px-4 py-3">
+      <div>
+        <p class="text-[13px] font-semibold">{p.commonPurchase}</p>
+        <p class="text-[11px] text-[#6b7280]">Gäller 6 månader · alla klasser</p>
+      </div>
+      <span class="text-[13px] font-semibold" style="font-variant-numeric: tabular-nums">{kr(p.avgOrder)}</span>
+    </div>
+
+    <div class="px-5 pt-5">
+      <p class="text-[12px] font-semibold">Kontakt</p>
+      <div class="mt-2 rounded-xl border border-[#e5e7eb] px-3 py-2.5">
+        <p class="text-[9px] uppercase tracking-wider text-[#9ca3af]">E-post</p>
+        <p class="text-[12px]">anna.lind@gmail.com</p>
+      </div>
+    </div>
+
+    <div class="px-5 pt-4">
+      <p class="text-[12px] font-semibold">Kort</p>
+      <div class="mt-2 rounded-xl border border-[#e5e7eb] px-3 py-2.5">
+        <p class="text-[9px] uppercase tracking-wider text-[#9ca3af]">Kortnummer</p>
+        <p class="text-[12px]" style="font-variant-numeric: tabular-nums">4242 4242 4242 4242</p>
+      </div>
+      <div class="mt-2 grid grid-cols-2 gap-2">
+        <div class="rounded-xl border border-[#e5e7eb] px-3 py-2.5">
+          <p class="text-[9px] uppercase tracking-wider text-[#9ca3af]">MM/ÅÅ</p>
+          <p class="text-[12px]">08 / 28</p>
+        </div>
+        <div class="rounded-xl border border-[#e5e7eb] px-3 py-2.5">
+          <p class="text-[9px] uppercase tracking-wider text-[#9ca3af]">CVC</p>
+          <p class="text-[12px]">•••</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- The WeHale block: collapsed and unchecked by default. -->
+    <div class="mx-5 mt-5 rounded-2xl border-2 transition-colors" data-block>
+      <label class="flex cursor-pointer items-start gap-3 px-4 py-3.5">
+        <input type="checkbox" class="peer sr-only" data-check />
+        <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border border-[#cbd5e1] bg-white transition-colors peer-checked:border-[#4fcbd6] peer-checked:bg-[#4fcbd6]" aria-hidden="true">
+          <svg viewBox="0 0 12 12" class="h-3 w-3 opacity-0 transition-opacity peer-checked:opacity-100" data-tick><path d="M2 6.2 4.7 9 10 3.5" fill="none" stroke="#08111f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="flex-1">
+          <span class="flex items-center justify-between">
+            <span class="text-[13px] font-semibold">Lägg till WeHale Pro</span>
+            <img src="/assets/images/logo.svg" alt="" class="h-3.5 w-auto invert" />
+          </span>
+          <span class="mt-1 block text-[13px] font-medium">0 kr i dag. <span data-disc-line>{p.guestDiscountMonthly} kr rabatt på den här ordern.</span></span>
+          <span class="mt-1 block text-[11px] leading-snug text-[#6b7280]">Guidad andning för lugn, fokus och sömn. Prova {p.guestTrialDays} dagar gratis, avbryt när du vill.</span>
+        </span>
+      </label>
+
+      <div class="hidden px-4 pb-4" data-expanded>
+        <div class="grid gap-2">
+          <label class="flex cursor-pointer items-center justify-between rounded-xl border border-[#e5e7eb] px-3 py-2.5 has-[:checked]:border-[#4fcbd6] has-[:checked]:bg-[#f0fbfc]">
+            <span class="flex items-center gap-2.5">
+              <input type="radio" name="wh-plan" value="month" checked class="accent-[#4fcbd6]" data-plan />
+              <span>
+                <span class="block text-[12px] font-semibold">Månadsvis</span>
+                <span class="block text-[10px] text-[#6b7280]">0 kr i dag · {p.monthlyPrice} kr/mån efter {p.guestTrialDays} dagar</span>
+              </span>
+            </span>
+            <span class="text-[12px] font-semibold" style={`color:${accent}`}>{p.guestDiscountMonthly} kr</span>
+          </label>
+          <label class="flex cursor-pointer items-center justify-between rounded-xl border border-[#e5e7eb] px-3 py-2.5 has-[:checked]:border-[#4fcbd6] has-[:checked]:bg-[#f0fbfc]">
+            <span class="flex items-center gap-2.5">
+              <input type="radio" name="wh-plan" value="year" class="accent-[#4fcbd6]" data-plan />
+              <span>
+                <span class="block text-[12px] font-semibold">Årsvis</span>
+                <span class="block text-[10px] text-[#6b7280]">{p.annualPrice} kr i dag · ingen gratisperiod</span>
+              </span>
+            </span>
+            <span class="text-[12px] font-semibold" style={`color:${accent}`}>{p.guestDiscountAnnual} kr</span>
+          </label>
+        </div>
+        <p class="mt-3 text-[10px] leading-snug text-[#6b7280]">Vi använder e-posten och kortet ovan. Inget mer att fylla i. Påminnelse via mejl 7 dagar före första dragningen.</p>
+        <p class="mt-3 flex items-center gap-2 text-[11px] text-[#374151]">
+          <span class="inline-block h-4 w-4 rounded-full" style={`background:${accent}`} aria-hidden="true"></span>
+          {p.name} har valt WeHale för sina gäster.
+        </p>
+      </div>
+
+      <div class="flex gap-4 px-4 pb-3 text-[11px]">
+        <button type="button" class="underline decoration-[#cbd5e1] underline-offset-2" data-open-sheet>Vad är WeHale?</button>
+        <span class="text-[#9ca3af]">Regler och villkor</span>
+      </div>
+    </div>
+
+    <div class="mx-5 mt-5 flex items-end justify-between">
+      <div>
+        <p class="text-[12px] text-[#6b7280]">Att betala i dag</p>
+        <p class="hidden text-[10px] text-[#6b7280]" data-incl>inkl. <span data-incl-amount></span> WeHale-rabatt</p>
+      </div>
+      <p class="text-[20px] font-semibold" style="font-variant-numeric: tabular-nums" data-total>{kr(p.avgOrder)}</p>
+    </div>
+
+    <div class="px-5 pb-5 pt-4">
+      <button type="button" class="w-full rounded-xl py-3.5 text-[14px] font-semibold text-white" style={`background:${accent}`} data-pay>Betala <span data-pay-amount>{kr(p.avgOrder)}</span></button>
+      <p class="mt-3 text-center text-[9px] text-[#9ca3af]">Prototyp. Inget dras. Kortnumret är ett testkort.</p>
+    </div>
+
+    <!-- The "Vad är WeHale?" sheet: fixed height, never covers the partner's header. -->
+    <div class="absolute inset-x-0 bottom-0 top-14 hidden flex-col rounded-t-[26px] bg-[#0b1220] text-[#f2f0ed] shadow-[0_-20px_60px_rgba(0,0,0,.35)]" data-sheet>
+      <div class="flex items-center justify-between px-5 pt-4">
+        <img src="/assets/images/logo.svg" alt="WeHale" class="h-4 w-auto" />
+        <button type="button" class="grid h-8 w-8 place-items-center rounded-full bg-white/10 text-sm" data-close-sheet aria-label="Stäng">✕</button>
+      </div>
+      <div class="flex-1 px-5 pt-5">
+        <p class="text-[20px] font-medium leading-tight">Andning du märker att den fungerar.</p>
+        <p class="mt-3 text-[12px] leading-relaxed text-white/70">Guidade sessioner på fem till tjugofem minuter. För lugn, för fokus, för sömn. Byggd av människor som undervisar andning, för människor som vill ha den i vardagen.</p>
+        <div class="mt-4 flex gap-2 overflow-hidden">
+          <img src="/assets/images/sessions/05-into-stillness.webp" alt="" class="h-24 w-[31%] rounded-xl object-cover" />
+          <img src="/assets/images/sessions/02-coherent-heart.webp" alt="" class="h-24 w-[31%] rounded-xl object-cover" />
+          <img src="/assets/images/sessions/06-nighttime-serenity.webp" alt="" class="h-24 w-[31%] rounded-xl object-cover" />
+        </div>
+        <ul class="mt-4 grid gap-1.5 text-[12px] text-white/80">
+          <li>· {p.guestTrialDays} dagar gratis, avbryt när du vill i appen.</li>
+          <li>· Påminnelse en vecka innan något kostar.</li>
+          <li>· Tre sessioner är alltid gratis, även efteråt.</li>
+        </ul>
+      </div>
+      <div class="px-5 pb-5">
+        <button type="button" class="w-full rounded-xl bg-white py-3 text-[13px] font-semibold text-[#0b1220]" data-close-sheet>Tillbaka till kassan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Receipt view ─── -->
+  <div data-view="receipt" class="hidden">
+    <div class="flex items-center justify-between px-5 pt-5">
+      {p.logo
+        ? <img src={p.logo} alt={p.name} class="h-6 w-auto" />
+        : <span class="text-[13px] font-extrabold uppercase tracking-[0.14em]" style={`color:${accent}`}>{p.name}</span>}
+      <span class="text-[11px] text-[#6b7280]">Kvitto</span>
+    </div>
+    <div class="px-5 pt-6">
+      <div class="grid h-10 w-10 place-items-center rounded-full text-white" style={`background:${accent}`} aria-hidden="true">✓</div>
+      <p class="mt-4 text-[20px] font-semibold leading-tight">Tack Anna, ditt klippkort är klart.</p>
+      <p class="mt-1 text-[12px] text-[#6b7280]">{p.commonPurchase} · <span data-receipt-total></span></p>
+    </div>
+
+    <div class="mx-5 mt-5 rounded-2xl bg-[#0b1220] p-4 text-[#f2f0ed]" data-receipt-wehale>
+      <div class="flex items-center justify-between">
+        <img src="/assets/images/logo.svg" alt="WeHale" class="h-4 w-auto" />
+        <span class="rounded-full bg-[#4fcbd6]/20 px-2 py-0.5 text-[10px] font-semibold text-[#4fcbd6]">Aktiv</span>
+      </div>
+      <p class="mt-3 text-[15px] font-medium leading-snug" data-receipt-title>Din WeHale Pro är aktiv. {p.guestTrialDays} fria dagar börjar nu.</p>
+      <p class="mt-2 text-[11px] leading-relaxed text-white/70" data-receipt-body>Öppna appen och logga in med anna.lind@gmail.com. Allt är öppet från första andetaget. Vi mejlar dig 7 dagar innan första dragningen på {p.monthlyPrice} kr.</p>
+      <button type="button" class="mt-4 w-full rounded-xl bg-white py-3 text-[13px] font-semibold text-[#0b1220]">Öppna WeHale</button>
+      <p class="mt-2 text-center text-[10px] text-white/50">Länken öppnar ditt konto direkt. Ingen kod att skriva.</p>
+    </div>
+
+    <p class="mx-5 mt-5 hidden text-[12px] text-[#6b7280]" data-receipt-plain>Utan gåvan ser kvittot ut precis som i dag.</p>
+
+    <div class="px-5 pb-5 pt-6 text-center">
+      <button type="button" class="text-[12px] underline decoration-[#cbd5e1] underline-offset-2" data-reset>Börja om</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  [data-block] { border-color: #e5e7eb; }
+  [data-block].is-on { border-color: #4fcbd6; background: #f7fdfd; }
+  /* Tailwind's peer variant cannot reach a descendant of the sibling, so the tick is drawn here. */
+  [data-check]:checked ~ span [data-tick] { opacity: 1; }
+</style>
+
+<script>
+  const fmt = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
+  document.querySelectorAll<HTMLElement>("[data-checkout]").forEach((root) => {
+    const price = Number(root.dataset.price);
+    const disc = { month: Number(root.dataset.discMonth), year: Number(root.dataset.discYear) };
+    const q = <T extends Element>(s: string) => root.querySelector<T>(s);
+    const check = q<HTMLInputElement>("[data-check]")!;
+    const block = q<HTMLElement>("[data-block]")!;
+    const expanded = q<HTMLElement>("[data-expanded]")!;
+    const total = q<HTMLElement>("[data-total]")!;
+    const incl = q<HTMLElement>("[data-incl]")!;
+    const inclAmount = q<HTMLElement>("[data-incl-amount]")!;
+    const payAmount = q<HTMLElement>("[data-pay-amount]")!;
+    const discLine = q<HTMLElement>("[data-disc-line]")!;
+    const sheet = q<HTMLElement>("[data-sheet]")!;
+    const views = { checkout: q<HTMLElement>('[data-view="checkout"]')!, receipt: q<HTMLElement>('[data-view="receipt"]')! };
+
+    const plan = () => (root.querySelector<HTMLInputElement>("[data-plan]:checked")?.value ?? "month") as "month" | "year";
+    const render = () => {
+      const on = check.checked;
+      const d = on ? disc[plan()] : 0;
+      block.classList.toggle("is-on", on);
+      expanded.classList.toggle("hidden", !on);
+      total.textContent = fmt(price - d);
+      payAmount.textContent = fmt(price - d);
+      incl.classList.toggle("hidden", !on);
+      inclAmount.textContent = fmt(d);
+      discLine.textContent = `${disc[plan()]} kr rabatt på den här ordern.`;
+    };
+    check.addEventListener("change", render);
+    root.querySelectorAll("[data-plan]").forEach((r) => r.addEventListener("change", render));
+
+    const receiptTitle = q<HTMLElement>("[data-receipt-title]")!;
+    const receiptBody = q<HTMLElement>("[data-receipt-body]")!;
+    const receiptDefaults = { title: receiptTitle.textContent, body: receiptBody.textContent };
+
+    q("[data-open-sheet]")?.addEventListener("click", () => { sheet.classList.remove("hidden"); sheet.classList.add("flex"); });
+    root.querySelectorAll("[data-close-sheet]").forEach((b) => b.addEventListener("click", () => { sheet.classList.add("hidden"); sheet.classList.remove("flex"); }));
+
+    q("[data-pay]")?.addEventListener("click", () => {
+      const on = check.checked;
+      const d = on ? disc[plan()] : 0;
+      q<HTMLElement>("[data-receipt-total]")!.textContent = fmt(price - d);
+      q<HTMLElement>("[data-receipt-wehale]")!.classList.toggle("hidden", !on);
+      q<HTMLElement>("[data-receipt-plain]")!.classList.toggle("hidden", on);
+      if (on && plan() === "year") {
+        receiptTitle.textContent = "Din WeHale Pro gäller ett år, från i dag.";
+        receiptBody.textContent = "Öppna appen och logga in med anna.lind@gmail.com. Allt är öppet från första andetaget. Vi hör av oss en månad innan året är slut.";
+      } else {
+        receiptTitle.textContent = receiptDefaults.title;
+        receiptBody.textContent = receiptDefaults.body;
+      }
+      views.checkout.classList.add("hidden");
+      views.receipt.classList.remove("hidden");
+      root.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    q("[data-reset]")?.addEventListener("click", () => {
+      check.checked = false;
+      const m = root.querySelector<HTMLInputElement>('[data-plan][value="month"]'); if (m) m.checked = true;
+      render();
+      views.receipt.classList.add("hidden");
+      views.checkout.classList.remove("hidden");
+    });
+    render();
+  });
+</script>

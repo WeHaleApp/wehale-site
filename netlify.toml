@@ -35,3 +35,9 @@
   for = "/sitemap-index.xml"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+# Partner pages are invitation-only while the model is piloted: never indexed.
+[[headers]]
+  for = "/for/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

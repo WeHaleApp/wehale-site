@@ -1,0 +1,64 @@
+---
+/**
+ * A soft gate: one shared password, checked in the browser against a SHA-256 hash, remembered
+ * for the tab. It keeps the pages out of casual reach while the model is piloted; it is not
+ * security (the HTML is public to anyone who reads source). Change the password by replacing
+ * HASH with `printf '<new>' | shasum -a 256`.
+ */
+const HASH = "7e9fc0e3c2a4f51101237356e0d2613062bd8b4ea5159ae7150c4898d5137070";
+---
+
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg)] px-6"
+  data-gate
+  data-hash={HASH}
+>
+  <form class="w-full max-w-sm" data-gate-form novalidate>
+    <img src="/assets/images/logo.svg" alt="WeHale" class="h-8 w-auto" />
+    <h1 class="mt-10 text-2xl font-medium">En sida för inbjudna.</h1>
+    <p class="mt-2 text-[var(--color-text-secondary)]">Lösenordet står i meddelandet du fick länken i.</p>
+    <label class="sr-only" for="gate-pw">Lösenord</label>
+    <input
+      id="gate-pw"
+      type="password"
+      autocomplete="current-password"
+      autocapitalize="off"
+      class="p-input mt-6 py-3"
+      placeholder="Lösenord"
+    />
+    <p class="mt-2 hidden text-sm text-[var(--color-rose)]" data-gate-error>Det stämde inte. Försök igen.</p>
+    <button type="submit" class="p-btn mt-4 w-full">Öppna</button>
+  </form>
+</div>
+
+<script>
+  const gate = document.querySelector<HTMLElement>("[data-gate]");
+  if (gate) {
+    const KEY = "wh_partner_gate";
+    const hash = gate.dataset.hash ?? "";
+    const open = () => {
+      gate.remove();
+      document.documentElement.classList.remove("gated");
+    };
+    try {
+      if (sessionStorage.getItem(KEY) === hash) open();
+    } catch {}
+    const form = gate.querySelector<HTMLFormElement>("[data-gate-form]");
+    const input = gate.querySelector<HTMLInputElement>("input");
+    const error = gate.querySelector<HTMLElement>("[data-gate-error]");
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const value = (input?.value ?? "").trim();
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+      const hex = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+      if (hex === hash) {
+        try { sessionStorage.setItem(KEY, hash); } catch {}
+        open();
+      } else {
+        error?.classList.remove("hidden");
+        input?.select();
+      }
+    });
+    input?.focus();
+  }
+</script>

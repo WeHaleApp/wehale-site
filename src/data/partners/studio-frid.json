@@ -1,0 +1,23 @@
+{
+  "slug": "studio-frid",
+  "name": "Studio Frid",
+  "kind": "yogastudio",
+  "city": "Stockholm",
+  "contactName": "Anna",
+  "ourContactName": "Philip",
+  "teamCode": "STUDIOFRID-TEAM",
+  "teamCodeDays": 90,
+  "guestDiscountMonthly": 100,
+  "guestDiscountAnnual": 500,
+  "guestTrialDays": 30,
+  "annualPrice": 999,
+  "monthlyPrice": 179,
+  "commissionPercent": 20,
+  "commissionMonths": 12,
+  "avgOrder": 795,
+  "ordersPerMonth": 400,
+  "commonPurchase": "Yoga · 10-klippkort",
+  "checkoutSystem": "Bokadirekt",
+  "accent": "#0f766e",
+  "quote": "Vi ger WeHale till alla våra gäster."
+}
