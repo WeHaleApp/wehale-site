@@ -12,6 +12,17 @@ import type { Partner } from "../../lib/partner";
 
 interface Props { partner: Partner }
 const { partner: p } = Astro.props;
+
+// The same arithmetic as the script below, run once at build so the first paint shows real numbers.
+const D = { abandon: 30, recover: 15 };
+const started = p.ordersPerMonth / (1 - D.abandon / 100);
+const abandoned = started - p.ordersPerMonth;
+const recovered = abandoned * (D.recover / 100);
+const convBefore = (p.ordersPerMonth / started) * 100;
+const convAfter = ((p.ordersPerMonth + recovered) / started) * 100;
+const int = (n: number) => Math.round(n).toLocaleString("sv-SE");
+const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
+const pct1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString("sv-SE");
 ---
 
 <div
@@ -30,7 +41,7 @@ const { partner: p } = Astro.props;
     </label>
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Påbörjade köp som avbryts i dag, %</span>
-      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max="95" value="30" data-abandon />
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max="95" value={D.abandon} data-abandon />
       <span class="mt-1 block text-xs text-[var(--color-text-tertiary)]">Vet du inte? Tre av tio är vanligt i bokningskassor.</span>
     </label>
   </div>
@@ -41,7 +52,7 @@ const { partner: p } = Astro.props;
       <p class="mt-1 text-sm text-[var(--color-text-secondary)]">Av dem som tvekar i sista steget slutför så här många när kassan visar {p.guestDiscountMonthly} kr rabatt. Det är siffran piloten mäter. Byt den.</p>
     </div>
     <label class="mt-4 flex items-center gap-3 md:mt-0">
-      <input class="p-input w-24 text-center text-lg" type="number" inputmode="numeric" min="0" max="100" value="15" data-recover />
+      <input class="p-input w-24 text-center text-lg" type="number" inputmode="numeric" min="0" max="100" value={D.recover} data-recover />
       <span class="text-sm text-[var(--color-text-secondary)]">%</span>
     </label>
   </div>
@@ -49,23 +60,23 @@ const { partner: p } = Astro.props;
   <div class="mt-8 grid gap-6 md:grid-cols-3">
     <div>
       <p class="text-xs text-[var(--color-text-tertiary)]">fler genomförda köp per månad</p>
-      <p class="p-num mt-2 text-[var(--color-accent)]"><span data-out="recovered">0</span></p>
-      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">konvertering <span data-out="convBefore">70</span> % → <span data-out="convAfter">70</span> %</p>
+      <p class="p-num mt-2 text-[var(--color-accent)]"><span data-out="recovered">+{int(recovered)}</span></p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">konvertering <span data-out="convBefore">{pct1(convBefore)}</span> % → <span data-out="convAfter">{pct1(convAfter)}</span> %</p>
     </div>
     <div>
       <p class="text-xs text-[var(--color-text-tertiary)]">mer intäkt per månad, till fullt pris</p>
-      <p class="p-num mt-2 text-[var(--color-accent)]" data-out="revenue">0 kr</p>
+      <p class="p-num mt-2 text-[var(--color-accent)]" data-out="revenue">+{krs(recovered * p.avgOrder)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">gästen ser rabatten, du får hela beloppet</p>
     </div>
     <div>
       <p class="text-xs text-[var(--color-text-tertiary)]">rabatten på de köpen</p>
-      <p class="p-num mt-2" data-out="discount">0 kr</p>
+      <p class="p-num mt-2" data-out="discount">{krs(recovered * p.guestDiscountMonthly)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">per månad. Den betalar vi, inte du.</p>
     </div>
   </div>
 
   <div class="mt-8 border-t border-[var(--color-line)] pt-5 text-sm text-[var(--color-text-secondary)]">
-    <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain"></span></p>
+    <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain">{int(p.ordersPerMonth)} köp i dag och {int(abandoned)} avbrutna, så {int(started)} påbörjade. {D.recover} % av de avbrutna slutför med rabatten: {int(recovered)} köp till, à {krs(p.avgOrder)} till dig. Rabatten, {int(recovered)} × {p.guestDiscountMonthly} kr, står vi för.</span></p>
     <p class="mt-2">Gäster som ändå skulle ha köpt får också gåvan. Det kostar dig inget, och det räknar vi inte som intäkt här. Årsplanen ({p.guestDiscountAnnual} kr rabatt, betalas direkt) är inte med i räkningen.</p>
   </div>
 </div>

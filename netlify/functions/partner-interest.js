@@ -29,7 +29,7 @@ async function sendMail({ apiKey, from, to, replyTo, subject, html, text }) {
   try { return JSON.parse(body); } catch { return { ok: true }; }
 }
 
-const MODEL_LABELS = { checkout: 'Gåvan i kassan', referral: 'Ambassadör', gift: 'Gästkoden' };
+const MODEL_LABELS = { checkout: 'Gåvan i kassan', referral: 'Din länk', gift: 'Gästkoden' };
 
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };

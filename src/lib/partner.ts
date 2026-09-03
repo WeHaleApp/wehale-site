@@ -19,7 +19,7 @@ export type PartnerModel = "checkout" | "referral" | "gift";
 /** The names partners see. Short, concrete, from their side of the table (Isak, 2026-09-03). */
 export const MODEL_NAMES: Record<PartnerModel, string> = {
   checkout: "Gåvan i kassan",
-  referral: "Ambassadör",
+  referral: "Din länk",
   gift: "Gästkoden",
 };
 

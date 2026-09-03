@@ -14,6 +14,13 @@ const annualHalf = Math.floor(p.annualPrice / 2);
 const annualPaid = p.referralOffer === "annual50" ? annualHalf : p.annualPrice;
 const perAnnual = Math.round(annualPaid * net * share);
 const perMonth = Math.round(p.monthlyPrice * net * share);
+// Defaults, computed once at build so the first paint shows real numbers; the script keeps them live.
+const D = { annualShare: p.referralOffer === "annual50" ? 70 : 30, stay: 6 };
+const annuals0 = p.recruitsPerYear * (D.annualShare / 100);
+const monthlies0 = p.recruitsPerYear - annuals0;
+const year0 = annuals0 * perAnnual + monthlies0 * perMonth * D.stay;
+const int = (n: number) => Math.round(n).toLocaleString("sv-SE");
+const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
 ---
 
 <div
@@ -44,12 +51,12 @@ const perMonth = Math.round(p.monthlyPrice * net * share);
     </label>
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Andel som väljer årsmedlemskap, %</span>
-      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max="100" value={p.referralOffer === "annual50" ? 70 : 30} data-annual-share />
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max="100" value={D.annualShare} data-annual-share />
       <span class="mt-1 block text-xs text-[var(--color-text-tertiary)]">Resten väljer månadsplan.</span>
     </label>
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Månader en månadskund stannar, i snitt</span>
-      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max={p.commissionMonths} value="6" data-stay-months />
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max={p.commissionMonths} value={D.stay} data-stay-months />
       <span class="mt-1 block text-xs text-[var(--color-text-tertiary)]">Av de första {p.commissionMonths}. Det här mäter vi tillsammans.</span>
     </label>
   </div>
@@ -57,18 +64,18 @@ const perMonth = Math.round(p.monthlyPrice * net * share);
   <div class="mt-8 grid gap-6 md:grid-cols-2">
     <div>
       <p class="text-xs text-[var(--color-text-tertiary)]">till dig, från ett års värvade kunder</p>
-      <p class="p-num mt-2 text-[var(--color-accent)]" data-out="year">0 kr</p>
+      <p class="p-num mt-2 text-[var(--color-accent)]" data-out="year">{krs(year0)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">utbetalt månadsvis under de tolv månader kunderna betalar</p>
     </div>
     <div>
       <p class="text-xs text-[var(--color-text-tertiary)]">i snitt per månad</p>
-      <p class="p-num mt-2" data-out="month">0 kr</p>
+      <p class="p-num mt-2" data-out="month">{krs(year0 / 12)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">och varje nytt års kunder lägger på ett år till</p>
     </div>
   </div>
 
   <div class="mt-8 border-t border-[var(--color-line)] pt-5 text-sm text-[var(--color-text-secondary)]">
-    <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain"></span></p>
+    <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain">{int(annuals0)} årskunder × {krs(perAnnual)} + {int(monthlies0)} månadskunder × {krs(perMonth)} × {D.stay} månader = {krs(year0)}.</span></p>
     <p class="mt-2">Ersättningen räknas på det kunden faktiskt betalar oss under sina första {p.commissionMonths} månader, efter butikens andel. Byter kunden plan följer ersättningen med. Återbetalas ett köp dras det av.</p>
   </div>
 </div>
