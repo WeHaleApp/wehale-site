@@ -2,8 +2,7 @@
   "slug": "studio-frid",
   "name": "Studio Frid",
   "kind": "yogastudio",
-  "city": "Stockholm",
-  "contactName": "Anna",
+  "city": "Malmö",
   "ourContactName": "Philip",
   "models": [
     "checkout",
@@ -20,13 +19,15 @@
   "monthlyPrice": 179,
   "commissionPercent": 20,
   "commissionMonths": 12,
-  "avgOrder": 795,
+  "avgOrder": 475,
   "ordersPerMonth": 400,
   "guestsPerMonth": 300,
-  "commonPurchase": "Yoga · 10-klippkort",
-  "checkoutSystem": "Bokadirekt",
-  "accent": "#0f766e",
-  "quote": "Vi ger WeHale till alla våra gäster.",
+  "commonPurchase": "Prova-på-kort · en månad",
+  "checkoutSystem": "Wondr",
+  "accent": "#5f6e5a",
+  "quote": "Malmös äldsta yoga- och pilatesstudio.",
   "referralOffer": "trial90",
-  "recruitsPerYear": 100
+  "recruitsPerYear": 100,
+  "logo": "/assets/partners/studio-frid.png",
+  "purchaseNote": "Yoga och pilates matwork · 30 dagar"
 }

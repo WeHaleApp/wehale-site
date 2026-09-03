@@ -64,6 +64,8 @@ export interface Partner {
   ordersPerMonth: number;
   guestsPerMonth: number;
   commonPurchase: string;
+  /** The line under the purchase in the checkout mock. */
+  purchaseNote: string;
   checkoutSystem?: string;
   /** Optional branding for the checkout mock. */
   logo?: string;
@@ -95,6 +97,7 @@ export const GENERIC: Partner = {
   ordersPerMonth: 400,
   guestsPerMonth: 300,
   commonPurchase: "Yoga · 10-klippkort",
+  purchaseNote: "Gäller 6 månader · alla klasser",
   accent: "#0f766e",
 };
 

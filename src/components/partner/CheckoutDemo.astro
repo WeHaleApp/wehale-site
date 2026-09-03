@@ -25,7 +25,7 @@ const accent = p.accent ?? "#0f766e";
   <div data-view="checkout" class="relative" data-trial={p.guestTrialDays}>
     <div class="flex items-center justify-between px-5 pt-5">
       {p.logo
-        ? <img src={p.logo} alt={p.name} class="h-6 w-auto" />
+        ? <img src={p.logo} alt={p.name} class="h-8 w-auto" />
         : <span class="text-[13px] font-extrabold uppercase tracking-[0.14em]" style={`color:${accent}`}>{p.name}</span>}
       <span class="text-[11px] text-[#6b7280]">Kassa · 2/2</span>
     </div>
@@ -33,7 +33,7 @@ const accent = p.accent ?? "#0f766e";
     <div class="mx-5 mt-4 flex items-center justify-between rounded-2xl border border-[#e5e7eb] px-4 py-3">
       <div>
         <p class="text-[13px] font-semibold">{p.commonPurchase}</p>
-        <p class="text-[11px] text-[#6b7280]">Gäller 6 månader · alla klasser</p>
+        <p class="text-[11px] text-[#6b7280]">{p.purchaseNote}</p>
       </div>
       <span class="text-[13px] font-semibold" style="font-variant-numeric: tabular-nums">{kr(p.avgOrder)}</span>
     </div>
@@ -180,13 +180,13 @@ const accent = p.accent ?? "#0f766e";
   <div data-view="receipt" class="hidden">
     <div class="flex items-center justify-between px-5 pt-5">
       {p.logo
-        ? <img src={p.logo} alt={p.name} class="h-6 w-auto" />
+        ? <img src={p.logo} alt={p.name} class="h-8 w-auto" />
         : <span class="text-[13px] font-extrabold uppercase tracking-[0.14em]" style={`color:${accent}`}>{p.name}</span>}
       <span class="text-[11px] text-[#6b7280]">Kvitto</span>
     </div>
     <div class="px-5 pt-6">
       <div class="grid h-10 w-10 place-items-center rounded-full text-white" style={`background:${accent}`} aria-hidden="true">✓</div>
-      <p class="mt-4 text-[20px] font-semibold leading-tight">Tack Anna, ditt klippkort är klart.</p>
+      <p class="mt-4 text-[20px] font-semibold leading-tight">Tack Anna, ditt kort är klart.</p>
       <p class="mt-1 text-[12px] text-[#6b7280]">{p.commonPurchase} · <span data-receipt-total></span></p>
     </div>
 
