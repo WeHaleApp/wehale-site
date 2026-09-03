@@ -30,11 +30,27 @@ const covers = [
 
 <!-- ─── Hero ─── -->
 <section class="relative isolate overflow-hidden" id="top">
-  <div class="absolute inset-0 -z-10" aria-hidden="true">
-    <img src="/assets/images/sessions/05-into-stillness.webp" alt="" class="h-full w-full object-cover object-center" />
-    <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/30 via-[var(--color-bg)]/65 to-[var(--color-bg)]"></div>
+  <div class="absolute inset-0 -z-10 bg-[var(--color-bg)]" aria-hidden="true">
+    <!-- A still from the brand film (WH_16x9, 39 s): the closed eyes are the brand's calm.
+         On desktop the image lives in the right 62 % so the headline never crosses her face;
+         on mobile it fills the frame, darkened enough for the text to sit on it. -->
+    <!-- Mobile: a top band, text beneath it. Desktop: the right 62 %, text to its left. -->
+    <div class="absolute inset-x-0 top-0 h-[52%] md:inset-y-0 md:left-[38%] md:h-auto">
+      <img
+        src="/assets/images/partner/hero-eyes-closed-1920.webp"
+        srcset="/assets/images/partner/hero-eyes-closed-1920.webp 1920w, /assets/images/partner/hero-eyes-closed.webp 2560w"
+        sizes="(min-width: 768px) 62vw, 100vw"
+        alt=""
+        class="h-full w-full object-cover object-[62%_30%] md:object-[60%_35%]"
+        fetchpriority="high"
+      />
+      <div class="absolute inset-0 hidden bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/10 to-transparent md:block" style="width: 55%;"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/25 via-transparent to-[var(--color-bg)] md:hidden"></div>
+      <div class="absolute inset-0 bg-[var(--color-bg)]/10 md:bg-[var(--color-bg)]/15"></div>
+    </div>
+    <div class="absolute inset-0 hidden bg-gradient-to-b from-[var(--color-bg)]/30 via-transparent to-[var(--color-bg)] md:block"></div>
   </div>
-  <div class="mx-auto flex min-h-[78dvh] max-w-6xl flex-col justify-end px-6 pb-20 pt-32">
+  <div class="mx-auto flex min-h-[92dvh] max-w-6xl flex-col justify-end px-6 pb-16 pt-[46dvh] md:min-h-[78dvh] md:pb-20 md:pt-32">
     <p class="p-eyebrow" data-reveal>{eyebrow}</p>
     {greeting && <p class="mt-6 text-lg text-[var(--color-text-secondary)]" data-reveal>{greeting}</p>}
     <h1 class="mt-4 max-w-3xl text-[clamp(2.5rem,6vw,5rem)] font-medium leading-[1.05] tracking-tight" data-reveal>
@@ -81,8 +97,8 @@ const covers = [
 <!-- ─── What we believe ─── -->
 <section class="relative isolate overflow-hidden" id="tro">
   <div class="absolute inset-0 -z-10" aria-hidden="true">
-    <img src="/assets/images/sessions/06-nighttime-serenity.webp" alt="" class="h-full w-full object-cover object-center" loading="lazy" />
-    <div class="absolute inset-0 bg-[var(--color-bg)]/65"></div>
+    <img src="/assets/images/partner/forest-dawn.webp" alt="" class="h-full w-full object-cover object-center" loading="lazy" />
+    <div class="absolute inset-0 bg-[var(--color-bg)]/60"></div>
   </div>
   <div class="mx-auto max-w-6xl px-6 py-28">
     <p class="mx-auto max-w-3xl text-center text-[clamp(1.75rem,4vw,3rem)] font-medium leading-[1.15]" data-reveal>
@@ -170,15 +186,15 @@ const covers = [
       <p class="p-body mt-2 text-sm">Vi betalar rabatten, kontot, faktureringen och supporten. Integrationen tar en timme, eller ingen alls.</p>
     </div>
     <div class="p-card p-6">
-      <p class="p-num">{p.commissionPercent} %</p>
-      <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">av nettot, i {p.commissionMonths} månader</p>
-      <p class="p-body mt-2 text-sm">Provision på varje gäst som blir betalande. Månadsvis, redovisad i din egen vy. En ny intäktsrad.</p>
+      <p class="p-num">Fullt pris</p>
+      <p class="mt-2 text-sm font-semibold text-[var(--color-gold)]">på varje köp rabatten räddar</p>
+      <p class="p-body mt-2 text-sm">Gästen ser {p.guestDiscountMonthly} kr rabatt och slutför köpet. Du får hela beloppet. Skillnaden betalar vi.</p>
     </div>
   </div>
 
   <div class="mt-16">
-    <p class="p-eyebrow" data-reveal>Ett räkneexempel · med antagandena synliga</p>
-    <h3 class="p-h2 mt-4 max-w-2xl" data-reveal>Byt siffrorna mot dina egna. Vi räknar gärna tillsammans.</h3>
+    <p class="p-eyebrow" data-reveal>Räkneexemplet · ett antagande, dina siffror</p>
+    <h3 class="p-h2 mt-4 max-w-2xl" data-reveal>Fler slutför köpet när kassan visar en rabatt. Rabatten betalar vi.</h3>
     <div class="mt-8" data-reveal>
       <Calculator partner={p} />
     </div>

@@ -1,111 +1,99 @@
 ---
 /**
- * The business case with the assumptions on the table (CR-0.20 ruling: ranges with visible
- * assumptions, never a single number). Two scenarios side by side, every input editable,
- * prefilled with the partner's own numbers.
+ * The business case, as simply as it can be said (Isak, 2026-09-03: "extremt viktigt att
+ * räkneexemplet är tydligt och lätt att förstå", and: this is not a kick-back, it is a discount we
+ * finance, so the partner's gain is the conversion lift of a discounted price at zero cost).
+ *
+ * The chain: some started checkouts are abandoned today → a 100 kr discount at the last step
+ * makes a share of them complete → those orders pay the partner FULL price, because the discount
+ * is ours. Three of the partner's numbers, one assumption, one result.
  */
 import type { Partner } from "../../lib/partner";
 
 interface Props { partner: Partner }
 const { partner: p } = Astro.props;
-
-const scenarios = [
-  { key: "low", label: "Försiktigt", activation: 5, stay: 30 },
-  { key: "mid", label: "Rimligt", activation: 10, stay: 40 },
-];
 ---
 
 <div
   class="p-card p-6 md:p-8"
   data-calc
-  data-price={p.monthlyPrice}
   data-disc={p.guestDiscountMonthly}
-  data-pct={p.commissionPercent}
 >
-  <div class="grid gap-6 md:grid-cols-2">
+  <div class="grid gap-6 md:grid-cols-3">
     <label class="block">
-      <span class="text-sm text-[var(--color-text-secondary)]">Köp i kassan per månad</span>
+      <span class="text-sm text-[var(--color-text-secondary)]">Genomförda köp i kassan per månad</span>
       <input class="p-input mt-2" type="number" inputmode="numeric" min="0" step="10" value={p.ordersPerMonth} data-orders />
     </label>
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Ditt vanligaste köp, kr</span>
       <input class="p-input mt-2" type="number" inputmode="numeric" min="0" step="5" value={p.avgOrder} data-avg />
     </label>
+    <label class="block">
+      <span class="text-sm text-[var(--color-text-secondary)]">Påbörjade köp som avbryts i dag, %</span>
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max="95" value="30" data-abandon />
+      <span class="mt-1 block text-xs text-[var(--color-text-tertiary)]">Vet du inte? Tre av tio är vanligt i bokningskassor.</span>
+    </label>
   </div>
 
-  <div class="mt-8 grid gap-4 md:grid-cols-2">
-    {scenarios.map((s) => (
-      <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5" data-scenario={s.key}>
-        <p class="p-eyebrow" style={s.key === "mid" ? "color: var(--color-gold)" : ""}>{s.label}</p>
-
-        <div class="mt-4 grid grid-cols-2 gap-3">
-          <label class="block">
-            <span class="text-xs text-[var(--color-text-tertiary)]">tar gåvan, %</span>
-            <input class="p-input mt-1 py-2 text-sm" type="number" inputmode="numeric" min="0" max="100" value={s.activation} data-activation />
-          </label>
-          <label class="block">
-            <span class="text-xs text-[var(--color-text-tertiary)]">stannar efter {p.guestTrialDays} dagar, %</span>
-            <input class="p-input mt-1 py-2 text-sm" type="number" inputmode="numeric" min="0" max="100" value={s.stay} data-stay />
-          </label>
-        </div>
-
-        <dl class="mt-6 grid gap-4">
-          <div>
-            <dt class="text-xs text-[var(--color-text-tertiary)]">gåvor per månad</dt>
-            <dd class="p-num mt-1" data-out="gifts">0</dd>
-            <dd class="mt-1 text-xs text-[var(--color-text-secondary)]">rabatt vi står för: <span data-out="cost">0 kr</span> per månad. Våra pengar.</dd>
-          </div>
-          <div>
-            <dt class="text-xs text-[var(--color-text-tertiary)]">betalande efter {p.guestTrialDays} dagar</dt>
-            <dd class="p-num mt-1" data-out="paying">0</dd>
-          </div>
-          <div>
-            <dt class="text-xs text-[var(--color-text-tertiary)]">din provision från en månads gäster</dt>
-            <dd class="p-num mt-1 text-[var(--color-accent)]" data-out="commission">0 kr</dd>
-            <dd class="mt-1 text-xs text-[var(--color-text-secondary)]">per månad, {p.commissionPercent} % av {p.monthlyPrice} kr, så länge de stannar</dd>
-          </div>
-          <div>
-            <dt class="text-xs text-[var(--color-text-tertiary)]">i månad tolv, när tolv månaders gäster lagts på varandra</dt>
-            <dd class="p-num mt-1 text-[var(--color-accent)]" data-out="month12">0 kr</dd>
-            <dd class="mt-1 text-xs text-[var(--color-text-secondary)]">antagande: 15 % av de betalande lämnar varje månad</dd>
-          </div>
-        </dl>
-      </div>
-    ))}
+  <div class="mt-8 rounded-[var(--radius-md)] border border-[var(--color-accent-line)] bg-[var(--color-accent-soft)] p-5 md:flex md:items-center md:justify-between md:gap-6">
+    <div class="md:max-w-xl">
+      <p class="font-semibold">Antagandet, det enda</p>
+      <p class="mt-1 text-sm text-[var(--color-text-secondary)]">Av dem som tvekar i sista steget slutför så här många när kassan visar {p.guestDiscountMonthly} kr rabatt. Det är siffran piloten mäter. Byt den.</p>
+    </div>
+    <label class="mt-4 flex items-center gap-3 md:mt-0">
+      <input class="p-input w-24 text-center text-lg" type="number" inputmode="numeric" min="0" max="100" value="15" data-recover />
+      <span class="text-sm text-[var(--color-text-secondary)]">%</span>
+    </label>
   </div>
 
-  <p class="mt-6 text-sm text-[var(--color-text-secondary)]">
-    Plus varje övergivet köp som rabatten räddade. Den siffran är din, och den mäter vi tillsammans i piloten.
-    Ingen av siffrorna ovan är ett löfte. Alla är antaganden att byta ut, och årsplanen (500 kr rabatt, 999 kr direkt) är inte med i räkningen.
-  </p>
+  <div class="mt-8 grid gap-6 md:grid-cols-3">
+    <div>
+      <p class="text-xs text-[var(--color-text-tertiary)]">fler genomförda köp per månad</p>
+      <p class="p-num mt-2 text-[var(--color-accent)]"><span data-out="recovered">0</span></p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">konvertering <span data-out="convBefore">70</span> % → <span data-out="convAfter">70</span> %</p>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--color-text-tertiary)]">mer intäkt per månad, till fullt pris</p>
+      <p class="p-num mt-2 text-[var(--color-accent)]" data-out="revenue">0 kr</p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">gästen ser rabatten, du får hela beloppet</p>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--color-text-tertiary)]">rabatten på de köpen</p>
+      <p class="p-num mt-2" data-out="discount">0 kr</p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">per månad. Den betalar vi, inte du.</p>
+    </div>
+  </div>
+
+  <div class="mt-8 border-t border-[var(--color-line)] pt-5 text-sm text-[var(--color-text-secondary)]">
+    <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain"></span></p>
+    <p class="mt-2">Gäster som ändå skulle ha köpt får också gåvan. Det kostar dig inget, och det räknar vi inte som intäkt här. Årsplanen ({p.guestDiscountAnnual} kr rabatt, betalas direkt) är inte med i räkningen.</p>
+  </div>
 </div>
 
 <script>
-  const fmt = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
+  const kr = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
   const int = (n: number) => Math.round(n).toLocaleString("sv-SE");
+  const pct = (n: number) => (Math.round(n * 10) / 10).toLocaleString("sv-SE");
   document.querySelectorAll<HTMLElement>("[data-calc]").forEach((root) => {
-    const price = Number(root.dataset.price);
     const disc = Number(root.dataset.disc);
-    const pct = Number(root.dataset.pct) / 100;
-    const orders = root.querySelector<HTMLInputElement>("[data-orders]")!;
+    const num = (sel: string) => Number(root.querySelector<HTMLInputElement>(sel)?.value) || 0;
+    const set = (k: string, v: string) => root.querySelectorAll<HTMLElement>(`[data-out="${k}"]`).forEach((el) => (el.textContent = v));
     const render = () => {
-      const o = Math.max(0, Number(orders.value) || 0);
-      root.querySelectorAll<HTMLElement>("[data-scenario]").forEach((sc) => {
-        const act = Math.min(100, Math.max(0, Number(sc.querySelector<HTMLInputElement>("[data-activation]")!.value) || 0)) / 100;
-        const stay = Math.min(100, Math.max(0, Number(sc.querySelector<HTMLInputElement>("[data-stay]")!.value) || 0)) / 100;
-        const gifts = o * act;
-        const paying = gifts * stay;
-        const monthly = paying * price * pct;
-        // Twelve cohorts stacked, each keeping 85 % of the previous month's payers.
-        const churn = 0.15;
-        const month12 = monthly * (1 - Math.pow(1 - churn, 12)) / churn;
-        const set = (k: string, v: string) => { const el = sc.querySelector<HTMLElement>(`[data-out="${k}"]`); if (el) el.textContent = v; };
-        set("gifts", int(gifts));
-        set("cost", fmt(gifts * disc));
-        set("paying", int(paying));
-        set("commission", fmt(monthly));
-        set("month12", fmt(month12));
-      });
+      const orders = Math.max(0, num("[data-orders]"));
+      const avg = Math.max(0, num("[data-avg]"));
+      const abandon = Math.min(95, Math.max(0, num("[data-abandon]"))) / 100;
+      const recover = Math.min(100, Math.max(0, num("[data-recover]"))) / 100;
+      const started = abandon < 1 ? orders / (1 - abandon) : orders;
+      const abandoned = started - orders;
+      const recovered = abandoned * recover;
+      const convBefore = started > 0 ? (orders / started) * 100 : 0;
+      const convAfter = started > 0 ? ((orders + recovered) / started) * 100 : 0;
+      set("recovered", `+${int(recovered)}`);
+      set("convBefore", pct(convBefore));
+      set("convAfter", pct(convAfter));
+      set("revenue", `+${kr(recovered * avg)}`);
+      set("discount", kr(recovered * disc));
+      set("chain", `${int(orders)} köp i dag och ${int(abandoned)} avbrutna, så ${int(started)} påbörjade. ${int(recover * 100)} % av de avbrutna slutför med rabatten: ${int(recovered)} köp till, à ${kr(avg)} till dig. Rabatten, ${int(recovered)} × ${disc} kr, står vi för.`);
     };
     root.querySelectorAll("input").forEach((i) => i.addEventListener("input", render));
     render();
