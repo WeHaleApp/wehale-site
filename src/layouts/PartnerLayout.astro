@@ -71,6 +71,9 @@ const tint = partner?.accent ?? "#4fcbd6";
       [data-chapter] { animation: chapterIn .6s cubic-bezier(.2,.7,.2,1) both; }
       @keyframes chapterIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
       [data-chapter][hidden] { display: none; }
+      /* Anchors land under the sticky header (and the chapter bar inside the room), never behind them. */
+      section, [data-chapter] [id] { scroll-margin-top: calc(var(--header-h, 57px) + 1.25rem); }
+      [data-chapter] [id] { scroll-margin-top: calc(var(--header-h, 57px) + 4.5rem); }
       .p-card { background: var(--color-bg-raised); border: 1px solid var(--color-line); border-radius: var(--radius-lg); }
       .p-btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: 999px; background: var(--color-text); color: var(--color-bg); padding: .9rem 1.5rem; font-weight: 600; font-size: .95rem; transition: background-color .2s; }
       .p-btn:hover { background: var(--color-accent); }
@@ -86,7 +89,7 @@ const tint = partner?.accent ?? "#4fcbd6";
   </head>
 
   <body class="bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
-    <header class="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[var(--color-bg)]/80 backdrop-blur">
+    <header class="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[var(--color-bg)]/92 backdrop-blur" data-site-header>
       <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <a href="/" aria-label="WeHale" class="flex items-center">
           <img src="/assets/images/logo.svg" alt="WeHale" class="h-6 w-auto" />
@@ -116,6 +119,10 @@ const tint = partner?.accent ?? "#4fcbd6";
     </footer>
 
     <script>
+      // The chapter bar sticks right under the header, whatever height the partner's logo gives it.
+      const hdr = document.querySelector<HTMLElement>("[data-site-header]");
+      const setH = () => { if (hdr) document.documentElement.style.setProperty("--header-h", `${hdr.offsetHeight}px`); };
+      setH(); window.addEventListener("resize", setH); if ("ResizeObserver" in window && hdr) new ResizeObserver(setH).observe(hdr);
       if ("IntersectionObserver" in window) {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const els = document.querySelectorAll("[data-reveal]");

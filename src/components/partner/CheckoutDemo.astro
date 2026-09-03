@@ -229,6 +229,8 @@ const accent = p.accent ?? "#0f766e";
 
 <style>
   .demo-scroller::-webkit-scrollbar { display: none; }
+  /* With a mouse the phone is dragged like a touchscreen: a hand over it, a grabbing hand while dragging. */
+  @media (hover: hover) and (pointer: fine) { .demo-scroller { cursor: grab; } .demo-scroller.is-grabbing { cursor: grabbing; user-select: none; } .demo-scroller.is-grabbing * { cursor: grabbing; } }
   .demo-scroller { -webkit-overflow-scrolling: touch; }
   /* Tailwind v4 translates through the `translate` property, so that is what opens the sheet. */
   .demo-sheet.is-open { translate: 0 0; transform: none; }
@@ -261,6 +263,16 @@ const accent = p.accent ?? "#0f766e";
     const sheet = q<HTMLElement>("[data-sheet]")!;
     const views = { checkout: q<HTMLElement>('[data-view="checkout"]')!, receipt: q<HTMLElement>('[data-view="receipt"]')! };
 
+    // Mouse drag scrolls the phone (touch already does). A drag over 6px swallows the click that ends it.
+    const scroller = q<HTMLElement>("[data-scroller]")!;
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      let startY = 0, startTop = 0, moved = false, active = false;
+      scroller.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse" || e.button !== 0) return; active = true; moved = false; startY = e.clientY; startTop = scroller.scrollTop; scroller.classList.add("is-grabbing"); });
+      scroller.addEventListener("pointermove", (e) => { if (!active) return; const dy = e.clientY - startY; if (Math.abs(dy) > 6) moved = true; scroller.scrollTop = startTop - dy; });
+      const stop = () => { if (!active) return; active = false; scroller.classList.remove("is-grabbing"); };
+      scroller.addEventListener("pointerup", stop); scroller.addEventListener("pointerleave", stop); scroller.addEventListener("pointercancel", stop);
+      scroller.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+    }
     const dim = q<HTMLElement>("[data-dim]");
     const openSheet = () => { sheet.classList.add("is-open"); dim?.classList.add("is-open"); };
     const closeSheet = () => { sheet.classList.remove("is-open"); dim?.classList.remove("is-open"); sheet.style.transform = ""; };

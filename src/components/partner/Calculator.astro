@@ -46,7 +46,7 @@ const pct1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString("sv-SE");
     </label>
   </div>
 
-  <div class="mt-8 rounded-[var(--radius-md)] border border-[var(--color-accent-line)] bg-[var(--color-accent-soft)] p-5 md:flex md:items-center md:justify-between md:gap-6">
+  <div class="mt-8 rounded-[var(--radius-md)] bg-[var(--color-accent-soft)] p-5 md:flex md:max-w-3xl md:items-center md:gap-8">
     <div class="md:max-w-xl">
       <p class="font-semibold">Antagandet, det enda</p>
       <p class="mt-1 text-sm text-[var(--color-text-secondary)]">Av dem som tvekar i sista steget slutför så här många när kassan visar {p.guestDiscountMonthly} kr rabatt. Det är siffran piloten mäter. Byt den.</p>
@@ -59,23 +59,23 @@ const pct1 = (n: number) => (Math.round(n * 10) / 10).toLocaleString("sv-SE");
 
   <div class="mt-8 grid gap-6 md:grid-cols-3">
     <div>
-      <p class="text-xs text-[var(--color-text-tertiary)]">fler genomförda köp per månad</p>
+      <p class="text-sm text-[var(--color-text-secondary)]">fler genomförda köp per månad</p>
       <p class="p-num mt-2 text-[var(--color-accent)]"><span data-out="recovered">+{int(recovered)}</span></p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">konvertering <span data-out="convBefore">{pct1(convBefore)}</span> % → <span data-out="convAfter">{pct1(convAfter)}</span> %</p>
     </div>
     <div>
-      <p class="text-xs text-[var(--color-text-tertiary)]">mer intäkt per månad, till fullt pris</p>
+      <p class="text-sm text-[var(--color-text-secondary)]">mer intäkt per månad, till fullt pris</p>
       <p class="p-num mt-2 text-[var(--color-accent)]" data-out="revenue">+{krs(recovered * p.avgOrder)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">gästen ser rabatten, du får hela beloppet</p>
     </div>
     <div>
-      <p class="text-xs text-[var(--color-text-tertiary)]">rabatten på de köpen</p>
+      <p class="text-sm text-[var(--color-text-secondary)]">rabatten på de köpen</p>
       <p class="p-num mt-2" data-out="discount">{krs(recovered * p.guestDiscountMonthly)}</p>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">per månad. Den betalar vi, inte du.</p>
     </div>
   </div>
 
-  <div class="mt-8 border-t border-[var(--color-line)] pt-5 text-sm text-[var(--color-text-secondary)]">
+  <div class="mt-8 max-w-3xl border-t border-[var(--color-line)] pt-5 text-sm leading-relaxed text-[var(--color-text-secondary)]">
     <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain">{int(p.ordersPerMonth)} köp i dag och {int(abandoned)} avbrutna, så {int(started)} påbörjade. {D.recover} % av de avbrutna slutför med rabatten: {int(recovered)} köp till, à {krs(p.avgOrder)} till dig. Rabatten, {int(recovered)} × {p.guestDiscountMonthly} kr, står vi för.</span></p>
     <p class="mt-2">Gäster som ändå skulle ha köpt får också gåvan. Det kostar dig inget, och det räknar vi inte som intäkt här. Årsplanen ({p.guestDiscountAnnual} kr rabatt, betalas direkt) är inte med i räkningen.</p>
   </div>

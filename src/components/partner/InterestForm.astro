@@ -24,7 +24,7 @@ const shown = generic ? options : options.filter((o) => p.models.includes(o.key)
   <div class="grid gap-5 md:grid-cols-2">
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Ditt namn</span>
-      <input class="p-input mt-2" name="name" type="text" autocomplete="name" required />
+      <input class="p-input mt-2" name="name" type="text" autocomplete="name" placeholder="Förnamn Efternamn" required />
     </label>
     <label class="block">
       <span class="text-sm text-[var(--color-text-secondary)]">Verksamhet</span>
@@ -32,11 +32,11 @@ const shown = generic ? options : options.filter((o) => p.models.includes(o.key)
     </label>
     <label class="block md:col-span-2">
       <span class="text-sm text-[var(--color-text-secondary)]">E-post</span>
-      <input class="p-input mt-2" name="email" type="email" autocomplete="email" inputmode="email" required />
+      <input class="p-input mt-2" name="email" type="email" autocomplete="email" inputmode="email" placeholder="namn@studio.se" required />
     </label>
     <label class="block md:col-span-2">
       <span class="text-sm text-[var(--color-text-secondary)]">Hur når du dina gäster i dag?</span>
-      <input class="p-input mt-2" name="reach" type="text" placeholder="Bokningssystem, nyhetsbrev, klasser, retreats …" />
+      <input class="p-input mt-2" name="reach" type="text" placeholder="t.ex. bokningssystem, nyhetsbrev" />
     </label>
   </div>
 
