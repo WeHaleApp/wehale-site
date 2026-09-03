@@ -1,0 +1,74 @@
+---
+/**
+ * The three ways to work together, as three cards. The partner's JSON says which ones the page
+ * proposes; on a named page with fewer than three, the proposed ones carry a pill.
+ */
+import type { Partner, PartnerModel } from "../../lib/partner";
+
+interface Props { partner: Partner; generic?: boolean }
+const { partner: p, generic = false } = Astro.props;
+
+const offer = p.referralOffer === "annual50"
+  ? `50 % på årsabonnemanget`
+  : `${p.teamCodeDays} dagar gratis`;
+
+const cards: { key: PartnerModel; n: string; tag: string; title: string; body: string; who: string; href: string }[] = [
+  {
+    key: "checkout",
+    n: "1",
+    tag: "Fler slutför köpet",
+    title: "I din kassa",
+    body: `Vi finansierar en rabatt på dina produkter. Gästen ser ${p.guestDiscountMonthly} kr rabatt i sista steget och får ${p.guestTrialDays} dagar WeHale Pro. Du får fullt pris på köpet, och fler som slutför det. Inga pengar från oss till dig, och inga från dig till oss.`,
+    who: "För dig med bokningssystem eller webbshop.",
+    href: "#kassa",
+  },
+  {
+    key: "referral",
+    n: "2",
+    tag: "En ny intäktsrad",
+    title: "Rekommendation med provision",
+    body: `Du rekommenderar WeHale till dina gäster med ett erbjudande vi sätter ihop, till exempel ${offer}. Blir de betalande får du ${p.commissionPercent} % av allt de köper hos oss, i ${p.commissionMonths} månader.`,
+    who: "För dig med en publik: nyhetsbrev, klasser, retreats, podd.",
+    href: "#rekommendation",
+  },
+  {
+    key: "gift",
+    n: "3",
+    tag: "Enklast",
+    title: "Mervärde till dina gäster",
+    body: `${p.teamCodeDays} dagar WeHale Pro till alla dina gäster, i ditt namn. Inga pengar åt något håll. För dig som tycker appen är bra och vill ge bort den.`,
+    who: "För dig som vill börja litet, i dag.",
+    href: "#gava",
+  },
+];
+const proposed = new Set(p.models);
+const subset = !generic && proposed.size < 3;
+const shown = subset ? cards.filter((c) => proposed.has(c.key)) : cards;
+const others = subset ? cards.filter((c) => !proposed.has(c.key)) : [];
+const cols = shown.length === 1 ? "md:grid-cols-1 md:max-w-2xl" : shown.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
+---
+
+<div class:list={["grid gap-4", cols]}>
+  {shown.map((c) => (
+    <a
+      href={c.href}
+      class="p-card group flex flex-col p-6 transition-colors hover:border-[var(--color-accent-line)]"
+    >
+      <div class="flex items-center justify-between gap-3">
+        <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[var(--color-line-strong)] text-sm font-semibold">{c.n}</span>
+        {subset
+          ? <span class="rounded-full bg-[var(--color-accent-soft)] px-3 py-1 text-xs font-semibold text-[var(--color-accent)]">Vårt förslag för {p.name}</span>
+          : <span class="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-gold)]">{c.tag}</span>}
+      </div>
+      <h3 class="mt-5 text-xl font-semibold">{c.title}</h3>
+      <p class="p-body mt-3 flex-1 text-base">{c.body}</p>
+      <p class="mt-5 text-sm text-[var(--color-text-tertiary)]">{c.who}</p>
+      <span class="mt-4 text-sm font-semibold text-[var(--color-accent)] group-hover:underline">Läs mer</span>
+    </a>
+  ))}
+</div>
+{others.length > 0 && (
+  <p class="mt-6 text-sm text-[var(--color-text-tertiary)]">
+    Det finns {others.length === 1 ? "ett annat sätt" : "andra sätt"} också: {others.map((o) => o.title.toLowerCase()).join(" och ")}. Passar det bättre säger du till {p.ourContactName}.
+  </p>
+)}

@@ -1,0 +1,63 @@
+---
+/**
+ * Getting started as a timeline, and the pilot as a second one. Content is Isak's
+ * (2026-09-03); the form is a rail with nodes so the paths read as durations, not paragraphs.
+ * `mode` follows the models proposed: a checkout partner sees the three integration paths,
+ * a referral or gift partner sees the sharing path.
+ */
+import type { Partner } from "../../lib/partner";
+
+interface Props { partner: Partner; mode: "checkout" | "share" }
+const { partner: p, mode } = Astro.props;
+
+const steps = mode === "checkout"
+  ? [
+      { time: "15 min", title: "På tacksidan eller i kvittomejlet", body: `Ett block vi skriver, du klistrar in. Fungerar med alla bokningssystem${p.checkoutSystem ? `, ${p.checkoutSystem} också` : ""}.` },
+      { time: "1 timme", title: "Direkt i kassan", body: "En rad kod eller ett plugin. Rabatten läggs på automatiskt. Vi sitter med." },
+      { time: "30 min", title: "Direkt i kassan, med Stripe", body: "Koppla ditt Stripe med ett klick. Gästen behöver aldrig ange kortet igen." },
+    ]
+  : [
+      { time: "15 min", title: "Vi skapar din kod och din länk", body: `Med en textrad i ditt namn: "${p.name} har valt WeHale för sina gäster." Du godkänner den.` },
+      { time: "Samma dag", title: "Du delar där dina gäster är", body: "I klassen, i nyhetsbrevet, på kvittot, i din bio. Vi skickar färdiga rader och bilder." },
+      { time: "Månadsvis", title: "Du ser vad det gav", body: "Din egen vy: aktiveringar, betalande och det som är ditt. Inga rapporter att be om." },
+    ];
+
+const pilot = [
+  { when: "Start", title: "Åtta veckor, med ett tak", body: mode === "checkout" ? "Taket sätter vi tillsammans. Rabatterna stannar när det nås." : "Taket sätter vi tillsammans. Erbjudandet stänger när det nås." },
+  { when: "Löpande", title: "Din egen vy", body: mode === "checkout" ? "Aktiveringar, andel av dina köp, betalande, provision, och din kassakonvertering med och utan rutan." : "Aktiveringar, betalande, och din provision, redovisad per månad." },
+  { when: "Vecka 6", title: "Avstämning", body: "Fortsätt, justera eller avsluta. Ditt beslut." },
+  { when: "När som helst", title: "Pausa", body: "Utan förklaring." },
+];
+---
+
+<div class="grid gap-14 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+  <div>
+    <p class="text-sm text-[var(--color-text-secondary)]">{mode === "checkout" ? "Tre vägar in. Välj en, vi gör resten." : "Tre steg. Det första gör vi."}</p>
+    <ol class="relative mt-8 border-l border-[var(--color-line-strong)] pl-8">
+      {steps.map((s, i) => (
+        <li class:list={["relative", i < steps.length - 1 ? "pb-10" : ""]}>
+          <span class="absolute -left-[41px] top-1 grid h-5 w-5 place-items-center rounded-full border border-[var(--color-accent)] bg-[var(--color-bg)]" aria-hidden="true">
+            <span class="h-2 w-2 rounded-full bg-[var(--color-accent)]"></span>
+          </span>
+          <span class="inline-block rounded-full bg-[var(--color-accent-soft)] px-3 py-1 text-xs font-semibold tracking-wide text-[var(--color-accent)]">{s.time}</span>
+          <h3 class="mt-3 text-lg font-semibold">{s.title}</h3>
+          <p class="p-body mt-1 text-base">{s.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div class="p-card p-6 md:p-8">
+    <p class="p-eyebrow" style="color: var(--color-gold)">Piloten</p>
+    <ol class="relative mt-6 border-l border-[var(--color-line-strong)] pl-7">
+      {pilot.map((s, i) => (
+        <li class:list={["relative", i < pilot.length - 1 ? "pb-7" : ""]}>
+          <span class="absolute -left-[33px] top-1.5 h-3 w-3 rounded-full border border-[var(--color-gold)] bg-[var(--color-bg)]" aria-hidden="true"></span>
+          <p class="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-gold)]">{s.when}</p>
+          <p class="mt-1 font-semibold">{s.title}</p>
+          <p class="mt-1 text-sm text-[var(--color-text-secondary)]">{s.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</div>

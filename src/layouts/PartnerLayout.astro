@@ -61,7 +61,7 @@ const { title, description, label = "" } = Astro.props;
         <a href="/" aria-label="WeHale" class="flex items-center">
           <img src="/assets/images/logo.svg" alt="WeHale" class="h-6 w-auto" />
         </a>
-        {label && <span class="text-sm text-[var(--color-text-secondary)]">{label}</span>}
+        {label && <span class="max-w-[55%] truncate text-sm text-[var(--color-text-secondary)]">{label}</span>}
       </div>
     </header>
 
