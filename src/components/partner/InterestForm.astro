@@ -45,7 +45,7 @@ const shown = generic ? options : options.filter((o) => p.models.includes(o.key)
     <div class:list={["mt-3 grid gap-3", shown.length > 1 ? "md:grid-cols-3" : ""]}>
       {shown.map((o) => (
         <label class="flex cursor-pointer items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--color-line-strong)] bg-[var(--color-bg)] px-4 py-3 has-[:checked]:border-[var(--color-accent)]">
-          <input type="checkbox" name="models" value={o.key} class="mt-1 accent-[#4fcbd6]" checked={shown.length === 1} />
+          <input type="checkbox" name="models" data-model-option value={o.key} class="mt-1 accent-[#4fcbd6]" checked={shown.length === 1} />
           <span>
             <span class="block font-semibold">{o.label}</span>
             <span class="block text-xs text-[var(--color-text-tertiary)]">{o.hint}</span>
