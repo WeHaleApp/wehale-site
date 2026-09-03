@@ -16,5 +16,6 @@
   "guestsPerMonth": 500,
   "quote": "Andningen är det mina elever tar med sig hem.",
   "referralOffer": "annual50",
-  "recruitsPerYear": 1000
+  "recruitsPerYear": 1000,
+  "audienceWord": "elever"
 }

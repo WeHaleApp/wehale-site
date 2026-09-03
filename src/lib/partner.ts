@@ -32,6 +32,8 @@ export interface Partner {
   city?: string;
   /** Their contact person, first name. Personalises the greeting. */
   contactName?: string;
+  /** What they call the people they reach: "gäster" (studio), "elever" (teacher), "följare" (creator). */
+  audienceWord: string;
   /** Our side. */
   ourContactName: string;
   ourContactEmail?: string;
@@ -73,6 +75,7 @@ export const GENERIC: Partner = {
   slug: "",
   name: "Din studio",
   kind: "studio",
+  audienceWord: "gäster",
   ourContactName: "Philip",
   models: ["checkout", "referral", "gift"],
   ownerCode: "DINSTUDIO-OWNER",

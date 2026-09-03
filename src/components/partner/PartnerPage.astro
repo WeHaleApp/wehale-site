@@ -22,8 +22,9 @@ const { partner: p, generic = false } = Astro.props;
 
 const has = (m: Partner["models"][number]) => p.models.includes(m);
 const eyebrow = generic
-  ? "Ett förslag från WeHale · för studios, lärare och plattformar"
+  ? "Samarbeta med WeHale · studios, lärare, kreatörer och plattformar"
   : `För ${p.name} · ett förslag från WeHale`;
+const aud = p.audienceWord;
 const greeting = !generic && p.contactName ? `Hej ${p.contactName}.` : null;
 const mailto = p.ourContactEmail
   ? `mailto:${p.ourContactEmail}?subject=${encodeURIComponent(`WeHale och ${p.name}`)}`
@@ -65,10 +66,12 @@ const covers = [
     <p class="p-eyebrow" data-reveal>{eyebrow}</p>
     {greeting && <p class="mt-6 text-lg text-[var(--color-text-secondary)]" data-reveal>{greeting}</p>}
     <h1 class="mt-4 max-w-3xl text-[clamp(2.5rem,6vw,5rem)] font-medium leading-[1.05] tracking-tight" data-reveal>
-      Andning som dina gäster tar med sig hem.
+      {generic ? "Andning att ge vidare. I ditt namn." : `Andning som dina ${aud} tar med sig hem.`}
     </h1>
     <p class="p-body mt-6 max-w-xl" data-reveal>
-      Andningen är det dina gäster minns bäst från en klass, och det de har svårast att göra hemma. WeHale är det som händer mellan klasserna. Prova appen själv först. Sedan {waysWord} att låta dina gäster få den, som gynnar dig också.
+      {generic
+        ? "Guidad andning som dem du når tar med sig in i vardagen, kopplad till dig. Prova appen själv först. Sedan tre sätt att låta dina gäster, elever eller följare få den, som gynnar dig också."
+        : `Andningen är det dina ${aud} minns bäst från en klass, och det de har svårast att göra hemma. WeHale är det som händer mellan klasserna. Prova appen själv först. Sedan ${waysWord} att låta dina ${aud} få den, som gynnar dig också.`}
     </p>
     <div class="mt-10 flex flex-col gap-3 sm:flex-row" data-reveal>
       <a href="#prova" class="p-btn">Prova appen</a>
@@ -124,7 +127,7 @@ const covers = [
         <p class="p-body mt-2 text-base">Andning som lärs ut som andning, för lugn, fokus och sömn, i ett tempo man kan följa. Byggd med lärare, med samma omsorg som en bra klass. Vi lovar lugn, fokus och sömn, inget annat.</p>
       </div>
       <div class="p-card p-6">
-        <p class="p-eyebrow">Dina gäster</p>
+        <p class="p-eyebrow">{generic ? "Dem du når" : `Dina ${aud}`}</p>
         <p class="mt-3 font-semibold">Behandlas som vuxna.</p>
         <p class="p-body mt-2 text-base">Inget förvalt, inget dolt. En påminnelse innan något kostar och avbryt i appen med två tryck. Din rekommendation ska aldrig kosta dig förtroende, för det är ditt förtroende gästen lånar oss.</p>
       </div>
@@ -224,7 +227,7 @@ const covers = [
 <section class="mx-auto max-w-6xl px-6 py-20 md:py-24" id="modeller">
   <p class="p-eyebrow" data-reveal>{p.models.length === 3 ? "Tre sätt att samarbeta" : p.models.length === 2 ? "Två sätt att samarbeta" : "Så här kan vi samarbeta"}</p>
   <h2 class="p-h2 mt-4 max-w-2xl" data-reveal>Ett samarbete, i den form som passar din verksamhet.</h2>
-  <p class="p-body mt-6 max-w-2xl" data-reveal>Gemensamt för alla: dina gäster får WeHale i ditt namn, du bestämmer takten, och du kan pausa när du vill. Skillnaden är var värdet landar. Varje sätt har sitt eget kapitel nedan, med allt som hör till det.</p>
+  <p class="p-body mt-6 max-w-2xl" data-reveal>Gemensamt för alla: {generic ? "de du når" : `dina ${aud}`} får WeHale i ditt namn, du bestämmer takten, och du kan pausa när du vill. Skillnaden är var värdet landar. Varje sätt har sitt eget kapitel nedan, med allt som hör till det.</p>
   <div class="mt-10" data-reveal>
     <Models partner={p} generic={generic} />
   </div>
