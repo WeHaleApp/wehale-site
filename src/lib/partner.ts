@@ -53,8 +53,12 @@ export interface Partner {
   /** The referral model (CR-0.5): X % of net for the first N months, on annual and monthly alike. */
   commissionPercent: number;
   commissionMonths: number;
-  /** The store's share we net off before the split (Apple Small Business Program: 15 %). */
+  /** The store's cut of the price, before VAT is removed. 30 % today; 15 % once the Small Business
+   *  Program is approved (Isak applies, effect ~mid-October 2026). Verified at the ASC API
+   *  2026-09-04: 179 kr yields 100.24 kr proceeds, which is 179 / 1.25 × 0.70. */
   storeSharePercent: number;
+  /** Swedish VAT on digital subscriptions. Apple and Google remit it; it was never ours. */
+  vatPercent: number;
   /** The offer the partner's audience gets. */
   referralOffer: "trial90" | "annual50";
   /** Paying customers they expect to recruit per year, for the calculator. */
@@ -97,7 +101,8 @@ export const GENERIC: Partner = {
   monthlyPrice: 179,
   commissionPercent: 20,
   commissionMonths: 12,
-  storeSharePercent: 15,
+  storeSharePercent: 30,
+  vatPercent: 25,
   referralOffer: "annual50",
   recruitsPerYear: 300,
   avgOrder: 795,
@@ -122,6 +127,11 @@ export const ONELINK_BASE = "https://wehale.onelink.me/zcid?deep_link_value=";
 
 export function codeLink(code: string): string {
   return ONELINK_BASE + encodeURIComponent(code);
+}
+
+/** What actually reaches us from a listed price: VAT out, then the store's cut. */
+export function proceeds(price: number, p: Pick<Partner, "storeSharePercent" | "vatPercent">): number {
+  return (price / (1 + p.vatPercent / 100)) * (1 - p.storeSharePercent / 100);
 }
 
 export function kr(n: number): string {

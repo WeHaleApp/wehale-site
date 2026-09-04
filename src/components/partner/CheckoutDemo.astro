@@ -35,6 +35,7 @@ const accent = p.accent ?? "#0f766e";
         <span>{p.checkoutDomain}</span>
       </div>
       <div class="demo-scroller relative flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none]" data-scroller>
+        <div data-bounce>
   <!-- ─── Checkout view ─── -->
   <div data-view="checkout" data-trial={p.guestTrialDays}>
     <div class="flex items-center justify-between px-5 pt-5">
@@ -178,6 +179,7 @@ const accent = p.accent ?? "#0f766e";
       <button type="button" class="text-[13px] underline decoration-[#cbd5e1] underline-offset-2" data-reset>Börja om</button>
     </div>
   </div>
+        </div>
       </div>
     <!-- The "Vad är WeHale?" sheet: fixed height, never covers the partner's header. -->
       <!-- Mirrors the Figma frame 537:2025: warm fade, wordmark, partner lockup, a taste of the
@@ -235,6 +237,7 @@ const accent = p.accent ?? "#0f766e";
   /* Tailwind v4 translates through the `translate` property, so that is what opens the sheet. */
   .demo-sheet.is-open { translate: 0 0; transform: none; }
   .demo-sheet.is-dragging { transition: none; }
+  [data-bounce] { will-change: transform; }
   .demo-dim.is-open { opacity: 1; pointer-events: auto; }
   /* Fullscreen on mobile: the phone IS the screen. */
   .demo[data-fullscreen] { max-width: none; display: flex; flex-direction: column; flex: 1; min-height: 0; }
@@ -263,15 +266,55 @@ const accent = p.accent ?? "#0f766e";
     const sheet = q<HTMLElement>("[data-sheet]")!;
     const views = { checkout: q<HTMLElement>('[data-view="checkout"]')!, receipt: q<HTMLElement>('[data-view="receipt"]')! };
 
-    // Mouse drag scrolls the phone (touch already does). A drag over 6px swallows the click that ends it.
+    // Mouse drag scrolls the phone (touch already does), with the two things that make a touchscreen
+    // feel like one: it keeps gliding after you let go, and it rubber-bands at the ends instead of
+    // stopping dead (Isak, 2026-09-04). A drag over 6px swallows the click that ends it.
     const scroller = q<HTMLElement>("[data-scroller]")!;
+    const bounce = q<HTMLElement>("[data-bounce]")!;
+    const SPRING = "transform .5s cubic-bezier(.16,1.5,.3,1)";
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
       let startY = 0, startTop = 0, moved = false, active = false;
-      scroller.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse" || e.button !== 0) return; active = true; moved = false; startY = e.clientY; startTop = scroller.scrollTop; scroller.classList.add("is-grabbing"); });
-      scroller.addEventListener("pointermove", (e) => { if (!active) return; const dy = e.clientY - startY; if (Math.abs(dy) > 6) moved = true; scroller.scrollTop = startTop - dy; });
-      const stop = () => { if (!active) return; active = false; scroller.classList.remove("is-grabbing"); };
+      let vy = 0, lastT = 0, lastY2 = 0, raf = 0;
+      const maxTop = () => scroller.scrollHeight - scroller.clientHeight;
+      const setPull = (px: number) => { bounce.style.transition = "none"; bounce.style.transform = px ? `translateY(${px}px)` : ""; };
+      const release = () => { bounce.style.transition = SPRING; bounce.style.transform = ""; };
+      const kick = (px: number) => { setPull(px); requestAnimationFrame(release); };
+      scroller.addEventListener("pointerdown", (e) => {
+        if (e.pointerType !== "mouse" || e.button !== 0) return;
+        cancelAnimationFrame(raf); vy = 0; active = true; moved = false;
+        startY = lastY2 = e.clientY; startTop = scroller.scrollTop; lastT = performance.now();
+        bounce.style.transition = "none";
+        scroller.classList.add("is-grabbing");
+      });
+      scroller.addEventListener("pointermove", (e) => {
+        if (!active) return;
+        const dy = e.clientY - startY;
+        if (Math.abs(dy) > 6) moved = true;
+        const now = performance.now(), dt = Math.max(6, now - lastT);
+        if (now - lastT > 0) { vy = (e.clientY - lastY2) / dt; lastT = now; lastY2 = e.clientY; }
+        const want = startTop - dy, max = maxTop();
+        scroller.scrollTop = Math.min(max, Math.max(0, want));
+        // Past an end the content follows the hand, damped, so pulling feels like resistance.
+        const over = want < 0 ? -want : want > max ? -(want - max) : 0;
+        setPull(over ? Math.sign(over) * Math.min(80, Math.pow(Math.abs(over), 0.72) * 2.4) : 0);
+      });
+      const glide = () => {
+        vy *= 0.94;
+        if (Math.abs(vy) < 0.02) { release(); return; }
+        const max = maxTop(), next = scroller.scrollTop - vy * 16;
+        if (next < 0 || next > max) { scroller.scrollTop = next < 0 ? 0 : max; kick(Math.min(64, Math.abs(vy) * 34) * (next < 0 ? 1 : -1)); return; }
+        scroller.scrollTop = next;
+        raf = requestAnimationFrame(glide);
+      };
+      const stop = () => {
+        if (!active) return;
+        active = false; scroller.classList.remove("is-grabbing");
+        if (bounce.style.transform) { release(); vy = 0; return; }
+        if (Math.abs(vy) > 0.05) raf = requestAnimationFrame(glide); else release();
+      };
       scroller.addEventListener("pointerup", stop); scroller.addEventListener("pointerleave", stop); scroller.addEventListener("pointercancel", stop);
       scroller.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+      window.addEventListener("scroll", () => cancelAnimationFrame(raf), { passive: true });
     }
     const dim = q<HTMLElement>("[data-dim]");
     const openSheet = () => { sheet.classList.add("is-open"); dim?.classList.add("is-open"); };

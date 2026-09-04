@@ -411,7 +411,7 @@ const covers = [
       <p class="p-eyebrow" data-reveal>Räkneexemplet · dina siffror</p>
       <h3 class="p-h3 mt-4 max-w-2xl" data-reveal>Dina följare får erbjudandet. Du får din andel av allt de betalar, i tolv månader.</h3>
       <p class="p-body mt-6 max-w-2xl" data-reveal>
-        Dina följare får {offerText}, med din länk eller din kod. Du får {p.commissionPercent} % av allt de betalar under sina första {p.commissionMonths} månader, årsplan som månadsplan, utbetalt månadsvis efter Apples och Googles avgift.
+        Dina följare får {offerText}, med din länk eller din kod. Du får {p.commissionPercent} % av vad de betalar under sina första {p.commissionMonths} månader, årsplan som månadsplan, räknat på det som återstår efter moms och butikens avgift.
       </p>
       <div class="mt-10" data-reveal>
         <ReferralCalculator partner={p} />
@@ -429,7 +429,7 @@ const covers = [
     <div class="mx-auto max-w-6xl px-6 pb-14 md:pb-24" id="rekommendation-villkor">
       <p class="p-eyebrow" data-reveal>Villkoren för det här sättet</p>
       <dl class="p-terms mt-6" data-reveal>
-        <div><dt>Din ersättning</dt><dd>{p.commissionPercent} % av nettot, efter butikens andel på {p.storeSharePercent} %, av allt en värvad kund betalar under sina första {p.commissionMonths} månader. Årsmedlemskap och månadsplan räknas båda. Utbetalt månadsvis, efter butikens returfönster.</dd></div>
+        <div><dt>Din ersättning</dt><dd>{p.commissionPercent} % av nettot, alltså efter moms och butikens avgift på {p.storeSharePercent} %, av allt en värvad kund betalar under sina första {p.commissionMonths} månader. Årsmedlemskap och månadsplan räknas båda. Utbetalt månadsvis, efter butikens returfönster.</dd></div>
         <div><dt>Erbjudandet till dina följare</dt><dd>{offerText}. Aktiveras med din länk eller din kod. Sätts per partner och kan bytas mellan kampanjer.</dd></div>
         <div><dt>Din rapport</dt><dd>Aktiveringar, betalande kunder och din ersättning, redovisad per månad. Grupper, aldrig namn.</dd></div>
         <div><dt>Piloten</dt><dd>Åtta veckor med ett tak vi sätter tillsammans. Avstämning vecka 6. Pausa när du vill.</dd></div>

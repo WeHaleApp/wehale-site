@@ -5,15 +5,15 @@
  * their first 12 months, annual and monthly alike. Two amounts per customer first, then the total.
  */
 import type { Partner } from "../../lib/partner";
+import { proceeds } from "../../lib/partner";
 
 interface Props { partner: Partner }
 const { partner: p } = Astro.props;
-const net = 1 - p.storeSharePercent / 100;
 const share = p.commissionPercent / 100;
 const annualHalf = Math.floor(p.annualPrice / 2);
 const annualPaid = p.referralOffer === "annual50" ? annualHalf : p.annualPrice;
-const perAnnual = Math.round(annualPaid * net * share);
-const perMonth = Math.round(p.monthlyPrice * net * share);
+const perAnnual = Math.round(proceeds(annualPaid, p) * share);
+const perMonth = Math.round(proceeds(p.monthlyPrice, p) * share);
 // Defaults, computed once at build so the first paint shows real numbers; the script keeps them live.
 const D = { annualShare: p.referralOffer === "annual50" ? 70 : 30, stay: 6 };
 const annuals0 = p.recruitsPerYear * (D.annualShare / 100);
@@ -34,12 +34,12 @@ const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
     <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5">
       <p class="p-eyebrow">per värvad kund som väljer årsmedlemskap</p>
       <p class="p-num mt-2 text-[var(--color-accent)]">{perAnnual} kr</p>
-      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av {annualPaid} kr efter Apples och Googles avgift på {p.storeSharePercent} %. Betalas ut efter köpet. Förnyar kunden inom de {p.commissionMonths} månaderna räknas det med.</p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av det {annualPaid} kr lämnar efter moms och Apples avgift. Betalas ut efter köpet. Förnyar kunden inom de {p.commissionMonths} månaderna räknas det med.</p>
     </div>
     <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5">
       <p class="p-eyebrow">per värvad kund som väljer månadsplan</p>
       <p class="p-num mt-2 flex items-baseline gap-2 text-[var(--color-accent)]">{perMonth} kr <span class="text-base font-normal text-[var(--color-text-secondary)]">per månad</span></p>
-      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av {p.monthlyPrice} kr efter Apples och Googles avgift på {p.storeSharePercent} %, varje månad de stannar, i upp till {p.commissionMonths} månader.</p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av det {p.monthlyPrice} kr lämnar efter moms och Apples avgift, varje månad de stannar, i upp till {p.commissionMonths} månader.</p>
     </div>
   </div>
 
@@ -76,7 +76,7 @@ const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
 
   <div class="mt-8 border-t border-[var(--color-line)] pt-5 text-sm text-[var(--color-text-secondary)]">
     <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain">{int(annuals0)} årskunder × {krs(perAnnual)} + {int(monthlies0)} månadskunder × {krs(perMonth)} × {D.stay} månader = {krs(year0)}.</span></p>
-    <p class="mt-2">Ersättningen räknas på det kunden faktiskt betalar oss under sina första {p.commissionMonths} månader, efter Apples och Googles avgift. Byter kunden plan följer ersättningen med. Återbetalas ett köp dras det av.</p>
+    <p class="mt-2">Ersättningen räknas på det kunden faktiskt betalar oss under sina första {p.commissionMonths} månader, efter moms och butikens avgift. Byter kunden plan följer ersättningen med. Återbetalas ett köp dras det av.</p>
   </div>
 </div>
 
