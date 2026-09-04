@@ -1,0 +1,102 @@
+---
+/**
+ * The ways to work together, as cards that SELECT: one chapter room below swaps its content to the
+ * chosen way (Isak, 2026-09-03: "varje samarbetsform kan struktureras smartare … istället för
+ * stackat"). Each card carries a small scene so the reader sees the way before reading it, one
+ * hierarchy (eyebrow → name → body → who), and a selected state. Names are short and from the
+ * partner's side: Gåvan i kassan, Din länk, Gästkoden. A named page shows only the ways it proposes.
+ */
+import type { Partner, PartnerModel } from "../../lib/partner";
+import { MODEL_NAMES } from "../../lib/partner";
+
+interface Props { partner: Partner; generic?: boolean }
+const { partner: p, generic = false } = Astro.props;
+
+const offerShort = p.referralOffer === "annual50" ? "50 % på årsmedlemskapet" : `${p.teamCodeDays} dagar gratis`;
+const linkSlug = p.slug || "din-studio";
+const accent = p.accent ?? "#0f766e";
+
+const cards: { key: PartnerModel; tag: string; title: string; body: string; who: string }[] = [
+  { key: "checkout", tag: "Fler slutför köpet", title: MODEL_NAMES.checkout, body: `Vi finansierar en rabatt på dina produkter. Gästen ser ${p.guestDiscountMonthly} kr rabatt i sista steget och får ${p.guestTrialDays} dagar WeHale Pro. Du får fullt pris, och fler som slutför köpet.`, who: "För dig med bokningssystem eller webbshop." },
+  { key: "referral", tag: "En ny intäktsrad", title: MODEL_NAMES.referral, body: `Dina följare får ${offerShort} med din länk eller din kod. Blir de kunder får du ${p.commissionPercent} % av allt de betalar under sitt första år.`, who: "För nyhetsbrev, communities, poddar och plattformar." },
+  { key: "gift", tag: "Enklast", title: MODEL_NAMES.gift, body: `${p.teamCodeDays} dagar WeHale Pro till dina gäster, i ditt namn. Inga pengar åt något håll. För dig som tycker appen är bra och vill ge bort den.`, who: "För dig som vill börja litet, i dag." },
+];
+const shown = generic ? cards : cards.filter((c) => p.models.includes(c.key));
+const others = generic ? [] : cards.filter((c) => !p.models.includes(c.key));
+const cols = shown.length === 1 ? "md:grid-cols-1 md:max-w-2xl" : shown.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3";
+---
+
+<div class:list={["grid gap-4 md:gap-5", cols]} role="tablist" aria-label="Sätt att samarbeta" data-model-cards data-stagger>
+  {shown.map((c, i) => (
+    <button type="button" role="tab" aria-selected={i === 0 ? "true" : "false"} aria-controls={`kapitel-${c.key}`} data-select={c.key} data-reveal style={`--i:${i}`}
+      class="p-card group flex flex-col overflow-hidden text-left transition-[border-color,box-shadow] duration-300 aria-selected:border-[var(--color-accent-line)] aria-selected:shadow-[0_0_0_1px_var(--color-accent-line),0_24px_60px_rgba(0,0,0,.35)]">
+      <div class="relative h-48 overflow-hidden border-b border-[var(--color-line)]" aria-hidden="true">
+        <span class="absolute left-4 top-4 z-10 hidden rounded-full bg-[var(--color-text)] px-2.5 py-1 text-[11px] font-semibold text-[var(--color-bg)] group-aria-selected:inline-block">Visas nedan</span>
+        {c.key === "checkout" && (
+          <div class="absolute inset-0 bg-[#f4f6f8]">
+            <div class="absolute left-5 right-5 top-5 rounded-xl bg-white p-3 text-[#111827] shadow-[0_10px_30px_rgba(0,0,0,.12)]">
+              <div class="flex items-start gap-2.5">
+                <span class="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded bg-[#4fcbd6]"><svg viewBox="0 0 12 12" class="h-2.5 w-2.5"><path d="M2 6.2 4.7 9 10 3.5" fill="none" stroke="#08111f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="flex-1">
+                  <span class="flex items-center justify-between text-[12px] font-semibold"><span>Lägg till WeHale Pro</span><img src="/assets/images/logo.svg" alt="" class="h-2.5 w-auto invert" /></span>
+                  <span class="mt-0.5 block text-[11px] text-[#374151]">0 kr i dag · {p.guestDiscountMonthly} kr rabatt på ordern</span>
+                </span>
+              </div>
+            </div>
+            <div class="absolute bottom-5 left-5 right-5 rounded-xl bg-white p-3 text-[#111827] shadow-[0_10px_30px_rgba(0,0,0,.12)]">
+              <div class="flex justify-between text-[11px] text-[#6b7280]"><span>{p.commonPurchase}</span><span>{p.avgOrder} kr</span></div>
+              <div class="mt-1 flex justify-between text-[11px] font-medium text-[#0f9aa6]"><span>WeHale-rabatt</span><span>−{p.guestDiscountMonthly} kr</span></div>
+              <div class="mt-1.5 flex items-end justify-between border-t border-[#e5e7eb] pt-1.5 text-[11px] font-semibold"><span>Att betala i dag</span><span class="text-[14px]">{p.avgOrder - p.guestDiscountMonthly} kr</span></div>
+            </div>
+          </div>
+        )}
+        {c.key === "referral" && (
+          <div class="absolute inset-0 bg-[#0c1528]">
+            <div class="absolute inset-x-5 top-6 flex items-center gap-2 rounded-full bg-white px-3.5 py-2 text-[#111827] shadow-[0_10px_30px_rgba(0,0,0,.35)]">
+              <span class="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#4fcbd6]"><svg viewBox="0 0 12 12" class="h-3 w-3"><path d="M5 7l2-2M4.2 8.3a1.6 1.6 0 0 1 0-2.3l1-1a1.6 1.6 0 0 1 2.3 0M7.8 3.7a1.6 1.6 0 0 1 0 2.3l-1 1a1.6 1.6 0 0 1-2.3 0" fill="none" stroke="#08111f" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+              <span class="truncate text-[12px] font-semibold">wehale.io/for/{linkSlug}</span>
+            </div>
+            <div class="absolute inset-x-5 bottom-6 grid grid-cols-2 gap-2">
+              <div class="rounded-xl bg-white/10 p-3">
+                <p class="text-[10px] uppercase tracking-[0.12em] text-white/70">Dina följare</p>
+                <p class="mt-1 text-[12px] font-semibold leading-tight text-white">{offerShort}</p>
+              </div>
+              <div class="rounded-xl bg-[#4fcbd6]/15 p-3">
+                <p class="text-[10px] uppercase tracking-[0.12em] text-white/70">Du</p>
+                <p class="mt-1 text-[12px] font-semibold leading-tight text-white">{p.commissionPercent} % i {p.commissionMonths} mån</p>
+              </div>
+            </div>
+          </div>
+        )}
+        {c.key === "gift" && (
+          <div class="absolute inset-0">
+            <img src="/assets/images/sessions/02-coherent-heart.webp" alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#06101f] via-[#06101f]/60 to-transparent"></div>
+            <div class="absolute inset-x-5 bottom-5 rounded-xl border border-white/15 bg-[#0b1220]/90 p-3 text-white">
+              <div class="flex items-center justify-between">
+                <img src="/assets/images/logo.svg" alt="" class="h-3 w-auto" />
+                <span class="rounded-full bg-[#4fcbd6]/20 px-2 py-0.5 text-[10px] font-semibold text-[#4fcbd6]">{p.teamCodeDays} dagar</span>
+              </div>
+              <p class="mt-2 text-[12px] leading-snug">{p.name} har valt WeHale för sina gäster.</p>
+            </div>
+          </div>
+        )}
+      </div>
+      <div class="flex flex-1 flex-col p-5 md:p-6">
+        <p class="p-eyebrow">{c.tag}</p>
+        <h3 class="mt-2 text-xl font-semibold">{c.title}</h3>
+        <p class="p-body mt-2 flex-1 text-[15px] md:text-base">{c.body}</p>
+        <p class="mt-4 text-sm text-[var(--color-text-tertiary)]">{c.who}</p>
+        <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent)]">
+          <span class="group-aria-selected:hidden">Se hur det fungerar</span><span class="hidden group-aria-selected:inline">Visas nedan</span>
+          <svg viewBox="0 0 16 16" class="h-3.5 w-3.5 transition-transform group-aria-selected:rotate-90" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </button>
+  ))}
+</div>
+{others.length > 0 && (
+  <p class="mt-5 text-sm text-[var(--color-text-tertiary)]">
+    Det finns {others.length === 1 ? "ett annat sätt" : "andra sätt"} också: {others.map((o) => o.title.toLowerCase()).join(" och ")}. Passar det bättre säger du till oss.
+  </p>
+)}

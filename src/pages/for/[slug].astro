@@ -1,0 +1,24 @@
+---
+/** One page per JSON file in src/data/partners/. */
+import PartnerLayout from "../../layouts/PartnerLayout.astro";
+import Gate from "../../components/partner/Gate.astro";
+import PartnerPage from "../../components/partner/PartnerPage.astro";
+import { loadPartners, type Partner } from "../../lib/partner";
+
+export function getStaticPaths() {
+  return loadPartners().map((partner) => ({ params: { slug: partner.slug }, props: { partner } }));
+}
+
+interface Props { partner: Partner }
+const { partner } = Astro.props;
+---
+
+<PartnerLayout
+  title={`WeHale för ${partner.name}`}
+  description={`Ett förslag från WeHale till ${partner.name}: en gåva i er kassa som vi betalar.`}
+  label={`För ${partner.name}`}
+  partner={partner}
+>
+  <Gate />
+  <PartnerPage partner={partner} />
+</PartnerLayout>

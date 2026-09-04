@@ -1,0 +1,108 @@
+---
+/**
+ * "I want to be contacted": the form at the end of the partner page. Posts JSON to the Netlify
+ * function partner-interest, which mails the team through the same Postmark account as the
+ * support form. On a named page the partner is prefilled; on the generic page the form is the
+ * way in (Isak, 2026-09-03: the generic page goes on the public site when we are happy with it).
+ */
+import type { Partner } from "../../lib/partner";
+import { MODEL_NAMES } from "../../lib/partner";
+
+interface Props { partner: Partner; generic?: boolean }
+const { partner: p, generic = false } = Astro.props;
+
+const options: { key: keyof typeof MODEL_NAMES; label: string; hint: string }[] = [
+  { key: "checkout", label: MODEL_NAMES.checkout, hint: "Jag har en kassa eller webbshop" },
+  { key: "referral", label: MODEL_NAMES.referral, hint: "Jag når många, i nyhetsbrev eller kanaler" },
+  { key: "gift", label: MODEL_NAMES.gift, hint: "Jag vill ge mina gäster appen, inget mer" },
+];
+const shown = generic ? options : options.filter((o) => p.models.includes(o.key));
+---
+
+<form class="p-card mx-auto max-w-2xl p-6 text-left md:p-8" data-interest data-endpoint="/.netlify/functions/partner-interest" novalidate>
+  <input type="hidden" name="partner" value={generic ? "" : p.slug} />
+  <div class="grid gap-5 md:grid-cols-2">
+    <label class="block">
+      <span class="text-sm text-[var(--color-text-secondary)]">Ditt namn</span>
+      <input class="p-input mt-2" name="name" type="text" autocomplete="name" placeholder="Förnamn Efternamn" required />
+    </label>
+    <label class="block">
+      <span class="text-sm text-[var(--color-text-secondary)]">Verksamhet</span>
+      <input class="p-input mt-2" name="business" type="text" autocomplete="organization" value={generic ? "" : p.name} />
+    </label>
+    <label class="block md:col-span-2">
+      <span class="text-sm text-[var(--color-text-secondary)]">E-post</span>
+      <input class="p-input mt-2" name="email" type="email" autocomplete="email" inputmode="email" placeholder="namn@studio.se" required />
+    </label>
+    <label class="block md:col-span-2">
+      <span class="text-sm text-[var(--color-text-secondary)]">Hur når du dina gäster i dag?</span>
+      <input class="p-input mt-2" name="reach" type="text" placeholder="t.ex. bokningssystem, nyhetsbrev" />
+    </label>
+  </div>
+
+  <fieldset class="mt-6">
+    <legend class="text-sm text-[var(--color-text-secondary)]">Vad är du mest nyfiken på?</legend>
+    <div class:list={["mt-3 grid gap-3", shown.length > 1 ? "md:grid-cols-3" : ""]}>
+      {shown.map((o) => (
+        <label class="flex cursor-pointer items-start gap-3 rounded-[var(--radius-sm)] border border-[var(--color-line-strong)] bg-[var(--color-bg)] px-4 py-3 has-[:checked]:border-[var(--color-accent)]">
+          <input type="checkbox" name="models" data-model-option value={o.key} class="mt-1 accent-[#4fcbd6]" checked={shown.length === 1} />
+          <span>
+            <span class="block font-semibold">{o.label}</span>
+            <span class="block text-xs text-[var(--color-text-tertiary)]">{o.hint}</span>
+          </span>
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <label class="mt-6 block">
+    <span class="text-sm text-[var(--color-text-secondary)]">Något vi ska veta? <span class="text-[var(--color-text-tertiary)]">(frivilligt)</span></span>
+    <textarea class="p-input mt-2 min-h-[6rem]" name="message" rows="3"></textarea>
+  </label>
+
+  <div class="hidden" aria-hidden="true"><label>Lämna tomt <input type="text" name="botField" tabindex="-1" autocomplete="off" /></label></div>
+
+  <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-xs text-[var(--color-text-tertiary)]">Vi svarar inom två arbetsdagar. Inga nyhetsbrev, ingen lista.</p>
+    <button type="submit" class="p-btn sm:w-auto" data-submit>Jag vill bli kontaktad</button>
+  </div>
+  <p class="mt-4 hidden text-sm text-[var(--color-rose)]" data-error></p>
+</form>
+
+<div class="p-card mx-auto hidden max-w-2xl p-8 text-center" data-interest-done>
+  <p class="p-eyebrow">Tack</p>
+  <p class="mt-3 text-2xl font-medium">Vi hör av oss inom två arbetsdagar.</p>
+  <p class="p-body mt-3">Med ett förslag på hur det skulle se ut hos dig. Ett bekräftelsemejl är på väg.</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>("[data-interest]").forEach((form) => {
+    const done = form.parentElement?.querySelector<HTMLElement>("[data-interest-done]");
+    const err = form.querySelector<HTMLElement>("[data-error]");
+    const btn = form.querySelector<HTMLButtonElement>("[data-submit]");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      err?.classList.add("hidden");
+      const fd = new FormData(form);
+      const payload = {
+        name: fd.get("name"), business: fd.get("business"), email: fd.get("email"), reach: fd.get("reach"),
+        message: fd.get("message"), partner: fd.get("partner"), botField: fd.get("botField"),
+        models: fd.getAll("models"),
+      };
+      if (!String(payload.name ?? "").trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(payload.email ?? ""))) {
+        if (err) { err.textContent = "Namn och en giltig e-postadress behövs."; err.classList.remove("hidden"); }
+        return;
+      }
+      if (btn) { btn.disabled = true; btn.textContent = "Skickar …"; }
+      try {
+        const res = await fetch(form.dataset.endpoint!, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error(await res.text());
+        form.classList.add("hidden");
+        done?.classList.remove("hidden");
+      } catch (ex) {
+        if (err) { err.textContent = "Det gick inte att skicka just nu. Försök igen om en stund."; err.classList.remove("hidden"); }
+        if (btn) { btn.disabled = false; btn.textContent = "Jag vill bli kontaktad"; }
+      }
+    });
+  });
+</script>

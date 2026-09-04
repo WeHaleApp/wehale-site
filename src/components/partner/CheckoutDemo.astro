@@ -1,0 +1,388 @@
+---
+/**
+ * The partner's checkout, as a working mock: the WeHale block after card and e-mail, unchecked
+ * until the guest chooses (consumer law: no pre-ticked paid add-on), two plans on expand, the
+ * "Vad är WeHale?" sheet over the checkout, and the receipt with one button into the app.
+ * Mirrors the Figma prototype on the App-file page "Partner checkout (CR-0.20)".
+ */
+import type { Partner } from "../../lib/partner";
+import { kr } from "../../lib/partner";
+
+interface Props { partner: Partner }
+const { partner: p } = Astro.props;
+const accent = p.accent ?? "#0f766e";
+---
+
+<div
+  class="demo mx-auto w-full max-w-[400px]"
+  data-checkout
+  data-price={p.avgOrder}
+  data-disc-month={p.guestDiscountMonthly}
+  data-disc-year={p.guestDiscountAnnual}
+  style={`--pa:${accent}`}
+>
+  <!-- The phone: a bezel, a screen, a status bar and a browser address bar with the partner's
+       checkout domain. Everything below scrolls inside the screen, like the real thing. -->
+  <div class="demo-bezel relative rounded-[30px] border border-white/10 bg-[#0b0f19] p-[4px] shadow-[0_40px_100px_rgba(0,0,0,.55)] md:rounded-[52px] md:p-[10px]">
+    <div class="demo-screen relative flex h-[min(78vh,780px)] flex-col overflow-hidden rounded-[27px] bg-white text-[#111827] md:rounded-[42px]">
+      <div class="pointer-events-none absolute left-1/2 top-2.5 z-20 hidden h-[26px] w-[96px] -translate-x-1/2 rounded-full bg-[#0b0f19] md:block" aria-hidden="true"></div>
+      <div class="flex items-center justify-between px-7 pt-3.5 text-[13px] font-semibold text-[#111827]" aria-hidden="true">
+        <span>9:41</span>
+        <span class="flex items-center gap-1"><svg viewBox="0 0 16 12" class="h-3 w-4"><path d="M1 9h2v3H1zM5 6h2v6H5zM9 3h2v9H9zM13 0h2v12h-2z" fill="currentColor"/></svg><svg viewBox="0 0 24 12" class="h-3 w-6"><rect x="1" y="1" width="19" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="2.6" y="2.6" width="14" height="6.8" rx="1.2" fill="currentColor"/><path d="M21.5 4v4a1.6 1.6 0 0 0 0-4z" fill="currentColor"/></svg></span>
+      </div>
+      <div class="mx-4 mt-2 flex items-center justify-center gap-1.5 rounded-xl bg-[#eef0f3] py-1.5 text-[12px] text-[#374151]" aria-hidden="true">
+        <svg viewBox="0 0 12 12" class="h-3 w-3"><rect x="2" y="5" width="8" height="6" rx="1.2" fill="currentColor"/><path d="M4 5V3.6a2 2 0 0 1 4 0V5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+        <span>{p.checkoutDomain}</span>
+      </div>
+      <div class="demo-scroller relative flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none]" data-scroller>
+        <div data-bounce>
+  <!-- ─── Checkout view ─── -->
+  <div data-view="checkout" data-trial={p.guestTrialDays}>
+    <div class="flex items-center justify-between px-5 pt-5">
+      {p.logo
+        ? <img src={p.logo} alt={p.name} class="h-8 w-auto" />
+        : <span class="text-[14px] font-extrabold uppercase tracking-[0.14em]" style={`color:${accent}`}>{p.name}</span>}
+      <span class="text-[12px] text-[#6b7280]">Kassa · 2/2</span>
+    </div>
+
+    <div class="mx-5 mt-4 flex items-center justify-between rounded-2xl border border-[#e5e7eb] px-4 py-3">
+      <div>
+        <p class="text-[14px] font-semibold">{p.commonPurchase}</p>
+        <p class="text-[12px] text-[#6b7280]">{p.purchaseNote}</p>
+      </div>
+      <span class="text-[14px] font-semibold" style="font-variant-numeric: tabular-nums">{kr(p.avgOrder)}</span>
+    </div>
+
+    <div class="px-5 pt-5">
+      <p class="text-[13px] font-semibold">Kontakt</p>
+      <div class="mt-2 rounded-xl border border-[#e5e7eb] px-3 py-2.5">
+        <p class="text-[10px] uppercase tracking-wider text-[#9ca3af]">E-post</p>
+        <p class="text-[13px]">anna.lind@gmail.com</p>
+      </div>
+    </div>
+
+    <div class="px-5 pt-4">
+      <p class="text-[13px] font-semibold">Kort</p>
+      <div class="mt-2 rounded-xl border border-[#e5e7eb] px-3 py-2.5">
+        <p class="text-[10px] uppercase tracking-wider text-[#9ca3af]">Kortnummer</p>
+        <p class="text-[13px]" style="font-variant-numeric: tabular-nums">4242 4242 4242 4242</p>
+      </div>
+      <div class="mt-2 grid grid-cols-2 gap-2">
+        <div class="rounded-xl border border-[#e5e7eb] px-3 py-2.5">
+          <p class="text-[10px] uppercase tracking-wider text-[#9ca3af]">MM/ÅÅ</p>
+          <p class="text-[13px]">08 / 28</p>
+        </div>
+        <div class="rounded-xl border border-[#e5e7eb] px-3 py-2.5">
+          <p class="text-[10px] uppercase tracking-wider text-[#9ca3af]">CVC</p>
+          <p class="text-[13px]">•••</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- The WeHale block: collapsed and unchecked by default. -->
+    <div class="mx-5 mt-5 rounded-2xl border-2 transition-colors" data-block>
+      <label class="flex cursor-pointer items-start gap-3 px-4 py-3.5">
+        <input type="checkbox" class="peer sr-only" data-check />
+        <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border border-[#cbd5e1] bg-white transition-colors peer-checked:border-[#4fcbd6] peer-checked:bg-[#4fcbd6]" aria-hidden="true">
+          <svg viewBox="0 0 12 12" class="h-3 w-3 opacity-0 transition-opacity peer-checked:opacity-100" data-tick><path d="M2 6.2 4.7 9 10 3.5" fill="none" stroke="#08111f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="flex-1">
+          <span class="flex items-center justify-between">
+            <span class="text-[14px] font-semibold">Lägg till WeHale Pro</span>
+            <img src="/assets/images/logo.svg" alt="" class="h-3.5 w-auto invert" />
+          </span>
+          <span class="mt-1 block text-[14px] font-medium">0 kr i dag. <span data-disc-line>{p.guestDiscountMonthly} kr rabatt på den här ordern.</span></span>
+          <span class="mt-1 block text-[12px] leading-snug text-[#6b7280]">Guidad andning för lugn, fokus och sömn. Prova {p.guestTrialDays} dagar gratis, avbryt när du vill.</span>
+        </span>
+      </label>
+
+      <div class="hidden px-4 pb-4" data-expanded>
+        <div class="grid gap-2">
+          <label class="flex cursor-pointer items-center justify-between rounded-xl border border-[#e5e7eb] px-3 py-2.5 has-[:checked]:border-[#4fcbd6] has-[:checked]:bg-[#f0fbfc]">
+            <span class="flex items-center gap-2.5">
+              <input type="radio" name="wh-plan" value="month" checked class="accent-[#4fcbd6]" data-plan />
+              <span>
+                <span class="block text-[13px] font-semibold">Månadsvis</span>
+                <span class="block text-[11px] text-[#6b7280]">0 kr i dag · {p.monthlyPrice} kr/mån efter {p.guestTrialDays} dagar</span>
+              </span>
+            </span>
+            <span class="text-[13px] font-semibold" style={`color:${accent}`}>{p.guestDiscountMonthly} kr</span>
+          </label>
+          <label class="flex cursor-pointer items-center justify-between rounded-xl border border-[#e5e7eb] px-3 py-2.5 has-[:checked]:border-[#4fcbd6] has-[:checked]:bg-[#f0fbfc]">
+            <span class="flex items-center gap-2.5">
+              <input type="radio" name="wh-plan" value="year" class="accent-[#4fcbd6]" data-plan />
+              <span>
+                <span class="block text-[13px] font-semibold">Årsvis</span>
+                <span class="block text-[11px] text-[#6b7280]">{p.annualPrice} kr i dag · ingen gratisperiod</span>
+              </span>
+            </span>
+            <span class="text-[13px] font-semibold" style={`color:${accent}`}>{p.guestDiscountAnnual} kr</span>
+          </label>
+        </div>
+        <p class="mt-3 text-[11px] leading-snug text-[#6b7280]">Vi använder e-posten och kortet ovan. Inget mer att fylla i. Påminnelse via mejl 7 dagar före första dragningen.</p>
+        <p class="mt-3 flex items-center gap-2 text-[12px] text-[#374151]">
+          <span class="inline-block h-4 w-4 rounded-full" style={`background:${accent}`} aria-hidden="true"></span>
+          {p.name} har valt WeHale för sina gäster.
+        </p>
+      </div>
+
+      <div class="flex gap-4 px-4 pb-3 text-[12px]">
+        <button type="button" class="underline decoration-[#cbd5e1] underline-offset-2" data-open-sheet>Vad är WeHale?</button>
+        <span class="text-[#9ca3af]">Regler och villkor</span>
+      </div>
+    </div>
+
+    <div class="mx-5 mt-5 grid gap-1.5 text-[13px]" style="font-variant-numeric: tabular-nums">
+      <div class="flex justify-between text-[#6b7280]"><span>{p.commonPurchase}</span><span>{kr(p.avgOrder)}</span></div>
+      <div class="hidden justify-between font-medium text-[#0f9aa6]" data-disc-row><span>WeHale-rabatt</span><span data-disc-amount>−{kr(p.guestDiscountMonthly)}</span></div>
+      <div class="mt-1 flex items-end justify-between border-t border-[#e5e7eb] pt-2">
+        <span class="font-semibold">Att betala i dag</span>
+        <span class="text-[20px] font-semibold" data-total>{kr(p.avgOrder)}</span>
+      </div>
+    </div>
+
+    <div class="px-5 pb-5 pt-4">
+      <button type="button" class="w-full rounded-xl py-3.5 text-[15px] font-semibold text-white transition-transform active:scale-[.98]" style={`background:${accent}`} data-pay>Betala <span data-pay-amount>{kr(p.avgOrder)}</span></button>
+      <p class="mt-3 text-center text-[10px] text-[#9ca3af]">Prototyp. Inget dras. Kortnumret är ett testkort.</p>
+    </div>
+
+  </div>
+
+  <!-- ─── Receipt view ─── -->
+  <div data-view="receipt" class="hidden">
+    <div class="flex items-center justify-between px-5 pt-5">
+      {p.logo
+        ? <img src={p.logo} alt={p.name} class="h-8 w-auto" />
+        : <span class="text-[14px] font-extrabold uppercase tracking-[0.14em]" style={`color:${accent}`}>{p.name}</span>}
+      <span class="text-[12px] text-[#6b7280]">Kvitto</span>
+    </div>
+    <div class="px-5 pt-6">
+      <div class="grid h-10 w-10 place-items-center rounded-full text-white" style={`background:${accent}`} aria-hidden="true">✓</div>
+      <p class="mt-4 text-[20px] font-semibold leading-tight">Tack Anna, ditt kort är klart.</p>
+      <p class="mt-1 text-[13px] text-[#6b7280]">{p.commonPurchase} · <span data-receipt-total></span></p>
+    </div>
+
+    <div class="mx-5 mt-5 rounded-2xl bg-[#0b1220] p-4 text-[#f2f0ed]" data-receipt-wehale>
+      <div class="flex items-center justify-between">
+        <img src="/assets/images/logo.svg" alt="WeHale" class="h-4 w-auto" />
+        <span class="rounded-full bg-[#4fcbd6]/20 px-2 py-0.5 text-[11px] font-semibold text-[#4fcbd6]">Aktiv</span>
+      </div>
+      <p class="mt-3 text-[15px] font-medium leading-snug" data-receipt-title>Din WeHale Pro är aktiv. {p.guestTrialDays} fria dagar börjar nu.</p>
+      <p class="mt-2 text-[12px] leading-relaxed text-white/70" data-receipt-body>Öppna appen och logga in med anna.lind@gmail.com. Allt är öppet från första andetaget. Vi mejlar dig 7 dagar innan första dragningen på {p.monthlyPrice} kr.</p>
+      <button type="button" class="mt-4 w-full rounded-xl bg-white py-3 text-[14px] font-semibold text-[#0b1220]">Öppna WeHale</button>
+      <p class="mt-2 text-center text-[11px] text-white/50">Länken öppnar ditt konto direkt. Ingen kod att skriva.</p>
+    </div>
+
+    <p class="mx-5 mt-5 hidden text-[13px] text-[#6b7280]" data-receipt-plain>Utan gåvan ser kvittot ut precis som i dag.</p>
+
+    <div class="px-5 pb-5 pt-6 text-center">
+      <button type="button" class="text-[13px] underline decoration-[#cbd5e1] underline-offset-2" data-reset>Börja om</button>
+    </div>
+  </div>
+        </div>
+      </div>
+    <!-- The "Vad är WeHale?" sheet: fixed height, never covers the partner's header. -->
+      <!-- Mirrors the Figma frame 537:2025: warm fade, wordmark, partner lockup, a taste of the
+           library, the gift's state, one way back and a quiet decline. -->
+      <div class="demo-dim pointer-events-none absolute inset-0 z-10 bg-black/35 opacity-0 transition-opacity duration-500" data-dim aria-hidden="true"></div>
+      <div class="demo-sheet absolute inset-x-0 bottom-0 z-20 flex max-h-[calc(100%-2.75rem)] translate-y-[104%] flex-col overflow-hidden rounded-t-[26px] bg-[#0b1220] text-[#f2f0ed] shadow-[0_-20px_60px_rgba(0,0,0,.35)] transition-transform duration-500 ease-[cubic-bezier(.2,.7,.2,1)]" data-sheet>
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#b4471c]/80 via-[#5b2416]/40 to-transparent" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-white/30" aria-hidden="true"></div>
+        <div class="relative px-5 pt-9">
+          <img src="/assets/images/logo.svg" alt="WeHale" class="h-7 w-auto" />
+          <div class="mt-4 flex items-center gap-2 text-[12px] text-white/70">
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-2 py-1 text-[#111827]">
+              <span class="grid h-4 w-4 place-items-center rounded-full text-[8px] font-bold text-white" style={`background:${accent}`}>{p.name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()}</span>
+              <span class="text-[11px] font-semibold">{p.name}</span>
+            </span>
+            <span>har valt WeHale för sina gäster</span>
+          </div>
+          <p class="mt-4 text-[19px] font-medium leading-tight">Andning du märker att den fungerar.</p>
+          <p class="mt-2 text-[12.5px] leading-relaxed text-white/70">Guidade andningsövningar på 5 till 25 minuter för lugn, fokus och sömn.</p>
+          <div class="-mx-5 mt-4 flex gap-2.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
+            {[
+              ["/assets/images/sessions/04-conscious-morning.webp", "Conscious Morning", "Activate"],
+              ["/assets/images/sessions/02-coherent-heart.webp", "Coherent Heart", "Balance"],
+              ["/assets/images/sessions/05-into-stillness.webp", "Into Stillness", "Calm"],
+              ["/assets/images/sessions/06-nighttime-serenity.webp", "Nighttime Serenity", "Sömn"],
+            ].map(([src, title, meta]) => (
+              <figure class="relative h-[118px] w-[112px] shrink-0 overflow-hidden rounded-xl">
+                <img src={src} alt="" class="h-full w-full object-cover" />
+                <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-2">
+                  <p class="text-[12px] font-semibold leading-tight">{title}</p>
+                  <p class="text-[10px] text-white/70">{meta}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <div class="mt-4 rounded-xl border border-[#4fcbd6]/60 bg-[#4fcbd6]/10 p-3">
+            <p class="text-[13.5px] font-semibold leading-snug" data-sheet-gift-title>Din gåva: {p.guestTrialDays} dagar gratis + {p.guestDiscountMonthly} kr rabatt nu</p>
+            <p class="mt-1 text-[11.5px] text-white/70" data-sheet-gift-sub>0 kr i dag · {p.monthlyPrice} kr/mån efter · avbryt när du vill</p>
+          </div>
+        </div>
+        <div class="relative px-5 pb-4 pt-3">
+          <button type="button" class="w-full rounded-xl bg-white py-3 text-[14px] font-semibold text-[#0b1220] transition-transform active:scale-[.98]" data-close-sheet>Tillbaka till kassan</button>
+          <button type="button" class="mt-2 w-full py-1.5 text-center text-[12px] text-white/60 underline decoration-white/30 underline-offset-2" data-decline>Fortsätt utan erbjudandet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .demo-scroller::-webkit-scrollbar { display: none; }
+  /* With a mouse the phone is dragged like a touchscreen: a hand over it, a grabbing hand while dragging. */
+  @media (hover: hover) and (pointer: fine) { .demo-scroller { cursor: grab; } .demo-scroller.is-grabbing { cursor: grabbing; user-select: none; } .demo-scroller.is-grabbing * { cursor: grabbing; } }
+  .demo-scroller { -webkit-overflow-scrolling: touch; }
+  /* Tailwind v4 translates through the `translate` property, so that is what opens the sheet. */
+  .demo-sheet.is-open { translate: 0 0; transform: none; }
+  .demo-sheet.is-dragging { transition: none; }
+  [data-bounce] { will-change: transform; }
+  .demo-dim.is-open { opacity: 1; pointer-events: auto; }
+  /* Fullscreen on mobile: the phone IS the screen. */
+  .demo[data-fullscreen] { max-width: none; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .demo[data-fullscreen] .demo-bezel { display: flex; flex-direction: column; flex: 1; min-height: 0; border: 0; padding: 0; border-radius: 0; box-shadow: none; }
+  .demo[data-fullscreen] .demo-screen { flex: 1; min-height: 0; height: auto; border-radius: 0; }
+  [data-block] { border-color: #e5e7eb; }
+  [data-block].is-on { border-color: #4fcbd6; background: #f7fdfd; }
+  /* Tailwind's peer variant cannot reach a descendant of the sibling, so the tick is drawn here. */
+  [data-check]:checked ~ span [data-tick] { opacity: 1; }
+</style>
+
+<script>
+  const fmt = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
+  document.querySelectorAll<HTMLElement>("[data-checkout]").forEach((root) => {
+    const price = Number(root.dataset.price);
+    const disc = { month: Number(root.dataset.discMonth), year: Number(root.dataset.discYear) };
+    const q = <T extends Element>(s: string) => root.querySelector<T>(s);
+    const check = q<HTMLInputElement>("[data-check]")!;
+    const block = q<HTMLElement>("[data-block]")!;
+    const expanded = q<HTMLElement>("[data-expanded]")!;
+    const total = q<HTMLElement>("[data-total]")!;
+    const discRow = q<HTMLElement>("[data-disc-row]")!;
+    const discAmount = q<HTMLElement>("[data-disc-amount]")!;
+    const payAmount = q<HTMLElement>("[data-pay-amount]")!;
+    const discLine = q<HTMLElement>("[data-disc-line]")!;
+    const sheet = q<HTMLElement>("[data-sheet]")!;
+    const views = { checkout: q<HTMLElement>('[data-view="checkout"]')!, receipt: q<HTMLElement>('[data-view="receipt"]')! };
+
+    // Mouse drag scrolls the phone (touch already does), with the two things that make a touchscreen
+    // feel like one: it keeps gliding after you let go, and it rubber-bands at the ends instead of
+    // stopping dead (Isak, 2026-09-04). A drag over 6px swallows the click that ends it.
+    const scroller = q<HTMLElement>("[data-scroller]")!;
+    const bounce = q<HTMLElement>("[data-bounce]")!;
+    const SPRING = "transform .5s cubic-bezier(.16,1.5,.3,1)";
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      let startY = 0, startTop = 0, moved = false, active = false;
+      let vy = 0, lastT = 0, lastY2 = 0, raf = 0;
+      const maxTop = () => scroller.scrollHeight - scroller.clientHeight;
+      const setPull = (px: number) => { bounce.style.transition = "none"; bounce.style.transform = px ? `translateY(${px}px)` : ""; };
+      const release = () => { bounce.style.transition = SPRING; bounce.style.transform = ""; };
+      const kick = (px: number) => { setPull(px); requestAnimationFrame(release); };
+      scroller.addEventListener("pointerdown", (e) => {
+        if (e.pointerType !== "mouse" || e.button !== 0) return;
+        cancelAnimationFrame(raf); vy = 0; active = true; moved = false;
+        startY = lastY2 = e.clientY; startTop = scroller.scrollTop; lastT = performance.now();
+        bounce.style.transition = "none";
+        scroller.classList.add("is-grabbing");
+      });
+      scroller.addEventListener("pointermove", (e) => {
+        if (!active) return;
+        const dy = e.clientY - startY;
+        if (Math.abs(dy) > 6) moved = true;
+        const now = performance.now(), dt = Math.max(6, now - lastT);
+        if (now - lastT > 0) { vy = (e.clientY - lastY2) / dt; lastT = now; lastY2 = e.clientY; }
+        const want = startTop - dy, max = maxTop();
+        scroller.scrollTop = Math.min(max, Math.max(0, want));
+        // Past an end the content follows the hand, damped, so pulling feels like resistance.
+        const over = want < 0 ? -want : want > max ? -(want - max) : 0;
+        setPull(over ? Math.sign(over) * Math.min(80, Math.pow(Math.abs(over), 0.72) * 2.4) : 0);
+      });
+      const glide = () => {
+        vy *= 0.94;
+        if (Math.abs(vy) < 0.02) { release(); return; }
+        const max = maxTop(), next = scroller.scrollTop - vy * 16;
+        if (next < 0 || next > max) { scroller.scrollTop = next < 0 ? 0 : max; kick(Math.min(64, Math.abs(vy) * 34) * (next < 0 ? 1 : -1)); return; }
+        scroller.scrollTop = next;
+        raf = requestAnimationFrame(glide);
+      };
+      const stop = () => {
+        if (!active) return;
+        active = false; scroller.classList.remove("is-grabbing");
+        if (bounce.style.transform) { release(); vy = 0; return; }
+        if (Math.abs(vy) > 0.05) raf = requestAnimationFrame(glide); else release();
+      };
+      scroller.addEventListener("pointerup", stop); scroller.addEventListener("pointerleave", stop); scroller.addEventListener("pointercancel", stop);
+      scroller.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+      window.addEventListener("scroll", () => cancelAnimationFrame(raf), { passive: true });
+    }
+    const dim = q<HTMLElement>("[data-dim]");
+    const openSheet = () => { sheet.classList.add("is-open"); dim?.classList.add("is-open"); };
+    const closeSheet = () => { sheet.classList.remove("is-open"); dim?.classList.remove("is-open"); sheet.style.transform = ""; };
+    dim?.addEventListener("click", closeSheet);
+    // Drag the sheet down to close, like the real thing.
+    let dragY: number | null = null;
+    sheet.addEventListener("pointerdown", (e) => { if ((e.target as HTMLElement).closest("button, a, input, .overflow-x-auto")) return; dragY = e.clientY; sheet.classList.add("is-dragging"); sheet.setPointerCapture(e.pointerId); });
+    sheet.addEventListener("pointermove", (e) => { if (dragY == null) return; const dy = Math.max(0, e.clientY - dragY); sheet.style.transform = `translateY(${dy}px)`; });
+    const endDrag = (e: PointerEvent) => { if (dragY == null) return; const dy = e.clientY - dragY; dragY = null; sheet.classList.remove("is-dragging"); if (dy > 90) closeSheet(); else sheet.style.transform = ""; };
+    sheet.addEventListener("pointerup", endDrag); sheet.addEventListener("pointercancel", endDrag);
+    const plan = () => (root.querySelector<HTMLInputElement>("[data-plan]:checked")?.value ?? "month") as "month" | "year";
+    const render = () => {
+      const on = check.checked;
+      const d = on ? disc[plan()] : 0;
+      block.classList.toggle("is-on", on);
+      expanded.classList.toggle("hidden", !on);
+      total.textContent = fmt(price - d);
+      payAmount.textContent = fmt(price - d);
+      discRow.classList.toggle("hidden", !on);
+      discRow.classList.toggle("flex", on);
+      discAmount.textContent = `−${fmt(d)}`;
+      discLine.textContent = `${disc[plan()]} kr rabatt på den här ordern.`;
+      const gt = q<HTMLElement>("[data-sheet-gift-title]"); const gs = q<HTMLElement>("[data-sheet-gift-sub]");
+      if (gt && gs) {
+        const trial = root.querySelector<HTMLElement>("[data-view='checkout']")?.dataset.trial ?? "";
+        gt.textContent = on
+          ? (plan() === "year" ? `Din gåva är ikryssad: ${disc.year} kr rabatt nu, ett år WeHale Pro` : `Din gåva är ikryssad: ${trial} dagar gratis + ${disc.month} kr rabatt nu`)
+          : `Din gåva: ${trial} dagar gratis + ${disc.month} kr rabatt nu`;
+        gs.textContent = on ? (plan() === "year" ? "Betalas i dag · förnyas om ett år · avbryt när du vill" : "0 kr i dag · dras efter gratisperioden · avbryt när du vill") : "Kryssa i rutan i kassan när du är tillbaka. Inget dras i dag.";
+      }
+    };
+    q("[data-decline]")?.addEventListener("click", () => { check.checked = false; render(); closeSheet(); });
+    check.addEventListener("change", render);
+    root.querySelectorAll("[data-plan]").forEach((r) => r.addEventListener("change", render));
+
+    const receiptTitle = q<HTMLElement>("[data-receipt-title]")!;
+    const receiptBody = q<HTMLElement>("[data-receipt-body]")!;
+    const receiptDefaults = { title: receiptTitle.textContent, body: receiptBody.textContent };
+
+    q("[data-open-sheet]")?.addEventListener("click", openSheet);
+    root.querySelectorAll("[data-close-sheet]").forEach((b) => b.addEventListener("click", closeSheet));
+
+    q("[data-pay]")?.addEventListener("click", () => {
+      const on = check.checked;
+      const d = on ? disc[plan()] : 0;
+      q<HTMLElement>("[data-receipt-total]")!.textContent = fmt(price - d);
+      q<HTMLElement>("[data-receipt-wehale]")!.classList.toggle("hidden", !on);
+      q<HTMLElement>("[data-receipt-plain]")!.classList.toggle("hidden", on);
+      if (on && plan() === "year") {
+        receiptTitle.textContent = "Din WeHale Pro gäller ett år, från i dag.";
+        receiptBody.textContent = "Öppna appen och logga in med anna.lind@gmail.com. Allt är öppet från första andetaget. Vi hör av oss en månad innan året är slut.";
+      } else {
+        receiptTitle.textContent = receiptDefaults.title;
+        receiptBody.textContent = receiptDefaults.body;
+      }
+      views.checkout.classList.add("hidden");
+      views.receipt.classList.remove("hidden");
+      q<HTMLElement>("[data-scroller]")?.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    q("[data-reset]")?.addEventListener("click", () => {
+      check.checked = false;
+      const m = root.querySelector<HTMLInputElement>('[data-plan][value="month"]'); if (m) m.checked = true;
+      render();
+      views.receipt.classList.add("hidden");
+      views.checkout.classList.remove("hidden");
+      q<HTMLElement>("[data-scroller]")?.scrollTo({ top: 0 });
+    });
+    render();
+  });
+</script>

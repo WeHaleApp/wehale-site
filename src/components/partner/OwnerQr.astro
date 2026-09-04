@@ -1,0 +1,23 @@
+---
+/**
+ * The owner's personal QR: one scan, lifetime WeHale Pro, usable once. Rendered at build time as
+ * an inline SVG so it stays crisp at any size. The link is the OneLink with the owner's code as
+ * deep_link_value; the single-use lifetime code type is a backend requirement in CR-0.20 and must
+ * exist before a page is sent to a real partner.
+ */
+import QRCode from "qrcode";
+import { codeLink } from "../../lib/partner";
+
+interface Props { code: string }
+const { code } = Astro.props;
+const svg = await QRCode.toString(codeLink(code), {
+  type: "svg",
+  margin: 0,
+  errorCorrectionLevel: "M",
+  color: { dark: "#0b1220", light: "#ffffff" },
+});
+---
+
+<div class="inline-block rounded-2xl bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,.45)]">
+  <div class="h-[188px] w-[188px] [&>svg]:h-full [&>svg]:w-full" set:html={svg} />
+</div>

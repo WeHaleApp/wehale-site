@@ -1,0 +1,21 @@
+{
+  "slug": "exempel-instruktor",
+  "name": "Lisa Andersson",
+  "kind": "andningslärare",
+  "contactName": "Lisa",
+  "ourContactName": "Philip",
+  "models": [
+    "referral",
+    "gift"
+  ],
+  "ownerCode": "LISA-OWNER",
+  "teamCode": "LISA-TEAM",
+  "teamCodeDays": 90,
+  "commissionPercent": 20,
+  "commissionMonths": 12,
+  "guestsPerMonth": 500,
+  "quote": "Andningen är det mina elever tar med sig hem.",
+  "referralOffer": "annual50",
+  "recruitsPerYear": 1000,
+  "audienceWord": "elever"
+}

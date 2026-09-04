@@ -1,0 +1,106 @@
+---
+/**
+ * The referral model's business case on CR-0.5's terms (Martin's model, Isak's rulings
+ * 2026-08-31): X % of net after the store's share, on everything a recruited customer pays during
+ * their first 12 months, annual and monthly alike. Two amounts per customer first, then the total.
+ */
+import type { Partner } from "../../lib/partner";
+import { proceeds } from "../../lib/partner";
+
+interface Props { partner: Partner }
+const { partner: p } = Astro.props;
+const share = p.commissionPercent / 100;
+const annualHalf = Math.floor(p.annualPrice / 2);
+const annualPaid = p.referralOffer === "annual50" ? annualHalf : p.annualPrice;
+const perAnnual = Math.round(proceeds(annualPaid, p) * share);
+const perMonth = Math.round(proceeds(p.monthlyPrice, p) * share);
+// Defaults, computed once at build so the first paint shows real numbers; the script keeps them live.
+const D = { annualShare: p.referralOffer === "annual50" ? 70 : 30, stay: 6 };
+const annuals0 = p.recruitsPerYear * (D.annualShare / 100);
+const monthlies0 = p.recruitsPerYear - annuals0;
+const year0 = annuals0 * perAnnual + monthlies0 * perMonth * D.stay;
+const int = (n: number) => Math.round(n).toLocaleString("sv-SE");
+const krs = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
+---
+
+<div
+  class="p-card p-6 md:p-8"
+  data-refcalc
+  data-per-annual={perAnnual}
+  data-per-month={perMonth}
+  data-months={p.commissionMonths}
+>
+  <div class="grid gap-4 md:grid-cols-2">
+    <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5">
+      <p class="p-eyebrow">per värvad kund som väljer årsmedlemskap</p>
+      <p class="p-num mt-2 text-[var(--color-accent)]">{perAnnual} kr</p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av det {annualPaid} kr lämnar efter moms och Apples avgift. Betalas ut efter köpet. Förnyar kunden inom de {p.commissionMonths} månaderna räknas det med.</p>
+    </div>
+    <div class="rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-bg)] p-5">
+      <p class="p-eyebrow">per värvad kund som väljer månadsplan</p>
+      <p class="p-num mt-2 flex items-baseline gap-2 text-[var(--color-accent)]">{perMonth} kr <span class="text-base font-normal text-[var(--color-text-secondary)]">per månad</span></p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">{p.commissionPercent} % av det {p.monthlyPrice} kr lämnar efter moms och Apples avgift, varje månad de stannar, i upp till {p.commissionMonths} månader.</p>
+    </div>
+  </div>
+
+  <div class="mt-8 grid gap-6 md:grid-cols-3">
+    <label class="block">
+      <span class="text-sm text-[var(--color-text-secondary)]">Kunder du värvar per år</span>
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" step="10" value={p.recruitsPerYear} data-recruits />
+      <span class="mt-1 block text-sm text-[var(--color-text-secondary)]">Betalande, inte nedladdningar. En till tre procent av dem du når regelbundet är en vanlig tumregel.</span>
+    </label>
+    <label class="block">
+      <span class="text-sm text-[var(--color-text-secondary)]">Andel som väljer årsmedlemskap, %</span>
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max="100" value={D.annualShare} data-annual-share />
+      <span class="mt-1 block text-sm text-[var(--color-text-secondary)]">Resten väljer månadsplan.</span>
+    </label>
+    <label class="block">
+      <span class="text-sm text-[var(--color-text-secondary)]">Månader en månadskund stannar, i snitt</span>
+      <input class="p-input mt-2" type="number" inputmode="numeric" min="0" max={p.commissionMonths} value={D.stay} data-stay-months />
+      <span class="mt-1 block text-sm text-[var(--color-text-secondary)]">Av de första {p.commissionMonths}. Det här mäter vi tillsammans.</span>
+    </label>
+  </div>
+
+  <div class="mt-8 grid gap-6 md:grid-cols-2">
+    <div>
+      <p class="p-eyebrow">till dig, från ett års värvade kunder</p>
+      <p class="p-num mt-2 text-[var(--color-accent)]" data-out="year">{krs(year0)}</p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">utbetalt månadsvis under de tolv månader kunderna betalar</p>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--color-text-secondary)]">i snitt per månad</p>
+      <p class="p-num mt-2" data-out="month">{krs(year0 / 12)}</p>
+      <p class="mt-2 text-sm text-[var(--color-text-secondary)]">och varje nytt års kunder lägger på ett år till</p>
+    </div>
+  </div>
+
+  <div class="mt-8 border-t border-[var(--color-line)] pt-5 text-sm text-[var(--color-text-secondary)]">
+    <p><span class="font-semibold text-[var(--color-text)]">Så här räknar vi:</span> <span data-out="chain">{int(annuals0)} årskunder × {krs(perAnnual)} + {int(monthlies0)} månadskunder × {krs(perMonth)} × {D.stay} månader = {krs(year0)}.</span></p>
+    <p class="mt-2">Ersättningen räknas på det kunden faktiskt betalar oss under sina första {p.commissionMonths} månader, efter moms och butikens avgift. Byter kunden plan följer ersättningen med. Återbetalas ett köp dras det av.</p>
+  </div>
+</div>
+
+<script>
+  const kr = (n: number) => `${Math.round(n).toLocaleString("sv-SE")} kr`;
+  const int = (n: number) => Math.round(n).toLocaleString("sv-SE");
+  document.querySelectorAll<HTMLElement>("[data-refcalc]").forEach((root) => {
+    const perAnnual = Number(root.dataset.perAnnual);
+    const perMonth = Number(root.dataset.perMonth);
+    const months = Number(root.dataset.months);
+    const num = (sel: string) => Number(root.querySelector<HTMLInputElement>(sel)?.value) || 0;
+    const set = (k: string, v: string) => root.querySelectorAll<HTMLElement>(`[data-out="${k}"]`).forEach((el) => (el.textContent = v));
+    const render = () => {
+      const recruits = Math.max(0, num("[data-recruits]"));
+      const annualShare = Math.min(100, Math.max(0, num("[data-annual-share]"))) / 100;
+      const stay = Math.min(months, Math.max(0, num("[data-stay-months]")));
+      const annuals = recruits * annualShare;
+      const monthlies = recruits - annuals;
+      const year = annuals * perAnnual + monthlies * perMonth * stay;
+      set("year", kr(year));
+      set("month", kr(year / 12));
+      set("chain", `${int(annuals)} årskunder × ${kr(perAnnual)} + ${int(monthlies)} månadskunder × ${kr(perMonth)} × ${int(stay)} månader = ${kr(year)}.`);
+    };
+    root.querySelectorAll("input").forEach((i) => i.addEventListener("input", render));
+    render();
+  });
+</script>

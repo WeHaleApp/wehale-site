@@ -1,0 +1,175 @@
+---
+/**
+ * Layout for the invitation-only partner pages (/for, /for/<slug>).
+ *
+ * Differs from BaseLayout on purpose: Swedish, noindex, no marketing header or GTM, Nunito Sans
+ * (the app's face since 2.7.7) and the app's aurora accent instead of the site's older green.
+ * The `gated` class hides scroll until Gate.astro has checked the shared password.
+ */
+import "../styles/global.css";
+import type { Partner } from "../lib/partner";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Right-hand header label when there is no partner logo, e.g. "För Studio Frid". */
+  label?: string;
+  /** The named partner: their logo joins ours in the header, their colour tints the page. */
+  partner?: Partner;
+}
+
+const { title, description, label = "", partner } = Astro.props;
+const silhouette = partner?.logoOnDark === "keep" ? "" : "filter:brightness(0) invert(1);opacity:.92";
+const tint = partner?.accent ?? "#4fcbd6";
+---
+
+<!doctype html>
+<html
+  lang="sv"
+  class="gated"
+  style={`--color-accent:#4fcbd6;--color-accent-soft:rgba(79,203,214,.16);--color-accent-line:rgba(79,203,214,.5);--partner:${tint};--color-text-secondary:rgba(242,240,237,.70);--color-text-tertiary:rgba(242,240,237,.52);--font-sans:'Nunito Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;--font-display:'Nunito Sans',ui-sans-serif,system-ui,sans-serif;`}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#090f1d" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/images/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/images/favicon.png" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/nunito-sans/nunito-sans-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/nunito-sans.css" />
+    <style is:global>
+      html.gated { overflow: hidden; }
+      /* Type: one step down on mobile, tighter leading; the phone audit (2026-09-03) found body at
+         ~20px flattening the hierarchy while labels sat at 10–13px below legibility. */
+      .p-eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); text-wrap: balance; }
+      .p-h2 { font-size: clamp(1.75rem, 3.6vw, 2.75rem); font-weight: 500; line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
+      .p-h3 { font-size: clamp(1.375rem, 3vw, 2.25rem); font-weight: 500; line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance; }
+      .p-body { color: var(--color-text-secondary); font-size: 1rem; line-height: 1.55; text-wrap: pretty; }
+      @media (min-width: 768px) { .p-body { font-size: 1.0625rem; line-height: 1.6; } }
+      p, dd, li, figcaption, blockquote { text-wrap: pretty; }
+      h1, h2, h3 { text-wrap: balance; }
+      .p-terms > div { display: grid; gap: .25rem; padding: 1rem 0; border-top: 1px solid var(--color-line); }
+      @media (min-width: 768px) { .p-terms > div { grid-template-columns: 14rem 1fr; gap: .5rem; } }
+      .p-terms dt { font-weight: 600; } .p-terms dd { color: var(--color-text-secondary); line-height: 1.55; }
+      /* Motion: few, slow, choreographed. One reveal per group with a stagger, never a fade on every element. */
+      [data-stagger] > [data-reveal] { transition-delay: calc(var(--i, 0) * 90ms); }
+      .hero-in { opacity: 0; transform: translateY(18px); animation: heroIn 1.1s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: var(--d, 0ms); }
+      @keyframes heroIn { to { opacity: 1; transform: none; } }
+      @supports (animation-timeline: scroll()) {
+        [data-parallax] { animation: parallax linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+        @keyframes parallax { from { transform: translateY(-6%) scale(1.06); } to { transform: translateY(6%) scale(1.06); } }
+      }
+      @media (prefers-reduced-motion: reduce) { .hero-in { animation: none; opacity: 1; transform: none; } [data-parallax] { animation: none; } }
+      /* The chapter switcher: cards select, the bar sticks under the header. */
+      .p-tab { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; border-radius: 999px; padding: .55rem 1rem; font-size: .875rem; font-weight: 600; color: var(--color-text-secondary); transition: color .25s, background-color .25s; }
+      .p-tab[aria-selected="true"] { background: var(--color-text); color: var(--color-bg); }
+      [data-chapter] { animation: chapterIn .6s cubic-bezier(.2,.7,.2,1) both; }
+      @keyframes chapterIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+      [data-chapter][hidden] { display: none; }
+      /* Anchors land under the sticky header (and the chapter bar inside the room), never behind them. */
+      section, [data-chapter] [id] { scroll-margin-top: calc(var(--header-h, 57px) + 1.25rem); }
+      [data-chapter] [id] { scroll-margin-top: calc(var(--header-h, 57px) + 4.5rem); }
+      .p-card { background: var(--color-bg-raised); border: 1px solid var(--color-line); border-radius: var(--radius-lg); }
+      .p-card .p-body { color: rgba(242,240,237,.80); }
+      .p-link { font-size: .95rem; font-weight: 600; color: var(--color-text-secondary); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--color-line-strong); }
+      .p-link:hover { color: var(--color-text); }
+      .p-btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: 999px; background: var(--color-text); color: var(--color-bg); padding: .9rem 1.5rem; font-weight: 600; font-size: .95rem; transition: background-color .2s; }
+      .p-btn:hover { background: var(--color-accent); }
+      .p-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: 999px; border: 1px solid var(--color-line-strong); color: var(--color-text); padding: .9rem 1.5rem; font-weight: 500; font-size: .95rem; transition: background-color .2s; }
+      .p-btn-ghost:hover { background: var(--color-bg-raised); }
+      .p-num { font-size: clamp(2.25rem, 4vw, 3.25rem); font-weight: 300; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+      .p-input { width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--color-line-strong); background: var(--color-bg); color: var(--color-text); padding: .65rem .8rem; font-size: 1rem; font-variant-numeric: tabular-nums; outline: none; }
+      .p-input:focus { border-color: var(--color-accent); }
+      .p-input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+      .p-input[type="number"]::-webkit-inner-spin-button, .p-input[type="number"]::-webkit-outer-spin-button { appearance: none; margin: 0; }
+      /* On small screens the header slides away while reading down and returns on the way up, so the
+         fixed chrome never takes half the screen. The chapter bar follows --header-h. */
+      [data-site-header] { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+      [data-site-header].is-away { transform: translateY(-100%); }
+      [data-chapter-nav] { transition: top .35s cubic-bezier(.2,.7,.2,1); }
+      .p-input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+      .p-input[type="number"]::-webkit-inner-spin-button, .p-input[type="number"]::-webkit-outer-spin-button { appearance: none; margin: 0; }
+      /* On small screens the header slides away while reading down and returns on the way up, so the
+         fixed chrome never takes half the screen. The chapter bar follows --header-h. */
+      [data-site-header] { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+      [data-site-header].is-away { transform: translateY(-100%); }
+      [data-chapter-nav] { transition: top .35s cubic-bezier(.2,.7,.2,1); }
+      .p-input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+      .p-input[type="number"]::-webkit-inner-spin-button, .p-input[type="number"]::-webkit-outer-spin-button { appearance: none; margin: 0; }
+      /* On small screens the header slides away while reading down and returns on the way up, so the
+         fixed chrome never takes half the screen. The chapter bar follows --header-h. */
+      [data-site-header] { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+      [data-site-header].is-away { transform: translateY(-100%); }
+      [data-chapter-nav] { transition: top .35s cubic-bezier(.2,.7,.2,1); }
+      [data-reveal] { opacity: 0; transform: translateY(12px); transition: opacity .6s var(--ease-out-soft), transform .6s var(--ease-out-soft); }
+      [data-reveal].is-visible { opacity: 1; transform: none; }
+      [data-reveal] { transition-duration: .9s; transition-timing-function: cubic-bezier(.2,.7,.2,1); }
+    </style>
+  </head>
+
+  <body class="bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+    <header class="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[var(--color-bg)]/92 backdrop-blur" data-site-header>
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <a href="/" aria-label="WeHale" class="flex items-center">
+          <img src="/assets/images/logo.svg" alt="WeHale" class="h-6 w-auto" />
+        </a>
+        {partner?.logo ? (
+          <div class="flex items-center gap-3 md:gap-4">
+            <span class="hidden text-sm text-[var(--color-text-tertiary)] sm:inline">tillsammans med</span>
+            <img src={partner.logo} alt={partner.name} class="h-9 w-auto max-w-[44vw] md:h-11" style={silhouette} />
+          </div>
+        ) : partner ? (
+          <span class="text-sm font-semibold">{partner.name}</span>
+        ) : label ? (
+          <span class="max-w-[55%] truncate text-sm text-[var(--color-text-secondary)]">{label}</span>
+        ) : null}
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="border-t border-[var(--color-line)]">
+      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-[var(--color-text-tertiary)] md:flex-row md:justify-between">
+        <span>{partner ? `WeHale × ${partner.name}` : "WeHale · wehale.io"}</span>
+        <span>Den här sidan är en inbjudan, inte en offentlig sida. Dela den inte vidare.</span>
+      </div>
+    </footer>
+
+    <script>
+      // The chapter bar sticks right under the header, whatever height the partner's logo gives it.
+      const hdr = document.querySelector<HTMLElement>("[data-site-header]");
+      const setH = () => { if (hdr) document.documentElement.style.setProperty("--header-h", `${hdr.offsetHeight}px`); };
+      setH(); window.addEventListener("resize", setH); if ("ResizeObserver" in window && hdr) new ResizeObserver(setH).observe(hdr);
+      let lastY = window.scrollY;
+      const small = window.matchMedia("(max-width: 767px)");
+      window.addEventListener("scroll", () => {
+        if (!hdr || !small.matches) return;
+        const y = window.scrollY, down = y > lastY + 4, up = y < lastY - 4;
+        if (down && y > 240 && !hdr.classList.contains("is-away")) { hdr.classList.add("is-away"); document.documentElement.style.setProperty("--header-h", "0px"); }
+        else if ((up || y < 120) && hdr.classList.contains("is-away")) { hdr.classList.remove("is-away"); setH(); }
+        lastY = y;
+      }, { passive: true });
+      if ("IntersectionObserver" in window) {
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const els = document.querySelectorAll("[data-reveal]");
+        if (reduced) els.forEach((el) => el.classList.add("is-visible"));
+        else {
+          const io = new IntersectionObserver(
+            (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); } }),
+            { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
+          );
+          els.forEach((el) => io.observe(el));
+        }
+      } else {
+        document.querySelectorAll("[data-reveal]").forEach((el) => el.classList.add("is-visible"));
+      }
+    </script>
+  </body>
+</html>
