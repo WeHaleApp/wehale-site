@@ -35,3 +35,23 @@
   for = "/sitemap-index.xml"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+# Universal links: proof that the app owns wehale.io/session/* links. Invisible —
+# it adds no page and changes nothing anyone sees. It only works paired with
+# associatedDomains in wehale-app's app.json; neither half does anything alone.
+#
+# The file has no extension on purpose, so its content type is pinned here:
+# Apple rejects a guessed one, fetches it exactly once, and follows no redirect.
+[[headers]]
+  for = "/.well-known/apple-app-site-association"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "public, max-age=3600"
+
+# Only ever reached by somebody WITHOUT the app. With it, iOS opens the session
+# before any request leaves the phone. Sent to the front page, which already
+# carries the App Store link, rather than adding a page to the site.
+[[redirects]]
+  from = "/session/*"
+  to = "/"
+  status = 302
