@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["4M22G424WX.com.andningsapoteket.ios"],
+        "components": [
+          {
+            "/": "/session/*",
+            "comment": "A session link opens that session in the app"
+          }
+        ]
+      }
+    ]
+  }
+}
