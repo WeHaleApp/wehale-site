@@ -41,16 +41,16 @@
 # associatedDomains in wehale-app's app.json; neither half does anything alone.
 #
 # The file has no extension on purpose, so its content type is pinned here:
-# Apple rejects a guessed one, fetches it exactly once, and follows no redirect.
+# Serve JSON directly over HTTPS; the association-file URL must not redirect.
 [[headers]]
   for = "/.well-known/apple-app-site-association"
   [headers.values]
     Content-Type = "application/json"
     Cache-Control = "public, max-age=3600"
 
-# Only ever reached by somebody WITHOUT the app. With it, iOS opens the session
-# before any request leaves the phone. Sent to the front page, which already
-# carries the App Store link, rather than adding a page to the site.
+# Browser fallback, including no app, older app versions, and an explicit browser
+# preference. The front page carries the store links; installation does not retain
+# the requested session (deferred deep linking is outside this change).
 [[redirects]]
   from = "/session/*"
   to = "/"
