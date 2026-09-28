@@ -634,7 +634,7 @@ export function createPlayer(P) {
     get session(){ return sessionMode; }, get cur(){ return curEv; }, get free(){ return freeMode; }, get chrome(){ return chromeOn || sheetOpen(); },
     reduced: reduceMotion,
     layout(){ return { W:GEO.W||innerWidth, H:GEO.H||innerHeight, cx:(GEO.cx??innerWidth/2)-(GEO.left||0), cy:GEO.cy-(GEO.top||0), U:GEO.U, R:sphereR(),
-      capBottom: GEO.cy+GEO.Rmax+64+Math.min(innerHeight*.1, 62), safeBottom: safeProbe.offsetHeight||0 }; },
+      capBottom: (GEO.capTop ?? GEO.cy+GEO.Rmax+64)+Math.min(innerHeight*.1, 62), safeBottom: safeProbe.offsetHeight||0 }; },
     get holds(){ return EV.filter(e=>(e.type==='hold'||e.type==='holdEmpty') && e.dur>0).map(e=>({type:e.type, start:e.t, dur:e.dur})); },
     get hold(){ const e=curEv; if(!sessionMode || !e || !(e.type==='hold'||e.type==='holdEmpty') || !e.dur) return null; const el=audio.currentTime-e.t;
       return {type:e.type, start:e.t, dur:e.dur, elapsed:el, remaining:Math.max(0,e.dur-el), frac:Math.max(0,Math.min(1,el/e.dur))}; }};
@@ -656,7 +656,10 @@ export function createPlayer(P) {
   function layout(){ const RC=visRect(), W=RC.width, H=RC.height, U=Math.min(W,H*.5625);
     GEO.U=U; GEO.left=RC.left; GEO.top=RC.top; GEO.W=W; GEO.H=H; GEO.cx=RC.left+W/2; GEO.cy=RC.top+H/2-.10*U; GEO.Rmax=.36*U;
     phaseEl.style.top=Math.round(GEO.cy+GEO.Rmax+14)+'px';
-    capEl.style.top=Math.round(GEO.cy+GEO.Rmax+64)+'px';
+    // captions stay at least 16 px clear of the player controls (the scrubber row), on short screens too
+    const tr=document.querySelector('.times'), trTop=tr ? tr.getBoundingClientRect().top : 0, capH=62;
+    GEO.capTop=Math.round(Math.min(GEO.cy+GEO.Rmax+64, trTop>0 ? trTop-16-capH : Infinity));
+    capEl.style.top=GEO.capTop+'px';
     document.documentElement.style.setProperty('--holdTop', Math.max(96, Math.round(GEO.cy-GEO.Rmax-62))+'px'); }
   addEventListener('resize',layout); layout();
   try{ const ro=new ResizeObserver(()=>layout()); ['silk','stage'].forEach(id=>{ const e=document.getElementById(id); if(e) ro.observe(e); }); }catch(_){}
@@ -802,6 +805,7 @@ export function createPlayer(P) {
     exit: toStart, setScore: useScore, setCaptions: setCaps, setWorld,
     intro(on){ if(on){ introFrom=b; introT0=performance.now(); } else introT0=null; },   // one breath with the light, no voice
     get breath(){ return b; },
+    relayout: ()=>layout(),
     get startAt(){ return Math.max(0, +(SCORE && SCORE.startAt) || 0); },   // where the web playback starts (1 s before Edvin's first word)
     get at(){ return audio.currentTime; }, get dur(){ return DUR; }, get playing(){ return sessionMode && !audio.paused; },
     tier: silk ? 'silk' : gl ? 'webgl1' : 'orb',

@@ -106,6 +106,7 @@ if (VAR.y) {
   $("startScr").setAttribute("aria-labelledby", "startHy");
   if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").textContent = "Breathe with Edvin. 6 minutes, free."; }
   body.classList.add("calm-start");   // a dimmer, softer room behind the start screen; detail returns with the session
+  requestAnimationFrame(() => sphereUp(true));
 }
 renderChoice(false);
 // arrival (d, e): the text waits for its font (no fallback flash), then the headline rises in and the tiles follow
@@ -140,7 +141,7 @@ function loadPlayer() {
       score, audio,
       onTick: tick, onEvent: onEvent, onFinish: finish, onExit: exitEarly, gather: !!VAR.y,
     });
-    body.classList.add("gl-on"); body.dataset.tier = player.tier;
+    body.classList.add("gl-on"); body.dataset.tier = player.tier; if (VAR.y) sphereUp(body.classList.contains("sphere-up"));
     if (VAR.worlds) player.setWorld(worldOf(selected), 0);
     if (introOn) player.intro(true);
     return player;
@@ -197,7 +198,7 @@ $("introSkip").addEventListener("click", endIntro);
 function begin(from) {
   hideScreens(); $("intro").hidden = true; closeSave();
   $(START_LBL).textContent = "";
-  body.classList.remove("calm-start");
+  body.classList.remove("calm-start"); sphereUp(false);
   // d, e: start at the session's startAt (1 s before Edvin's first word), fading the sound in over 1 s
   const at0 = !from && VAR.fast ? player.startAt : (from || 0);
   if (!from && VAR.fast && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
@@ -211,7 +212,7 @@ $(START_BTN).addEventListener("click", () => play(0));
 $("againBtn").addEventListener("click", () => play(0));
 let exitAt = 0;
 $("resumeBtn").addEventListener("click", () => play(exitAt));
-$("exitStart").addEventListener("click", () => { showScreen("startScr"); });
+$("exitStart").addEventListener("click", () => { showScreen("startScr"); if (VAR.y) { body.classList.add("calm-start"); sphereUp(true); } });
 
 function tick(at) {
   if (!oneMin && at >= 60) { oneMin = true; track.oneMinute(params()); }
@@ -289,6 +290,30 @@ function exitEarly(at) {
   // d, e: leaving in the first minute often means "not now": offer to save it
   if (VAR.y) { $("exitSave").hidden = false; if (exitAt < 60) openSave("Want to come back to it later?"); }
 }
+
+// ---------- d, e: the sphere whole and smaller, in the free space between the subline and the tiles ----------
+// The room's canvases move and scale as one (the player measures the canvas, so words and rings follow); Start
+// removes the transform, so the sphere grows into its session size from where it was.
+const ROOM = ["silk", "stage"].map($);
+function placeSphere() {
+  if (!VAR.y) return;
+  const up = body.classList.contains("sphere-up");
+  if (!up) { ROOM.forEach((el) => { el.style.transform = ""; }); return; }
+  const top = $("ySub").getBoundingClientRect().bottom, bottom = $("choicesY").getBoundingClientRect().top;
+  if (!(bottom > top)) return;
+  const W = innerWidth, H = innerHeight, U = Math.min(W, H * .5625), cy0 = H / 2 - .1 * U;
+  const r = .20 * U, space = bottom - top, s = Math.max(.55, Math.min(1, (space - 24) / (2 * r))), cy = (top + bottom) / 2;
+  // scale about the canvas centre (so the player's own geometry, measured from the canvas box, stays exact)
+  const ty = cy - H / 2 - s * (cy0 - H / 2);
+  ROOM.forEach((el) => { el.style.transformOrigin = "50% 50%"; el.style.transform = `translateY(${ty.toFixed(1)}px) scale(${s.toFixed(3)})`; });
+}
+function sphereUp(on) {
+  if (!VAR.y) return;
+  body.classList.toggle("sphere-up", on); placeSphere();
+  // keep the player's measurements in step while the transform eases (about 1 s)
+  const t0 = performance.now(); const step = () => { if (player && player.relayout) player.relayout(); if (performance.now() - t0 < 1300) requestAnimationFrame(step); }; requestAnimationFrame(step);
+}
+addEventListener("resize", placeSphere);
 
 // ---------- save for later (d, e): the app, a reminder, or the link ----------
 const inApp = /Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Bytedance|Snapchat|LinkedInApp/i.test(navigator.userAgent);

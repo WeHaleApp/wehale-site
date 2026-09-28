@@ -39,4 +39,4 @@ export const DAYTIME_ENDS = 18;
 
 // The landing test (docs/breathe/LANDING.md): which start screen a visitor without ?v= sees. "0" is the original.
 // Every event carries v, so the variants can be compared once traffic runs.
-export const DEFAULT_VARIANT = "c";   // the lead's pick (28 Sep); A/B against ?v=a, the original is ?v=0
+export const DEFAULT_VARIANT = "d";   // the lead's pick after Isak's review (28 Sep); c, a, e and the original (0) stay reachable

@@ -246,7 +246,9 @@ body[data-v="d"] #startScr, body[data-v="e"] #startScr { padding-top: calc(env(s
 .ylede h1 { font-size: 32px !important; line-height: 1.12 !important; margin: 0 0 6px !important; }
 .ysub { font-size: 17px !important; color: var(--text) !important; font-weight: 500; }
 /* the room behind the start screen: dimmer and softer, still breathing; the detail comes back with the session */
-#silk { transition: opacity 1.6s ease, filter 1.2s ease; }
+#silk { transition: opacity 1.6s ease, filter 1.2s ease, transform 1s var(--ease-enter); }
+#stage { transition: transform 1s var(--ease-enter); }
+@media (prefers-reduced-motion: reduce) { #silk, #stage { transition: opacity .3s, transform .3s; } }
 body.calm-start #silk { filter: brightness(.55) saturate(.85); }   /* no blur: a full-screen blur costs frames on mid-range phones */
 @media (prefers-reduced-motion: reduce) { #silk { transition: opacity .2s; } }
 .tiles { display: grid; gap: 8px; margin-bottom: 14px; }
@@ -335,3 +337,15 @@ body.arrived .yact > :not(.tiles) { animation-delay: .46s; }
 .sopt span { display: grid; gap: 2px; min-width: 0; }
 .sdone { margin: 6px 2px 2px; padding: 10px 14px; border-radius: 12px; background: rgba(69, 181, 160, .16); color: #bfeee4; font: 600 14px/1.35 var(--font); }
 .sdone.pop { animation: rise .35s var(--ease-enter) both; }
+
+/* d, e: room for the whole sphere between the subline and the tiles */
+@media (max-height: 700px) {
+  body[data-v="d"] .tile { min-height: 54px; padding: 7px 14px; } body[data-v="d"] .tile .orb { width: 30px; height: 30px; }
+  body[data-v="d"] .tile b { font-size: 16px; } body[data-v="d"] .tile small { font-size: 13.5px; }
+  body[data-v="d"] #startScr .savebtn, body[data-v="e"] #startScr .savebtn { min-height: 42px; padding: 9px; margin-top: 6px; }
+  body[data-v="d"] .ysafe { margin-top: 6px !important; }
+  body[data-v="d"] #startScr, body[data-v="e"] #startScr { padding-top: calc(env(safe-area-inset-top, 0px) + 50px); }
+  body[data-v="e"] .tile { aspect-ratio: auto; padding: 10px 4px 9px; gap: 5px; } body[data-v="e"] .tile .orb { width: 34px; height: 34px; }
+  body[data-v="e"] .tile small { font-size: 12.5px; }
+}
+body[data-v="e"] #startScr { overflow: hidden; }
