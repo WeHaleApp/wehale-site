@@ -32,12 +32,13 @@ const VARIANTS = {
   // f: the landing loop's variant (docs/breathe/landing-loop/LOG.md), built on d one judged change at a time
   // Each loop change is a flag, so a change that isn't kept is switched off, not lost (LOG.md says which and why).
   f: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "under",
-    does: true, sub: true, feather: true },
+    does: true, sub: true, feather: true, adOrb: false, moment: true },
 };
 const V = VARIANTS[Q.get("v")] ? Q.get("v") : (VARIANTS[DEFAULT_VARIANT] ? DEFAULT_VARIANT : "0");
 const VAR = VARIANTS[V];
 body.dataset.v = V;
 if (VAR.does) body.classList.add("f-does");
+if (VAR.moment) body.classList.add("f-moment");   // the chosen session is the big card; the others stay small until tapped
 if (VAR.feather) body.classList.add("f-feather");   // the scaled-down room fades out at its edges (no visible canvas rectangle)
 // message match: ?h=<hook> echoes the ad's first line (variants a, b, c) and picks its session
 const HOOK_ID = (VAR.x || VAR.y) && HOOKS.hooks[Q.get("h") || ""] ? Q.get("h") : null;
@@ -65,7 +66,11 @@ body.dataset.wanted = wanted;
 const LAY = VAR.y ? "Y" : VAR.x ? "X" : "";
 const START_BTN = "startBtn" + LAY, START_LBL = "startLbl" + LAY;
 const choiceEls = [...document.querySelectorAll(VAR.y ? ".tile" : VAR.x ? ".chip" : ".choice")];
-const worldOf = (slug) => (VAR.worlds && bySlug(slug) && bySlug(slug).world) || "ember";
+// f (adOrb): every ad ends on the warm amber orb, so the page arrives in that world and takes on the session's colour
+// about 1.3 s later (or at the first tap on a tile)
+let holdWorld = VAR.adOrb ? "ember" : null;
+const worldOf = (slug) => holdWorld || (VAR.worlds && bySlug(slug) && bySlug(slug).world) || "ember";
+function releaseWorld() { if (!holdWorld) return; holdWorld = null; if (player) player.setWorld(worldOf(selected), 1.4); else body.dataset.world = worldOf(selected); }
 function renderChoice(fade) {
   const s = bySlug(selected);
   choiceEls.forEach((el) => el.setAttribute("aria-checked", String(el.dataset.slug === selected)));
@@ -78,6 +83,7 @@ function renderChoice(fade) {
 }
 choiceEls.forEach((el) => el.addEventListener("click", () => {
   if (el.dataset.ready !== "1") { $(START_LBL).textContent = bySlug(el.dataset.slug).title + " is coming soon."; return; }
+  if (holdWorld) holdWorld = null;
   if (selected !== el.dataset.slug) { selected = el.dataset.slug; renderChoice(true); prefetchScore(selected); showOfferAtStart(); }
   $(START_LBL).textContent = "";
   track.picked(params());
@@ -117,7 +123,7 @@ if (VAR.y) {
 renderChoice(false);
 // arrival (d, e): the text waits for its font (no fallback flash), then the headline rises in and the tiles follow
 if (VAR.y) {
-  let shown = false; const arrive = () => { if (shown) return; shown = true; body.classList.add("arrived"); };
+  let shown = false; const arrive = () => { if (shown) return; shown = true; body.classList.add("arrived"); if (holdWorld) setTimeout(releaseWorld, 1300); };
   try { Promise.all(["500 32px 'Nunito Sans'", "700 18px 'Nunito Sans'"].map((f) => document.fonts.load(f))).then(arrive, arrive); } catch (_) { arrive(); }
   setTimeout(arrive, 700);   // never hold the page for a slow font
 }
@@ -168,6 +174,7 @@ async function ready() {
   if (playerSlug !== selected) { const sc = await prefetchScore(selected); player.setScore(sc); playerSlug = selected; if (VAR.worlds) player.setWorld(worldOf(selected), 0); }
 }
 async function play(from) {
+  releaseWorld();
   const s = bySlug(selected); if (!s || !s.ready) return;
   const src = audioSrc(selected);
   if (!audio.src.endsWith(src)) { audio.src = src; audio.preload = "auto"; }
@@ -252,7 +259,7 @@ function showScreen(id) {
   hideScreens(); $(id).classList.remove("gone"); $(id).removeAttribute("aria-hidden"); $("goal").hidden = true;
   const h = [...$(id).querySelectorAll("h1")].find((x) => x.offsetParent !== null); if (h) { h.setAttribute("tabindex", "-1"); try { h.focus({ preventScroll: true }); } catch (_) {} }
 }
-function setTitles() { document.querySelectorAll("[data-title]").forEach((el) => { el.textContent = bySlug(selected).title; }); }
+function setTitles() { document.querySelectorAll("[data-title]").forEach((el) => { el.textContent = VAR.does ? bySlug(selected).choice : bySlug(selected).title; }); }
 function wireApp(el, link, tapParams) {
   if (!link) { el.hidden = true; return; }
   el.hidden = false; el.href = link;
@@ -263,7 +270,7 @@ async function finish() {
   if (finished) return; finished = true;
   setTitles();
   const s = bySlug(selected);
-  $("endNext").textContent = s.next_en;
+  $("endNext").textContent = (VAR.moment && s.next_f_en) || s.next_en;
   // the offer: read (or the built-in file), draw the arm once; standard copy whenever nothing is live
   $("endOffer").textContent = pick(STANDARD, "copy", LANG);
   $("endCode").hidden = true;
@@ -329,6 +336,11 @@ const savedUrl = (slug) => location.origin + "/breathe?s=" + slug + "&src=saved"
 const pad = (n) => String(n).padStart(2, "0");
 const calStamp = (d) => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(d.getHours()) + pad(d.getMinutes()) + "00";
 function reminderTime(slug) {   // the next 08:00 for Wake up, else the next 20:00, in the visitor's own time
+  if (VAR.moment) {   // f: later today, in two hours (before 21:00), else tomorrow at this time
+    const n = new Date(), t = new Date(n.getTime() + 2 * 3600000);
+    if (t.getHours() >= 7 && t.getHours() < 21 && t.getDate() === n.getDate()) return { t, label: "Remind me in 2 hours" };
+    const m = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, n.getHours(), n.getMinutes() < 30 ? 0 : 30, 0); return { t: m, label: "Remind me tomorrow at " + pad(m.getHours()) + ":" + pad(m.getMinutes()) };
+  }
   const h = slug === "wake-up" ? 8 : 20, d = new Date(), t = new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, 0, 0);
   const today = t > d; if (!today) t.setDate(t.getDate() + 1);
   return { t, label: slug === "wake-up" ? (today ? "Remind me this morning" : "Remind me tomorrow morning") : (today ? "Remind me tonight" : "Remind me tomorrow evening") };

@@ -62,3 +62,50 @@ is kept only if the total rises and no score drops.
 - Judge mean 119.5 -> 123.5, no criterion down a full point; Start from all four in both passes.
 - Note found here: the three `score.json` files with `startAt` (Edvin 1 s after Start) were built locally but never
   committed, so the preview still started every session at 0:00 (Reset's first word at 4.8 s). Committed with this.
+
+### 4. Retry of 1 + 2 on top of 3 - NOT KEPT
+- Change: the `does` and `sub` flags on again, with a sharper Wake up line ("Fast breaths, then a long hold") and the
+  keepup line "About 50 fast breaths in half a minute. 6 minutes with Edvin, free." (the breath of fire runs about
+  29 s at 0.51 s a breath, so about 57). The judge kit now carries every person's copy, not only foggy's.
+- Checks: all pass.
+- Judge mean 123.5 -> 124.5, choice up (challenger 2 -> 3, foggy 2.5 -> 4), but challenger honesty 4.5 -> 3.5 again:
+  one judge read "50 fast breaths in half a minute" as hype. Not kept; flags off.
+- Note: the draft `night` hook line ("Lights off. Mind still on.") lives in the hook data since 2, so from 3 on the
+  switchoff journey shows it as its headline in d and f alike. No ad links to it yet.
+
+### 5. Arrive in the ad's amber world, take on the session's colour 1.3 s later - NOT KEPT
+- Change (`adOrb`): every ad ends on the amber orb, so the room arrived as Ember for every session and cross-faded
+  (1.4 s) to Water or Night 1.3 s after the words were in.
+- Checks: all pass (56.8-57.5 fps, 6-8 dropped frames at 4x throttle; the extra cross-fade costs a little).
+- Judge mean 123.5 -> 115.5: the judges saw the orb "visibly swap" at about 3 s ("then a grey moon swap"); switchoff
+  wants the night palette from 0 s. Clearly worse; flag off.
+
+### 6. Frame 0 is an orb like the ad's, in the session's colour; Start never looks greyed - NOT KEPT
+- Change: an inline script placed the CSS poster's orb (a disc with a bright rim, drawn like the ad's last frame, in
+  Ember, Water or Night) where the sphere will sit, before first paint; words and buttons reach full opacity at 35 %
+  of their rise, so Start isn't a grey pill at 0.8 s.
+- Checks: all pass (Lighthouse 99 / 99).
+- Judge mean 123.5 -> 118.0 (foggy adMatch 5 -> 4, switchoff choice 4 -> 3). The judges still read Reset's teal and
+  Wind down's moon as "not the ad's orb", and one flagged the moon's texture as a blotch. Reverted (the script is
+  removed; its CSS is inert).
+- Three iterations in a row without a keep (4, 5, 6): the plateau rule. Next is one bigger, different move.
+
+### 7. The bigger move: the page fits the person's moment - KEPT, and f is the default
+- Change (`moment`, with `does` and `sub` on again):
+  - the chosen session is the big card (orb, name, what it does, 6 min); the other two are slim rows that grow into the
+    big card when tapped. The sphere gets the space the rows give back.
+  - tile lines say what the session does, not when ("Fast breaths, then a long hold" / "A slow pause between things"
+    / "Long exhales before sleep"); one name per session on the tile, Start, player title, save sheet and end screen
+    ("You just did Wake up.").
+  - the line under the ad's headline follows the ad (`sub_en`): "Take 6 minutes with Edvin first. Free, no app
+    needed." for parked; "Fast breaths, then a long hold. 6 minutes with Edvin, free." for keepup (no numbers after 4).
+  - save for later offers "Remind me in 2 hours" (before 21:00), else "tomorrow at <this time>".
+  - end screen: a darker ground under the words so the headline doesn't sit on the orb; next-time lines without a
+    time of day (`next_f_en`). At night the Start pill is a softer cream.
+- Checks: all pass (Lighthouse 94 / 94; 56.7-57.2 fps, 7-8 dropped frames at 4x throttle; contrast min 8.3:1 start,
+  7.9:1 sheet; Edvin 1.08-1.22 s, Wind down 0.41 s; no tap target under 44 px; nothing clipped; CLS 0).
+- Judge mean 123.5 -> 127.0 (vs d 119.5), no criterion down a full point, Start from all four in both passes.
+  Passes disagreed widely (115 and 139).
+- After judging, two small fixes: "6 min" no longer wraps in the big card, and Wake up's next-time line is
+  "Next time you need a lift" (a judge saw foggy's "slump" on the challenger's end screen).
+- Halfway milestone (m1).

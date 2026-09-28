@@ -39,7 +39,7 @@ All events go to the pixel only after Accept and only with an ID. Each has a fre
 
 - `session`: `wake-up`, `unravel` or `soft-reboot`.
 - `arm`: the offer arm (`A`, `B`) once one is assigned, otherwise `none`. *`assignment_id` only then.
-- `v`: the landing variant (`0`, `a`, `b`, `c`; LANDING.md). `h`: the ad hook id, when the visitor came with `?h=`.
+- `v`: the landing variant (`0`, `a` to `f`; LANDING.md, landing-loop/LOG.md). `h`: the ad hook id, when the visitor came with `?h=`.
 - `source`: `utm_source`, else `meta` (fbclid) or `tiktok` (ttclid), else the referrer's host, else `direct`.
 - No personal data: no email, phone, name, account id or free text.
 

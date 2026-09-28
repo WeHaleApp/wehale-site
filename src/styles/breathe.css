@@ -358,3 +358,24 @@ body[data-v="f"] #startScr .savebtn { min-height: 46px; }
 /* f: while the room is scaled down behind the start screen, its edges fade out (no hard canvas rectangle) */
 body.f-feather.sphere-up #silk, body.f-feather.growing #silk {
   -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); }
+/* f (moment): the chosen session is the big card, the other two are small rows; tapping one makes it the big one */
+body.f-moment .tile { transition: background .3s, border-color .3s, min-height .35s var(--ease-enter), padding .35s var(--ease-enter), transform .15s; }
+body.f-moment .tile .orb { transition: width .35s var(--ease-enter), height .35s var(--ease-enter); }
+body.f-moment .tile[aria-checked="false"] { min-height: 50px; padding: 6px 16px; }
+body.f-moment .tile[aria-checked="false"] .orb { width: 26px; height: 26px; }
+body.f-moment .tile[aria-checked="false"] small { display: none !important; }
+body.f-moment .tile[aria-checked="false"] b { font-size: 16px; font-weight: 600; }
+body.f-moment .tile[aria-checked="false"] em { opacity: .8; }
+body.f-moment .tile[aria-checked="true"] { min-height: 84px; padding: 14px 18px; }
+body.f-moment .tile[aria-checked="true"] .orb { width: 48px; height: 48px; }
+body.f-moment .tile[aria-checked="true"] b { font-size: 20px; }
+body.f-moment .tile[aria-checked="true"] small { font-size: 15px; }
+body.f-moment .tiles { gap: 6px; }
+@media (max-height: 700px) {
+  body.f-moment .tile[aria-checked="true"] { min-height: 70px; padding: 10px 16px; } body.f-moment .tile[aria-checked="true"] .orb { width: 40px; height: 40px; }
+  body.f-moment .tile[aria-checked="false"] { min-height: 46px; padding: 4px 14px; } }
+/* f (moment): at night the Start pill is softer; the end screen's words sit on a darker ground, clear of the orb */
+body.f-moment[data-selected="soft-reboot"] .starty { background: #d9d1c7; }
+body.f-moment #endScr { background: linear-gradient(to top, rgba(8, 4, 2, .96) 0%, rgba(8, 4, 2, .9) 50%, rgba(8, 4, 2, .35) 66%, rgba(8, 4, 2, 0) 78%); }
+body.f-moment #endScr .inner { padding-top: 34vh; }
+body.f-moment .tile em { white-space: nowrap; }
