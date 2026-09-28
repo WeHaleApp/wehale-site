@@ -380,3 +380,16 @@ body.f-moment #endScr { background: linear-gradient(to top, rgba(8, 4, 2, .96) 0
 body.f-moment #endScr .inner { padding-top: 34vh; }
 body.f-moment .tile em { white-space: nowrap; }
 .sopt [data-guide] { display: inline !important; }
+/* f (own): every row keeps a short line, so the other sessions are real options */
+body.f-own.f-moment .tile[aria-checked="false"] small.rf { display: block !important; font-size: 13px; color: var(--t2); }
+body.f-own.f-moment .tile[aria-checked="false"] { min-height: 58px; padding: 7px 16px; }
+body.f-own.f-moment .tile[aria-checked="false"] .orb { width: 30px; height: 30px; }
+@media (max-height: 700px) { body.f-own.f-moment .tile[aria-checked="false"] { min-height: 52px; padding: 5px 14px; } body.f-own.f-moment .tile[aria-checked="false"] small { font-size: 12.5px; } }
+/* f (own): at night, Start is a quiet night-blue pill, not the brightest thing in a dark bedroom */
+body.f-own.f-moment[data-selected="soft-reboot"] .starty { background: #2a3160; border-color: #6f7cc0; color: #eef1ff; }
+body.f-own.f-moment[data-selected="soft-reboot"] #startScr .savebtn { border-color: rgba(200, 208, 245, .3); }
+/* f (own): the challenger's edge: the room at full contrast, a bolder headline, the challenge line in amber */
+body.f-own.f-edge.calm-start #silk { filter: brightness(1.05) contrast(1.2) saturate(1.15); }
+body.f-own.f-edge .ylede h1 { font-weight: 800 !important; letter-spacing: -.01em; }
+body.f-own.f-edge .ysub { color: var(--accent) !important; font-weight: 700; text-shadow: 0 0 3px rgba(8, 5, 3, .9), 0 0 12px rgba(8, 5, 3, .8); }
+body.f-own.f-edge .tile[aria-checked="true"] { border-color: #ffb46b; box-shadow: 0 0 0 1px rgba(255, 180, 107, .4), 0 0 28px rgba(255, 150, 70, .25); }

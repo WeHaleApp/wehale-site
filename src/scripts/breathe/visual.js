@@ -597,6 +597,11 @@ void main(){ vec2 q=(gl_FragCoord.xy-uC)/uU; float d=length(q), px=1./uU;
     float lam=.55+.45*dot(n,normalize(vec3(-.25,.3,.92)));
     c=vec3(.62,.65,.74)*(.55+.45*smoothstep(.35,.75,m)-cr)*lam*pow(mu,.18)*(.55+.45*uGlow)*disc;
     c+=uNearC*(.9*rim+.3*halo)*(.7+.4*uGlow);
+  } else if(uKind>3.5){    // soft moon (landing f): a smooth pearl in night blue, no craters
+    float m=noise(u*1.1+vec2(3.,1.))*.6+noise(u*2.2+7.)*.4;
+    float lam=.62+.38*dot(n,normalize(vec3(-.25,.3,.92)));
+    c=vec3(.70,.75,.93)*(.82+.18*m)*lam*pow(mu,.22)*(.55+.45*uGlow)*disc;
+    c+=uNearC*(1.1*rim+.35*halo)*(.7+.45*uGlow);
   } else {                 // lantern
     float fl=fbm(u*2.6+vec2(-uTime*.04,uTime*.03));
     c=uFar*(.06+.28*pow(mu,1.6)*(.6+.7*uGlow))*(.7+.6*fl)*disc;
@@ -731,7 +736,7 @@ function createTideField(gl, prog, VS, opts = {}) {
     gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.useProgram(pRim.p);
     const u = pRim.u, f = (n, x) => u[n] && gl.uniform1f(u[n], x);
     gl.uniform2f(u.uC, cx, cy); f('uU', U); f('uR', R * 1.005); f('uGlow', L.glow); f('uTime', st.et || 0); f('uLine', mode === 'blend' ? 1 : 0);
-    f('uKind', world.centre || 0); f('uB', Math.min(1, st.bs));
+    f('uKind', (world.centre === 2 && typeof window !== 'undefined' && window.__breatheSoftMoon) ? 4 : (world.centre || 0)); f('uB', Math.min(1, st.bs));
     gl.uniform3fv(u.uFar, FAR); gl.uniform3fv(u.uNearC, NEAR);
     gl.drawArrays(gl.TRIANGLES, 0, 3); gl.disable(gl.BLEND);
   }

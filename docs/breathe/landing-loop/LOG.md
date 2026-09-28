@@ -140,3 +140,43 @@ People who already breathed a round with the guide in a 45-60 s ad: the subline 
 session is 6 minutes with <guide>, free.", Start reads "Continue with Edvin" (or Philip), and playback starts after
 the session's introduction (`web_continue_f`: The Wake Up 39.86 s, first words "We'll start with four seconds in";
 Unravel 39.04 s; The Soft Reboot 48.38 s). Tested for the challenger (keepup): the first word 1.1-1.2 s after the tap.
+
+### 9. Frame 0 glows: an orb in the hook's colour world, before first paint - NOT KEPT
+- Change (`glow`): each hook gets a `world` (the ads loop's plan: coffee and keepup ember, email and parked water,
+  night night). An inline script, before first paint, sets the world and draws a CSS orb with a bright rim where the
+  sphere will sit; words reach full opacity early. Found and fixed on the way: the hook's words went in after first
+  paint and shifted the tiles (Lighthouse CLS 0.009-0.013), so the start screen is hidden until the words are final
+  and f's layout classes are set before first paint. CLS 0 since.
+- Judge mean 131.0 -> 123.5 (foggy arrival 4 -> 3, challenger choice 3 -> 2). Every judge: the bright ringed orb
+  "dims into a dull brown disc by 0.8 s" (the live room behind the start screen is dimmed to 55 %). Reverted, and
+  retried with the room lit in 11.
+
+### 10. The challenge on the page: card, subline and first words - NOT KEPT
+- Change (`edge`): with `?h=keepup` the Wake up card says "Three rounds, each one harder", the subline "Each round
+  builds, then a long hold. 6 minutes with Edvin, free." and playback starts at 9.6 s: "We'll move through three
+  breathing techniques, each one building in intensity." (both his words).
+- Judge mean 131.0 -> 129.5; challenger choice stays 3.0 ("visually identical to the foggy page"). Flag off.
+
+### 11. Frame 0 glows (retry), with the room kept lit - NOT KEPT
+- Change: 9's glowing orb before first paint, plus the start screen's room at 90 % brightness instead of 55 %, so the
+  orb doesn't dim after the live room takes over.
+- Checks: all pass (Lighthouse 94 / 94, CLS 0, 58-59 fps).
+- Judge mean 131.0 -> 125.0 (challenger honesty 5 -> 4, switchoff arrival 4 -> 3: "the bright moon and the cream
+  button are glaring in the dark"). Reverted.
+- 9, 10, 11: three in a row without a keep, the plateau rule again. 12 is the bigger move; after it, stop.
+
+### 12. The bigger move: each person gets their own page - KEPT
+- Change (`own`, with `edge` and `softMoon` on):
+  - every row keeps its one line (unselected rows were bare names: "the choice feels defaulted");
+  - the challenger's page (`?h=keepup`): the room at full contrast, a bolder headline, the challenge in amber ("Each
+    round builds, then a long hold. 6 minutes with Edvin, free."), the card "Three rounds, each one harder", and
+    Edvin starts at "We'll move through three breathing techniques, each one building in intensity" (10.1 s; at 9.6 s
+    the previous caption still showed);
+  - at night, Start is a quiet night-blue pill; Wind down's centre is a smooth pearl instead of the cratered moon
+    (a new orb kind in the rim shader, f only).
+- Checks: all pass (Lighthouse 93; 57.6-58.4 fps, 4-6 dropped frames at 4x throttle; CLS 0; contrast min 4.9:1, the
+  amber challenge line on the brighter room, with a dark halo; 44 px targets; nothing clipped); the voice 0.6-1.35 s
+  after Start.
+- Judge mean 131.0 -> 133.5 (avg 4.17), no drops; Start from all four in both passes; challenger 3.88 -> 4.25.
+- The plateau move lifted the score. With 12 iterations and the rest of the weak points on the ads' side, the loop
+  stops here for m2.

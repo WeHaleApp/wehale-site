@@ -35,14 +35,16 @@ const VARIANTS = {
   // f: the landing loop's variant (docs/breathe/landing-loop/LOG.md), built on d one judged change at a time
   // Each loop change is a flag, so a change that isn't kept is switched off, not lost (LOG.md says which and why).
   f: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "under",
-    does: true, sub: true, feather: true, adOrb: false, moment: true, openings: true },
+    does: true, sub: true, feather: true, adOrb: false, moment: true, openings: true, softMoon: true, edge: true, glow: false, own: true },
 };
 const V = VARIANTS[Q.get("v")] ? Q.get("v") : (VARIANTS[DEFAULT_VARIANT] ? DEFAULT_VARIANT : "0");
 const VAR = VARIANTS[V];
 body.dataset.v = V;
 if (VAR.does) body.classList.add("f-does");
 if (VAR.moment) body.classList.add("f-moment");   // the chosen session is the big card; the others stay small until tapped
-if (VAR.feather) body.classList.add("f-feather");   // the scaled-down room fades out at its edges (no visible canvas rectangle)
+if (VAR.softMoon) window.__breatheSoftMoon = true;   // Wind down's centre: a smooth pearl instead of the cratered moon
+if (VAR.feather) body.classList.add("f-feather");
+if (VAR.own) body.classList.add("f-own");   // each person's own page: every row keeps its line, a dim night Start, the challenger's edge   // the scaled-down room fades out at its edges (no visible canvas rectangle)
 // message match: ?h=<hook> echoes the ad's first line (variants a, b, c) and picks its session
 const HOOK_ID = (VAR.x || VAR.y) && HOOKS.hooks[Q.get("h") || ""] ? Q.get("h") : null;
 const HOOK = HOOK_ID ? HOOKS.hooks[HOOK_ID] : null;
@@ -125,11 +127,22 @@ if (VAR.x) {
 if (VAR.y) {
   $("startScr").setAttribute("aria-labelledby", "startHy");
   if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").dataset.tpl = (VAR.sub && HOOK.sub_en) || "Breathe with {guide}. 6 minutes, free."; }
+  if (VAR.own && HOOK.edge_sub_en) body.classList.add("f-edge");
+  if (VAR.edge && HOOK.card_en) { const t = document.querySelector(`#choicesY .tile[data-slug="${HOOK.session}"] .rf`); if (t) t.textContent = HOOK.card_en; }
+  if (VAR.edge && HOOK.edge_sub_en) $("ySub").dataset.tpl = HOOK.edge_sub_en;
   if (SEEN) $("ySub").dataset.tpl = "That was one round. The whole session is 6 minutes with {guide}, free.";
   body.classList.add("calm-start");   // a dimmer, softer room behind the start screen; detail returns with the session
   requestAnimationFrame(() => sphereUp(true));
 }
 renderChoice(false);
+// f (glow): the page's words are final now; move the poster's orb to where the sphere will sit and show the words
+function placePoster() {
+  if (!body.classList.contains("f-poster")) return;
+  const a = $("ySub").getBoundingClientRect().bottom, c = $("choicesY").getBoundingClientRect().top, U = Math.min(innerWidth, innerHeight * .5625), r = .2 * U;
+  if (!(c > a)) return; const sc = Math.max(.55, Math.min(1, (c - a - 24) / (2 * r)));
+  body.style.setProperty("--orb-y", ((a + c) / 2).toFixed(0) + "px"); body.style.setProperty("--orb-r", (r * sc).toFixed(0) + "px");
+}
+placePoster(); body.classList.add("f-ready");
 // arrival (d, e): the text waits for its font (no fallback flash), then the headline rises in and the tiles follow
 if (VAR.y) {
   let shown = false; const arrive = () => { if (shown) return; shown = true; body.classList.add("arrived"); if (holdWorld) setTimeout(releaseWorld, 1300); };
@@ -223,7 +236,7 @@ function begin(from) {
   body.classList.remove("calm-start"); sphereUp(false);
   if (VAR.feather) { clearTimeout(begin.ft); body.classList.add("growing"); begin.ft = setTimeout(() => body.classList.remove("growing"), 1100); }
   // d, e: start at the session's startAt (1 s before Edvin's first word), fading the sound in over 1 s
-  const ws = VAR.openings && bySlug(selected) && bySlug(selected).web_start_f;   // f: skip an opening line that doesn't fit the moment
+  const ws = VAR.openings && (VAR.edge && HOOK && HOOK.start_f && HOOK.session === selected ? HOOK.start_f : bySlug(selected) && bySlug(selected).web_start_f);   // f: skip an opening line that doesn't fit the moment
   const wc = SEEN && bySlug(selected) && bySlug(selected).web_continue_f;
   const at0 = !from && VAR.fast ? (wc > 0 ? wc : ws != null && ws > 0 ? ws : player.startAt) : (from || 0);
   if (!from && VAR.fast && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
