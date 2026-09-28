@@ -84,8 +84,11 @@ if (!VAR.x && fromAd && bySlug(fromAd).ready) {
 if (VAR.x) {
   $("startScr").setAttribute("aria-labelledby", "startHx");
   if (HOOK) {   // the ad's own line first; the page's description follows as one line
+    // message match: the ad's line is the headline; what this is moves to the subline
     body.classList.add("hooked");
-    $("hookLine").hidden = false; $("hookLine").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en;
+    $("startHx").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en;
+    $("ledeSub").textContent = "A 6-minute guided breathing session with Edvin.";
+    $("ledeSub2").hidden = false;
   }
   // skip the choice when the ad chose the session, and always in c: the picker becomes a small link
   if (!VAR.picker || (fromAd && bySlug(fromAd).ready)) {

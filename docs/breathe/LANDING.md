@@ -102,4 +102,4 @@ only the arm that actually gets 30 days may see it (OFFER-CONFIG §5).
 
 Any of a, b or c with `?h=coffee` (hooks in `src/data/breathe-hooks.json`, drafts) puts the ad's line first and
 skips the choice. Events carry `v` (and `h`). The default for visitors without `?v=` is `DEFAULT_VARIANT` in
-`config.js`, "0" today.
+`config.js`: "c" (the lead's pick, 28 Sep), A/B against `?v=a`; the original is `?v=0`.
