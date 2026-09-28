@@ -379,3 +379,4 @@ body.f-moment[data-selected="soft-reboot"] .starty { background: #d9d1c7; }
 body.f-moment #endScr { background: linear-gradient(to top, rgba(8, 4, 2, .96) 0%, rgba(8, 4, 2, .9) 50%, rgba(8, 4, 2, .35) 66%, rgba(8, 4, 2, 0) 78%); }
 body.f-moment #endScr .inner { padding-top: 34vh; }
 body.f-moment .tile em { white-space: nowrap; }
+.sopt [data-guide] { display: inline !important; }

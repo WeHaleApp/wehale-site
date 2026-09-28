@@ -3,8 +3,8 @@
   "standard": {
     "copy_en": "Everyone gets a 14-day Welcome Period with the full library, then three sessions stay free forever.",
     "copy_sv": "Alla får en välkomstperiod på 14 dagar med hela biblioteket. Sedan är tre sessioner gratis för alltid.",
-    "app_line_en": "In the app, Edvin guides you with your eyes closed: the same voice and the same rhythm.",
-    "app_line_sv": "I appen guidar Edvin dig med slutna ögon: samma röst och samma rytm."
+    "app_line_en": "In the app, {guide} guides you with your eyes closed: the same voice and the same rhythm.",
+    "app_line_sv": "I appen guidar {guide} dig med slutna ögon: samma röst och samma rytm."
   },
   "offer": {
     "id": "ws-oct-01",

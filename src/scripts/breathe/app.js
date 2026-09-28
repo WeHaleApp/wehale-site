@@ -13,6 +13,9 @@ const SESSIONS = (window.__BREATHE_SESSIONS || SESSIONS_FILE.sessions);
 const bySlug = (s) => SESSIONS.find((x) => x.slug === s);
 const LANG = (Q.get("lang") || document.documentElement.lang || "en").slice(0, 2) === "sv" ? "sv" : "en";
 const audio = $("round");
+// the guide's name follows the chosen session (The Soft Reboot is Philip; Unravel and The Wake Up are Edvin)
+const guideOf = (slug) => (bySlug(slug) && bySlug(slug).narrator) || "Edvin";
+const fillGuide = (t, slug) => String(t || "").replace(/\{guide\}/g, guideOf(slug || selected));
 const body = document.body;
 
 // ---------- the landing test: ?v=0 (the original), a, b, c. Every event carries v. ----------
@@ -78,6 +81,8 @@ function renderChoice(fade) {
   $(START_BTN).setAttribute("aria-label", (LAY ? "Start " : "Play ") + s.title);
   $(START_BTN).disabled = !s.ready;
   body.dataset.selected = selected;
+  document.querySelectorAll("[data-guide]").forEach((el) => { el.textContent = guideOf(selected); });
+  document.querySelectorAll("[data-tpl]").forEach((el) => { el.textContent = fillGuide(el.dataset.tpl); });
   // choosing a session changes the room: a 0.6 s cross-fade in the live field, or the CSS light's colour
   if (VAR.worlds) { if (player) player.setWorld(worldOf(selected), fade ? .6 : 0); else body.dataset.world = worldOf(selected); }
 }
@@ -105,7 +110,7 @@ if (VAR.x) {
     // message match: the ad's line is the headline; what this is moves to the subline
     body.classList.add("hooked");
     $("startHx").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en;
-    $("ledeSub").textContent = "A 6-minute guided breathing session with Edvin.";
+    $("ledeSub").dataset.tpl = "A 6-minute guided breathing session with {guide}.";
     $("ledeSub2").hidden = false;
   }
   // skip the choice when the ad chose the session, and always in c: the picker becomes a small link
@@ -116,7 +121,7 @@ if (VAR.x) {
 }
 if (VAR.y) {
   $("startScr").setAttribute("aria-labelledby", "startHy");
-  if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").textContent = (VAR.sub && HOOK.sub_en) || "Breathe with Edvin. 6 minutes, free."; }
+  if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").dataset.tpl = (VAR.sub && HOOK.sub_en) || "Breathe with {guide}. 6 minutes, free."; }
   body.classList.add("calm-start");   // a dimmer, softer room behind the start screen; detail returns with the session
   requestAnimationFrame(() => sphereUp(true));
 }
@@ -218,7 +223,7 @@ function begin(from) {
   if (!from && VAR.fast && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
   if (!from && VAR.safety === "caption") { const c = $("safeCap"); c.hidden = false; c.classList.remove("out"); setTimeout(() => c.classList.add("out"), 2600); setTimeout(() => { c.hidden = true; }, 3400); }
   const pr = player.start(at0);
-  if (VAR.does) { const s = bySlug(selected); $("ttlK").textContent = "With Edvin · 6 min"; $("ttlT").textContent = s.choice; }   // one name per session
+  if (VAR.does) { const s = bySlug(selected); $("ttlK").textContent = "With " + guideOf(selected) + " · 6 min"; $("ttlT").textContent = s.choice; }   // one name per session
   if (pr && pr.catch) pr.catch(() => { player.exit(); showScreen("startScr"); $(START_LBL).textContent = "Tap start again to turn the sound on."; });
   if (!from) { finished = false; if (!started) { started = true; } track.start(params()); }
   requestWake();
@@ -274,7 +279,7 @@ async function finish() {
   // the offer: read (or the built-in file), draw the arm once; standard copy whenever nothing is live
   $("endOffer").textContent = pick(STANDARD, "copy", LANG);
   $("endCode").hidden = true;
-  $("endAppLine").textContent = pick(STANDARD, "app_line", LANG);
+  $("endAppLine").textContent = fillGuide(pick(STANDARD, "app_line", LANG));
   wireApp($("endApp"), oneLink({ session: selected, completed: true, assignment: null }), () => ({ ...params(), completed: 1 }));
   showScreen("endScr");
   const offer = await loadOffer(selected);
@@ -282,7 +287,7 @@ async function finish() {
   if (assignment) {
     const arm = assignment.armDef;
     $("endOffer").textContent = (LANG === "sv" && arm.copy_sv) || arm.copy_en;
-    if (arm.app_line_en) $("endAppLine").textContent = (LANG === "sv" && arm.app_line_sv) || arm.app_line_en;
+    if (arm.app_line_en) $("endAppLine").textContent = fillGuide((LANG === "sv" && arm.app_line_sv) || arm.app_line_en);
     if (arm.show_code) {
       const code = shortCodeOf(assignment);
       $("endCode").hidden = false;
@@ -299,7 +304,7 @@ function exitEarly(at) {
   const dur = player ? player.dur : 340;
   if (exitAt >= dur - 15) { finish(); return; }          // left during the last goodbye: that counts as finished
   setTitles();
-  $("exitAppLine").textContent = pick(STANDARD, "app_line", LANG);
+  $("exitAppLine").textContent = fillGuide(pick(STANDARD, "app_line", LANG));
   wireApp($("exitApp"), oneLink({ session: selected, completed: false, assignment: null }), () => ({ ...params(), completed: 0 }));
   showScreen("exitScr");
   // d, e: leaving in the first minute often means "not now": offer to save it
@@ -347,9 +352,9 @@ function reminderTime(slug) {   // the next 08:00 for Wake up, else the next 20:
 }
 function openSave(title) {
   const s = bySlug(selected), url = savedUrl(selected), r = reminderTime(selected), end = new Date(r.t.getTime() + 6 * 60000);
-  const name = "Breathe with Edvin: " + s.title + ", 6 min", details = "Your 6-minute session with Edvin: " + url;
+  const g = guideOf(selected), name = "Breathe with " + g + ": " + (VAR.does ? s.choice : s.title) + ", 6 min", details = "Your 6-minute session with " + g + ": " + url;
   $("saveH").textContent = title || "Save it for later";
-  $("saveSub").textContent = VAR.does ? s.choice + " · 6 min with Edvin" : s.choice + " · " + s.title + " · 6 min"; $("saveDone").hidden = true;
+  $("saveSub").textContent = VAR.does ? s.choice + " · 6 min with " + guideOf(selected) : s.choice + " · " + s.title + " · 6 min"; $("saveDone").hidden = true;
   const app = oneLink({ session: selected, completed: false, assignment: null, extra: { af_sub5: "saved" } });
   if (app) { $("saveApp").hidden = false; $("saveApp").href = app; } else $("saveApp").hidden = true;
   $("saveCalT").textContent = r.label;
@@ -377,7 +382,7 @@ $("saveCal").addEventListener("click", () => { saved("calendar"); confirmSave("O
 $("saveIcs").addEventListener("click", () => { saved("ics"); confirmSave("Calendar file ready: open it to add the reminder"); });
 $("saveCopy").addEventListener("click", async () => {
   const url = savedUrl(selected), done = (t) => { $("saveCopyT").textContent = t; };
-  if (navigator.share) { try { await navigator.share({ title: "Breathe with Edvin", text: "A 6-minute session with Edvin, for later.", url }); saved("share"); confirmSave("Link shared"); return; } catch (e) { if (e && e.name === "AbortError") return; } }
+  if (navigator.share) { try { await navigator.share({ title: "Breathe with " + guideOf(selected), text: "A 6-minute session with " + guideOf(selected) + ", for later.", url }); saved("share"); confirmSave("Link shared"); return; } catch (e) { if (e && e.name === "AbortError") return; } }
   let ok = false;
   try { await navigator.clipboard.writeText(url); ok = true; } catch (_) {
     try { const t = document.createElement("textarea"); t.value = url; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(t); t.select(); ok = document.execCommand("copy"); t.remove(); } catch (_) {}
