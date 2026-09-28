@@ -631,7 +631,10 @@ function createTideField(gl, prog, VS, opts = {}) {
     tier: 0, ema: 16, emaT: 0, fire: 0, qz: [0, 0, 0, 0], qs: 0, qz2: [0, 0, 0, 0], qs2: 0, hr: [0, .01, 0] };
   let worldName = TIDE_WORLDS[opts.world] ? opts.world : 'ember', world = TIDE_WORLDS[worldName];
   const CS = typeof window !== 'undefined' && window.__colourScript, arc = CS ? CS.create(worldName) : null;
-  const setWorld = (name) => { if (TIDE_WORLDS[name]) { worldName = name; world = TIDE_WORLDS[name]; if (arc) arc.setWorld(name); } };
+  const setWorld = (name) => { if (TIDE_WORLDS[name]) { worldName = name; world = TIDE_WORLDS[name]; fade = null; if (arc) arc.setWorld(name); } };
+  // a short cross-fade to another world (the /breathe start screen: choosing a session changes the room)
+  let fade = null;
+  const fadeTo = (name, secs = .6) => { if (!TIDE_WORLDS[name] || name === worldName) return; fade = { a: worldName, b: name, t: 0, d: Math.max(.05, secs) }; worldName = name; if (arc) arc.setWorld(name); };
   // the world blend (off by default): a session can travel between worlds, e.g. The Wake Up from Dawn into Ember.
   // A journey is [[t, world], ...]; each change eases over `over` seconds. Numbers interpolate, shape and centre
   // switch half way, the colour arc follows the world it is closest to.
@@ -667,6 +670,7 @@ function createTideField(gl, prog, VS, opts = {}) {
     L.swirl += (hl * .018 * L.sdir * world.swirl - L.swirl) * (1 - Math.exp(-dt / 1.5));
     L.tw += dt * (.6 + .8 * (st.calm || 0));
     const arcEnabled = !arcOff && (typeof window.__arcOn !== 'function' || window.__arcOn());   // the page's "Colour follows the session" toggle
+    if (fade) { fade.t += dt; const u = Math.min(1, fade.t / fade.d), s = u * u * (3 - 2 * u); world = blendWorld(TIDE_WORLDS[fade.a], TIDE_WORLDS[fade.b], s); if (u >= 1) { world = TIDE_WORLDS[fade.b]; fade = null; } }
     if (journey && bc && bc.session) { const [a, b2, u] = journeyAt(bc.at); L.journey = [a, b2, u]; world = blendWorld(TIDE_WORLDS[a], TIDE_WORLDS[b2], u); const nm = u < .5 ? a : b2;
       if (nm !== worldName) { worldName = nm; if (arc) arc.setWorld(nm); } }
     const mods = arc && arcEnabled ? arc.update(dt, bc) : null;
@@ -733,7 +737,7 @@ function createTideField(gl, prog, VS, opts = {}) {
   }
   function dispose() { try { [pSim, pPts, pFade, pAdd, pRim].forEach((q) => gl.deleteProgram(q.p)); S.forEach((s) => { gl.deleteTexture(s.p); gl.deleteTexture(s.v); gl.deleteFramebuffer(s.fb); });
     if (T) T.forEach((x) => { gl.deleteTexture(x.t); gl.deleteFramebuffer(x.fb); }); gl.deleteVertexArray(vPts); } catch (_) {} }
-  return { update, draw, drawSource, dispose, setWorld, setJourney, get worldName() { return worldName; }, get arc() { return arc; }, setQuiet, setHoldLane, get world() { return world; }, L, particles: NW * NW,
+  return { update, draw, drawSource, dispose, setWorld, fadeTo, setJourney, get worldName() { return worldName; }, get arc() { return arc; }, setQuiet, setHoldLane, get world() { return world; }, L, particles: NW * NW,
     get drawn() { return Math.floor(NW * NW * TIERS[L.tier] * world.count); }, f32 };
 }
 

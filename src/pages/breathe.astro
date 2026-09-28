@@ -57,10 +57,10 @@ const description = "A guided breathing session with Edvin, right in your browse
   <div id="flash" aria-hidden="true"></div><svg id="holdRing" viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="48"/><circle class="prg" id="arcP" cx="50" cy="50" r="48" pathLength="100"/></svg><div id="cdn" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div>
   <audio id="round" preload="none" playsinline></audio>
 
-  <!-- 1. Start -->
+  <!-- 1. Start. Two layouts on one page for the landing test (?v=): .v0 is the original, .vx the variants a, b, c -->
   <main class="screen" id="startScr" aria-labelledby="startH">
-    <p class="kick scr-top">Breathwork with Edvin</p>
-    <div class="inner">
+    <p class="kick scr-top v0">Breathwork with Edvin</p>
+    <div class="inner v0">
       <h1 id="startH">What do you need right now?</h1>
       <div class="choices" id="choices" role="radiogroup" aria-labelledby="startH">
         {sessions.map((s) => (
@@ -76,7 +76,41 @@ const description = "A guided breathing session with Edvin, right in your browse
       <span class="startlbl" id="startLbl" aria-live="polite"></span>
       <p class="fine">Headphones help. Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.</p>
     </div>
+
+    <header class="vx lede">
+      <p class="hook" id="hookLine" hidden></p>
+      <h1 id="startHx">A 6-minute guided breathing session with Edvin.</h1>
+      <p class="sub" id="ledeSub">Right here in your browser. Free, no account.</p>
+      <ol class="steps" aria-label="How it works">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10"/></svg><span>Sound on</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8.5" opacity=".45"/></svg><span>Follow the light: it rises as you breathe in</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg><span>About 6 minutes</span></li>
+      </ol>
+    </header>
+    <div class="vx act">
+      <div class="chips" id="choicesX" role="radiogroup" aria-label="Choose a session">
+        {sessions.map((s) => (
+          <button class="chip" type="button" role="radio" data-slug={s.slug} data-world={s.world} data-ready={s.ready ? "1" : "0"}
+            aria-checked={s.slug === first.slug ? "true" : "false"} aria-disabled={s.ready ? "false" : "true"}>
+            <b>{s.choice}</b><small>{s.ready ? s.title : "Coming soon"}</small>
+          </button>
+        ))}
+      </div>
+      <p class="offerstart" id="offerStart" hidden></p>
+      <button class="pill solid block startx" id="startBtnX" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><span>Start <span id="startTitleX">{first.title}</span></span></button>
+      <button class="change" type="button" id="otherBtn" hidden>or choose another session</button>
+      <span class="startlbl" id="startLblX" aria-live="polite"></span>
+      <p class="fine">Guided by Edvin, WeHale co-founder. Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.</p>
+    </div>
   </main>
+
+  <!-- the one breath before Edvin starts (variants b and c) -->
+  <div class="intro" id="intro" hidden aria-live="polite">
+    <p class="intro-sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10"/></svg> Sound on</p>
+    <p class="intro-word" id="introWord"></p>
+    <button class="linkbtn intro-skip" id="introSkip" type="button">Skip</button>
+  </div>
+  <p class="goal" id="goal" hidden></p>
 
   <!-- 2. End (finished) -->
   <section class="screen gone" id="endScr" aria-labelledby="endH">

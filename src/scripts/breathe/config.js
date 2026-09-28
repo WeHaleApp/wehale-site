@@ -36,3 +36,7 @@ export const ARM_KEY = "wehale.breathe.offer.v1";
 // Time-of-day preselect (visitor's local clock): before 11:00 wake-up, 11:00 to 18:00 unravel, after wind-down.
 export const MORNING_ENDS = 11;
 export const DAYTIME_ENDS = 18;
+
+// The landing test (docs/breathe/LANDING.md): which start screen a visitor without ?v= sees. "0" is the original.
+// Every event carries v, so the variants can be compared once traffic runs.
+export const DEFAULT_VARIANT = "0";

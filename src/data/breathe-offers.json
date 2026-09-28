@@ -1,5 +1,5 @@
 {
-  "_about": "Completion offer for wehale.io/breathe, in the shape proposed for GET /public/web-offer (app repo docs/marketing/2026-q4-paid/web-session/OFFER-CONFIG.md). 'standard' is today's truth for everyone and is what the end screen shows whenever no offer is live, the read fails, or it takes over 1.5 s. 'offer' is shown only while status is 'live'; the site then draws one arm per visitor by weight, stores it in localStorage and carries a token in the OneLink. The Swedish lines are drafts for Isak to check. Keep the variant 'draft' until the owner of main confirms the server grants it.",
+  "_about": "Completion offer for wehale.io/breathe, in the shape proposed for GET /public/web-offer (app repo docs/marketing/2026-q4-paid/web-session/OFFER-CONFIG.md). 'standard' is today's truth for everyone and is what the end screen shows whenever no offer is live, the read fails, or it takes over 1.5 s. 'offer' is shown only while status is 'live'; the site then draws one arm per visitor by weight, stores it in localStorage and carries a token in the OneLink. The Swedish lines are drafts for Isak to check. Keep the variant 'draft' until the owner of main confirms the server grants it. start_*/progress_*: shown only in the landing variants a, b and c, only to the arm that has them, only while the offer is live (the arm is then drawn on landing, not at the end screen).",
   "standard": {
     "copy_en": "Everyone gets a 14-day Welcome Period with the full library, then three sessions stay free forever.",
     "copy_sv": "Alla får en välkomstperiod på 14 dagar med hela biblioteket. Sedan är tre sessioner gratis för alltid.",
@@ -10,7 +10,11 @@
     "id": "ws-oct-01",
     "version": 1,
     "status": "draft",
-    "sessions": ["wake-up", "unravel", "soft-reboot"],
+    "sessions": [
+      "wake-up",
+      "unravel",
+      "soft-reboot"
+    ],
     "arms": [
       {
         "key": "A",
@@ -27,7 +31,11 @@
         "days": 30,
         "copy_en": "You finished, so your welcome period is 30 days instead of 14.",
         "copy_sv": "Du gjorde hela sessionen, så din välkomstperiod blir 30 dagar i stället för 14.",
-        "show_code": true
+        "show_code": true,
+        "start_en": "Finish the session and your first 30 days in the app are free.",
+        "start_sv": "Gör hela sessionen, så blir dina första 30 dagar i appen gratis.",
+        "progress_en": "{min} min to go · 30 days waiting",
+        "progress_sv": "{min} min kvar · 30 dagar väntar"
       }
     ]
   }

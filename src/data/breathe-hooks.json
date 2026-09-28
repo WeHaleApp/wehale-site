@@ -1,0 +1,25 @@
+{
+  "_about": "Ad hooks for message match: /breathe?h=<id> shows the ad's own first line above the page's one-line description and goes straight to that session (the picker becomes a small link). Draft lines: each must match a live ad word for word, and carries no effect claim (the lead and Isak sign off). Unknown ids are ignored.",
+  "hooks": {
+    "coffee": {
+      "line_en": "Fourth coffee. Still foggy.",
+      "line_sv": "Fjärde kaffet. Fortfarande dimmigt.",
+      "session": "wake-up"
+    },
+    "morning": {
+      "line_en": "Six minutes before the day starts.",
+      "line_sv": "Sex minuter innan dagen börjar.",
+      "session": "wake-up"
+    },
+    "lunch": {
+      "line_en": "A pause between two meetings.",
+      "line_sv": "En paus mellan två möten.",
+      "session": "unravel"
+    },
+    "night": {
+      "line_en": "Before you pick up your phone in bed.",
+      "line_sv": "Innan du tar upp mobilen i sängen.",
+      "session": "soft-reboot"
+    }
+  }
+}

@@ -141,8 +141,12 @@ export function createPlayer(P) {
   const setAccent=n=>{ const PP=PALS[n]; if(PP) document.documentElement.style.setProperty('--ringc','rgba('+PP.pale.map(v=>Math.round(v*255)).join(',')+',.9)'); document.documentElement.style.setProperty('--teal',ACCENT[n]||'#45b5a0'); document.documentElement.style.setProperty('--accent', n==='teal'?'#8fe0cf':n==='pearl'?'#dfe6f5':n==='sage'?'#cfe2b0':'#F2B872'); };
   let curPal='ember'; window.SILK_PALETTE=PALS.ember; setAccent('ember');
   let curWorld=(new URLSearchParams(location.search).get('world'))||'ember';
-  function setWorld(n){ const W=(typeof TIDE_WORLDS!=='undefined' && TIDE_WORLDS[n]) || null; if(!W) return; curWorld=n; silkOpts.tideOpts=Object.assign({}, silkOpts.tideOpts, {world:n});
-    if(silk && silk.tide) silk.tide.setWorld(n); curPal=W.pal; window.SILK_PALETTE=PALS[curPal]||PALS.ember; setAccent(curPal); document.documentElement.style.setProperty('--accent', W.accent);
+  // fade (seconds, optional): cross-fade the room and its palette instead of switching (the start screen's session choice)
+  let palFade=null;
+  function setWorld(n, fade){ const W=(typeof TIDE_WORLDS!=='undefined' && TIDE_WORLDS[n]) || null; if(!W) return; const was=curPal; curWorld=n; silkOpts.tideOpts=Object.assign({}, silkOpts.tideOpts, {world:n});
+    if(silk && silk.tide){ if(fade && silk.tide.fadeTo) silk.tide.fadeTo(n, fade); else silk.tide.setWorld(n); }
+    palFade = fade && PALS[was] && PALS[W.pal] && was!==W.pal ? {a:PALS[was], b:PALS[W.pal], t0:performance.now(), d:fade*1000} : null;
+    document.body.dataset.world=n; curPal=W.pal; window.SILK_PALETTE=PALS[curPal]||PALS.ember; setAccent(curPal); document.documentElement.style.setProperty('--accent', W.accent);
  }
   window.__setWorld=setWorld;
   // the world blend: The Wake Up travels from Dawn (arrival and the first round) into Ember (from the breath of fire)
@@ -314,12 +318,16 @@ export function createPlayer(P) {
   const countEl=document.getElementById('count'), capEl=document.getElementById('cap'); let countText='', capIdx=-2, capOp=0, capTarget=0;
   let fastRound=false, lastBreathAt=0;
   let trough=1, peak=0, rising=false, roundBreaths=0, roundDone=false, holdT=0;
+  let introT0=null, introFrom=.3;
   let k=.3, b=0, prevB=0, w=0, wTarget=0, fullFor=0, ft=0, last=performance.now(), t0=last, idle=0;
   function frame(now){
     const dt=Math.min(.25,(now-last)/1000); last=now;
     // --- where the breath comes from: Edvin's round (the locked tap timeline) or your finger
     const auto = sessionMode;
-    if(!sessionMode && !freeMode){ b = .22 + .16*(.5-.5*Math.cos(now/1000*2*Math.PI/7.5)); }
+    if(!sessionMode && !freeMode && introT0!=null){   // the one guided breath before the session: in as it rises (4 s), out (5 s)
+      const u=(now-introT0)/1000, s=x=>{ x=Math.max(0,Math.min(1,x)); return x*x*(3-2*x); };
+      b = u<4 ? introFrom+(.85-introFrom)*s(u/4) : .85+(.2-.85)*s((u-4)/5); }
+    else if(!sessionMode && !freeMode){ b = .22 + .16*(.5-.5*Math.cos(now/1000*2*Math.PI/7.5)); }
     else if(auto){
       const at=audio.currentTime;
       b=breathAt(at);
@@ -440,7 +448,9 @@ export function createPlayer(P) {
       ringT+=dt; const rr=Math.min(1,ringT/1.8);
       ringEl.style.opacity = ringT<1.8 ? (.45*(1-rr)).toFixed(3) : '0';
       ringEl.style.transform='scale('+(.55+1.1*rr).toFixed(3)+')'; }
-    { const m = musicLevel(dt); const base=(window.__journeyPal&&window.__journeyPal())||PALS[curPal]||PALS.ember; const on = musAmt>0 && sessionMode && !audio.paused;
+    { const m = musicLevel(dt); let base=(window.__journeyPal&&window.__journeyPal())||PALS[curPal]||PALS.ember;
+      if(palFade){ const u=Math.min(1,(now-palFade.t0)/palFade.d), s=u*u*(3-2*u), A=palFade.a, B=palFade.b, mx=(x,y)=>x.map((v,i)=>v+(y[i]-v)*s);
+        base={base:mx(A.base,B.base), pale:mx(A.pale,B.pale), tint:mx(A.tint,B.tint), ground:mx(A.ground,B.ground)}; if(u>=1) palFade=null; } const on = musAmt>0 && sessionMode && !audio.paused;
       const g = on ? 1+musAmt*(1.1*m-.55)/.7*.7 : 1;
       const CA = colourArc(dt);
       const CS=window.__colourScript, tideArc = CS && silk && silk.tide && arcOn;
@@ -534,7 +544,7 @@ export function createPlayer(P) {
   const setTitle=(k,t)=>{ $('ttlK').textContent=k; $('ttlT').textContent=t; };
   // from: seconds to start at (0 = the beginning; the exit screen's "back to the session" resumes where it stopped).
   // Called from the Play tap itself, so audio.play() runs inside the user gesture (iOS requires it).
-  function startSession(from){ setTitle(SCORE.kicker||'', SCORE.title||''); freeMode=false; sessionMode=true; body.classList.remove('free'); body.classList.add('in-session');
+  function startSession(from){ introT0=null; setTitle(SCORE.kicker||'', SCORE.title||''); freeMode=false; sessionMode=true; body.classList.remove('free'); body.classList.add('in-session');
     hintHidden=true; startMusic(); resetRound(); try{ audio.currentTime=Math.max(0, from||0); }catch(_){}
     const pr=audio.play(); showChrome(); if(coarse && fsOK && !isFs()) toggleFs();
     firePulse({type:'cue'}); flash(.3,.9);   // pressing play opens the room: one slow ring and a soft glow
@@ -788,7 +798,9 @@ export function createPlayer(P) {
   requestAnimationFrame(frame);
   return {
     start: startSession,                       // start(fromSeconds): call inside the Play tap
-    exit: toStart, setScore: useScore, setCaptions: setCaps,
+    exit: toStart, setScore: useScore, setCaptions: setCaps, setWorld,
+    intro(on){ if(on){ introFrom=b; introT0=performance.now(); } else introT0=null; },   // one breath with the light, no voice
+    get breath(){ return b; },
     get at(){ return audio.currentTime; }, get dur(){ return DUR; }, get playing(){ return sessionMode && !audio.paused; },
     tier: silk ? 'silk' : gl ? 'webgl1' : 'orb',
     seek: (t)=>seek(t),
