@@ -15,7 +15,7 @@
 
 const GRAPH = "https://graph.facebook.com/v21.0";
 const ALLOWED = new Set(["PageView", "ViewContent", "Lead", "SessionPicked", "SessionStart", "Session1Min", "SessionHold", "SessionFinish", "AppTap"]);
-const PARAM_KEYS = ["session", "arm", "source", "assignment_id", "completed", "content_name", "content_category"];
+const PARAM_KEYS = ["session", "arm", "source", "assignment_id", "completed", "content_name", "content_category", "v", "h"];
 const ORIGINS = new Set(["https://wehale.io", "https://www.wehale.io"]);
 const WINDOW_MS = 60_000, MAX_PER_WINDOW = 60;
 const hits = new Map();
