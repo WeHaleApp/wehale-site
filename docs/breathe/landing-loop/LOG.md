@@ -109,3 +109,6 @@ is kept only if the total rises and no score drops.
 - After judging, two small fixes: "6 min" no longer wraps in the big card, and Wake up's next-time line is
   "Next time you need a lift" (a judge saw foggy's "slump" on the challenger's end screen).
 - Halfway milestone (m1).
+- On the deployed preview (real network, Chromium, iPhone emulation): Edvin's first word 1.1-1.9 s after Start (Wind
+  down 0.8-1.2 s), inside 2 s but with less margin than locally (the audio streams); CLS 0 in 7 of 8 loads and
+  0.013 once at 375x667 (not reproduced in a focused test; open for m2).
