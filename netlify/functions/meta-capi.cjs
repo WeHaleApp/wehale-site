@@ -33,7 +33,7 @@ exports.handler = async (event) => {
   if (!token || !pixel) return { statusCode: 204, body: "" };   // not configured: accept and drop
 
   const origin = event.headers.origin || "";
-  const preview = /^https:\/\/[a-z0-9-]+--wehale\.netlify\.app$/.test(origin);   // deploy previews, for the test plan
+  const preview = /^https:\/\/[a-z0-9-]+--wehale-webs\.netlify\.app$/.test(origin);   // deploy previews, for the test plan
   if (!ORIGINS.has(origin) && !preview) return { statusCode: 403, body: "Forbidden" };
 
   const ip = (event.headers["x-nf-client-connection-ip"] || event.headers["x-forwarded-for"] || "").split(",")[0].trim();
