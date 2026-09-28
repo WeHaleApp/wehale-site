@@ -103,7 +103,44 @@ const description = "A guided breathing session with Edvin, right in your browse
       <span class="startlbl" id="startLblX" aria-live="polite"></span>
       <p class="fine">Guided by Edvin, WeHale co-founder. Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.</p>
     </div>
+
+    <!-- variants d and e: a reason, a choice, Start -->
+    <header class="vy ylede">
+      <h1 id="startHy">Breathe with Edvin.</h1>
+      <p class="ysub" id="ySub">6 minutes. Free. Right here.</p>
+    </header>
+    <div class="vy yact">
+      <div class="tiles" id="choicesY" role="radiogroup" aria-label="Choose a session">
+        {sessions.map((s) => (
+          <button class="tile" type="button" role="radio" data-slug={s.slug} data-world={s.world} data-ready={s.ready ? "1" : "0"}
+            aria-checked={s.slug === first.slug ? "true" : "false"} aria-disabled={s.ready ? "false" : "true"}>
+            <i class="orb" aria-hidden="true"></i>
+            <span class="tt"><b>{s.choice}</b><small>{s.ready ? s.reason_en : "Coming soon"}</small></span>
+            <em>{s.minutes} min</em>
+          </button>
+        ))}
+      </div>
+      <p class="offerstart" id="offerStartY" hidden></p>
+      <button class="pill solid block starty" id="startBtnY" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><span>Start <span id="startTitleY">{first.choice}</span></span></button>
+      <span class="startlbl" id="startLblY" aria-live="polite"></span>
+      <button class="savebtn" id="saveBtn" type="button">Not a good moment? Save it for later</button>
+      <p class="ysafe">Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.</p>
+    </div>
   </main>
+
+  <!-- save for later (variants d and e): bus, office, anywhere breathing isn't possible right now -->
+  <div class="sscrim" id="saveScrim" hidden></div>
+  <div class="ssheet" id="saveSheet" role="dialog" aria-modal="true" aria-labelledby="saveH" hidden>
+    <div class="grab" aria-hidden="true"></div>
+    <div class="shead"><h2 id="saveH">Save it for later</h2><button class="sclose" id="saveClose" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <p class="ssub" id="saveSub"></p>
+    <a class="sopt" id="saveApp" href="#" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></i><span><b>Get it in the app, it'll be waiting</b><small>Free app. The same session with Edvin.</small></span></a>
+    <a class="sopt" id="saveCal" href="#" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></i><span><b id="saveCalT">Remind me tonight</b><small id="saveCalS">A 6-minute reminder in Google Calendar</small></span></a>
+    <a class="sopt" id="saveIcs" href="#" download="breathe-with-edvin.ics" hidden><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"/></svg></i><span><b>Add to Apple Calendar or Outlook</b><small id="saveIcsS">A calendar file with the same reminder</small></span></a>
+    <button class="sopt" id="saveCopy" type="button"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg></i><span><b id="saveCopyT">Copy link</b><small id="saveCopyS">Open this page again when you're ready</small></span></button>
+    <p class="sdone" id="saveDone" role="status" aria-live="polite" hidden></p>
+  </div>
+  <p class="safecap" id="safeCap" hidden>Breathe at your own pace. Stop if you feel dizzy.<br />Not in water or while driving.</p>
 
   <!-- the one breath before Edvin starts (variants b and c) -->
   <div class="intro" id="intro" hidden aria-live="polite">
@@ -138,6 +175,7 @@ const description = "A guided breathing session with Edvin, right in your browse
         <a class="pill block" id="exitApp" href="#" rel="noopener">Open the WeHale app</a>
       </div>
       <p class="appline" id="exitAppLine"></p>
+      <button class="linkbtn" id="exitSave" type="button" hidden>Want to come back to it later?</button>
       <button class="linkbtn" id="exitStart" type="button">Choose another session</button>
     </div>
   </section>

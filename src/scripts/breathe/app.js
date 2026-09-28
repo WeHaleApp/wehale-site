@@ -2,7 +2,7 @@
 // The player (WebGL, ~25 KB gzipped) is imported after first paint; the score is fetched on idle; the audio
 // streams only after the Play tap.
 import { MORNING_ENDS, DAYTIME_ENDS, META_PIXEL_ID, META_CAPI_URL, DEFAULT_VARIANT } from "./config.js";
-import { initMeasurement, consent, setConsent, track } from "./measure.js";
+import { initMeasurement, consent, setConsent, onConsent, track } from "./measure.js";
 import { STANDARD, loadOffer, assign, storedAssignment, shortCodeOf, pick, oneLink } from "./offers.js";
 import SESSIONS_FILE from "../../data/breathe-sessions.json";
 import HOOKS from "../../data/breathe-hooks.json";
@@ -24,12 +24,17 @@ const VARIANTS = {
   a: { x: true, worlds: true, intro: false, picker: true, offerAtStart: true },
   b: { x: true, worlds: true, intro: true, picker: true, offerAtStart: true },
   c: { x: true, worlds: true, intro: true, picker: false, offerAtStart: true },
+  // d, e (Isak, 28 Sep): a reason, a choice, Start. Big world-coloured tiles, a calmer room, Edvin within ~1 s
+  // of Start (the session's startAt), and "Save it for later". d: stacked tiles, safety under Start; e: a row of
+  // square tiles, safety as a short caption when the session starts.
+  d: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "under" },
+  e: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "caption" },
 };
 const V = VARIANTS[Q.get("v")] ? Q.get("v") : (VARIANTS[DEFAULT_VARIANT] ? DEFAULT_VARIANT : "0");
 const VAR = VARIANTS[V];
 body.dataset.v = V;
 // message match: ?h=<hook> echoes the ad's first line (variants a, b, c) and picks its session
-const HOOK_ID = VAR.x && HOOKS.hooks[Q.get("h") || ""] ? Q.get("h") : null;
+const HOOK_ID = (VAR.x || VAR.y) && HOOKS.hooks[Q.get("h") || ""] ? Q.get("h") : null;
 const HOOK = HOOK_ID ? HOOKS.hooks[HOOK_ID] : null;
 let player = null, playerSlug = null, loading = null;
 
@@ -51,14 +56,15 @@ const wanted = fromAd || timeSlug(hour);
 let selected = (bySlug(wanted) && bySlug(wanted).ready) ? wanted : (SESSIONS.find((s) => s.ready) || SESSIONS[0]).slug;
 body.dataset.wanted = wanted;
 
-const START_BTN = VAR.x ? "startBtnX" : "startBtn", START_LBL = VAR.x ? "startLblX" : "startLbl";
-const choiceEls = [...document.querySelectorAll(VAR.x ? ".chip" : ".choice")];
+const LAY = VAR.y ? "Y" : VAR.x ? "X" : "";
+const START_BTN = "startBtn" + LAY, START_LBL = "startLbl" + LAY;
+const choiceEls = [...document.querySelectorAll(VAR.y ? ".tile" : VAR.x ? ".chip" : ".choice")];
 const worldOf = (slug) => (VAR.worlds && bySlug(slug) && bySlug(slug).world) || "ember";
 function renderChoice(fade) {
   const s = bySlug(selected);
   choiceEls.forEach((el) => el.setAttribute("aria-checked", String(el.dataset.slug === selected)));
-  $(VAR.x ? "startTitleX" : "startTitle").textContent = s.title;
-  $(START_BTN).setAttribute("aria-label", (VAR.x ? "Start " : "Play ") + s.title);
+  $("startTitle" + LAY).textContent = VAR.y ? s.choice : s.title;
+  $(START_BTN).setAttribute("aria-label", (LAY ? "Start " : "Play ") + s.title);
   $(START_BTN).disabled = !s.ready;
   body.dataset.selected = selected;
   // choosing a session changes the room: a 0.6 s cross-fade in the live field, or the CSS light's colour
@@ -71,12 +77,12 @@ choiceEls.forEach((el) => el.addEventListener("click", () => {
   track.picked(params());
 }));
 // the radio group: arrow keys move the choice
-$(VAR.x ? "choicesX" : "choices").addEventListener("keydown", (e) => {
+$("choices" + LAY).addEventListener("keydown", (e) => {
   if (!/Arrow(Left|Right|Up|Down)/.test(e.key)) return; e.preventDefault();
   const ready = choiceEls.filter((c) => c.dataset.ready === "1"); const i = ready.findIndex((c) => c.dataset.slug === selected);
   const n = ready[(i + (/Right|Down/.test(e.key) ? 1 : ready.length - 1)) % ready.length]; if (n) { n.click(); n.focus(); }
 });
-if (!VAR.x && fromAd && bySlug(fromAd).ready) {
+if (!LAY && fromAd && bySlug(fromAd).ready) {
   $("choices").hidden = true; $("changeBtn").hidden = false;
   $("startH").textContent = bySlug(fromAd).title;
   $("changeBtn").addEventListener("click", () => { $("choices").hidden = false; $("changeBtn").hidden = true; $("startH").textContent = "What do you need right now?"; });
@@ -96,7 +102,18 @@ if (VAR.x) {
     $("otherBtn").addEventListener("click", () => { body.classList.remove("collapsed"); $("otherBtn").hidden = true; });
   }
 }
+if (VAR.y) {
+  $("startScr").setAttribute("aria-labelledby", "startHy");
+  if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").textContent = "Breathe with Edvin. 6 minutes, free."; }
+  body.classList.add("calm-start");   // a dimmer, softer room behind the start screen; detail returns with the session
+}
 renderChoice(false);
+// arrival (d, e): the text waits for its font (no fallback flash), then the headline rises in and the tiles follow
+if (VAR.y) {
+  let shown = false; const arrive = () => { if (shown) return; shown = true; body.classList.add("arrived"); };
+  try { Promise.all(["500 32px 'Nunito Sans'", "700 18px 'Nunito Sans'"].map((f) => document.fonts.load(f))).then(arrive, arrive); } catch (_) { arrive(); }
+  setTimeout(arrive, 700);   // never hold the page for a slow font
+}
 
 // ---------- event params: {session, arm, source}; assignment_id once an offer arm exists ----------
 let assignment = null;
@@ -121,7 +138,7 @@ function loadPlayer() {
     playerSlug = score.slug || selected;
     player = mod.createPlayer({
       score, audio,
-      onTick: tick, onEvent: onEvent, onFinish: finish, onExit: exitEarly,
+      onTick: tick, onEvent: onEvent, onFinish: finish, onExit: exitEarly, gather: !!VAR.y,
     });
     body.classList.add("gl-on"); body.dataset.tier = player.tier;
     if (VAR.worlds) player.setWorld(worldOf(selected), 0);
@@ -178,9 +195,14 @@ async function endIntro() {
 }
 $("introSkip").addEventListener("click", endIntro);
 function begin(from) {
-  hideScreens(); $("intro").hidden = true;
+  hideScreens(); $("intro").hidden = true; closeSave();
   $(START_LBL).textContent = "";
-  const pr = player.start(from || 0);
+  body.classList.remove("calm-start");
+  // d, e: start at the session's startAt (1 s before Edvin's first word), fading the sound in over 1 s
+  const at0 = !from && VAR.fast ? player.startAt : (from || 0);
+  if (!from && VAR.fast && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
+  if (!from && VAR.safety === "caption") { const c = $("safeCap"); c.hidden = false; c.classList.remove("out"); setTimeout(() => c.classList.add("out"), 2600); setTimeout(() => { c.hidden = true; }, 3400); }
+  const pr = player.start(at0);
   if (pr && pr.catch) pr.catch(() => { player.exit(); showScreen("startScr"); $(START_LBL).textContent = "Tap start again to turn the sound on."; });
   if (!from) { finished = false; if (!started) { started = true; } track.start(params()); }
   requestWake();
@@ -205,7 +227,7 @@ async function showOfferAtStart() {
   if (!VAR.offerAtStart) return;
   const offer = await loadOffer(selected);
   assignment = assign(offer);
-  const arm = assignment && assignment.armDef, el = $("offerStart");
+  const arm = assignment && assignment.armDef, el = $(VAR.y ? "offerStartY" : "offerStart");
   if (arm && arm.start_en) { el.textContent = (LANG === "sv" && arm.start_sv) || arm.start_en; el.hidden = false; } else el.hidden = true;
 }
 showOfferAtStart();
@@ -257,13 +279,66 @@ async function finish() {
 
 function exitEarly(at) {
   exitAt = at || 0;
+  if (VAR.y) body.classList.add("calm-start");
   const dur = player ? player.dur : 340;
   if (exitAt >= dur - 15) { finish(); return; }          // left during the last goodbye: that counts as finished
   setTitles();
   $("exitAppLine").textContent = pick(STANDARD, "app_line", LANG);
   wireApp($("exitApp"), oneLink({ session: selected, completed: false, assignment: null }), () => ({ ...params(), completed: 0 }));
   showScreen("exitScr");
+  // d, e: leaving in the first minute often means "not now": offer to save it
+  if (VAR.y) { $("exitSave").hidden = false; if (exitAt < 60) openSave("Want to come back to it later?"); }
 }
+
+// ---------- save for later (d, e): the app, a reminder, or the link ----------
+const inApp = /Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Bytedance|Snapchat|LinkedInApp/i.test(navigator.userAgent);
+const savedUrl = (slug) => location.origin + "/breathe?s=" + slug + "&src=saved";
+const pad = (n) => String(n).padStart(2, "0");
+const calStamp = (d) => d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(d.getHours()) + pad(d.getMinutes()) + "00";
+function reminderTime(slug) {   // the next 08:00 for Wake up, else the next 20:00, in the visitor's own time
+  const h = slug === "wake-up" ? 8 : 20, d = new Date(), t = new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, 0, 0);
+  const today = t > d; if (!today) t.setDate(t.getDate() + 1);
+  return { t, label: slug === "wake-up" ? (today ? "Remind me this morning" : "Remind me tomorrow morning") : (today ? "Remind me tonight" : "Remind me tomorrow evening") };
+}
+function openSave(title) {
+  const s = bySlug(selected), url = savedUrl(selected), r = reminderTime(selected), end = new Date(r.t.getTime() + 6 * 60000);
+  const name = "Breathe with Edvin: " + s.title + ", 6 min", details = "Your 6-minute session with Edvin: " + url;
+  $("saveH").textContent = title || "Save it for later";
+  $("saveSub").textContent = s.choice + " · " + s.title + " · 6 min"; $("saveDone").hidden = true;
+  const app = oneLink({ session: selected, completed: false, assignment: null, extra: { af_sub5: "saved" } });
+  if (app) { $("saveApp").hidden = false; $("saveApp").href = app; } else $("saveApp").hidden = true;
+  $("saveCalT").textContent = r.label;
+  $("saveCal").href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(name) + "&dates=" + calStamp(r.t) + "/" + calStamp(end) + "&details=" + encodeURIComponent(details);
+  // an .ics file where downloads work; in-app browsers (Instagram, Facebook, TikTok) don't save files, so only Google there
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//WeHale//breathe//EN", "BEGIN:VEVENT", "UID:" + Date.now() + "-" + selected + "@wehale.io",
+    "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z", "DTSTART:" + calStamp(r.t), "DTEND:" + calStamp(end),
+    "SUMMARY:" + name, "DESCRIPTION:" + details, "URL:" + url, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  $("saveIcs").hidden = inApp; $("saveIcs").href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+  $("saveCopyT").textContent = navigator.share ? "Share or copy the link" : "Copy link"; $("saveCopyS").textContent = "Open this page again when you're ready";
+  $("saveScrim").hidden = false; $("saveSheet").hidden = false;
+  requestAnimationFrame(() => { $("saveSheet").classList.add("open"); $("saveScrim").classList.add("on"); });
+  try { $("saveSheet").querySelector(".sopt").focus({ preventScroll: true }); } catch (_) {}
+}
+function closeSave() { $("saveSheet").classList.remove("open"); $("saveScrim").classList.remove("on"); setTimeout(() => { $("saveSheet").hidden = true; $("saveScrim").hidden = true; }, 300); }
+const saved = (option) => track.saveForLater({ ...params(), option });
+// each option says what happened
+function confirmSave(text) { const d = $("saveDone"); d.textContent = text; d.hidden = false; d.classList.remove("pop"); void d.offsetWidth; d.classList.add("pop"); }
+$("saveBtn").addEventListener("click", () => openSave());
+$("exitSave").addEventListener("click", () => openSave("Want to come back to it later?"));
+$("saveClose").addEventListener("click", closeSave); $("saveScrim").addEventListener("click", closeSave);
+addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("saveSheet").hidden) closeSave(); });
+$("saveApp").addEventListener("click", () => saved("app"));
+$("saveCal").addEventListener("click", () => { saved("calendar"); confirmSave("Opened in Google Calendar: tap Save there to add it"); });
+$("saveIcs").addEventListener("click", () => { saved("ics"); confirmSave("Calendar file ready: open it to add the reminder"); });
+$("saveCopy").addEventListener("click", async () => {
+  const url = savedUrl(selected), done = (t) => { $("saveCopyT").textContent = t; };
+  if (navigator.share) { try { await navigator.share({ title: "Breathe with Edvin", text: "A 6-minute session with Edvin, for later.", url }); saved("share"); confirmSave("Link shared"); return; } catch (e) { if (e && e.name === "AbortError") return; } }
+  let ok = false;
+  try { await navigator.clipboard.writeText(url); ok = true; } catch (_) {
+    try { const t = document.createElement("textarea"); t.value = url; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(t); t.select(); ok = document.execCommand("copy"); t.remove(); } catch (_) {}
+  }
+  done(ok ? "Link copied" : url); if (ok) { saved("copy"); confirmSave("Link copied. Open it when you're ready."); }
+});
 
 // ---------- consent: shown only when something is configured to measure (or ?consent=1 for review) ----------
 const T = {
@@ -281,5 +356,8 @@ if ((measuring || Q.get("consent") === "1") && !consent()) {
   $("consentNo").addEventListener("click", () => done("denied"));
 }
 
+if (Q.get("src") === "saved") track.returnFromSaved(params());
+onConsent((c) => { if (c === "granted" && Q.get("src") === "saved") track.returnFromSaved(params()); });
+
 // test hooks for the preview checks (no effect for visitors)
-window.__breathe = { get player() { return player; }, loadPlayer, timeSlug, get selected() { return selected; }, finish, exitEarly };
+window.__breathe = { openSave, get player() { return player; }, loadPlayer, timeSlug, get selected() { return selected; }, finish, exitEarly };

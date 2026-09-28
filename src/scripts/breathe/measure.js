@@ -96,6 +96,8 @@ export const track = {
   oneMinute: (p) => send("Session1Min", p),
   firstHold: (p) => send("SessionHold", p),
   finish: (p) => send("SessionFinish", p),
+  saveForLater: (p) => send("SaveForLater", p),   // p.option: app | calendar | ics | share | copy
+  returnFromSaved: (p) => send("ReturnFromSaved", p),
   appTap: (p) => { send("AppTap", p); send("Lead", { content_name: p.session, ...p }, { standard: true }); },
 };
 

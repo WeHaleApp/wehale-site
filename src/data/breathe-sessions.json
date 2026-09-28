@@ -1,5 +1,5 @@
 {
-  "_about": "The three Always Free sessions offered on wehale.io/breathe. A session is playable when public/breathe/sessions/<slug>/score.json and audio.mp3 both exist at build time; until then its choice shows 'Coming soon'. next_en is the end-screen suggestion after finishing it. world: the room's colour on the start screen in the landing variants (a, b, c) and during that session; v=0 keeps Ember for all.",
+  "_about": "The three Always Free sessions offered on wehale.io/breathe. A session is playable when public/breathe/sessions/<slug>/score.json and audio.mp3 both exist at build time; until then its choice shows 'Coming soon'. next_en is the end-screen suggestion after finishing it. world: the room's colour on the start screen in the landing variants (a, b, c) and during that session; v=0 keeps Ember for all. reason_en: the one reason line on the tiles in variants d and e.",
   "sessions": [
     {
       "slug": "wake-up",
@@ -8,7 +8,8 @@
       "kicker": "Morning",
       "minutes": 6,
       "next_en": "Tomorrow morning: The Wake Up again. Or Unravel after lunch.",
-      "world": "ember"
+      "world": "ember",
+      "reason_en": "Energy for your morning"
     },
     {
       "slug": "unravel",
@@ -17,7 +18,8 @@
       "kicker": "Daytime reset",
       "minutes": 6,
       "next_en": "This evening: The Soft Reboot. Or Unravel again tomorrow afternoon.",
-      "world": "water"
+      "world": "water",
+      "reason_en": "A calm pause in your day"
     },
     {
       "slug": "soft-reboot",
@@ -26,7 +28,8 @@
       "kicker": "Evening wind-down",
       "minutes": 6,
       "next_en": "Tomorrow morning: The Wake Up. Or The Soft Reboot again tonight.",
-      "world": "night"
+      "world": "night",
+      "reason_en": "Slow down for the night"
     }
   ]
 }

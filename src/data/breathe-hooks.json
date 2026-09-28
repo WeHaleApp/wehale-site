@@ -1,25 +1,33 @@
 {
-  "_about": "Ad hooks for message match: /breathe?h=<id> shows the ad's own first line above the page's one-line description and goes straight to that session (the picker becomes a small link). Draft lines: each must match a live ad word for word, and carries no effect claim (the lead and Isak sign off). Unknown ids are ignored.",
+  "_about": "Ad hooks for message match: /breathe?h=<id> puts the ad's exact first line in the headline slot and preselects its session (variants a-e). The seven lines are the ads' own (lead, 28 Sep); unknown ids are ignored. Swedish lines not written yet.",
   "hooks": {
     "coffee": {
       "line_en": "Fourth coffee. Still foggy.",
-      "line_sv": "Fjärde kaffet. Fortfarande dimmigt.",
       "session": "wake-up"
     },
-    "morning": {
-      "line_en": "Six minutes before the day starts.",
-      "line_sv": "Sex minuter innan dagen börjar.",
+    "email": {
+      "line_en": "Before the first email.",
       "session": "wake-up"
     },
-    "lunch": {
-      "line_en": "A pause between two meetings.",
-      "line_sv": "En paus mellan två möten.",
+    "parked": {
+      "line_en": "Parked outside. Not ready to go in.",
       "session": "unravel"
     },
-    "night": {
-      "line_en": "Before you pick up your phone in bed.",
-      "line_sv": "Innan du tar upp mobilen i sängen.",
-      "session": "soft-reboot"
+    "slowest": {
+      "line_en": "The slowest breath of your day.",
+      "session": "unravel"
+    },
+    "exhale": {
+      "line_en": "Do you rush your exhale?",
+      "session": "unravel"
+    },
+    "rate": {
+      "line_en": "How do you feel, 1 to 10?",
+      "session": "unravel"
+    },
+    "keepup": {
+      "line_en": "Can you keep up with this?",
+      "session": "wake-up"
     }
   }
 }

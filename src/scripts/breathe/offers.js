@@ -77,7 +77,7 @@ export const pick = (o, key, lang) => (o && ((lang === "sv" && o[key + "_sv"]) |
 
 // The OneLink. With an assignment (only while a test offer is live): the token in deep_link_value and
 // af_sub1 = offer id, af_sub2 = arm. Always: af_sub3 = session, af_sub4 = 1 finished / 0 left early.
-export function oneLink({ session, completed, assignment }) {
+export function oneLink({ session, completed, assignment, extra }) {
   if (!ONELINK_BASE) return null;
   const q = new URLSearchParams();
   q.set("pid", ONELINK_PID);
@@ -89,5 +89,8 @@ export function oneLink({ session, completed, assignment }) {
   }
   q.set("af_sub3", session);
   q.set("af_sub4", completed ? "1" : "0");
+  if (extra) for (const k of Object.keys(extra)) q.set(k, extra[k]);   // e.g. af_sub5=saved (save for later)
+  // CONFIG GAP (owner of main): an app deep link that opens the session directly (af_dp / a UDL sub key), once
+  // the app reads one; today the app reads only deep_link_value, which stays reserved for the offer token.
   return ONELINK_BASE + "?" + q.toString();
 }

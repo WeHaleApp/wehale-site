@@ -318,7 +318,7 @@ export function createPlayer(P) {
   const countEl=document.getElementById('count'), capEl=document.getElementById('cap'); let countText='', capIdx=-2, capOp=0, capTarget=0;
   let fastRound=false, lastBreathAt=0;
   let trough=1, peak=0, rising=false, roundBreaths=0, roundDone=false, holdT=0;
-  let introT0=null, introFrom=.3;
+  let introT0=null, introFrom=.3; const bornAt=performance.now();
   let k=.3, b=0, prevB=0, w=0, wTarget=0, fullFor=0, ft=0, last=performance.now(), t0=last, idle=0;
   function frame(now){
     const dt=Math.min(.25,(now-last)/1000); last=now;
@@ -327,7 +327,8 @@ export function createPlayer(P) {
     if(!sessionMode && !freeMode && introT0!=null){   // the one guided breath before the session: in as it rises (4 s), out (5 s)
       const u=(now-introT0)/1000, s=x=>{ x=Math.max(0,Math.min(1,x)); return x*x*(3-2*x); };
       b = u<4 ? introFrom+(.85-introFrom)*s(u/4) : .85+(.2-.85)*s((u-4)/5); }
-    else if(!sessionMode && !freeMode){ b = .22 + .16*(.5-.5*Math.cos(now/1000*2*Math.PI/7.5)); }
+    else if(!sessionMode && !freeMode){ b = .22 + .16*(.5-.5*Math.cos(now/1000*2*Math.PI/7.5));
+      if(P.gather){ const u=Math.min(1,(now-bornAt)/1200), e=1-Math.pow(1-u,3); b*=e; } }   // arrival: the sphere gathers from nothing
     else if(auto){
       const at=audio.currentTime;
       b=breathAt(at);
@@ -801,6 +802,7 @@ export function createPlayer(P) {
     exit: toStart, setScore: useScore, setCaptions: setCaps, setWorld,
     intro(on){ if(on){ introFrom=b; introT0=performance.now(); } else introT0=null; },   // one breath with the light, no voice
     get breath(){ return b; },
+    get startAt(){ return Math.max(0, +(SCORE && SCORE.startAt) || 0); },   // where the web playback starts (1 s before Edvin's first word)
     get at(){ return audio.currentTime; }, get dur(){ return DUR; }, get playing(){ return sessionMode && !audio.paused; },
     tier: silk ? 'silk' : gl ? 'webgl1' : 'orb',
     seek: (t)=>seek(t),
