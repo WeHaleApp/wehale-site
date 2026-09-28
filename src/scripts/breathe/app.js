@@ -127,9 +127,9 @@ if (VAR.x) {
 if (VAR.y) {
   $("startScr").setAttribute("aria-labelledby", "startHy");
   if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").dataset.tpl = (VAR.sub && HOOK.sub_en) || "Breathe with {guide}. 6 minutes, free."; }
-  if (VAR.own && HOOK.edge_sub_en) body.classList.add("f-edge");
-  if (VAR.edge && HOOK.card_en) { const t = document.querySelector(`#choicesY .tile[data-slug="${HOOK.session}"] .rf`); if (t) t.textContent = HOOK.card_en; }
-  if (VAR.edge && HOOK.edge_sub_en) $("ySub").dataset.tpl = HOOK.edge_sub_en;
+  if (VAR.own && HOOK && HOOK.edge_sub_en) body.classList.add("f-edge");
+  if (VAR.edge && HOOK && HOOK.card_en) { const t = document.querySelector(`#choicesY .tile[data-slug="${HOOK.session}"] .rf`); if (t) t.textContent = HOOK.card_en; }
+  if (VAR.edge && HOOK && HOOK.edge_sub_en) $("ySub").dataset.tpl = HOOK.edge_sub_en;
   if (SEEN) $("ySub").dataset.tpl = "That was one round. The whole session is 6 minutes with {guide}, free.";
   body.classList.add("calm-start");   // a dimmer, softer room behind the start screen; detail returns with the session
   requestAnimationFrame(() => sphereUp(true));
