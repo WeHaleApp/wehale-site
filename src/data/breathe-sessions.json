@@ -1,5 +1,5 @@
 {
-  "_about": "The three Always Free sessions offered on wehale.io/breathe. A session is playable when public/breathe/sessions/<slug>/score.json and audio.mp3 both exist at build time; until then its choice shows 'Coming soon'. next_en is the end-screen suggestion after finishing it. world: the room's colour on the start screen in the landing variants (a, b, c) and during that session; v=0 keeps Ember for all. reason_en: the one reason line on the tiles in variants d and e. does_en: the tile line in variant f, what the session does, not tied to the clock. next_f_en: the end-screen suggestion in variant f (not tied to a time of day). narrator: who guides the recording (from the production database, 28 Sep: The Soft Reboot is Philip, Unravel and The Wake Up are Edvin); every name on the page follows the chosen session.",
+  "_about": "The three Always Free sessions offered on wehale.io/breathe. A session is playable when public/breathe/sessions/<slug>/score.json and audio.mp3 both exist at build time; until then its choice shows 'Coming soon'. next_en is the end-screen suggestion after finishing it. world: the room's colour on the start screen in the landing variants (a, b, c) and during that session; v=0 keeps Ember for all. reason_en: the one reason line on the tiles in variants d and e. does_en: the tile line in variant f, what the session does, not tied to the clock. next_f_en: the end-screen suggestion in variant f (not tied to a time of day). narrator: who guides the recording (from the production database, 28 Sep: The Soft Reboot is Philip, Unravel and The Wake Up are Edvin); every name on the page follows the chosen session. web_start_f: in variant f, where playback starts (1 s before the first line that fits any moment): The Wake Up skips 'This is your morning reset.', The Soft Reboot skips 'Welcome to this breathwork session, which is designed to cultivate more peace, more calm, and a way for you to manage your stress more effectively.' Unset: the score's startAt. web_continue_f: in variant f with ?seen=round (the visitor breathed one round in the ad), playback starts here, after the introduction (1 s before the first instruction).",
   "sessions": [
     {
       "slug": "wake-up",
@@ -12,7 +12,9 @@
       "reason_en": "Energy for your morning",
       "does_en": "Fast breaths, then a long hold",
       "next_f_en": "Next time you need a lift: Wake up again. Or Reset between things.",
-      "narrator": "Edvin"
+      "narrator": "Edvin",
+      "web_start_f": 4.28,
+      "web_continue_f": 39.86
     },
     {
       "slug": "unravel",
@@ -25,7 +27,8 @@
       "reason_en": "A calm pause in your day",
       "does_en": "A slow pause between things",
       "next_f_en": "Next time you are between things: Reset again. Wind down before bed.",
-      "narrator": "Edvin"
+      "narrator": "Edvin",
+      "web_continue_f": 39.04
     },
     {
       "slug": "soft-reboot",
@@ -38,7 +41,9 @@
       "reason_en": "Slow down for the night",
       "does_en": "Long exhales before sleep",
       "next_f_en": "Tomorrow night: Wind down again, lights off.",
-      "narrator": "Philip"
+      "narrator": "Philip",
+      "web_start_f": 9.35,
+      "web_continue_f": 48.38
     }
   ]
 }

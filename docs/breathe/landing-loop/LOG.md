@@ -112,3 +112,31 @@ is kept only if the total rises and no score drops.
 - On the deployed preview (real network, Chromium, iPhone emulation): Edvin's first word 1.1-1.9 s after Start (Wind
   down 0.8-1.2 s), inside 2 s but with less margin than locally (the audio streams); CLS 0 in 7 of 8 loads and
   0.013 once at 375x667 (not reproduced in a focused test; open for m2).
+
+## Second half (to m2): the lead's M1 rulings
+Two blind passes per version with a full-point drop rule are now the rule. `?h=night` stays. The ads loop's M1 ads
+replace the v1 ads as each person's last frame (overloaded now arrives from "Before the first email.", `?h=email&s=unravel`,
+at 08:50); the judge brief says each person's ad is getting its own colour world. New baseline (f after the narrator
+fix, the M1 ads): **125.0** (two passes, 124 and 126).
+
+Fact fix, own commit: The Soft Reboot is guided by **Philip**, not Edvin (production database). `narrator` in
+breathe-sessions.json; every name on the page follows the chosen session; the generic headline is "Breathe with us."
+
+### 8. Skip the opening lines that don't fit - KEPT (8b)
+- Change (`openings`, `web_start_f` in breathe-sessions.json): The Wake Up starts at 4.28 s, so the first words are "A
+  short practice to clear the fog", not "This is your morning reset." (at 15:00 and 18:30). The Soft Reboot starts at
+  9.35 s, past "Welcome to this breathwork session, which is designed to cultivate more peace, more calm, and a way
+  for you to manage your stress more effectively" (a claim), so Philip's first words are "We'll be using a technique
+  called 4-7-8". Unravel is unchanged ("Welcome. This practice is called the physiological sigh.").
+- 8a started The Soft Reboot at 8.82 s, which showed the tail "more effectively." as the first caption; mean 124.5
+  (flat). 8b (9.35 s) fixed that.
+- Checks: all pass; the first word 1.08-1.25 s after Start, Philip 0.55 s.
+- Judge mean 125.0 -> 131.0, no drops; Start from all four in both passes.
+- Still said in The Wake Up's introduction: "let's begin this morning practice together" (36.6 s), part of the
+  instructions, so it stays.
+
+### The one-round journey (`?seen=round`), outside the scored four
+People who already breathed a round with the guide in a 45-60 s ad: the subline is "That was one round. The whole
+session is 6 minutes with <guide>, free.", Start reads "Continue with Edvin" (or Philip), and playback starts after
+the session's introduction (`web_continue_f`: The Wake Up 39.86 s, first words "We'll start with four seconds in";
+Unravel 39.04 s; The Soft Reboot 48.38 s). Tested for the challenger (keepup): the first word 1.1-1.2 s after the tap.

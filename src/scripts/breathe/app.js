@@ -35,7 +35,7 @@ const VARIANTS = {
   // f: the landing loop's variant (docs/breathe/landing-loop/LOG.md), built on d one judged change at a time
   // Each loop change is a flag, so a change that isn't kept is switched off, not lost (LOG.md says which and why).
   f: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "under",
-    does: true, sub: true, feather: true, adOrb: false, moment: true },
+    does: true, sub: true, feather: true, adOrb: false, moment: true, openings: true },
 };
 const V = VARIANTS[Q.get("v")] ? Q.get("v") : (VARIANTS[DEFAULT_VARIANT] ? DEFAULT_VARIANT : "0");
 const VAR = VARIANTS[V];
@@ -46,6 +46,8 @@ if (VAR.feather) body.classList.add("f-feather");   // the scaled-down room fade
 // message match: ?h=<hook> echoes the ad's first line (variants a, b, c) and picks its session
 const HOOK_ID = (VAR.x || VAR.y) && HOOKS.hooks[Q.get("h") || ""] ? Q.get("h") : null;
 const HOOK = HOOK_ID ? HOOKS.hooks[HOOK_ID] : null;
+// f: ?seen=round, the visitor already breathed one round with the guide in the ad: "Continue with …", no second introduction
+const SEEN = !!(VAR.moment && Q.get("seen") === "round");
 let player = null, playerSlug = null, loading = null;
 
 // ---------- where the visitor came from (no personal data) ----------
@@ -77,7 +79,8 @@ function releaseWorld() { if (!holdWorld) return; holdWorld = null; if (player) 
 function renderChoice(fade) {
   const s = bySlug(selected);
   choiceEls.forEach((el) => el.setAttribute("aria-checked", String(el.dataset.slug === selected)));
-  $("startTitle" + LAY).textContent = VAR.y ? s.choice : s.title;
+  if (SEEN) $(START_BTN).querySelector("span").textContent = "Continue with " + guideOf(selected);
+  else $("startTitle" + LAY).textContent = VAR.y ? s.choice : s.title;
   $(START_BTN).setAttribute("aria-label", (LAY ? "Start " : "Play ") + s.title);
   $(START_BTN).disabled = !s.ready;
   body.dataset.selected = selected;
@@ -122,6 +125,7 @@ if (VAR.x) {
 if (VAR.y) {
   $("startScr").setAttribute("aria-labelledby", "startHy");
   if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").dataset.tpl = (VAR.sub && HOOK.sub_en) || "Breathe with {guide}. 6 minutes, free."; }
+  if (SEEN) $("ySub").dataset.tpl = "That was one round. The whole session is 6 minutes with {guide}, free.";
   body.classList.add("calm-start");   // a dimmer, softer room behind the start screen; detail returns with the session
   requestAnimationFrame(() => sphereUp(true));
 }
@@ -219,7 +223,9 @@ function begin(from) {
   body.classList.remove("calm-start"); sphereUp(false);
   if (VAR.feather) { clearTimeout(begin.ft); body.classList.add("growing"); begin.ft = setTimeout(() => body.classList.remove("growing"), 1100); }
   // d, e: start at the session's startAt (1 s before Edvin's first word), fading the sound in over 1 s
-  const at0 = !from && VAR.fast ? player.startAt : (from || 0);
+  const ws = VAR.openings && bySlug(selected) && bySlug(selected).web_start_f;   // f: skip an opening line that doesn't fit the moment
+  const wc = SEEN && bySlug(selected) && bySlug(selected).web_continue_f;
+  const at0 = !from && VAR.fast ? (wc > 0 ? wc : ws != null && ws > 0 ? ws : player.startAt) : (from || 0);
   if (!from && VAR.fast && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
   if (!from && VAR.safety === "caption") { const c = $("safeCap"); c.hidden = false; c.classList.remove("out"); setTimeout(() => c.classList.add("out"), 2600); setTimeout(() => { c.hidden = true; }, 3400); }
   const pr = player.start(at0);
