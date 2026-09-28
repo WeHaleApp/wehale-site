@@ -133,7 +133,7 @@ body.in-session .chrome:not(.off) ~ #brand { opacity: 0; }
 .meta { font: 500 15px/1.4 var(--font) !important; color: var(--text) !important; margin-top: 12px !important; }
 .fine { font-size: 13px !important; line-height: 1.45 !important; color: var(--t3) !important; margin-top: 14px !important; }
 
-.choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0 2px; }
+.choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 2px; }
 .choice { appearance: none; border: 0; border-radius: 16px; background: rgba(246, 237, 227, .08); color: var(--ink); cursor: pointer;
   padding: 10px 6px 9px; display: grid; gap: 3px; justify-items: center; min-height: 58px; transition: background .2s, color .2s; }
 .choice b { font: 700 15px/1.2 var(--font); }
@@ -143,7 +143,12 @@ body.in-session .chrome:not(.off) ~ #brand { opacity: 0; }
 .choice[aria-disabled="true"] b { opacity: .6; }
 .change { appearance: none; background: none; border: 0; color: var(--t2); font: 600 14px/1 var(--font); text-decoration: underline; text-underline-offset: 3px; padding: 10px; cursor: pointer; margin-top: 4px; }
 
-#startBtn { margin: 16px auto 0; width: 80px; height: 80px; }
+#startBtn { margin: 12px auto 0; width: 72px; height: 72px; }
+/* the start screen keeps the whole safety line clear of the bottom edge: the home indicator, in-app browser bars
+   and, on deploy previews, Netlify's feedback bar (about 46 px) */
+#startScr { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 56px); }
+#startScr h1 { margin-bottom: 6px; }
+#startScr .fine { margin-top: 10px !important; }
 .scr-top { position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 50px); margin: 0; }
 .startlbl:empty { display: none; }
 #startBtn[aria-busy="true"] svg { opacity: .35; }
@@ -172,5 +177,5 @@ body.in-session .consent { display: none; }
 
 .noscript { position: fixed; inset: auto 16px 16px; z-index: 9; text-align: center; color: var(--t2); }
 @media (min-height: 800px) { .screen h1 { font-size: 30px; } }
-@media (max-height: 640px) { .scr-top { display: none; } #startBtn { width: 68px; height: 68px; } }
+@media (max-height: 640px) { .scr-top { display: none; } #startBtn { width: 64px; height: 64px; } #startScr { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); } }
 @media (prefers-reduced-motion: reduce) { .screen, .screen.gone, .chrome { transition-duration: .2s; } }
