@@ -36,12 +36,18 @@ const VARIANTS = {
   // Each loop change is a flag, so a change that isn't kept is switched off, not lost (LOG.md says which and why).
   f: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "under",
     does: true, sub: true, feather: true, adOrb: false, moment: true, openings: true, softMoon: true, edge: true, glow: false, own: true },
+  // g (Isak, 29 Sep): a radical reduction. One line, the sphere, Begin; swipe between the three worlds; save for later.
+  // g1: tap Begin (or the sphere). g2: hold the sphere to breathe in (about 1.2 s), release to begin; Begin stays.
+  g1: { y: true, g: true, worlds: true, intro: false, picker: true, offerAtStart: false, fast: true, safety: "caption",
+    does: true, sub: false, feather: true, moment: true, openings: true, softMoon: true, edge: true, own: false, hold: false },
+  "g2-next": { y: true, g: true, worlds: true, intro: false, picker: true, offerAtStart: false, fast: true, safety: "caption",
+    does: true, sub: false, feather: true, moment: true, openings: true, softMoon: true, edge: true, own: false, hold: true },
 };
-const V = VARIANTS[Q.get("v")] ? Q.get("v") : (VARIANTS[DEFAULT_VARIANT] ? DEFAULT_VARIANT : "0");
+const V = Q.get("v") === "g" ? "g1" : VARIANTS[Q.get("v")] ? Q.get("v") : (VARIANTS[DEFAULT_VARIANT] ? DEFAULT_VARIANT : "0");
 const VAR = VARIANTS[V];
 body.dataset.v = V;
 if (VAR.does) body.classList.add("f-does");
-if (VAR.moment) body.classList.add("f-moment");   // the chosen session is the big card; the others stay small until tapped
+if (VAR.moment && !VAR.g) body.classList.add("f-moment");   // the chosen session is the big card; the others stay small until tapped
 if (VAR.softMoon) window.__breatheSoftMoon = true;   // Wind down's centre: a smooth pearl instead of the cratered moon
 if (VAR.feather) body.classList.add("f-feather");
 if (VAR.own) body.classList.add("f-own");   // each person's own page: every row keeps its line, a dim night Start, the challenger's edge   // the scaled-down room fades out at its edges (no visible canvas rectangle)
@@ -50,6 +56,12 @@ const HOOK_ID = (VAR.x || VAR.y) && HOOKS.hooks[Q.get("h") || ""] ? Q.get("h") :
 const HOOK = HOOK_ID ? HOOKS.hooks[HOOK_ID] : null;
 // f: ?seen=round, the visitor already breathed one round with the guide in the ad: "Continue with …", no second introduction
 const SEEN = !!(VAR.moment && Q.get("seen") === "round");
+// g: the one line (the ad's hook on its own session, else "Breathe with <guide>.") and one quiet line
+function gLines() {
+  const s = bySlug(selected);
+  $("startHy").textContent = HOOK && HOOK.session === selected ? ((LANG === "sv" && HOOK.line_sv) || HOOK.line_en) : "Breathe with " + guideOf(selected) + ".";
+  $("ySub").textContent = s.choice + " · 6 minutes · free";
+}
 let player = null, playerSlug = null, loading = null;
 
 // ---------- where the visitor came from (no personal data) ----------
@@ -82,12 +94,14 @@ function renderChoice(fade) {
   const s = bySlug(selected);
   choiceEls.forEach((el) => el.setAttribute("aria-checked", String(el.dataset.slug === selected)));
   if (SEEN) $(START_BTN).querySelector("span").textContent = "Continue with " + guideOf(selected);
+  else if (VAR.g) $(START_BTN).querySelector("span").textContent = "Begin";
   else $("startTitle" + LAY).textContent = VAR.y ? s.choice : s.title;
   $(START_BTN).setAttribute("aria-label", (LAY ? "Start " : "Play ") + s.title);
   $(START_BTN).disabled = !s.ready;
   body.dataset.selected = selected;
   document.querySelectorAll("[data-guide]").forEach((el) => { el.textContent = guideOf(selected); });
   document.querySelectorAll("[data-tpl]").forEach((el) => { el.textContent = fillGuide(el.dataset.tpl); });
+  if (VAR.g) gLines();
   // choosing a session changes the room: a 0.6 s cross-fade in the live field, or the CSS light's colour
   if (VAR.worlds) { if (player) player.setWorld(worldOf(selected), fade ? .6 : 0); else body.dataset.world = worldOf(selected); }
 }
@@ -150,6 +164,8 @@ if (VAR.y) {
   setTimeout(arrive, 700);   // never hold the page for a slow font
 }
 
+if (VAR.g) $("safeCap").textContent = "Go at your own pace. Stop if you feel dizzy.";
+
 // ---------- event params: {session, arm, source}; assignment_id once an offer arm exists ----------
 let assignment = null;
 function params() {
@@ -197,6 +213,7 @@ async function ready() {
 }
 async function play(from) {
   releaseWorld();
+  if (VAR.g && !from) gGo();
   const s = bySlug(selected); if (!s || !s.ready) return;
   const src = audioSrc(selected);
   if (!audio.src.endsWith(src)) { audio.src = src; audio.preload = "auto"; }
@@ -251,7 +268,7 @@ $(START_BTN).addEventListener("click", () => play(0));
 $("againBtn").addEventListener("click", () => play(0));
 let exitAt = 0;
 $("resumeBtn").addEventListener("click", () => play(exitAt));
-$("exitStart").addEventListener("click", () => { showScreen("startScr"); if (VAR.y) { body.classList.add("calm-start"); sphereUp(true); } });
+$("exitStart").addEventListener("click", () => { showScreen("startScr"); if (VAR.y) { body.classList.add("calm-start"); sphereUp(true); } if (VAR.g) gReset(); });
 
 function tick(at) {
   if (!oneMin && at >= 60) { oneMin = true; track.oneMinute(params()); }
@@ -338,6 +355,11 @@ function placeSphere() {
   if (!VAR.y) return;
   const up = body.classList.contains("sphere-up");
   if (!up) { ROOM.forEach((el) => { el.style.transform = ""; }); return; }
+  if (VAR.g) {   // g: the sphere stays where the session has it, a little smaller, so Begin grows it into the session
+    const H = innerHeight, U = Math.min(innerWidth, H * .5625), cy0 = H / 2 - .1 * U, sg = .9, tyg = (cy0 - H / 2) * (1 - sg);
+    body.style.setProperty("--orb-y", cy0.toFixed(0) + "px"); body.style.setProperty("--orb-r", (.2 * U * sg).toFixed(0) + "px");
+    ROOM.forEach((el) => { el.style.transformOrigin = "50% 50%"; el.style.transform = `translateY(${tyg.toFixed(1)}px) scale(${sg})`; }); return;
+  }
   const top = $("ySub").getBoundingClientRect().bottom, bottom = $("choicesY").getBoundingClientRect().top;
   if (!(bottom > top)) return;
   const W = innerWidth, H = innerHeight, U = Math.min(W, H * .5625), cy0 = H / 2 - .1 * U;
@@ -427,6 +449,121 @@ if ((measuring || Q.get("consent") === "1") && !consent()) {
 
 if (Q.get("src") === "saved") track.returnFromSaved(params());
 onConsent((c) => { if (c === "granted" && Q.get("src") === "saved") track.returnFromSaved(params()); });
+
+// ---------- g: the carousel of worlds, the press that breathes in, and the one motion into the session ----------
+// The room (both canvases) follows the finger, the ground light at .4 (parallax), the line at .6; a spring snaps it to
+// a session. Gestures start 24 px in from the edges (the in-app browsers' back swipe). touch-action: none on the screen.
+const G_ORDER = SESSIONS.filter((x) => x.ready).map((x) => x.slug);
+let gx = 0, gAnim = 0, gDrag = null, gHold = null, gSwell = 1, gSwellAnim = 0, gBusy = false;
+function gApply(x) {
+  gx = x; const W = innerWidth;
+  ROOM.forEach((el) => { el.style.translate = x.toFixed(1) + "px 0"; });
+  $("poster").style.translate = (x * .4).toFixed(1) + "px 0";
+  const lede = document.querySelector(".ylede"); lede.style.translate = (x * .6).toFixed(1) + "px 0";
+  lede.style.opacity = String(Math.max(0, 1 - Math.abs(x) / (W * .4)).toFixed(3));
+}
+function gSpring(target, v0, done) {   // a damped spring (k 260, 85 % of critical damping), not a linear slide
+  cancelAnimationFrame(gAnim); let x = gx, v = v0 || 0, last = performance.now();
+  const k = 260, c = 2 * Math.sqrt(k) * .85;
+  const step = (t) => { const h = Math.min(.032, Math.max(.001, (t - last) / 1000)); last = t; v += (-k * (x - target) - c * v) * h; x += v * h; gApply(x);
+    if (Math.abs(x - target) < .5 && Math.abs(v) < 8) { gApply(target); if (done) done(); return; } gAnim = requestAnimationFrame(step); };
+  gAnim = requestAnimationFrame(step);
+}
+function gScale(to, ms) {   // the swell (an inhale under the finger) and its release
+  cancelAnimationFrame(gSwellAnim); const from = gSwell, t0 = performance.now();
+  const step = (t) => { const u = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - u, 3); gSwell = from + (to - from) * e;
+    ROOM.forEach((el) => { el.style.scale = gSwell.toFixed(4); }); if (u < 1) gSwellAnim = requestAnimationFrame(step); };
+  gSwellAnim = requestAnimationFrame(step);
+}
+function gDots() {
+  const i = G_ORDER.indexOf(selected);
+  [...$("gDots").children].forEach((d, j) => d.classList.toggle("on", j === i));
+  $("gPrev").disabled = i <= 0; $("gNext").disabled = i >= G_ORDER.length - 1;
+  $("gLive").textContent = bySlug(selected).choice + ", " + (i + 1) + " of " + G_ORDER.length;
+}
+function gPick(slug) {
+  const el = choiceEls.find((c) => c.dataset.slug === slug); if (el) el.click();
+  try { if (navigator.vibrate) navigator.vibrate(8); } catch (_) {}   // a light tick where it exists (not iOS)
+  gDots();
+}
+function gHideHint() { const h = $("gHint"); if (h) h.classList.add("out"); }
+function gStep(dir, v) {
+  if (gBusy) return; const i = G_ORDER.indexOf(selected), j = i + dir, W = innerWidth; gHideHint();
+  if (j < 0 || j >= G_ORDER.length) { gSpring(0, v); return; }   // the ends give a little and come back
+  gBusy = true;
+  gSpring(-dir * W * .5, v, () => { gPick(G_ORDER[j]); gApply(dir * W * .42); gSpring(0, 0, () => { gBusy = false; }); });
+}
+function gGeom() { const cs = getComputedStyle(body); return { x: innerWidth / 2, y: parseFloat(cs.getPropertyValue("--orb-y")) || innerHeight * .45, r: parseFloat(cs.getPropertyValue("--orb-r")) || 70 }; }
+function gOnSphere(e) { const g = gGeom(), dx = e.clientX - g.x, dy = e.clientY - g.y; return dx * dx + dy * dy <= Math.pow(g.r * 1.3, 2); }
+function gHoldStart() {
+  gHold = { t0: performance.now(), u: 0 }; body.classList.add("g-holding");
+  const step = () => { if (!gHold) return; const u = Math.min(1, (performance.now() - gHold.t0) / 1200); gHold.u = u;
+    gSwell = 1 + .08 * (1 - Math.pow(1 - u, 2)); ROOM.forEach((el) => { el.style.scale = gSwell.toFixed(4); });
+    $("gRing").style.setProperty("--hold", u.toFixed(3));
+    if (u < 1) gHold.raf = requestAnimationFrame(step); else { body.classList.add("g-full"); try { if (navigator.vibrate) navigator.vibrate(12); } catch (_) {} } };
+  gHold.raf = requestAnimationFrame(step);
+}
+function gHoldEnd(begin) {
+  if (!gHold) return false; const full = gHold.u >= 1; cancelAnimationFrame(gHold.raf); gHold = null;
+  body.classList.remove("g-holding", "g-full"); $("gRing").style.setProperty("--hold", "0");
+  if (full && begin) { play(0); return true; }
+  gScale(1, 500); if (begin) $("gHoldHint").classList.add("nudge"); return false;
+}
+function gGo() {   // the start screen dissolves at once; the sphere exhales and grows into the session
+  body.classList.add("g-going"); gHideHint();
+  gScale(1, 700);
+  const t0 = performance.now(), from = window.__breatheSparse || .35;
+  const up = (t) => { const u = Math.min(1, (t - t0) / 1400); window.__breatheSparse = from + (1 - from) * u; if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up);
+}
+function gReset() { body.classList.remove("g-going"); window.__breatheSparse = .35; gApply(0); gScale(1, 10); }
+if (VAR.g) {
+  window.__breatheSparse = .35;
+  const scr = $("startScr"), EDGE = 24;
+  $("choicesY").hidden = true; ["saveBtn", "offerStartY"].forEach((id) => { $(id).hidden = true; });
+  gDots();
+  scr.addEventListener("pointerdown", (e) => {
+    if (e.button > 0 || scr.classList.contains("gone")) return;
+    if (e.target.closest("button, a, .consent")) return;
+    if (e.clientX < EDGE || e.clientX > innerWidth - EDGE) return;
+    gDrag = { x0: e.clientX, y0: e.clientY, id: e.pointerId, moved: false, sphere: gOnSphere(e), hist: [[performance.now(), e.clientX]] };
+    cancelAnimationFrame(gAnim); try { scr.setPointerCapture(e.pointerId); } catch (_) {}
+    if (gDrag.sphere) { if (VAR.hold) gHoldStart(); else gScale(1.04, 180); }
+  });
+  scr.addEventListener("pointermove", (e) => {
+    if (!gDrag || e.pointerId !== gDrag.id || gBusy) return;
+    const mx = e.clientX - gDrag.x0;
+    if (!gDrag.moved && Math.abs(mx) > 10 && Math.abs(mx) > Math.abs(e.clientY - gDrag.y0)) { gDrag.moved = true; gHoldEnd(false); gScale(1, 200); gHideHint(); }
+    if (!gDrag.moved) return;
+    const i = G_ORDER.indexOf(selected); let x = mx; if ((i === 0 && x > 0) || (i === G_ORDER.length - 1 && x < 0)) x *= .3;
+    gApply(x); gDrag.hist.push([performance.now(), e.clientX]); if (gDrag.hist.length > 6) gDrag.hist.shift();
+  });
+  const end = (e, cancel) => {
+    if (!gDrag || e.pointerId !== gDrag.id) return; const d = gDrag; gDrag = null;
+    if (d.moved) {
+      const h = d.hist, a = h[0], b = h[h.length - 1], v = b[0] > a[0] ? (b[1] - a[1]) / (b[0] - a[0]) * 1000 : 0;   // px/s
+      if (!cancel && (Math.abs(gx) > innerWidth * .2 || Math.abs(v) > 450)) gStep(gx < 0 || (Math.abs(gx) < 10 && v < 0) ? 1 : -1, v); else gSpring(0, v);
+      return;
+    }
+    if (cancel) { gHoldEnd(false); gScale(1, 300); return; }
+    if (VAR.hold) { gHoldEnd(true); return; }
+    if (d.sphere) play(0); else gScale(1, 200);   // g1: a tap on the light begins
+  };
+  scr.addEventListener("pointerup", (e) => end(e, false));
+  scr.addEventListener("pointercancel", (e) => end(e, true));
+  $("gPrev").addEventListener("click", () => gStep(-1, 0)); $("gNext").addEventListener("click", () => gStep(1, 0));
+  addEventListener("keydown", (e) => {
+    if (scr.classList.contains("gone") || !$("saveSheet").hidden || !/^Arrow(Left|Right)$/.test(e.key)) return;
+    e.preventDefault(); gStep(e.key === "ArrowRight" ? 1 : -1, 0);
+  });
+  // Begin: the light swells while the button is pressed, and exhales into the session on release
+  $(START_BTN).addEventListener("pointerdown", () => gScale(1.05, 260));
+  $(START_BTN).addEventListener("pointerleave", () => { if (!body.classList.contains("g-going")) gScale(1, 300); });
+  $("gSave").addEventListener("click", () => openSave());
+  // the swipe hint: first visit only, fades after 2 s or at the first swipe; g2 also says the light can be held
+  let seen = false; try { seen = localStorage.getItem("wehale.breathe.swipehint") === "1"; localStorage.setItem("wehale.breathe.swipehint", "1"); } catch (_) {}
+  if (seen || Q.get("hint") === "0") $("gHint").hidden = true; else setTimeout(gHideHint, 3200);
+  if (VAR.hold) $("gHoldHint").hidden = false;
+}
 
 // test hooks for the preview checks (no effect for visitors)
 window.__breathe = { openSave, get player() { return player; }, loadPlayer, timeSlug, get selected() { return selected; }, finish, exitEarly };

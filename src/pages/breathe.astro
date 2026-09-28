@@ -10,12 +10,14 @@ import path from "node:path";
 import BreatheLayout from "../layouts/BreatheLayout.astro";
 import "../styles/breathe.css";
 import SESSIONS from "../data/breathe-sessions.json";
+import HOOKS from "../data/breathe-hooks.json";
 
 const pub = path.resolve("public/breathe/sessions");
 const sessions = SESSIONS.sessions.map((s) => ({
   ...s,
   ready: fs.existsSync(path.join(pub, s.slug, "score.json")) && fs.existsSync(path.join(pub, s.slug, "audio.mp3")),
 }));
+const HOOK_WORLDS = Object.fromEntries(Object.entries(HOOKS.hooks).map(([k, h]) => [k, h.world || (SESSIONS.sessions.find((x) => x.slug === h.session) || {}).world]));
 const first = sessions.find((s) => s.ready) || sessions[0];
 const title = "Guided breathing: a free 6-minute session · WeHale";
 const description = "A guided breathing session with Edvin or Philip, right in your browser. About 6 minutes. Free, no account.";
@@ -125,8 +127,24 @@ const description = "A guided breathing session with Edvin or Philip, right in y
       <span class="startlbl" id="startLblY" aria-live="polite"></span>
       <button class="savebtn" id="saveBtn" type="button">Not a good moment? Save it for later</button>
       <p class="ysafe">Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.</p>
+      <button class="vg glink" id="gSave" type="button" data-save>Save for later</button>
     </div>
+    <!-- variant g: the sessions are a carousel of worlds (swipe, arrows, or these buttons); dots show where you are -->
+    <div class="vg gnav" id="gNav">
+      <button class="gstep" id="gPrev" type="button" aria-label="Previous session"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg></button>
+      <div class="gdots" id="gDots" aria-hidden="true">{sessions.filter((s) => s.ready).map(() => <i></i>)}</div>
+      <button class="gstep" id="gNext" type="button" aria-label="Next session"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg></button>
+    </div>
+    <p class="vg ghint" id="gHint" aria-hidden="true">‹ swipe ›</p>
+    <p class="vg gholdhint" id="gHoldHint" hidden>Or hold the light to breathe in</p>
+    <div class="vg gring" id="gRing" aria-hidden="true"></div>
+    <p class="vg gsr" id="gLive" aria-live="polite"></p>
   </main>
+  <!-- g: before first paint, the orb glows in the session's world where the sphere sits -->
+  <script is:inline define:vars={{ HW: HOOK_WORLDS, SW: Object.fromEntries(sessions.map((x) => [x.slug, x.world])) }}>(function(){try{var Q=new URLSearchParams(location.search),q=Q.get("v");if(q!=="g"&&q!=="g1"&&q!=="g2")return;
+    var b=document.body;b.dataset.v=q==="g"?"g1":q;b.classList.add("f-does","f-feather","g-poster");
+    var w=SW[Q.get("s")||""]||HW[Q.get("h")||""];if(!w){var h=+Q.get("hour");if(!(Q.has("hour")&&h>=0&&h<24))h=new Date().getHours();w=h<11?"ember":h<18?"water":"night";}b.dataset.world=w;
+    var W=innerWidth,H=innerHeight,U=Math.min(W,H*.5625);b.style.setProperty("--orb-y",(H/2-.1*U).toFixed(0)+"px");b.style.setProperty("--orb-r",(.2*U*.9).toFixed(0)+"px");}catch(e){}})();</script>
 
   <!-- save for later (variants d and e): bus, office, anywhere breathing isn't possible right now -->
   <div class="sscrim" id="saveScrim" hidden></div>

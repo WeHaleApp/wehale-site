@@ -183,3 +183,16 @@ Unravel 39.04 s; The Soft Reboot 48.38 s). Tested for the challenger (keepup): t
 - On the deployed preview after m2: the voice 0.65-1.05 s after Start for Wind down, and 0.8 s and 2.1 s for the
   challenger. Starting at 10.1 s needs a range request into the audio, which can miss 2 s on a cold load. Open:
   prefetch that range while the start screen is up.
+- Bug found after m2 and fixed (b068608): iteration 12 read hook fields without a hook, so /breathe without `?h=`
+  (the default visitor) threw and showed no session. The loop's journeys all carried a hook, so the checks missed it;
+  the harness now also loads each variant without `?h=`.
+
+## Variant g (Isak's verdict on f: too much going on). Checkpoint 1
+`?v=g` (= `g1`): one line (the ad's hook on its session, else "Breathe with <guide>."), one quiet line ("Wake up ·
+6 minutes · free"), the sphere in its world (sparse field, not dimmed, a glowing CSS orb before WebGL), Begin, and
+"Save for later". Swipe left/right (from 24 px in from the edges), the arrow keys, or the ‹ › buttons move between
+the three worlds: the room follows the finger (ground at .4 for parallax, the line at .6), a spring snaps it, the dots
+show where you are, and `navigator.vibrate(8)` ticks where it exists. A tap on Begin or on the sphere dissolves the
+screen and the sphere grows into the session; the safety line is a 3 s caption. Checks: swipe 58.8-60 fps at 4x CPU
+(0-3 dropped frames), CLS 0, contrast at least 5.7:1 (the ‹ › got a dark backing), the voice 1.08-1.32 s after Begin.
+The hold-to-breathe version (g2) is built but off until the lead's go. f is unchanged and still the default.

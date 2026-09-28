@@ -717,7 +717,7 @@ function createTideField(gl, prog, VS, opts = {}) {
     gl.uniform1i(u.uN, NW); gl.uniform2f(u.uRes, W, H); gl.uniform2f(u.uC, cx, cy); f('uU', U); f('uR', R); f('uGlow', L.glow);
     f('uPx', Math.max(1.4, W / 390 * 1.05)); f('uYb', yb); f('uYt', yt); f('uTopBand', 90 * (W / 390) / U); f('uBand', 150 * (W / 390) / U); f('uTw', L.tw); f('uNear', .006); f('uTwk', Wd.twinkle); f('uSize', Wd.size);
     f('uShape', Wd.shape); f('uPg', trails ? 1 : 2.3); gl.uniform3fv(u.uFar, FAR); gl.uniform3fv(u.uNearC, NEAR); gl.uniform4fv(u.uQz, L.qz); f('uQs', L.qs); gl.uniform4fv(u.uQz2, L.qz2); f('uQs2', L.qs2); gl.uniform3fv(u.uHr, L.hr);
-    gl.bindVertexArray(vPts); gl.drawArrays(gl.POINTS, 0, Math.floor(NW * NW * TIERS[L.tier] * Wd.count));
+    gl.bindVertexArray(vPts); gl.drawArrays(gl.POINTS, 0, Math.floor(NW * NW * TIERS[L.tier] * Wd.count * ((typeof window !== 'undefined' && window.__breatheSparse) || 1)));   // g: a sparse, calm field before Begin
     gl.bindVertexArray(vTri);
     if (!trails) { gl.disable(gl.BLEND); return; }
     ti = 1 - ti;
