@@ -1,0 +1,29 @@
+{
+  "_about": "The three Always Free sessions offered on wehale.io/breathe. A session is playable when public/breathe/sessions/<slug>/score.json and audio.mp3 both exist at build time; until then its choice shows 'Coming soon'. next_en is the end-screen suggestion after finishing it.",
+  "sessions": [
+    {
+      "slug": "wake-up",
+      "choice": "Wake up",
+      "title": "The Wake Up",
+      "kicker": "Morning",
+      "minutes": 6,
+      "next_en": "Tomorrow morning: The Wake Up again. Or Unravel after lunch."
+    },
+    {
+      "slug": "unravel",
+      "choice": "Reset",
+      "title": "Unravel",
+      "kicker": "Daytime reset",
+      "minutes": 6,
+      "next_en": "This evening: The Soft Reboot. Or Unravel again tomorrow afternoon."
+    },
+    {
+      "slug": "soft-reboot",
+      "choice": "Wind down",
+      "title": "The Soft Reboot",
+      "kicker": "Evening wind-down",
+      "minutes": 6,
+      "next_en": "Tomorrow morning: The Wake Up. Or The Soft Reboot again tonight."
+    }
+  ]
+}

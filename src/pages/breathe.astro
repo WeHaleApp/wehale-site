@@ -1,0 +1,122 @@
+---
+/**
+ * wehale.io/breathe: a free guided breathing session, no sign-up. The page ads point at.
+ * Start screen (plain HTML/CSS, first paint without WebGL or audio) -> the Tide player (lazy) -> end or exit screen.
+ * Sessions: src/data/breathe-sessions.json; a session is playable when its score and audio exist in
+ * public/breathe/sessions/<slug>/ at build time. Offers: src/data/breathe-offers.json. Config gaps: src/scripts/breathe/config.js.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import BreatheLayout from "../layouts/BreatheLayout.astro";
+import "../styles/breathe.css";
+import SESSIONS from "../data/breathe-sessions.json";
+
+const pub = path.resolve("public/breathe/sessions");
+const sessions = SESSIONS.sessions.map((s) => ({
+  ...s,
+  ready: fs.existsSync(path.join(pub, s.slug, "score.json")) && fs.existsSync(path.join(pub, s.slug, "audio.mp3")),
+}));
+const first = sessions.find((s) => s.ready) || sessions[0];
+const title = "Breathe with Edvin: a free 6-minute session · WeHale";
+const description = "A guided breathing session with Edvin, right in your browser. About 6 minutes. Free, no account.";
+---
+
+<BreatheLayout title={title} description={description}>
+  <div id="poster" aria-hidden="true"></div>
+  <canvas id="silk" aria-hidden="true"></canvas>
+  <div id="lostGlow" aria-hidden="true"></div>
+  <canvas id="stage" width="1" height="1" aria-label="Breathing visual. Tap to show the controls."></canvas>
+
+  <div class="chrome off" id="chrome">
+    <header class="top">
+      <div><button class="icon" id="closeBtn" aria-label="Leave the session"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <div class="ttl"><span id="ttlK"></span><b id="ttlT"></b></div>
+      <div class="right">
+        <button class="icon" id="ccBtn" aria-pressed="true" aria-label="Captions"><span>CC</span></button>
+        <button class="icon" id="fsBtn" aria-label="Full screen"><svg viewBox="0 0 24 24" id="fsIco"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      </div>
+    </header>
+    <footer class="ctl"><div class="ctl-in">
+      <div class="times"><span id="tEl">0:00</span><span id="tPh"></span><span id="tRem"></span></div>
+      <div class="scrub" id="scrub" role="slider" aria-label="Session position" aria-valuemin="0" aria-valuemax="340" aria-valuenow="0" tabindex="0"><div class="segs" id="segs"></div><i class="knob" id="knob"></i></div>
+      <div class="btns">
+        <button class="skip" id="backBtn" aria-label="Back 10 seconds"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v5h5"/></svg><span>10s</span></button>
+        <button class="play" id="playBtn" aria-label="Pause"><svg viewBox="0 0 24 24" id="playIco"></svg></button>
+        <button class="skip" id="fwdBtn" aria-label="Forward 10 seconds"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg><span>10s</span></button>
+      </div>
+    </div></footer>
+  </div>
+  <img id="brand" src="/assets/images/logo.svg" alt="WeHale" width="96" height="20" />
+
+  <p class="hint" id="hint" aria-hidden="true"></p>
+  <div class="phase" id="phase" aria-live="polite"></div>
+  <div class="count" id="count"><span id="countT"></span><i class="kbar" aria-hidden="true"><b id="kbarB"></b></i></div>
+  <div class="cap" id="cap" aria-live="polite"></div>
+  <div class="meter" id="meterWrap" aria-hidden="true"><i id="meter"></i></div>
+  <div class="ring" id="ring" aria-hidden="true"></div>
+  <div id="flash" aria-hidden="true"></div><svg id="holdRing" viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="48"/><circle class="prg" id="arcP" cx="50" cy="50" r="48" pathLength="100"/></svg><div id="cdn" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div>
+  <audio id="round" preload="none" playsinline></audio>
+
+  <!-- 1. Start -->
+  <main class="screen" id="startScr" aria-labelledby="startH">
+    <p class="kick scr-top">Breathwork with Edvin</p>
+    <div class="inner">
+      <h1 id="startH">What do you need right now?</h1>
+      <div class="choices" id="choices" role="radiogroup" aria-labelledby="startH">
+        {sessions.map((s) => (
+          <button class="choice" type="button" role="radio" data-slug={s.slug} data-ready={s.ready ? "1" : "0"}
+            aria-checked={s.slug === first.slug ? "true" : "false"} aria-disabled={s.ready ? "false" : "true"}>
+            <b>{s.choice}</b><small>{s.ready ? s.title : "Coming soon"}</small>
+          </button>
+        ))}
+      </div>
+      <button class="change" type="button" id="changeBtn" hidden>Choose another session</button>
+      <p class="meta" id="startMeta"><span id="startTitle">{first.title}</span> · About 6 guided minutes. Free, no account.</p>
+      <button class="play" id="startBtn" type="button" aria-label={`Play ${first.title}`}><svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
+      <span class="startlbl" id="startLbl" aria-live="polite"></span>
+      <p class="fine">Headphones help. Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.</p>
+    </div>
+  </main>
+
+  <!-- 2. End (finished) -->
+  <section class="screen gone" id="endScr" aria-labelledby="endH">
+    <div class="inner">
+      <h1 id="endH">You just did <span data-title></span>.</h1>
+      <p id="endNext"></p>
+      <p class="offer" id="endOffer"></p>
+      <p class="offer" id="endCode" hidden></p>
+      <div class="stack">
+        <a class="pill solid block" id="endApp" href="#" rel="noopener">Continue in the WeHale app</a>
+        <button class="pill block" id="againBtn" type="button">Play again</button>
+      </div>
+      <p class="appline" id="endAppLine"></p>
+    </div>
+  </section>
+
+  <!-- 3. Exit (left early): calm, no offer -->
+  <section class="screen gone" id="exitScr" aria-labelledby="exitH">
+    <div class="inner">
+      <h1 id="exitH">Pick up where you left off</h1>
+      <p><span data-title></span> is one of the three sessions that stay free in the WeHale app.</p>
+      <div class="stack">
+        <button class="pill solid block" id="resumeBtn" type="button">Back to the session</button>
+        <a class="pill block" id="exitApp" href="#" rel="noopener">Open the WeHale app</a>
+      </div>
+      <p class="appline" id="exitAppLine"></p>
+      <button class="linkbtn" id="exitStart" type="button">Choose another session</button>
+    </div>
+  </section>
+
+  <!-- Consent: shown only when there is something to consent to (a pixel ID or the server events are configured) -->
+  <div class="consent" id="consent" role="region" aria-label="Measurement choice" hidden>
+    <p id="consentText"></p>
+    <div class="row"><button type="button" id="consentYes"></button><button type="button" id="consentNo"></button></div>
+  </div>
+
+  <noscript><p class="noscript">This session needs JavaScript turned on.</p></noscript>
+
+  <script is:inline define:vars={{ SESSIONS_DATA: sessions }}>window.__BREATHE_SESSIONS = SESSIONS_DATA;</script>
+  <script>
+    import "../scripts/breathe/app.js";
+  </script>
+</BreatheLayout>
