@@ -29,10 +29,16 @@ const VARIANTS = {
   // square tiles, safety as a short caption when the session starts.
   d: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "under" },
   e: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "caption" },
+  // f: the landing loop's variant (docs/breathe/landing-loop/LOG.md), built on d one judged change at a time
+  // Each loop change is a flag, so a change that isn't kept is switched off, not lost (LOG.md says which and why).
+  f: { y: true, worlds: true, intro: false, picker: true, offerAtStart: true, fast: true, safety: "under",
+    does: true, sub: true, feather: true },
 };
 const V = VARIANTS[Q.get("v")] ? Q.get("v") : (VARIANTS[DEFAULT_VARIANT] ? DEFAULT_VARIANT : "0");
 const VAR = VARIANTS[V];
 body.dataset.v = V;
+if (VAR.does) body.classList.add("f-does");
+if (VAR.feather) body.classList.add("f-feather");   // the scaled-down room fades out at its edges (no visible canvas rectangle)
 // message match: ?h=<hook> echoes the ad's first line (variants a, b, c) and picks its session
 const HOOK_ID = (VAR.x || VAR.y) && HOOKS.hooks[Q.get("h") || ""] ? Q.get("h") : null;
 const HOOK = HOOK_ID ? HOOKS.hooks[HOOK_ID] : null;
@@ -104,7 +110,7 @@ if (VAR.x) {
 }
 if (VAR.y) {
   $("startScr").setAttribute("aria-labelledby", "startHy");
-  if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").textContent = "Breathe with Edvin. 6 minutes, free."; }
+  if (HOOK) { $("startHy").textContent = (LANG === "sv" && HOOK.line_sv) || HOOK.line_en; $("ySub").textContent = (VAR.sub && HOOK.sub_en) || "Breathe with Edvin. 6 minutes, free."; }
   body.classList.add("calm-start");   // a dimmer, softer room behind the start screen; detail returns with the session
   requestAnimationFrame(() => sphereUp(true));
 }
@@ -199,11 +205,13 @@ function begin(from) {
   hideScreens(); $("intro").hidden = true; closeSave();
   $(START_LBL).textContent = "";
   body.classList.remove("calm-start"); sphereUp(false);
+  if (VAR.feather) { clearTimeout(begin.ft); body.classList.add("growing"); begin.ft = setTimeout(() => body.classList.remove("growing"), 1100); }
   // d, e: start at the session's startAt (1 s before Edvin's first word), fading the sound in over 1 s
   const at0 = !from && VAR.fast ? player.startAt : (from || 0);
   if (!from && VAR.fast && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
   if (!from && VAR.safety === "caption") { const c = $("safeCap"); c.hidden = false; c.classList.remove("out"); setTimeout(() => c.classList.add("out"), 2600); setTimeout(() => { c.hidden = true; }, 3400); }
   const pr = player.start(at0);
+  if (VAR.does) { const s = bySlug(selected); $("ttlK").textContent = "With Edvin · 6 min"; $("ttlT").textContent = s.choice; }   // one name per session
   if (pr && pr.catch) pr.catch(() => { player.exit(); showScreen("startScr"); $(START_LBL).textContent = "Tap start again to turn the sound on."; });
   if (!from) { finished = false; if (!started) { started = true; } track.start(params()); }
   requestWake();
@@ -329,7 +337,7 @@ function openSave(title) {
   const s = bySlug(selected), url = savedUrl(selected), r = reminderTime(selected), end = new Date(r.t.getTime() + 6 * 60000);
   const name = "Breathe with Edvin: " + s.title + ", 6 min", details = "Your 6-minute session with Edvin: " + url;
   $("saveH").textContent = title || "Save it for later";
-  $("saveSub").textContent = s.choice + " · " + s.title + " · 6 min"; $("saveDone").hidden = true;
+  $("saveSub").textContent = VAR.does ? s.choice + " · 6 min with Edvin" : s.choice + " · " + s.title + " · 6 min"; $("saveDone").hidden = true;
   const app = oneLink({ session: selected, completed: false, assignment: null, extra: { af_sub5: "saved" } });
   if (app) { $("saveApp").hidden = false; $("saveApp").href = app; } else $("saveApp").hidden = true;
   $("saveCalT").textContent = r.label;

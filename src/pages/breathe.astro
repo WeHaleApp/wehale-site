@@ -115,7 +115,7 @@ const description = "A guided breathing session with Edvin, right in your browse
           <button class="tile" type="button" role="radio" data-slug={s.slug} data-world={s.world} data-ready={s.ready ? "1" : "0"}
             aria-checked={s.slug === first.slug ? "true" : "false"} aria-disabled={s.ready ? "false" : "true"}>
             <i class="orb" aria-hidden="true"></i>
-            <span class="tt"><b>{s.choice}</b><small>{s.ready ? s.reason_en : "Coming soon"}</small></span>
+            <span class="tt"><b>{s.choice}</b><small class="rd">{s.ready ? s.reason_en : "Coming soon"}</small><small class="rf">{s.ready ? s.does_en : "Coming soon"}</small></span>
             <em>{s.minutes} min</em>
           </button>
         ))}

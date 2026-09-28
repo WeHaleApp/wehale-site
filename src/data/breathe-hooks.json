@@ -1,33 +1,46 @@
 {
-  "_about": "Ad hooks for message match: /breathe?h=<id> puts the ad's exact first line in the headline slot and preselects its session (variants a-e). The seven lines are the ads' own (lead, 28 Sep); unknown ids are ignored. Swedish lines not written yet.",
+  "_about": "Ad hooks for message match: /breathe?h=<id> puts the ad's exact first line in the headline slot and preselects its session (variants a-e). The seven lines are the ads' own (lead, 28 Sep); unknown ids are ignored. Swedish lines not written yet. sub_en: the line under the headline in variant f (what happens next, echoing the ad's end card). 'night' is a draft from the landing loop; no ad uses it yet.",
   "hooks": {
     "coffee": {
       "line_en": "Fourth coffee. Still foggy.",
-      "session": "wake-up"
+      "session": "wake-up",
+      "sub_en": "Try 6 minutes of breathing with Edvin instead. Free, no app needed."
     },
     "email": {
       "line_en": "Before the first email.",
-      "session": "wake-up"
+      "session": "wake-up",
+      "sub_en": "6 minutes of breathing with Edvin first. Free, no app needed."
     },
     "parked": {
       "line_en": "Parked outside. Not ready to go in.",
-      "session": "unravel"
+      "session": "unravel",
+      "sub_en": "Take 6 minutes with Edvin first. Free, no app needed."
     },
     "slowest": {
       "line_en": "The slowest breath of your day.",
-      "session": "unravel"
+      "session": "unravel",
+      "sub_en": "6 minutes of slow breathing with Edvin. Free, no app needed."
     },
     "exhale": {
       "line_en": "Do you rush your exhale?",
-      "session": "unravel"
+      "session": "unravel",
+      "sub_en": "Find out in 6 minutes with Edvin. Free, no app needed."
     },
     "rate": {
       "line_en": "How do you feel, 1 to 10?",
-      "session": "unravel"
+      "session": "unravel",
+      "sub_en": "Ask again after 6 minutes with Edvin. Free, no app needed."
     },
     "keepup": {
       "line_en": "Can you keep up with this?",
-      "session": "wake-up"
+      "session": "wake-up",
+      "sub_en": "About 50 fast breaths in half a minute. 6 minutes with Edvin, free."
+    },
+    "night": {
+      "line_en": "Lights off. Mind still on.",
+      "sub_en": "6 slow minutes with Edvin. Fine to do lying down. Free.",
+      "session": "soft-reboot",
+      "draft": "landing loop, 28 Sep: a line for the one who can't switch off; no ad uses it yet (for the ads loop)"
     }
   }
 }

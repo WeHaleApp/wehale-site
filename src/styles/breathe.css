@@ -181,7 +181,7 @@ body.in-session .consent { display: none; }
 @media (prefers-reduced-motion: reduce) { .screen, .screen.gone, .chrome { transition-duration: .2s; } }
 
 /* ---------- landing variants (?v=a|b|c): say what it is at the top, the sphere in the middle, one action below ---------- */
-body:not([data-v="0"]) .v0, body:not([data-v="a"]):not([data-v="b"]):not([data-v="c"]) .vx, body:not([data-v="d"]):not([data-v="e"]) .vy { display: none !important; }
+body:not([data-v="0"]) .v0, body:not([data-v="a"]):not([data-v="b"]):not([data-v="c"]) .vx, body:not([data-v="d"]):not([data-v="e"]):not([data-v="f"]) .vy { display: none !important; }
 body:not([data-v="0"]) #startScr { justify-content: space-between; padding-top: calc(env(safe-area-inset-top, 0px) + 58px);
   background: linear-gradient(to bottom, rgba(8, 4, 2, .72) 0%, rgba(8, 4, 2, 0) 34%), linear-gradient(to top, rgba(8, 4, 2, .88) 0%, rgba(8, 4, 2, .45) 36%, rgba(8, 4, 2, 0) 60%); }
 .lede, .act { width: 100%; max-width: 420px; margin: 0 auto; }
@@ -240,7 +240,7 @@ body[data-world="night"] { background: #05060e; }
 body[data-world] #poster { transition: opacity 1.6s ease, background .6s ease; }
 
 /* ---------- variants d, e: a reason, a choice, Start ---------- */
-body[data-v="d"] #startScr, body[data-v="e"] #startScr { padding-top: calc(env(safe-area-inset-top, 0px) + 64px);
+body:is([data-v="d"],[data-v="f"]) #startScr, body[data-v="e"] #startScr { padding-top: calc(env(safe-area-inset-top, 0px) + 64px);
   background: linear-gradient(to bottom, rgba(8, 4, 2, .8) 0%, rgba(8, 4, 2, .35) 22%, rgba(8, 4, 2, 0) 36%), linear-gradient(to top, rgba(8, 4, 2, .94) 0%, rgba(8, 4, 2, .7) 42%, rgba(8, 4, 2, 0) 64%); }
 .ylede, .yact { width: 100%; max-width: 420px; margin: 0 auto; }
 .ylede h1 { font-size: 32px !important; line-height: 1.12 !important; margin: 0 0 6px !important; }
@@ -268,9 +268,9 @@ body.calm-start #silk { filter: brightness(.55) saturate(.85); }   /* no blur: a
 .tile[aria-checked="true"] small, .tile[aria-checked="true"] em { color: var(--text); }
 .tile[aria-disabled="true"] { opacity: .55; }
 /* d: stacked, colour on the left */
-body[data-v="d"] .tile { display: flex; align-items: center; gap: 14px; min-height: 72px; padding: 12px 16px; }
-body[data-v="d"] .tile .orb { width: 40px; height: 40px; }
-body[data-v="d"] .tile em { margin-left: auto; }
+body:is([data-v="d"],[data-v="f"]) .tile { display: flex; align-items: center; gap: 14px; min-height: 72px; padding: 12px 16px; }
+body:is([data-v="d"],[data-v="f"]) .tile .orb { width: 40px; height: 40px; }
+body:is([data-v="d"],[data-v="f"]) .tile em { margin-left: auto; }
 /* e: a row of squares, the orb on top */
 body[data-v="e"] .tiles { grid-template-columns: repeat(3, 1fr); }
 body[data-v="e"] .tile { display: grid; justify-items: center; text-align: center; gap: 8px; padding: 14px 6px 12px; aspect-ratio: .82; align-content: center; }
@@ -289,8 +289,8 @@ body[data-v="e"] .ysafe { display: none; }
 .safecap.out { opacity: 0; }
 @media (max-height: 700px) {
   .ylede h1 { font-size: 28px !important; } .ysub { font-size: 16px !important; }
-  body[data-v="d"] .tile { min-height: 62px; padding: 9px 14px; } body[data-v="d"] .tile .orb { width: 34px; height: 34px; }
-  body[data-v="d"] .tiles { gap: 6px; margin-bottom: 10px; } body[data-v="e"] .tile { aspect-ratio: .95; } .starty { min-height: 54px; }
+  body:is([data-v="d"],[data-v="f"]) .tile { min-height: 62px; padding: 9px 14px; } body:is([data-v="d"],[data-v="f"]) .tile .orb { width: 34px; height: 34px; }
+  body:is([data-v="d"],[data-v="f"]) .tiles { gap: 6px; margin-bottom: 10px; } body[data-v="e"] .tile { aspect-ratio: .95; } .starty { min-height: 54px; }
 }
 /* the save sheet */
 .sscrim { position: fixed; inset: 0; z-index: 9; background: rgba(0, 0, 0, .45); opacity: 0; transition: opacity .3s; }
@@ -316,7 +316,7 @@ body[data-v="e"] .ysafe { display: none; }
 #ccBtn span { border: 0; padding: 0; }
 
 /* arrival (d, e): frame 0 is the dark ground and its glow; the headline rises in, the tiles follow 70 ms apart */
-body[data-v="d"] .ylede > *, body[data-v="e"] .ylede > *, body[data-v="d"] .yact > *, body[data-v="e"] .yact > *, .tile { opacity: 0; }
+body:is([data-v="d"],[data-v="f"]) .ylede > *, body[data-v="e"] .ylede > *, body:is([data-v="d"],[data-v="f"]) .yact > *, body[data-v="e"] .yact > *, .tile { opacity: 0; }
 body.arrived .ylede > *, body.arrived .yact > *, body.arrived .tile { animation: rise .7s var(--ease-enter) both; }
 body.arrived .ylede > :nth-child(2) { animation-delay: .08s; }
 body.arrived .tile:nth-child(1) { animation-delay: .22s; } body.arrived .tile:nth-child(2) { animation-delay: .29s; } body.arrived .tile:nth-child(3) { animation-delay: .36s; }
@@ -340,12 +340,21 @@ body.arrived .yact > :not(.tiles) { animation-delay: .46s; }
 
 /* d, e: room for the whole sphere between the subline and the tiles */
 @media (max-height: 700px) {
-  body[data-v="d"] .tile { min-height: 54px; padding: 7px 14px; } body[data-v="d"] .tile .orb { width: 30px; height: 30px; }
-  body[data-v="d"] .tile b { font-size: 16px; } body[data-v="d"] .tile small { font-size: 13.5px; }
-  body[data-v="d"] #startScr .savebtn, body[data-v="e"] #startScr .savebtn { min-height: 42px; padding: 9px; margin-top: 6px; }
-  body[data-v="d"] .ysafe { margin-top: 6px !important; }
-  body[data-v="d"] #startScr, body[data-v="e"] #startScr { padding-top: calc(env(safe-area-inset-top, 0px) + 50px); }
+  body:is([data-v="d"],[data-v="f"]) .tile { min-height: 54px; padding: 7px 14px; } body:is([data-v="d"],[data-v="f"]) .tile .orb { width: 30px; height: 30px; }
+  body:is([data-v="d"],[data-v="f"]) .tile b { font-size: 16px; } body:is([data-v="d"],[data-v="f"]) .tile small { font-size: 13.5px; }
+  body:is([data-v="d"],[data-v="f"]) #startScr .savebtn, body[data-v="e"] #startScr .savebtn { min-height: 42px; padding: 9px; margin-top: 6px; }
+  body:is([data-v="d"],[data-v="f"]) .ysafe { margin-top: 6px !important; }
+  body:is([data-v="d"],[data-v="f"]) #startScr, body[data-v="e"] #startScr { padding-top: calc(env(safe-area-inset-top, 0px) + 50px); }
   body[data-v="e"] .tile { aspect-ratio: auto; padding: 10px 4px 9px; gap: 5px; } body[data-v="e"] .tile .orb { width: 34px; height: 34px; }
   body[data-v="e"] .tile small { font-size: 12.5px; }
 }
 body[data-v="e"] #startScr { overflow: hidden; }
+
+/* ---------- variant f (the landing loop, docs/breathe/landing-loop/LOG.md) ---------- */
+.tile .rf, body.f-does .tile .rd { display: none; }
+body.f-does .tile .rf { display: block; }
+body[data-v="f"] .sclose { width: 44px; height: 44px; }
+body[data-v="f"] #startScr .savebtn { min-height: 46px; }
+/* f: while the room is scaled down behind the start screen, its edges fade out (no hard canvas rectangle) */
+body.f-feather.sphere-up #silk, body.f-feather.growing #silk {
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); }
