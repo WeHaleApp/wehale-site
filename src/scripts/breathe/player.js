@@ -289,14 +289,20 @@ export function createPlayer(P) {
 
   // ---- the session score (score.json per session): phases carry a kind; the visual grammar reads canonical names ----
   const KIND_NAME={arrival:'Arrival', steady:'Four in, four out', fire:'Breath of fire', peak:'Last gear', holds:'Hold and release', integration:'Integration', closing:'Closing'};
-  const kindOf=p=>{ if(p[3] && KIND_NAME[p[3]]) return p[3]; const n=String(p[2]||'').toLowerCase();
+  // a phase's kind: p[3], or the score's kind map {label: section behaviour name} (the session-scores format)
+  const NAME_KIND=Object.fromEntries(Object.entries(KIND_NAME).map(([k,v])=>[v,k]));
+  const kindOf=p=>{ if(p[3] && KIND_NAME[p[3]]) return p[3]; const km=SCORE && SCORE.kind && SCORE.kind[p[2]]; if(km && NAME_KIND[km]) return NAME_KIND[km];
+    if(NAME_KIND[p[2]]) return NAME_KIND[p[2]]; const n=String(p[2]||'').toLowerCase();
     return /arriv|settl|intro/.test(n) ? 'arrival' : /integrat|after/.test(n) ? 'integration' : /clos|end/.test(n) ? 'closing' : /hold|release/.test(n) ? 'holds' : 'steady'; };
   let SCORE=null, CAPS=[], PHASES=[], DUR=1;
   const phaseAt=t=>{ for(const p of PHASES) if(t>=p[0] && t<p[1]) return p[2]; return ''; };
   const phaseLabel=t=>{ for(const p of PHASES) if(t>=p[0] && t<p[1]) return p[4]; return ''; };
   const bnd=kind=>{ for(const p of PHASES) if(p[3]===kind) return [p[0],p[1]]; return null; };
   // the second half of the holds (The Wake Up: its second round) is the culmination
-  const lateAt=t=>{ const h=bnd('holds'); return h ? t>(h[0]+h[1])/2 : false; };
+  // (score.late sets it; otherwise the middle of the holds phase)
+  const lateAt=t=>{ if(SCORE && SCORE.late!=null) return t>SCORE.late; const h=bnd('holds'); return h ? t>(h[0]+h[1])/2 : false; };
+  // intensity ramps over a phase, inset by score.ramps[kind] = [from start, before end] seconds (default: the whole phase)
+  const ramp=(k)=>{ const r=SCORE && SCORE.ramps && SCORE.ramps[k]; return r || [0,0]; };
   let lastCue=-1, ringT=9, ROUND_CUES=[];
   const EMPH=['inhale','exhale','hold','let','go','sigh','empty','nose','last'];
   // Breath model: eases toward full while held, toward empty when released (same as the tap tool),
@@ -346,7 +352,7 @@ export function createPlayer(P) {
     const kTempo=Math.min(1,Math.max(0,(recent-.12)/.45));
     // in a session the intensity follows the arc of the techniques (each builds on the last), not a breath count
     const kSess=at=>{ const ph=phaseAt(at), f=(a,b)=>Math.min(1,Math.max(0,(at-a)/(b-a))), pb=(k,a,b)=>{ const x=bnd(k); return x ? f(x[0]+a, x[1]-b) : 0; };
-      return ph==='Four in, four out' ? .28+.17*pb('steady',6.1,.8) : inFire(at) ? .8+.2*f(FIRE.from+.7,FIRE.to-1.2) : ph==='Breath of fire' ? .6 : ph==='Last gear' ? .72+.28*pb('peak',.1,2.5)
+      return ph==='Four in, four out' ? .28+.17*pb('steady',...ramp('steady')) : inFire(at) ? .8+.2*f(FIRE.from+.7,FIRE.to-1.2) : ph==='Breath of fire' ? .6 : ph==='Last gear' ? .72+.28*pb('peak',...ramp('peak'))
         : ph==='Hold and release' ? .5 : ph==='Arrival' ? .15 : .18; };
     const kRound = sessionMode ? kSess(audio.currentTime) : Math.min(1, roundBreaths/22);
     const calm=Math.min(1, holdT/25); calmNow=calm;
@@ -365,7 +371,7 @@ export function createPlayer(P) {
     else if(auto && (sPhase==='Arrival'||sPhase==='Integration'||sPhase==='Closing')) want='';
     else if(curEv){ const ty=curEv.type;
       if(ty==='kick' || ((curEv.fast || (freeMode && fastRound)) && (ty==='in'||ty==='out'))) want='';
-      else want=({in:'Breathe in',out:'Breathe out',hold:'Hold',holdEmpty:'Hold',release:'Let go'})[ty]||''; }
+      else want=({in:'Breathe in',top:'Breathe in',out:'Breathe out',hold:'Hold',holdEmpty:'Hold',release:'Let go'})[ty]||''; }
     if(want!==phaseName){ phaseName=want; phaseAge=0; if(want) phaseEl.textContent=want; } else phaseAge+=dt;
     if(!hintHidden && (down||auto)){ hintHidden=true; hint.style.opacity='0'; }
     let tgtOp = phaseName ? (phaseName==='Hold' ? Math.min(1,phaseAge/.9)*(1-.35*calm) : 1) : 0;
@@ -668,7 +674,7 @@ export function createPlayer(P) {
   setCueStyle(cueStyle);
   function cueMask(){ const m = CUEMODES[cueStyle] ?? 0; return reduceMotion && m ? 1 : m; }   // reduced motion: light in place only
   function glCue(ev){
-    const n=ev.n||0, T={ in:[1,1], out:[-1,1], hold:[0,.8], holdEmpty:[0,.7], release:[-1,1.5], kick:[-1,.55], count:[1,.55+.2*(3-n)] };
+    const n=ev.n||0, T={ top:[1,.62], in:[1,1], out:[-1,1], hold:[0,.8], holdEmpty:[0,.7], release:[-1,1.5], kick:[-1,.55], count:[1,.55+.2*(3-n)] };
     const cueKind = ev.type==='cue' ? kindOf(PHASES.find(p=>Math.abs(p[0]-ev.t)<.05)||[0,0,'']) : '';
     let v = ev.type==='cue' ? (cueKind==='fire' ? [-1,1.3] : [1,1.1]) : T[ev.type];
     if(!v) return; if(ev.fast && (ev.type==='in'||ev.type==='out')) v=[v[0],.6];
@@ -685,6 +691,7 @@ export function createPlayer(P) {
     if(pulsesOn) punchV=Math.max(punchV, ev.type==='count' ? .2+.15*(3-ev.n) : ev.type==='kick' ? (Math.abs(ev.t-firstKick())<.01 ? 1.5 : 1) : ev.fast && (ev.type==='out'||ev.type==='in') && !inFire(ev.t) ? .38 : 0);   // fire: only the exhale; last gear: both, equal
     if(!pulsesOn) return;
     switch(ev.type){
+      case 'top': ring(R*1.32,R*1.02,.42,.34); flash(.1,.22); break;   // the double inhale's top-up: a short, distinct sip in
       case 'in':  if(ev.fast){ ring(R*1.3,R*1.0,.45,.2); break; } ring(R*1.75,R*1.04,.62,.42); flash(.14,.28); break;   // in and out carry equal weight
       case 'out': if(ev.fast){ ring(R*1.0,R*1.3,.45,.2); break; } ring(R*1.02,R*1.65,.62,.42); flash(.14,.28); break;
       case 'hold': case 'holdEmpty': flash(.24,.55); break;
@@ -769,10 +776,11 @@ export function createPlayer(P) {
     SCORE=sc; CAPS=(sc.caps||[]).map(c=>c.slice()); DUR=+sc.dur || (sc.phases && sc.phases.length ? sc.phases[sc.phases.length-1][1] : 1);
     PHASES=(sc.phases||[]).map(p=>{ const k=kindOf(p); return [p[0],p[1],KIND_NAME[k],k,p[2]]; });   // [from, to, canonical name, kind, label]
     const sh=sc.shape||{}; FIRE=sh.fire||null; BOX=sh.box||null; WARP=sh.warp||null; LEAD=sh.lead||null; BRIDGE=sh.bridge||[]; NATURAL=sh.natural||[];
-    EV=buildEV(); window.__EV=EV; evI=-2; curEv=null; capIdx=-2; ROUND_CUES=(sc.cues||[]);
+    // events: exact from the score (score.ev, the session-scores format), or derived from the curve (The Wake Up)
+    EV = Array.isArray(sc.ev) ? sc.ev.map(e=>Object.assign({},e)).sort((a,b)=>a.t-b.t) : buildEV(); window.__EV=EV; evI=-2; curEv=null; capIdx=-2; ROUND_CUES=(sc.cues||[]);
     if(bline && bline.reset) bline.reset();
     buildSegs();
-    const look=sc.look||{}; JOURNEY=look.journey||null;
+    const look=sc.look||{}; JOURNEY=look.journey||sc.journey||null;
     const qW=new URLSearchParams(location.search).get('world'); if(!qW && look.world && TIDE_WORLDS[look.world]) setWorld(look.world);
     setJourney(journeyOn && !!JOURNEY); }
   setWorld(curWorld);

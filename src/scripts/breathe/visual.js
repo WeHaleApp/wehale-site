@@ -981,7 +981,7 @@ function createBreathLine(host, bc, opts = {}) {
   let style = opts.style || 'thread', visible = opts.visible !== false;
   const halo = !!opts.halo;   // a dark halo under the crisp strokes, for bright worlds (costs ~0.4 ms on a phone-size canvas)
   const S = { op: 0, rev: 0, trail: 0, pulse: 0, lastEv: -1, lastT: null, ch: 0 };
-  const TYPES = { in: 1, out: 1, hold: .8, holdEmpty: .8, release: 1.3, kick: .7, count: .6 };
+  const TYPES = { top: .75, in: 1, out: 1, hold: .8, holdEmpty: .8, release: 1.3, kick: .7, count: .6 };
   const col = (a, c = [255, 230, 202]) => `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a)).toFixed(3)})`;
   const smooth = (u) => { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); };
   function envelope(at) {    // enters before the first round, dissolves into free breathing
@@ -1069,7 +1069,7 @@ function createBreathLine(host, bc, opts = {}) {
       if (count === 'ticks') drawTicks(c, X, (tt) => y(B(tt)), at, futEnd, dpr, W);
       // technique names arrive on the thread, at the moment each begins, and leave once passed
       c.font = `600 ${10.5 * dpr}px "Nunito Sans", system-ui, sans-serif`; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
-      for (const p of bc.phases || []) { const lab = LABELS[p[2]]; if (!lab) continue; const dt = p[0] - at; if (dt < -1.5 || dt > futEnd) continue;
+      for (const p of bc.phases || []) { const lab = LABELS[p[2]] && (p[4] || LABELS[p[2]]);   // the session's own label (p[4]) for a counted or held section if (!lab) continue; const dt = p[0] - at; if (dt < -1.5 || dt > futEnd) continue;
         const x = X(dt), f = Math.min(1, (W - x) / (70 * dpr)) * (dt < 0 ? Math.max(0, 1 + dt / 1.5) : 1) * rev;
         const gm = c.createLinearGradient(0, top - 10 * dpr, 0, bottom); gm.addColorStop(0, col(.4 * f)); gm.addColorStop(1, col(0));
         c.fillStyle = gm; c.fillRect(x - .5 * dpr, top - 10 * dpr, dpr, A + 10 * dpr);   // a soft marker where the technique begins
