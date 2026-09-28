@@ -180,3 +180,6 @@ Unravel 39.04 s; The Soft Reboot 48.38 s). Tested for the challenger (keepup): t
 - Judge mean 131.0 -> 133.5 (avg 4.17), no drops; Start from all four in both passes; challenger 3.88 -> 4.25.
 - The plateau move lifted the score. With 12 iterations and the rest of the weak points on the ads' side, the loop
   stops here for m2.
+- On the deployed preview after m2: the voice 0.65-1.05 s after Start for Wind down, and 0.8 s and 2.1 s for the
+  challenger. Starting at 10.1 s needs a range request into the audio, which can miss 2 s on a cold load. Open:
+  prefetch that range while the start screen is up.
