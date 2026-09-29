@@ -38,14 +38,14 @@
       "world": "water"
     },
     "keepup": {
-      "line_en": "Can you keep up with this?",
+      "line_en": "Can you keep up with this?",
       "session": "wake-up",
       "sub_en": "Fast breaths, then a long hold. 6 minutes with {guide}, free.",
       "world": "ember",
       "card_en": "Three rounds, each one harder",
       "start_f": 10.1,
       "edge_sub_en": "Each round builds, then a long hold. 6 minutes with {guide}, free.",
-      "g_sub_en": "The Wake Up with {guide} · breath of fire, 3 rounds · free",
+      "g_sub_en": "The Wake Up with {guide} · 3 rounds · 6 min · free\nSit down, and stop if you feel dizzy.",
       "g_edge": true,
       "g_cta_en": "Start round 1"
     },

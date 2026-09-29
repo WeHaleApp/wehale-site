@@ -468,3 +468,5 @@ body[data-v^="g"] .ghint { display: none; }                    /* the arrows are
 body.g-edge #silk, body.g-edge #stage { filter: contrast(1.28) saturate(1.45) hue-rotate(-12deg) !important; }
 body[data-v^="g"] .ylede h1 { text-wrap: balance; max-width: 352px !important; }
 @media (min-width: 768px) { body.whc-on { padding-bottom: 0; } body[data-v^="g"].whc-on #startScr { padding-bottom: 96px; } }
+/* desktop: the pager stays legible over the particle field */
+@media (min-width: 768px) { .gdots { padding: 6px 10px; border-radius: 999px; background: rgba(6, 5, 8, .55); } .gdots i { background: rgba(242, 240, 237, .7); } }
