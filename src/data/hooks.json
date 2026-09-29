@@ -59,10 +59,11 @@
   "variants": {
     "_about": "?v= picks a page variant for the A/B. Every event carries the variant actually shown (v).",
     "home": {
-      "default": "hero-still",
+      "default": "hero-film",
       "options": {
-        "hero-still": "the brand-film still (eyes closed): a right-hand panel on desktop, a top band on phones (default; Isak decides later)",
-        "hero-landscape": "a landscape instead (forest at dawn), no person"
+        "hero-film": "the brand film: the valley at dawn, a woman under a pink sky, eyes closed (16.3 s loop; phones get the 9x16 edit)",
+        "hero-valley": "the film's opening valley only, slowed (12.5 s)",
+        "hero-still": "the closed-eyes shot only, slowed (6.9 s)"
       }
     },
     "breathe": {
