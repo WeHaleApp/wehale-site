@@ -25,7 +25,8 @@ mkloop() {
     if [[ $f == 16x9 ]]; then S="scale=1280:720"; W=1280; else S="scale=540:960"; W=540; fi
     ffmpeg -v error -y -i "$SRC/WH_$f.mp4" -filter_complex "[0:v]trim=0.3:6.8,setpts=PTS-STARTPTS[a];[0:v]trim=21.3:26.3,setpts=PTS-STARTPTS[b];[0:v]trim=36.05:38.85,setpts=(PTS-STARTPTS)/0.65[c];[0:v]trim=0.3:1.3,setpts=PTS-STARTPTS[d];[a][b]xfade=transition=fade:duration=1:offset=5.5[ab];[ab][c]xfade=transition=fade:duration=1:offset=9.5[abc];[abc][d]xfade=transition=fade:duration=1:offset=12.8,trim=1.0,setpts=PTS-STARTPTS,$GRADE,$S,format=yuv420p[v]" \
       -map "[v]" -an -c:v libx264 -preset slow -crf 27 -profile:v high -movflags +faststart -r 24 "$OUT/film-$f.mp4"
-    ffmpeg -v error -y -ss 1.0 -i "$OUT/film-$f.mp4" -frames:v 1 -vf "scale=$W:-1" -q:v 3 "$OUT/film-$f-poster.jpg"
+    # the poster is what iOS shows when autoplay is blocked (Low Power Mode): the misty valley at about 2 s, lifted a little
+    ffmpeg -v error -y -ss 2.0 -i "$OUT/film-$f.mp4" -frames:v 1 -vf "eq=gamma=1.18:brightness=0.02:saturation=1.05,scale=$W:-1" -q:v 2 "$OUT/film-$f-poster.jpg"
   done
 }
 mkloop

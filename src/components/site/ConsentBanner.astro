@@ -12,8 +12,7 @@ const { tone = "navy" } = Astro.props;
 const COPY = {
   en: {
     label: "Privacy choices",
-    text: "May we use cookies to measure this visit? It shows us which ads bring people here and what they do next. Nothing runs unless you accept.",
-    short: "May we measure this visit with cookies?",
+    text: "We’d like to measure visits to improve WeHale.",
     privacy: "Privacy", accept: "Accept", decline: "Decline", settings: "Settings",
     heading: "Choose what we may measure",
     analytics: "Site measurement", analyticsSub: "Google Analytics: which pages are used, and how.",
@@ -22,8 +21,7 @@ const COPY = {
   },
   sv: {   // DRAFT: for Isak to check
     label: "Integritetsval",
-    text: "Får vi använda cookies för att mäta besöket? Det visar vilka annonser som leder hit och vad som händer sedan. Inget körs om du inte godkänner.",
-    short: "Får vi mäta besöket med cookies?",
+    text: "Vi vill gärna mäta besök för att göra WeHale bättre.",
     privacy: "Integritet", accept: "Godkänn", decline: "Avböj", settings: "Inställningar",
     heading: "Välj vad vi får mäta",
     analytics: "Mätning av sajten", analyticsSub: "Google Analytics: vilka sidor som används, och hur.",
@@ -36,12 +34,12 @@ const COPY = {
 <div class="whc" id="whConsent" data-pos="bottom" data-tone={tone} role="region" aria-labelledby="whcLabel" hidden>
   <h2 class="whc-sr" id="whcLabel">{COPY.en.label}</h2>
   <div class="whc-ask" data-view="ask">
-    <p class="whc-t"><span class="whc-long" data-t="text">{COPY.en.text}</span><span class="whc-short" data-t="short">{COPY.en.short}</span> <a href="/privacy" data-t="privacy">{COPY.en.privacy}</a></p>
+    <p class="whc-t"><span data-t="text">{COPY.en.text}</span></p>
     <div class="whc-row">
       <button type="button" class="whc-b" data-act="accept" data-t="accept">{COPY.en.accept}</button>
       <button type="button" class="whc-b" data-act="decline" data-t="decline">{COPY.en.decline}</button>
-      <button type="button" class="whc-link" data-act="settings" data-t="settings" aria-expanded="false">{COPY.en.settings}</button>
     </div>
+    <p class="whc-links"><a href="/privacy" data-t="privacy">{COPY.en.privacy}</a><span aria-hidden="true">·</span><button type="button" class="whc-link" data-act="settings" data-t="settings" aria-expanded="false">{COPY.en.settings}</button></p>
   </div>
   <form class="whc-set" data-view="settings" hidden>
     <div class="whc-hrow"><p class="whc-h" data-t="heading" tabindex="-1">{COPY.en.heading}</p><button type="button" class="whc-x" data-act="close" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -60,57 +58,49 @@ const COPY = {
 <script type="application/json" id="whConsentCopy" set:html={JSON.stringify(COPY)} />
 
 <style is:global>
-  /* Phones: a compact bar, one line and one row (about 84 px), so it never covers the page's primary action.
-     Desktop: a small card, bottom left. /breathe ("top"): the same bar at the top, never over Begin; hidden in the session. */
-  .whc { --whc-bg: linear-gradient(180deg, rgba(27, 34, 50, .97), rgba(19, 25, 38, .98)); --whc-ink: #f2f0ed; --whc-t2: rgba(242, 240, 237, .78);
-    --whc-line: rgba(242, 240, 237, .24); position: fixed; z-index: 70; left: 0; right: 0; bottom: 0; box-sizing: border-box;
-    padding: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 6px); border-radius: 16px 16px 0 0; background: var(--whc-bg);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: 0 -10px 40px rgba(0, 0, 0, .4);
-    font: 400 14px/1.35 "Nunito Sans", ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--whc-t2);
-    animation: whcIn 520ms cubic-bezier(.33, 1, .68, 1) both; }
+  /* One calm card, floating (SITE-GOALS §5; Isak, 29 Sep): navy glass with a blur and a hairline, the app's type, two
+     equal pills and a quiet Settings link. It enters on the app's enter curve about 1.2 s after load, and is gone once
+     answered. Phones: 16 px from the edges. Desktop: bottom left, at most 380 px wide. */
+  .whc { --whc-ink: #f2f0ed; --whc-t2: rgba(242, 240, 237, .78); --whc-line: rgba(242, 240, 237, .16);
+    position: fixed; z-index: 70; left: 16px; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); box-sizing: border-box;
+    padding: 14px 14px 2px; border-radius: 16px; background: rgba(14, 21, 37, .78);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2); backdrop-filter: blur(20px) saturate(1.2);
+    box-shadow: inset 0 0 0 1px var(--whc-line), 0 18px 50px rgba(0, 0, 0, .45);
+    font: 400 15px/1.45 "Nunito Sans", ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--whc-t2);
+    opacity: 0; transform: translateY(14px); pointer-events: none;
+    transition: opacity 500ms cubic-bezier(.33, 1, .68, 1), transform 500ms cubic-bezier(.33, 1, .68, 1); }
+  .whc.is-in { opacity: 1; transform: none; pointer-events: auto; }
+  .whc.is-out { opacity: 0; transform: translateY(10px); transition-duration: 300ms; transition-timing-function: cubic-bezier(.32, 0, .67, 0); }
   .whc[hidden] { display: none; }
   .whc * { box-sizing: border-box; }
-  @keyframes whcIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-  .whc-long { display: none; }
-  .whc-t { margin: 0 2px 6px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .whc-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; }
-  .whc[data-tone="warm"] { --whc-bg: linear-gradient(180deg, rgba(30, 21, 15, .97), rgba(20, 13, 9, .98)); --whc-ink: #f6ede3; --whc-t2: rgba(246, 237, 227, .8); --whc-line: rgba(246, 237, 227, .3); }
-  @keyframes whcInTop { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
-  /* Desktop: one slim full-width bar (about 68 px); the page gets the same room at its end (body.whc-on) */
-  @media (min-width: 768px) {
-    .whc-ask { display: flex; align-items: center; justify-content: center; gap: 24px; max-width: 1152px; margin: 0 auto; }
-    .whc[data-pos="bottom"] { padding: 12px 24px; border-radius: 0; font-size: 15px; }
-    .whc[data-pos="bottom"] .whc-long { display: inline; }
-    .whc[data-pos="bottom"] .whc-short { display: none; }
-    .whc .whc-t { margin: 0 !important; white-space: normal; max-width: 720px; }
-    .whc-row { grid-template-columns: 132px 132px auto; flex: none; }
-    .whc.is-set { left: auto; right: 24px; bottom: 24px; width: 400px; border-radius: 16px; }
-    body.whc-on { padding-bottom: 72px; }
-  }
+  @media (min-width: 768px) { .whc { left: 24px; right: auto; bottom: 24px; width: 380px; } }
+  .whc[data-tone="warm"] { background: rgba(28, 19, 13, .72); --whc-ink: #f6ede3; --whc-t2: rgba(246, 237, 227, .8); --whc-line: rgba(246, 237, 227, .16); }
+  body[data-world="water"] .whc[data-tone="warm"] { background: rgba(8, 26, 28, .72); --whc-ink: #eef6f4; --whc-t2: rgba(238, 246, 244, .8); }
+  body[data-world="night"] .whc[data-tone="warm"] { background: rgba(14, 16, 36, .74); --whc-ink: #eef1ff; --whc-t2: rgba(238, 241, 255, .8); }
   body.in-session .whc, body.in-session .whc-scrim { display: none; }
-  /* Settings: the bar opens into a sheet over a scrim */
-  .whc-scrim { position: fixed; inset: 0; z-index: 69; background: rgba(5, 8, 15, .6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .whc-scrim[hidden] { display: none; }
-  .whc.is-set { padding: 16px 18px calc(env(safe-area-inset-bottom, 0px) + 14px); }
   .whc-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; }
   .whc p { margin: 0; }
-  .whc a { color: var(--whc-ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--whc-line); }
+  .whc a { color: var(--whc-t2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 240, 237, .3); }
+  .whc a:hover { color: var(--whc-ink); }
+  .whc-t { margin: 0 0 10px !important; color: var(--whc-ink); text-align: center; font-size: 14px; letter-spacing: -.005em; }
+  .whc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .whc-row1 { grid-template-columns: 1fr; margin-top: 12px; }
-  .whc-b { appearance: none; min-height: 44px; border-radius: 999px; border: 0; box-shadow: inset 0 0 0 1px var(--whc-line);
-    background: rgba(255, 255, 255, .06); color: var(--whc-ink); font-family: inherit; font-weight: 700; font-size: 15px; line-height: 1; cursor: pointer;
-    transition: background-color 220ms cubic-bezier(.33, 1, .68, 1), transform 220ms cubic-bezier(.33, 1, .68, 1); }
-  .whc-b:hover { background: rgba(255, 255, 255, .11); }
-  .whc-b:active { transform: scale(.97); }
-  .whc-link { appearance: none; display: block; min-height: 44px; min-width: 44px; padding: 0 8px; border: 0; background: none; cursor: pointer;
-    color: var(--whc-t2); font-family: inherit; font-weight: 600; font-size: 14px; line-height: 1; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--whc-line); }
+  .whc-b { appearance: none; min-height: 44px; border-radius: 999px; border: 0; box-shadow: inset 0 0 0 1px rgba(242, 240, 237, .24);
+    background: rgba(255, 255, 255, .07); color: var(--whc-ink); font-family: inherit; font-weight: 700; font-size: 15px; line-height: 1; cursor: pointer;
+    transition: background-color 220ms cubic-bezier(.33, 1, .68, 1), transform 220ms cubic-bezier(.25, .1, .25, 1); -webkit-tap-highlight-color: transparent; }
+  .whc-b:hover { background: rgba(255, 255, 255, .13); }
+  .whc-b:active { transform: scale(.97); transition-duration: 100ms; }
+  .whc-links { display: flex; justify-content: center; align-items: center; gap: 4px; margin-top: 2px !important; font-size: 13px; }
+  .whc-links a { display: inline-flex; align-items: center; min-height: 40px; min-width: 44px; justify-content: center; padding: 0 8px; text-decoration: none; font-weight: 600; }
+  .whc-links span { opacity: .5; }
+  .whc-link { appearance: none; display: inline-flex; align-items: center; justify-content: center; min-height: 40px; min-width: 44px; padding: 0 8px; border: 0; background: none; cursor: pointer;
+    color: var(--whc-t2); font-family: inherit; font-weight: 600; font-size: 13px; line-height: 1; letter-spacing: .01em; }
+  .whc-link:hover { color: var(--whc-ink); }
   .whc-hrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .whc-h { color: var(--whc-ink); font-weight: 700; margin: 0 !important; outline: none; }
   .whc-x { appearance: none; border: 0; background: none; color: var(--whc-t2); width: 44px; height: 44px; margin: -8px -10px -8px 0; display: grid; place-items: center; cursor: pointer; border-radius: 50%; }
   .whc-x:hover { color: var(--whc-ink); }
-  .whc-opt input:focus-visible { outline: 2px solid #45b5a0; outline-offset: 3px; }
-  /* /breathe: the bar takes the session's world, so it belongs to the scene */
-  body[data-world="water"] .whc[data-tone="warm"] { --whc-bg: linear-gradient(180deg, rgba(10, 30, 32, .96), rgba(5, 16, 18, .98)); --whc-ink: #eef6f4; --whc-t2: rgba(238, 246, 244, .8); --whc-line: rgba(238, 246, 244, .28); }
-  body[data-world="night"] .whc[data-tone="warm"] { --whc-bg: linear-gradient(180deg, rgba(20, 22, 44, .96), rgba(9, 10, 24, .98)); --whc-ink: #eef1ff; --whc-t2: rgba(238, 241, 255, .8); --whc-line: rgba(238, 241, 255, .26); }
+  .whc-set { padding-bottom: 8px; }
   .whc-opt { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, .07); cursor: pointer; }
   .whc-opt span { display: grid; gap: 2px; }
   .whc-opt b { color: var(--whc-ink); font-weight: 600; }
@@ -120,12 +110,14 @@ const COPY = {
   .whc-opt input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: var(--whc-ink);
     transition: transform 220ms cubic-bezier(.33, 1, .68, 1); }
   .whc-opt input:checked { background: var(--whc-ink); }
-  .whc-opt input:checked::after { background: #131926; }
-  .whc-opt input:checked::after { transform: translateX(18px); }
-  .whc-done { color: var(--whc-ink); }
+  .whc-opt input:checked::after { background: #131926; transform: translateX(18px); }
+  .whc-opt input:focus-visible { outline: 2px solid #45b5a0; outline-offset: 3px; }
+  .whc-done { color: var(--whc-ink); padding-bottom: 8px; }
   .whc :focus-visible { outline: 2px solid var(--whc-ink); outline-offset: 2px; }
   .whc .whc-h:focus, .whc .whc-h:focus-visible { outline: none; }
-  @media (prefers-reduced-motion: reduce) { .whc { animation: none; } .whc-b, .whc-opt input, .whc-opt input::after { transition: none; } }
+  .whc-scrim { position: fixed; inset: 0; z-index: 69; background: rgba(5, 8, 15, .55); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .whc-scrim[hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) { .whc { transition: none; } .whc-b, .whc-opt input, .whc-opt input::after { transition: none; } }
 </style>
 
 <script>
@@ -146,6 +138,9 @@ const COPY = {
   const box = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
   let closeTimer = 0;
   const scrim = document.getElementById("whcScrim") as HTMLElement;
+  // answered: it fades out on the exit curve and is gone (no minimised tab left behind)
+  const pendingOff = () => document.documentElement.classList.remove("consent-pending");
+  const hide = () => { pendingOff(); root.classList.remove("is-in"); root.classList.add("is-out"); window.setTimeout(() => { root.hidden = true; root.classList.remove("is-out"); }, 320); };
   // body.whc-on while the bar is up, so a page can keep its primary action above it
   new MutationObserver(() => document.body.classList.toggle("whc-on", !root.hidden)).observe(root, { attributes: true, attributeFilter: ["hidden"] });
   function open(settings = false) {
@@ -156,18 +151,20 @@ const COPY = {
     view(settings ? "settings" : "ask");
     root.querySelector("[data-act=settings]")!.setAttribute("aria-expanded", String(settings));
     root.hidden = false;
+    root.classList.remove("is-out");
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("is-in")));
     if (settings) (root.querySelector(".whc-h") as HTMLElement).focus({ preventScroll: true });
   }
   function done(state: { analytics: boolean; ads: boolean }, confirm = false) {
     save(state); scrim.hidden = true;
-    if (!confirm) { root.hidden = true; return; }
-    view("done"); closeTimer = window.setTimeout(() => { root.hidden = true; }, 2600);
+    if (!confirm) { hide(); return; }
+    view("done"); closeTimer = window.setTimeout(hide, 2200);
   }
   root.querySelector("[data-act=accept]")!.addEventListener("click", () => done({ analytics: true, ads: true }));
   root.querySelector("[data-act=decline]")!.addEventListener("click", () => done({ analytics: false, ads: false }));
   root.querySelector("[data-act=settings]")!.addEventListener("click", () => open(true));
   form.addEventListener("submit", (e) => { e.preventDefault(); done({ analytics: box("analytics").checked, ads: box("ads").checked }, true); });
-  const back = () => { scrim.hidden = true; root.classList.remove("is-set"); if (current()) root.hidden = true; else view("ask"); };
+  const back = () => { scrim.hidden = true; root.classList.remove("is-set"); if (current()) hide(); else view("ask"); };
   scrim.addEventListener("click", back);
   root.querySelector("[data-act=close]")!.addEventListener("click", back);
   addEventListener("keydown", (e) => { if (e.key === "Escape" && !root.hidden && root.classList.contains("is-set")) back(); });
@@ -179,6 +176,8 @@ const COPY = {
   });
 
   startTags();
-  if ((ANY_TAG || Q.get("consent") === "1") && !current()) open(false);
+  // first visit: the card arrives about 1.2 s after load, once the page has settled
+  if ((ANY_TAG || Q.get("consent") === "1") && !current()) { document.documentElement.classList.add("consent-pending"); window.setTimeout(() => { if (!current()) open(false); }, 1200); }
+  else pendingOff();
   (window as any).__whConsent = { open, current };
 </script>

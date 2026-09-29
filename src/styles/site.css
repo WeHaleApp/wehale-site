@@ -256,3 +256,7 @@ html.cardplay-orb .breathing-card:active .orb-play { transform: scale(var(--pres
 
 .card-text { padding-right: 92px; }
 html.cardplay-orb .card-text { padding-right: 0; }
+
+/* While the consent card is waiting for an answer (html.consent-pending, set before first paint), the home hero keeps its
+   actions and offer line above the card on phones. Answering removes the room; that follows a tap, so it is not a layout shift. */
+@media (max-width: 767px) { html.consent-pending #top .hero-pad { padding-bottom: 168px; } html.consent-pending #heroPause { bottom: 168px; } }

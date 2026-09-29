@@ -53,5 +53,5 @@ export function save(state) {
 export const consentHead = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
 gtag("consent","default",{ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied",analytics_storage:"denied",functionality_storage:"denied",personalization_storage:"denied",security_storage:"denied",wait_for_update:500});
 gtag("set","ads_data_redaction",true);gtag("set","url_passthrough",false);
-try{var c=JSON.parse(localStorage.getItem("${CONSENT_KEY}")||"null");if(c){var a=typeof c.analytics==="boolean"?c.analytics:c.choice==="granted",d=typeof c.ads==="boolean"?c.ads:c.choice==="granted";
-if(a||d)gtag("consent","update",{analytics_storage:a?"granted":"denied",ad_storage:d?"granted":"denied",ad_user_data:d?"granted":"denied",ad_personalization:d?"granted":"denied"});}}catch(e){}`;
+try{var c=JSON.parse(localStorage.getItem("${CONSENT_KEY}")||"null");if(!c)document.documentElement.classList.add("consent-pending");if(c){var a=typeof c.analytics==="boolean"?c.analytics:c.choice==="granted",d=typeof c.ads==="boolean"?c.ads:c.choice==="granted";
+if(a||d)gtag("consent","update",{analytics_storage:a?"granted":"denied",ad_storage:d?"granted":"denied",ad_user_data:d?"granted":"denied",ad_personalization:d?"granted":"denied"});}}catch(e){document.documentElement.classList.add("consent-pending");}`;
