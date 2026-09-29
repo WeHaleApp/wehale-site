@@ -95,7 +95,7 @@ const PALETTES = {
   dawn:  { base: [.66, .27, .22], pale: [1., .80, .70], tint: [.09, .03, .03], ground: [.0055, .0025, .0025] },
   pearl: { base: [.40, .44, .54], pale: [.93, .95, 1.], tint: [.05, .06, .11], ground: [.006, .007, .012] },
   sage:  { base: [.30, .46, .26], pale: [.87, .95, .78], tint: [.04, .07, .035], ground: [.003, .0045, .002] },
-  blackcurrant: { base: [.30, .08, .20], pale: [.84, .72, .80], tint: [.045, .014, .04], ground: [.0032, .0014, .0042] },
+  blackcurrant: { base: [.30, .08, .20], pale: [.84, .72, .80], tint: [.045, .014, .04], ground: [.0032, .003, .0034] },
 };
 
 const VS_LINES = `#version 300 es

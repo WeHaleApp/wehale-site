@@ -1,4 +1,4 @@
-// The campaign page's controller (src/pages/recharge.astro): arrival -> the session (the /breathe player) -> the offer.
+// The campaign page's controller (src/pages/[campaign].astro): arrival -> the session (the /breathe player) -> the offer.
 // Waits for the gate (window.__rcGate); nothing loads or measures on a page that turned into the 404.
 import DATA from "../../data/recharge.json";
 import { readCampaign, campaignLink, phoneOf } from "./link.js";
@@ -53,7 +53,7 @@ function run() {
       try { await loadPlayer(); } catch (_) { $("beginLbl").textContent = "The session didn't load. Check your connection and try again."; $("beginBtn").removeAttribute("aria-busy"); return; }
       $("beginBtn").removeAttribute("aria-busy"); $("beginLbl").textContent = "";
     }
-    hide(); body.classList.remove("calm-start");
+    hide(); body.classList.remove("calm-start"); body.classList.add("rc-dim");   // the lights dim: one calm fade into the dark session
     // the guide speaks within about a second: start 1 s before the first word, the sound fading in over that second
     const at0 = from || (S.start > 0 ? S.start : player.startAt);
     if (!from && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
@@ -82,7 +82,7 @@ function run() {
   // ---------- the offer: one button (the OneLink), a QR code of the same link on desktop ----------
   let from = "skip";
   function offer(why) {
-    from = why; body.classList.add("calm-start");
+    from = why; body.classList.add("calm-start"); body.classList.remove("rc-dim");
     const h = $("offerH"); h.textContent = why === "end" ? h.dataset.done : h.dataset.title;
     const b = $("sessBtn"); b.textContent = why === "end" ? b.dataset.again : why === "exit" ? b.dataset.back : b.dataset.first;
     const link = campaignLink(DATA, { ...CAMP, at: why === "end" ? "offer" : why });
@@ -99,7 +99,7 @@ function run() {
     if (qrFor === link) { $("qrBox").hidden = false; return; }
     try {
       const QR = (await import("qrcode")).default;
-      $("qrCode").innerHTML = await QR.toString(link, { type: "svg", margin: 2, errorCorrectionLevel: "M", color: { dark: "#0b0610", light: "#f6ede3" } });
+      $("qrCode").innerHTML = await QR.toString(link, { type: "svg", margin: 2, errorCorrectionLevel: "M", color: { dark: "#0A0A0A", light: "#FFFFFF" } });
       qrFor = link; $("qrBox").hidden = false;
     } catch (_) { $("qrBox").hidden = true; }
   }

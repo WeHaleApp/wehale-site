@@ -137,7 +137,7 @@ export function createPlayer(P) {
     water:{base:[.05,.36,.40],pale:[.62,.96,.92],tint:[.008,.05,.06],ground:[.0012,.0045,.0065]},
     night:{base:[.30,.34,.52],pale:[.90,.93,1.],tint:[.02,.025,.06],ground:[.0015,.0018,.0045]},
     moss:{base:[.42,.46,.12],pale:[1.,.93,.62],tint:[.035,.045,.01],ground:[.0026,.0032,.0011]},
-    blackcurrant:{base:[.30,.08,.20],pale:[.84,.72,.80],tint:[.045,.014,.04],ground:[.0032,.0014,.0042]} };
+    blackcurrant:{base:[.30,.08,.20],pale:[.84,.72,.80],tint:[.045,.014,.04],ground:[.0032,.003,.0034]} };
   const ACCENT={blackcurrant:'#b98aa8',ember:'#e08a4f',amber:'#e3a653',dawn:'#e39a8a',pearl:'#aab6cf',sage:'#8fb07e',teal:'#45b5a0'};
   const setAccent=n=>{ const PP=PALS[n]; if(PP) document.documentElement.style.setProperty('--ringc','rgba('+PP.pale.map(v=>Math.round(v*255)).join(',')+',.9)'); document.documentElement.style.setProperty('--teal',ACCENT[n]||'#45b5a0'); document.documentElement.style.setProperty('--accent', n==='teal'?'#8fe0cf':n==='pearl'?'#dfe6f5':n==='sage'?'#cfe2b0':'#F2B872'); };
   let curPal='ember'; window.SILK_PALETTE=PALS.ember; setAccent('ember');

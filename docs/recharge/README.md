@@ -1,10 +1,18 @@
-# /recharge: the campaign landing page (CONFIDENTIAL until launch)
+# /recharge: the campaign landing page, "Charge Your Current" (CONFIDENTIAL until launch)
+
+The path is one config value, `route` in `src/data/recharge.json` (today `recharge`): the page
+(`src/pages/[campaign].astro`), the sitemap exclusion, the noindex headers (written into `dist/_headers` at build,
+`astro.config.mjs`) and the QR codes all follow it.
+
+Look: arrival and offer in the partner's light editorial style (Salty white #F4F3F1, Potassium black #0A0A0A type,
+Magnesium greige #DCD8D3 rules, square buttons, blackcurrant the only colour); the session stays dark with the
+berry world; Begin dims the light room in one calm 1.8 s fade. WeHale's Nunito Sans until the partner's fonts arrive.
 
 Every outside link and QR code of the campaign points here. Arrival (co-brand lockup, title, one line, **Begin**) →
 the session in the browser (the /breathe Tide player, `src/components/breathe/PlayerStage.astro` + `player.js`) →
 the offer: "First month free, then 499 kr per year. Cancel anytime before the trial ends." and one button.
 
-Files: `src/pages/recharge.astro`, `src/scripts/recharge/{app,link}.js`, `src/styles/recharge.css`,
+Files: `src/pages/[campaign].astro`, `src/scripts/recharge/{app,link}.js`, `src/styles/recharge.css`,
 `src/data/recharge.json` (everything that changes), `scripts/recharge-qr.mjs`, `tests/recharge.test.js`.
 
 ## URL parameters
@@ -30,7 +38,8 @@ On desktop the offer shows a QR code of the same link. Nobody is ever asked to t
   before the guide's first word) in `recharge.json`, and `stand_in: false`.
 - **World:** `blackcurrant`, a Tide-field stand-in in the campaign's palette (Isak, 29 Sep). The campaign's own Cell
   visual (recharge-visual branch) replaces it once integrated; `session.world` is the switch.
-- **Partner logo:** `public/recharge/partner-logo.svg` is a dashed placeholder. Replace the file (same name), or
+- **Partner logo:** `public/recharge/partner-logo.svg` is a dashed placeholder (black, for the light ground; the
+  WeHale logo there is `public/recharge/wehale-logo-black.svg`). Replace the file (same name), or
   set `partner_logo.src`/`width`/`height`. The design session supplies the real lockup.
 
 ## The gate (until launch): obscurity, not security
@@ -46,8 +55,8 @@ On desktop the offer shows a QR code of the same link. Nobody is ever asked to t
 
 ## At launch
 1. `gate.on: false` in `src/data/recharge.json` (the one flag).
-2. If the page should then be findable: drop the `hidden` prop in `recharge.astro`, the
-   sitemap filter and the netlify.toml headers. Otherwise leave them: the page works from its links and QR codes.
+2. If the page should then be findable: drop the `hidden` prop in `[campaign].astro`, the
+   sitemap filter and the headers hook in `astro.config.mjs`. Otherwise leave them: the page works from its links and QR codes.
 
 ## QR codes
 `node scripts/recharge-qr.mjs <outDir> [influencers.csv]`: newsletter, flyer, pdp, and one per influencer from a

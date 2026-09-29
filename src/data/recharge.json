@@ -1,5 +1,7 @@
 {
-  "_about": "The campaign page wehale.io/recharge (docs/recharge/README.md). Everything that changes before or at launch is here. CONFIDENTIAL until launch: the page is gated (gate), noindex, out of the sitemap, disallowed in robots.txt and linked from nowhere.",
+  "_about": "The campaign page (wehale.io/<route>, today /recharge) (docs/recharge/README.md). Everything that changes before or at launch is here. CONFIDENTIAL until launch: the page is gated (gate), noindex, out of the sitemap, disallowed in robots.txt and linked from nowhere.",
+  "route": "recharge",
+  "_about_route": "The page's path, the one place it is set: the page, the sitemap exclusion, the noindex headers (written into dist/_headers at build) and the QR codes all follow it.",
   "gate": {
     "_about": "Obscurity, not security: the page renders only with ?k=<key>, whose salted SHA-256 is compared in the browser; without it the visitor gets the site's 404. The key itself is not in the repo. At launch set on to false (the one flag), and see docs/recharge/README.md for the rest of the launch list.",
     "on": true,
@@ -10,7 +12,7 @@
     "_about": "STAND-IN: The Wake Up (Edvin) until the campaign session is recorded (Philip). To drop the real one in: put score.json and audio.mp3 in public/recharge/session/, point score and audio there, and set narrator, minutes and start (seconds, about 1 s before the guide's first word). world: the Tide world the session plays in; the Cell visual replaces it once integrated.",
     "stand_in": true,
     "slug": "wake-up",
-    "title": "Recharge Your Current",
+    "title": "Charge Your Current",
     "narrator": "Edvin",
     "minutes": 6,
     "start": 4.28,
@@ -19,12 +21,13 @@
     "world": "blackcurrant"
   },
   "copy": {
-    "title": "Recharge Your Current",
+    "kicker": "Meet Blackcurrant.",
+    "title": "Charge Your Current",
     "line": "{minutes} guided minutes of breathing with {narrator}, right here in your browser.",
     "begin": "Begin",
     "skip": "Skip the session, get the offer",
     "safety": "Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.",
-    "done": "You just did Recharge Your Current.",
+    "done": "You just did Charge Your Current.",
     "offer_1": "First month free, then 499 kr per year.",
     "offer_2": "Cancel anytime before the trial ends.",
     "cta": "Start your free month",
@@ -38,6 +41,7 @@
   "partner_logo": {
     "_about": "PLACEHOLDER: the design session supplies the real lockup. Swap the file (same name) or point src at a new one.",
     "src": "/recharge/partner-logo.svg",
+    "wehale_src": "/recharge/wehale-logo-black.svg",
     "alt": "Campaign partner",
     "width": 96,
     "height": 20

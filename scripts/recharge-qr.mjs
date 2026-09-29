@@ -12,7 +12,7 @@ import QRCode from "qrcode";
 import DATA from "../src/data/recharge.json" with { type: "json" };
 import { cleanCode } from "../src/scripts/recharge/link.js";
 
-const BASE = process.env.RECHARGE_URL || "https://wehale.io/recharge";
+const BASE = process.env.RECHARGE_URL || "https://wehale.io/" + DATA.route;
 const out = process.argv[2] || "qr";
 const csv = process.argv[3];
 fs.mkdirSync(out, { recursive: true });
