@@ -55,7 +55,7 @@ const ld = {
 <BaseLayout title="WeHale · Come back to yourself" description="Guided breathing with Edvin and Philip, on iPhone and Android. Calm, clear, connected. Try a session free in your browser." page="home" current="home" pathname="/" ogImage="/assets/images/og/home.jpg">
   <Fragment slot="head">
     <!-- the hero variant (?v=), decided before first paint; every event carries it as v -->
-    <script is:inline define:vars={{ HERO }}>(function(){try{var v=new URLSearchParams(location.search).get("v");document.documentElement.dataset.v=HERO.ok.indexOf(v)>-1?v:HERO.def;}catch(e){document.documentElement.dataset.v=HERO.def;}})();</script>
+    <script is:inline define:vars={{ HERO }}>(function(){try{var v=new URLSearchParams(location.search).get("v");document.documentElement.dataset.v=HERO.ok.indexOf(v)>-1||v==="cardplay-orb"?v:HERO.def;if(v==="cardplay-orb")document.documentElement.classList.add("cardplay-orb");}catch(e){document.documentElement.dataset.v=HERO.def;}})();</script>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(ld)} />
   </Fragment>
 
@@ -111,14 +111,15 @@ const ld = {
       </div>
       <div class="mt-10 grid grid-cols-3 gap-5 swipe" data-swipe tabindex="0" role="region" aria-label="Three sessions, swipe to see all">
         {web.map((s, i) => (
-          <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card press-card breathing-card group relative block aspect-[3/4]" data-reveal style={`--i:${i};--phase:${-[0, 3.4, 6.8][i]}s;--glow:${s.slug === "wake-up" ? "rgba(255,170,90,.32)" : s.slug === "unravel" ? "rgba(110,220,215,.28)" : "rgba(200,210,255,.24)"}`} data-try data-card-play={s.slug} data-at={`library_${s.slug}`} aria-label={`${s.title}, with ${s.narrator}. Play · 6 min`}>
+          <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card press-card breathing-card group relative block aspect-[3/4]" data-reveal style={`--i:${i};--phase:${-[0, 3.4, 6.8][i]}s;--glow:${s.slug === "wake-up" ? "rgba(255,170,90,.32)" : s.slug === "unravel" ? "rgba(110,220,215,.28)" : "rgba(200,210,255,.24)"};--tint:${s.slug === "wake-up" ? "rgba(255,190,130,.14)" : s.slug === "unravel" ? "rgba(140,230,220,.12)" : "rgba(190,200,255,.12)"}`} data-try data-card-play={s.slug} data-at={`library_${s.slug}`} aria-label={`${s.title}, with ${s.narrator}. Play · 6 min`}>
             <span class="orb-breath absolute inset-0" aria-hidden="true"><img src={`/assets/images/sessions/orb-${s.slug}-800.webp`} srcset={`/assets/images/sessions/orb-${s.slug}-480.webp 480w, /assets/images/sessions/orb-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="h-full w-full object-cover" loading="lazy" decoding="async" /></span>
             <span class="orb-glow absolute inset-0" aria-hidden="true"></span>
-            <span class="card-play" title="Play · 6 min" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span>
+            <span class="card-play" title="Play · 6 min" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Play</span>
+            <span class="orb-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span>
             <span class="absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/85 via-black/40 to-transparent p-5 pt-16">
               <span class="block text-[0.75rem] font-bold uppercase tracking-[0.12em] text-white/80">{s.cat} · 6 min · with {s.narrator}</span>
-              <span class="mt-1 block pr-16 text-xl font-semibold">{s.title}</span>
-              <span class="block pr-16 text-[16px] text-white/80">{s.reason_en}</span>
+              <span class="card-text mt-1 block text-xl font-semibold">{s.title}</span>
+              <span class="card-text block text-[16px] text-white/80">{s.reason_en}</span>
             </span>
           </a>
         ))}
