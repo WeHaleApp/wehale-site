@@ -196,3 +196,9 @@ show where you are, and `navigator.vibrate(8)` ticks where it exists. A tap on B
 screen and the sphere grows into the session; the safety line is a 3 s caption. Checks: swipe 58.8-60 fps at 4x CPU
 (0-3 dropped frames), CLS 0, contrast at least 5.7:1 (the ‹ › got a dark backing), the voice 1.08-1.32 s after Begin.
 The hold-to-breathe version (g2) is built but off until the lead's go. f is unchanged and still the default.
+- g, full screen (lead, 29 Sep): Begin asks for full screen on the page root within the tap, where element full
+  screen exists (Android Chrome, desktop); a rejection is ignored. The player's full-screen toggle stays in the
+  controls there and is hidden on iPhone Safari and in-app browsers, where the session is already edge to edge
+  (100dvh, fixed body, no bounce). In g the controls hide after 3 s without a touch (3.5 s elsewhere) and a tap
+  brings them back. Leaving full screen keeps the session playing. Checked: desktop and Android emulation (full
+  screen on, audio still playing after exit), iPhone WebKit (no toggle, controls hidden after 3 s, back on tap).

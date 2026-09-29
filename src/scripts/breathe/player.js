@@ -439,7 +439,7 @@ export function createPlayer(P) {
         const cB=bnd('closing'), pres = ph==='Arrival' ? .85+.15*Math.min(1,Math.max(0,(at-3)/30)) : ph==='Closing' && cB ? .55+.45*Math.max(0,1-(at-cB[0])/10) : 1;
         silkCv.style.opacity=pres.toFixed(3);
         if(ph==='Integration') wTarget=Math.max(wTarget,.35);
-        if(!audio.paused && chromeOn && !dragging && !sheetOpen() && now-chromeT>3500) hideChrome();
+        if(!audio.paused && chromeOn && !dragging && !sheetOpen() && now-chromeT>(P.hideAfter||3500)) hideChrome();
         if(P.onTick) P.onTick(at, !audio.paused);
         if(at>=DUR-.35 && !audio.paused){ audio.pause(); showEnd(); }
       } else {

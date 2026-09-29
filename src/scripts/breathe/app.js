@@ -189,7 +189,7 @@ function loadPlayer() {
     playerSlug = score.slug || selected;
     player = mod.createPlayer({
       score, audio,
-      onTick: tick, onEvent: onEvent, onFinish: finish, onExit: exitEarly, gather: !!VAR.y,
+      onTick: tick, onEvent: onEvent, onFinish: finish, onExit: exitEarly, gather: !!VAR.y, hideAfter: VAR.g ? 3000 : 3500,
     });
     body.classList.add("gl-on"); body.dataset.tier = player.tier; if (VAR.y) sphereUp(body.classList.contains("sphere-up"));
     if (VAR.worlds) player.setWorld(worldOf(selected), 0);
@@ -212,6 +212,10 @@ async function ready() {
   if (playerSlug !== selected) { const sc = await prefetchScore(selected); player.setScore(sc); playerSlug = selected; if (VAR.worlds) player.setWorld(worldOf(selected), 0); }
 }
 async function play(from) {
+  // g: full screen from the Begin tap itself (the gesture must be synchronous), where the browser has element full
+  // screen (Android Chrome, desktop). iPhone and the in-app browsers have none: nothing is asked, nothing shows.
+  if (VAR.g && !from) { try { const el = document.documentElement, rq = el.requestFullscreen || el.webkitRequestFullscreen;
+    if ((document.fullscreenEnabled || document.webkitFullscreenEnabled) && !(document.fullscreenElement || document.webkitFullscreenElement) && rq) { const r = rq.call(el, { navigationUI: "hide" }); if (r && r.catch) r.catch(() => {}); } } catch (_) {} }
   releaseWorld();
   if (VAR.g && !from) gGo();
   const s = bySlug(selected); if (!s || !s.ready) return;
