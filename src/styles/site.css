@@ -241,3 +241,7 @@ dialog.sheet[open] { animation: sheetIn 420ms var(--ease-enter); }
 .story-nav { display: none; }
 @media (min-width: 768px) { .story-item { width: 30%; } .story-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; } .story + .dots { display: none; } }
 @media (max-width: 767px) { .story { margin-inline: -1.25rem; padding-inline: 1.25rem; scroll-padding-inline: 1.25rem; } }
+
+/* While the consent card is waiting for an answer (html.consent-pending, set before first paint), the home hero keeps its
+   actions and offer line above the card on phones. Answering removes the room; that follows a tap, so it is not a layout shift. */
+@media (max-width: 767px) { html.consent-pending #top .hero-pad { padding-bottom: 168px; } html.consent-pending #heroPause { bottom: 168px; } }
