@@ -9,7 +9,7 @@
     "sha256": "24e24cfd1f889ed16cc1ac73ea8b19ca52c7bf9f7f15dae40d2c567c53bbdbc5"
   },
   "session": {
-    "_about": "The campaign session, which lives only in the WeHale app (Isak, 29 Sep: no web session on this page; the hook is to try it in the app, free and theirs to keep, and after it the offer). The page names it: title, narrator and minutes. slug tags the events. STAND-IN values (The Wake Up, Edvin) until the campaign session is recorded (Philip); then set narrator and minutes, and stand_in: false. The chip shows no minutes until the recording exists (29 Sep); add " · {minutes} min" back to session_line then.",
+    "_about": "The campaign session, which lives only in the WeHale app (Isak, 29 Sep: no web session on this page; the hook is to try it in the app, free and theirs to keep, and after it the offer). The page names it: title, narrator and minutes. slug tags the events. STAND-IN values (The Wake Up, Edvin) until the campaign session is recorded (Philip); then set narrator and minutes, and stand_in: false. The chip shows no minutes until the recording exists (29 Sep); add ' · {minutes} min' back to session_line then.",
     "stand_in": true,
     "slug": "wake-up",
     "title": "Charge Your Current",
