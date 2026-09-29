@@ -40,13 +40,13 @@ On desktop the offer shows a QR code of the same link. Nobody is ever asked to t
 - Anyone who reads the page source or the JS bundle can see the page's text and bypass the check. The key only keeps
   the page from being stumbled on. Real protection needs the server: see `edge-gate.proposed.ts` (a Netlify Edge
   Function with basic auth, **proposed, not deployed**: it sits outside `netlify/edge-functions/` on purpose).
-- Also: `noindex, nofollow` (meta and `X-Robots-Tag`), no referrer, out of the sitemap, `Disallow: /recharge` in
-  robots.txt, no links from anywhere on the site. Note: the robots.txt line itself names the path publicly.
+- Also: `noindex, nofollow` (meta and `X-Robots-Tag`), no referrer, out of the sitemap, no links from anywhere on the
+  site. Deliberately **not** in robots.txt: a Disallow would name the path publicly and stop crawlers from seeing the noindex.
 - To rotate the key: `printf '%s' "<salt>:<new key>" | shasum -a 256`, put the hash in `gate.sha256`.
 
 ## At launch
 1. `gate.on: false` in `src/data/recharge.json` (the one flag).
-2. If the page should then be findable: drop the `hidden` prop in `recharge.astro`, the robots.txt line, the
+2. If the page should then be findable: drop the `hidden` prop in `recharge.astro`, the
    sitemap filter and the netlify.toml headers. Otherwise leave them: the page works from its links and QR codes.
 
 ## QR codes
