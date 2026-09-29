@@ -2,10 +2,12 @@
 /**
  * BreatheLayout: the full-screen web session (wehale.io/breathe).
  *
- * Deliberately NOT BaseLayout: no site header or footer (the page is a player), no Tailwind, and no Google Tag
- * Manager. GTM-NCPSJ2QF loads on every other page without consent; that is being raised with Isak and the owner
- * of main, and this page does not add to it. Measurement here is consent-first (src/scripts/breathe/measure.js).
+ * Deliberately NOT BaseLayout: no site header or footer (the page is a player) and no Tailwind. It shares the site's
+ * consent (Consent Mode v2 denied by default, the same banner, at the top so it never covers Begin or the session)
+ * and its tags (src/scripts/tags.js: GTM and the pixels load only after consent, from env vars, docs/ENV.md).
  */
+import ConsentBanner from "../components/site/ConsentBanner.astro";
+import { consentHead } from "../scripts/consent.js";
 interface Props {
   title: string;
   description: string;
@@ -15,6 +17,7 @@ interface Props {
 const { title, description, ogImage = "/breathe/og.jpg", lang = "en" } = Astro.props;
 const canonical = "https://wehale.io/breathe";
 const fullOg = ogImage.startsWith("http") ? ogImage : `https://wehale.io${ogImage}`;
+const server = { meta: !!(process.env.META_CAPI_TOKEN && process.env.META_PIXEL_ID), tiktok: !!(process.env.TIKTOK_EVENTS_TOKEN && process.env.TIKTOK_PIXEL_ID) };
 ---
 
 <!doctype html>
@@ -25,6 +28,8 @@ const fullOg = ogImage.startsWith("http") ? ogImage : `https://wehale.io${ogImag
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#0e0907" />
     <meta name="format-detection" content="telephone=no" />
+    <script is:inline set:html={consentHead} />
+    <script is:inline set:html={`window.__WH_SERVER=${JSON.stringify(server)};`} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -47,5 +52,6 @@ const fullOg = ogImage.startsWith("http") ? ogImage : `https://wehale.io${ogImag
   </head>
   <body>
     <slot />
+    <ConsentBanner placement="top" />
   </body>
 </html>

@@ -1,261 +1,77 @@
 ---
+/**
+ * Investors: footer only (audit: one job for ad traffic). The stale stats row ("launching May 2026", "Founding
+ * team 6", "traction published post-launch") is removed rather than guessed; figures are Isak's to add.
+ */
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const title = "WeHale for Investors";
-const description =
-  "WeHale is a breathwork app for people who don't meditate. Investor information, traction, team, and contact.";
+const description = "WeHale is a guided breathing app for people who don't meditate. Team, approach and contact.";
 
-// PLACEHOLDER: swap with real numbers as they materialize post-launch.
-const stats = [
-  { label: "Sessions in catalog", value: "25+", note: "Across Activate, Balance, Calm" },
-  { label: "Founding team", value: "6", note: "Product, design, brand, content" },
-  { label: "Launch", value: "May 2026", note: "iOS first, Android in roadmap" },
+const people = [
+  { name: "Isak Gustafsson", role: "Co-founder", bio: "Computer science background, ten years scaling digital products at Precis, Sweden's largest media-tech agency, working with global app teams. Builds the app and runs growth." },
+  { name: "Edvin", role: "Co-founder", bio: "Years of personal breathwork practice and live group sessions. Curates the catalogue and teaches the techniques behind it." },
+  { name: "Philip Sigfridsson", role: "Co-founder", bio: "Years of breathwork practice and group facilitation. Anchors the product to the practice as it actually works." },
 ];
-
-// Team is 3 founders + 1 advisor. Each role label is the literal title;
-// each blurb is a factual signal of what they bring (no superlatives,
-// no 'best-in-class' framing: that violates the brand voice).
-const founders = [
-  {
-    initial: "I",
-    name: "Isak Gustafsson",
-    role: "Founder",
-    description:
-      "Computer science background, ten years scaling digital products at Precis, Sweden's largest media-tech agency, working with global app teams. Builds the app and runs growth.",
-    color: "var(--color-accent)",
-  },
-  {
-    initial: "E",
-    name: "Edvin",
-    role: "Founder",
-    description:
-      "Years of personal breathwork practice and live group sessions. Curates the catalog and teaches the techniques behind it.",
-    color: "var(--color-blue)",
-  },
-  {
-    initial: "P",
-    name: "Philip Sigfridsson",
-    role: "Founder",
-    description:
-      "Years of breathwork practice and group facilitation. Anchors the product to the practice as it actually works.",
-    color: "var(--color-gold)",
-  },
-];
-
-const advisors = [
-  {
-    initial: "M",
-    name: "Martin Wikfalk",
-    role: "Advisor",
-    description:
-      "Founded and exited Mindfullnessappen, the original Swedish meditation app. Advises on brand, voice, and the playbook for retention in the wellness category.",
-    color: "var(--color-accent)",
-  },
-];
-
-const differentiators = [
-  {
-    title: "Technique-first",
-    body:
-      "Every session is built around a real breathwork technique with measurable physiological intent. Not a generic meditation track with breathing cues added on.",
-  },
-  {
-    title: "Calm brand, no hype",
-    body:
-      "We don't promise transformation. We don't shout. The brand reads like the practice itself: warm, grounded, restrained. That tone is rare in this category and a real differentiator.",
-  },
-  {
-    title: "Practitioner + operator team",
-    body:
-      "Most apps in this space are built by pure operators with no practice or pure practitioners with no operator chops. We're both. Deep practice plus ten years of digital growth experience, with an advisor who already exited the closest analog in our market.",
-  },
+const advisor = { name: "Martin Wikfalk", role: "Advisor", bio: "Founded and exited Mindfullnessappen, the original Swedish meditation app. Advises on brand, voice, and retention in the wellness category." };
+const points = [
+  { t: "Technique-first", b: "Every session is built around one named breathwork technique, and the voice, music and pace follow from it." },
+  { t: "Calm, no hype", b: "We don't promise transformation. The brand reads like the practice itself: warm, grounded, restrained." },
+  { t: "Practice and product", b: "Two co-founders who teach breathing, one who has built digital products for ten years, and an advisor who has built the closest analogue in our market." },
 ];
 ---
 
-<BaseLayout title={title} description={description} solidHeader>
-  <!-- Section 1: Positioning -->
-  <section class="pt-32 pb-20 md:pt-44 md:pb-28">
-    <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow" data-reveal>Investors</p>
-      <h1
-        class="mt-6 max-w-3xl text-4xl font-semibold leading-tight md:text-6xl"
-        style="letter-spacing: var(--tracking-display);"
-        data-reveal
-      >
-        A breathwork practice for people who don't meditate.
-      </h1>
-      <p class="mt-6 max-w-2xl text-lg text-[var(--color-text-secondary)] md:text-xl" data-reveal>
-        WeHale is an iOS-first breathwork app launching May 2026. We're building
-        the calmest, most credible app in a category that's been dominated by
-        hype.
-      </p>
-      <div class="mt-10 flex flex-wrap gap-3" data-reveal>
-        <a
-          href="mailto:isak@wehale.io"
-          class="inline-flex items-center gap-2 rounded-full bg-[var(--color-text)] px-6 py-3 text-sm font-semibold text-[var(--color-bg)] hover:bg-[var(--color-accent)] transition-colors"
-        >
-          Email Isak
-        </a>
-        <a
-          href="#team"
-          class="inline-flex items-center gap-2 rounded-full border border-[var(--color-line-strong)] px-6 py-3 text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-bg-raised)] transition-colors"
-        >
-          Meet the team
-        </a>
+<BaseLayout title={title} description={description} page="investors" solidHeader>
+  <section class="pb-16 pt-32 md:pb-24 md:pt-44">
+    <div class="mx-auto max-w-5xl px-5 md:px-6">
+      <p class="t-caption hero-in">Investors</p>
+      <h1 class="t-display hero-in mt-4 max-w-3xl" style="--d:120ms">Breathing for people who don't meditate.</h1>
+      <p class="t-body hero-in mt-6 max-w-2xl" style="--d:260ms">WeHale is a guided breathing app on iPhone and Android, made in Varberg, Sweden.</p>
+      <div class="hero-in mt-9 flex flex-wrap gap-3" style="--d:380ms">
+        <a href="mailto:isak@wehale.io?subject=WeHale: investor intro" class="btn">Email Isak</a>
+        <a href="#team" class="btn-quiet">Meet the team</a>
       </div>
     </div>
   </section>
 
-  <!-- Section 2: Stats -->
-  <section class="bg-[var(--color-bg-alt)] py-16 md:py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="grid gap-6 md:grid-cols-3">
-        {
-          stats.map((s, i) => (
-            <div
-              class="rounded-3xl border border-[var(--color-line)] bg-[var(--color-bg)] p-8"
-              data-reveal
-              style={`transition-delay: ${i * 80}ms`}
-              data-placeholder="stat"
-            >
-              <div class="text-5xl font-semibold tracking-tight" style="letter-spacing: var(--tracking-display);">
-                {s.value}
-              </div>
-              <div class="mt-3 text-sm font-medium text-[var(--color-text)]">{s.label}</div>
-              <div class="mt-1 text-xs text-[var(--color-text-tertiary)]">{s.note}</div>
-            </div>
-          ))
-        }
-      </div>
-      <p class="mt-8 text-center text-xs text-[var(--color-text-tertiary)]">
-        Live traction metrics published here post-launch as they materialize.
-      </p>
+  <section class="mx-auto max-w-6xl px-5 pb-16 md:px-6 md:pb-24">
+    <h2 class="t-title1" data-reveal>What makes us distinct.</h2>
+    <div class="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
+      {points.map((p, i) => (
+        <article class="glass p-6 md:p-7" data-reveal style={`--i:${i}`}>
+          <h3 class="t-title3">{p.t}</h3>
+          <p class="t-body mt-3">{p.b}</p>
+        </article>
+      ))}
     </div>
   </section>
 
-  <!-- Section 3: Differentiators -->
-  <section class="py-24 md:py-32">
-    <div class="mx-auto max-w-5xl px-6">
-      <header class="mx-auto max-w-2xl text-center" data-reveal>
-        <h2 class="text-3xl font-semibold tracking-tight md:text-5xl">What makes us distinct.</h2>
-      </header>
-
-      <div class="mt-16 grid gap-6 md:grid-cols-3">
-        {
-          differentiators.map((d, i) => (
-            <article
-              class="rounded-3xl border border-[var(--color-line)] bg-[var(--color-bg-raised)] p-8"
-              data-reveal
-              style={`transition-delay: ${i * 80}ms`}
-            >
-              <h3 class="text-xl font-semibold">{d.title}</h3>
-              <p class="mt-3 text-[var(--color-text-secondary)]">{d.body}</p>
-            </article>
-          ))
-        }
+  <section class="bg-[var(--color-bg-raised)]" id="team">
+    <div class="mx-auto max-w-6xl px-5 py-16 md:px-6 md:py-24">
+      <h2 class="t-title1" data-reveal>The team.</h2>
+      <div class="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
+        {people.map((p, i) => (
+          <article class="glass p-6 md:p-7" data-reveal style={`--i:${i}`}>
+            <h3 class="t-title2">{p.name}</h3>
+            <p class="t-caption mt-2">{p.role}</p>
+            <p class="t-body mt-4">{p.bio}</p>
+          </article>
+        ))}
       </div>
+      <article class="glass mt-4 p-6 md:max-w-xl md:p-7" data-reveal>
+        <h3 class="t-title2">{advisor.name}</h3>
+        <p class="t-caption mt-2">{advisor.role}</p>
+        <p class="t-body mt-4">{advisor.bio}</p>
+      </article>
     </div>
   </section>
 
-  <!-- Section 4: Team -->
-  <section class="bg-[var(--color-bg-alt)] py-24 md:py-32" id="team">
-    <div class="mx-auto max-w-6xl px-6">
-      <header class="mx-auto max-w-2xl text-center" data-reveal>
-        <h2 class="text-3xl font-semibold tracking-tight md:text-5xl">The team.</h2>
-        <p class="mt-4 text-base text-[var(--color-text-secondary)]">
-          Three founders. One advisor. The combination is the differentiator.
-        </p>
-      </header>
-
-      <!-- Founders: three across on desktop -->
-      <div class="mt-16 grid gap-6 md:grid-cols-3" data-reveal>
-        {
-          founders.map((m) => (
-            <article
-              class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg)] p-6"
-              data-placeholder="team-photo"
-            >
-              <span
-                class="inline-flex h-12 w-12 items-center justify-center rounded-full text-lg font-semibold text-[var(--color-bg)]"
-                style={`background: ${m.color}`}
-                aria-hidden="true"
-              >
-                {m.initial}
-              </span>
-              <h3 class="mt-4 text-lg font-semibold">{m.name}</h3>
-              <p class="text-sm text-[var(--color-text-tertiary)]">{m.role}</p>
-              <p class="mt-3 text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                {m.description}
-              </p>
-            </article>
-          ))
-        }
-      </div>
-
-      <!-- Advisor: separate row, narrower so it reads as supporting cast -->
-      <div class="mx-auto mt-6 max-w-xl" data-reveal>
-        {
-          advisors.map((m) => (
-            <article
-              class="rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg)] p-6"
-              data-placeholder="team-photo"
-            >
-              <div class="flex items-start gap-4">
-                <span
-                  class="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-lg font-semibold text-[var(--color-bg)]"
-                  style={`background: ${m.color}`}
-                  aria-hidden="true"
-                >
-                  {m.initial}
-                </span>
-                <div>
-                  <h3 class="text-lg font-semibold">{m.name}</h3>
-                  <p class="text-sm text-[var(--color-text-tertiary)]">{m.role}</p>
-                  <p class="mt-3 text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                    {m.description}
-                  </p>
-                </div>
-              </div>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 5: Press kit -->
-  <section class="py-24 md:py-32">
-    <div class="mx-auto max-w-3xl px-6 text-center">
-      <h2 class="text-3xl font-semibold md:text-4xl" data-reveal>Press kit.</h2>
-      <p class="mt-4 text-base text-[var(--color-text-secondary)]" data-reveal>
-        Logo files, brand colors, hero screenshots, and 100-word boilerplate.
-        Available on request. Drop us a line.
-      </p>
-      <a
-        href="mailto:hello@wehale.io?subject=WeHale press kit"
-        class="mt-8 inline-flex items-center gap-2 rounded-full border border-[var(--color-line-strong)] px-6 py-3 text-sm font-medium hover:bg-[var(--color-bg-raised)] transition-colors"
-        data-reveal
-      >
-        Request press kit
-      </a>
-    </div>
-  </section>
-
-  <!-- Section 6: Contact -->
-  <section class="bg-[var(--color-bg-alt)] py-24 md:py-32">
-    <div class="mx-auto max-w-2xl px-6 text-center">
-      <h2 class="text-3xl font-semibold md:text-4xl" data-reveal>Let's talk.</h2>
-      <p class="mt-4 text-base text-[var(--color-text-secondary)]" data-reveal>
-        We're not raising actively, but we're always glad to meet thoughtful
-        investors who care about the category.
-      </p>
-      <a
-        href="mailto:isak@wehale.io?subject=WeHale: investor intro"
-        class="mt-10 inline-flex items-center gap-2 rounded-full bg-[var(--color-text)] px-6 py-3 text-sm font-semibold text-[var(--color-bg)] hover:bg-[var(--color-accent)] transition-colors"
-        data-reveal
-      >
-        Email Isak directly
-      </a>
+  <section class="mx-auto max-w-3xl px-5 py-20 text-center md:py-28">
+    <h2 class="t-title1" data-reveal>Let's talk.</h2>
+    <p class="t-body mx-auto mt-4 max-w-md" data-reveal>We're not raising actively, but we're always glad to meet thoughtful investors who care about the category.</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3" data-reveal>
+      <a href="mailto:isak@wehale.io?subject=WeHale: investor intro" class="btn">Email Isak directly</a>
+      <a href="mailto:hello@wehale.io?subject=WeHale press kit" class="btn-quiet">Request press kit</a>
     </div>
   </section>
 </BaseLayout>

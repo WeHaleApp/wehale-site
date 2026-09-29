@@ -1,14 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import LegalLayout from "../components/LegalLayout.astro";
+import { BREATHE_URL, OFFER_LINE } from "../components/site/links";
 
 const title = "Support · WeHale";
 const description =
-  "Get help with the WeHale app — account, subscriptions, and technical questions. We usually reply within one business day.";
+  "Get help with the WeHale app: what's free, subscriptions on iPhone and Android, and technical questions. We usually reply within one business day.";
 ---
 
-<BaseLayout title={title} description={description} solidHeader>
-  <LegalLayout heading="Support" effective="July 5, 2026">
+<BaseLayout title={title} description={description} page="support" current="support" solidHeader>
+  <LegalLayout heading="Support" eyebrow="Help" updated="September 2026">
     <h2>Contact us</h2>
     <p>
       The fastest way to reach us is email:
@@ -18,25 +19,34 @@ const description =
 
     <h2>Common questions</h2>
 
+    <h3>What's free?</h3>
+    <p>
+      {OFFER_LINE} After that, three sessions stay free: The Wake Up, Unravel and
+      The Soft Reboot. You can also <a href={BREATHE_URL} data-try data-at="support">try a session in your browser</a>, with no account.
+    </p>
+
     <h3>How do I manage or cancel my subscription?</h3>
     <p>
-      Subscriptions are handled by Apple. Open <strong>Settings</strong> on
-      your iPhone → tap your name → <strong>Subscriptions</strong> →
-      <strong>WeHale</strong>. There you can change plan, cancel, or restore.
-      Cancelling keeps your access until the end of the paid period.
+      <strong>iPhone:</strong> open <strong>Settings</strong> → tap your name →
+      <strong>Subscriptions</strong> → <strong>WeHale</strong>. There you can change plan, cancel, or restore.
     </p>
+    <p>
+      <strong>Android:</strong> open the <strong>Google Play</strong> app → tap your profile icon →
+      <strong>Payments &amp; subscriptions</strong> → <strong>Subscriptions</strong> → <strong>WeHale</strong>.
+    </p>
+    <p>Cancelling keeps your access until the end of the paid period.</p>
 
     <h3>How do I restore a previous purchase?</h3>
     <p>
       In the WeHale app, go to <strong>Profile → Settings → Restore
-      Purchases</strong>. Make sure you're signed in with the same Apple ID
+      Purchases</strong>. Make sure you're signed in with the same Apple ID or Google account
       you used for the original purchase.
     </p>
 
-    <h3>The audio won't play — what do I do?</h3>
+    <h3>The audio won't play. What do I do?</h3>
     <p>
       Check that your device isn't in silent mode and that the volume is up.
-      If a session still won't load, close and reopen the app — sessions are
+      If a session still won't load, close and reopen the app: sessions are
       streamed and a brief connection drop can interrupt loading. Downloaded
       sessions in your Library play offline.
     </p>

@@ -164,17 +164,6 @@ body.in-session .chrome:not(.off) ~ #brand { opacity: 0; }
 .appline { margin-top: 12px !important; font-size: 14px !important; color: var(--t3) !important; }
 .linkbtn { appearance: none; background: none; border: 0; color: var(--t2); font: 600 14px/1 var(--font); padding: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 
-/* ---------- consent: small, equal choices, never blocks the session ---------- */
-.consent { position: fixed; z-index: 8; left: 12px; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); max-width: 460px; margin: 0 auto;
-  padding: 14px 14px 12px; border-radius: 16px; background: rgba(24, 16, 11, .94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, .35); font: 400 14px/1.45 var(--font); color: var(--t2); }
-.consent p { margin: 0 0 10px; }
-.consent a { color: var(--text); text-underline-offset: 3px; }
-.consent .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.consent button { appearance: none; min-height: 44px; border-radius: 999px; border: 1px solid rgba(246, 237, 227, .35); background: rgba(246, 237, 227, .06);
-  color: var(--ink); font: 700 15px/1 var(--font); cursor: pointer; }
-body.in-session .consent { display: none; }
-
 .noscript { position: fixed; inset: auto 16px 16px; z-index: 9; text-align: center; color: var(--t2); }
 @media (min-height: 800px) { .screen h1 { font-size: 30px; } }
 @media (max-height: 640px) { .scr-top { display: none; } #startBtn { width: 64px; height: 64px; } #startScr { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); } }

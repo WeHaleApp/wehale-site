@@ -10,17 +10,7 @@ export const ONELINK_BASE = "https://wehale.onelink.me/zcid";
 export const ONELINK_PID = "web_session";
 export const ONELINK_CAMPAIGN = "breathe";
 
-// CONFIG GAP (Isak): the Meta Pixel (dataset) ID, set as the Netlify env var PUBLIC_META_PIXEL_ID. Unset now,
-// so fbevents.js is never requested, even after consent.
-export const META_PIXEL_ID = (import.meta.env.PUBLIC_META_PIXEL_ID || "").trim();
-
-// CONFIG GAP (owner of main + Isak): the Conversions API endpoint. Only once
-// netlify/functions/meta-capi.cjs is approved and META_CAPI_TOKEN is set in Netlify. Null = no server events.
-export const META_CAPI_URL = (import.meta.env.PUBLIC_META_CAPI_URL || "").trim() || null;
-
-// CONFIG GAP (Isak): a Meta Events Manager test code, only while testing (see docs/breathe/MEASUREMENT.md).
-// It can also be passed as ?fbtest=TEST12345 on the page.
-export const META_TEST_EVENT_CODE = (import.meta.env.PUBLIC_META_TEST_EVENT_CODE || "").trim() || null;
+// The tags (GTM, Meta, TikTok) and their IDs live in src/scripts/tags.js, driven by the env vars in docs/ENV.md.
 
 // The completion offer. The source today is src/data/breathe-offers.json, built into the page. The offer spec
 // proposes a public read, GET /public/web-offer?session=<slug>, not built yet and needing the owner of main's OK.
@@ -39,4 +29,5 @@ export const DAYTIME_ENDS = 18;
 
 // The landing test (docs/breathe/LANDING.md): which start screen a visitor without ?v= sees. "0" is the original.
 // Every event carries v, so the variants can be compared once traffic runs.
-export const DEFAULT_VARIANT = "g1";   // g (one line, the sphere, Begin; swipe between worlds), live on wehale.io 29 Sep; f, d, c, a, e and the original (0) stay reachable by ?v= for the A/B
+import DATA from "../../data/hooks.json";
+export const DEFAULT_VARIANT = DATA.variants.breathe.default;   // g1 (one line, the sphere, Begin; swipe between worlds), live on wehale.io 29 Sep; the others stay reachable by ?v= for the A/B

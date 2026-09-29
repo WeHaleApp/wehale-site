@@ -1,11 +1,12 @@
 // /breathe page controller: the picker, the lazy player, the end and exit screens, consent and events.
 // The player (WebGL, ~25 KB gzipped) is imported after first paint; the score is fetched on idle; the audio
 // streams only after the Play tap.
-import { MORNING_ENDS, DAYTIME_ENDS, META_PIXEL_ID, META_CAPI_URL, DEFAULT_VARIANT } from "./config.js";
-import { initMeasurement, consent, setConsent, onConsent, track } from "./measure.js";
-import { STANDARD, loadOffer, assign, storedAssignment, shortCodeOf, pick, oneLink } from "./offers.js";
+import { MORNING_ENDS, DAYTIME_ENDS, DEFAULT_VARIANT } from "./config.js";
+import { initMeasurement, onConsent, track } from "./measure.js";
+import { STANDARD, loadOffer, assign, storedAssignment, shortCodeOf, pick, oneLink, setLinkContext } from "./offers.js";
+import { readContract, eventParams } from "../contract.js";
 import SESSIONS_FILE from "../../data/breathe-sessions.json";
-import HOOKS from "../../data/breathe-hooks.json";
+import HOOKS from "../../data/hooks.json";
 
 const $ = (id) => document.getElementById(id);
 const Q = new URLSearchParams(location.search);
@@ -64,14 +65,10 @@ function gLines() {
 }
 let player = null, playerSlug = null, loading = null;
 
-// ---------- where the visitor came from (no personal data) ----------
-const source = (() => {
-  const u = Q.get("utm_source"); if (u) return u.slice(0, 40);
-  if (Q.get("fbclid")) return "meta";
-  if (Q.get("ttclid")) return "tiktok";
-  try { if (document.referrer) return new URL(document.referrer).hostname.slice(0, 60); } catch (_) {}
-  return "direct";
-})();
+// ---------- where the visitor came from, and the rest of the ad-to-site contract (no personal data) ----------
+const CONTRACT = readContract(location.search, document.referrer);
+const source = CONTRACT.source;
+setLinkContext({ contract: CONTRACT, v: V });
 
 // ---------- which session: ?s= (the ad link) skips the question; otherwise the local time preselects ----------
 export function timeSlug(h) { return h < MORNING_ENDS ? "wake-up" : h < DAYTIME_ENDS ? "unravel" : "soft-reboot"; }
@@ -174,7 +171,7 @@ if (VAR.g) {
 let assignment = null;
 function params() {
   const a = assignment || storedAssignment();
-  const p = { session: selected, arm: a ? a.arm : "none", source, v: V };
+  const p = eventParams(CONTRACT, { session: selected, arm: a ? a.arm : "none", source, v: V });
   if (HOOK_ID) p.h = HOOK_ID;
   if (a) p.assignment_id = a.assignmentId;
   return p;
@@ -281,7 +278,7 @@ $("exitStart").addEventListener("click", () => { showScreen("startScr"); if (VAR
 
 // g: a quiet "Continue in the app" in the controls (shown on tap); nothing visible while breathing
 function wireCtlApp() {
-  if (!VAR.g) return; const link = oneLink({ session: selected, completed: false, assignment: null, extra: { af_sub5: "in_session" } });
+  if (!VAR.g) return; const link = oneLink({ session: selected, completed: false, assignment: null, at: "in_session" });
   wireApp($("ctlApp"), link, () => ({ ...params(), completed: 0 }));
 }
 function showEndQr(assigned) {
@@ -417,7 +414,7 @@ function openSave(title) {
   const g = guideOf(selected), name = "Breathe with " + g + ": " + (VAR.does ? s.choice : s.title) + ", 6 min", details = "Your 6-minute session with " + g + ": " + url;
   $("saveH").textContent = title || "Save it for later";
   $("saveSub").textContent = VAR.does ? s.choice + " · 6 min with " + guideOf(selected) : s.choice + " · " + s.title + " · 6 min"; $("saveDone").hidden = true;
-  const app = oneLink({ session: selected, completed: false, assignment: null, extra: { af_sub5: "saved" } });
+  const app = oneLink({ session: selected, completed: false, assignment: null, at: "saved" });
   if (app) { $("saveApp").hidden = false; $("saveApp").href = app; } else $("saveApp").hidden = true;
   $("saveCalT").textContent = r.label;
   $("saveCal").href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(name) + "&dates=" + calStamp(r.t) + "/" + calStamp(end) + "&details=" + encodeURIComponent(details);
@@ -452,21 +449,8 @@ $("saveCopy").addEventListener("click", async () => {
   done(ok ? "Link copied" : url); if (ok) { saved("copy"); confirmSave("Link copied. Open it when you're ready."); }
 });
 
-// ---------- consent: shown only when something is configured to measure (or ?consent=1 for review) ----------
-const T = {
-  en: { text: 'May we measure this visit? With your OK, Meta’s pixel tells us which ads bring people here and whether they finish the session. It uses cookies. The session works the same either way. <a href="/privacy">Privacy</a>', yes: "Accept", no: "Decline" },
-  sv: { text: 'Får vi mäta besöket? Med ditt ok berättar Metas pixel vilka annonser som leder hit och om sessionen görs klart. Den använder cookies. Sessionen fungerar likadant oavsett. <a href="/privacy">Integritet</a>', yes: "Godkänn", no: "Avböj" },
-};
+// ---------- consent: the site's shared banner (src/components/site/ConsentBanner.astro), never over the session ----------
 initMeasurement();
-const measuring = !!(META_PIXEL_ID || META_CAPI_URL);
-if ((measuring || Q.get("consent") === "1") && !consent()) {
-  const t = T[LANG];
-  $("consentText").innerHTML = t.text; $("consentYes").textContent = t.yes; $("consentNo").textContent = t.no;
-  $("consent").lang = LANG; $("consent").hidden = false;
-  const done = (c) => { setConsent(c); $("consent").hidden = true; };
-  $("consentYes").addEventListener("click", () => done("granted"));
-  $("consentNo").addEventListener("click", () => done("denied"));
-}
 
 if (Q.get("src") === "saved") track.returnFromSaved(params());
 onConsent((c) => { if (c === "granted" && Q.get("src") === "saved") track.returnFromSaved(params()); });
@@ -547,7 +531,7 @@ if (VAR.g) {
   gDots();
   scr.addEventListener("pointerdown", (e) => {
     if (e.button > 0 || scr.classList.contains("gone")) return;
-    if (e.target.closest("button, a, .consent")) return;
+    if (e.target.closest("button, a, .whc")) return;
     if (e.clientX < EDGE || e.clientX > innerWidth - EDGE) return;
     gDrag = { x0: e.clientX, y0: e.clientY, id: e.pointerId, moved: false, sphere: gOnSphere(e), hist: [[performance.now(), e.clientX]] };
     cancelAnimationFrame(gAnim); try { scr.setPointerCapture(e.pointerId); } catch (_) {}

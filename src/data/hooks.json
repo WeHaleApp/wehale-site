@@ -1,0 +1,80 @@
+{
+  "_about": "The ad-to-site data (SITE-GOALS §4): hooks and page variants, so a new ad needs no code change. ?h=<id> puts the ad's first line in the headline slot (home and /breathe) and preselects its session on /breathe; unknown ids are ignored. line_en: the headline (7 words or fewer). sub_en: the one line under it ({guide} is the session's narrator). world: the colour world the ad ends in (the /breathe first frame). card_en, edge_sub_en, start_f: /breathe variant f only. Swedish lines (line_sv) not written yet. variants: what ?v= may pick on each page; anything else falls back to the default. ",
+  "hooks": {
+    "coffee": {
+      "line_en": "Fourth coffee. Still foggy.",
+      "session": "wake-up",
+      "sub_en": "Try 6 minutes of breathing with {guide} instead. Free, no app needed.",
+      "world": "ember"
+    },
+    "email": {
+      "line_en": "Before the first email.",
+      "session": "wake-up",
+      "sub_en": "6 minutes of breathing with {guide} first. Free, no app needed.",
+      "world": "water"
+    },
+    "parked": {
+      "line_en": "Parked outside. Not ready to go in.",
+      "session": "unravel",
+      "sub_en": "Take 6 minutes with {guide} first. Free, no app needed.",
+      "world": "water"
+    },
+    "slowest": {
+      "line_en": "The slowest breath of your day.",
+      "session": "unravel",
+      "sub_en": "6 minutes of slow breathing with {guide}. Free, no app needed.",
+      "world": "water"
+    },
+    "exhale": {
+      "line_en": "Do you rush your exhale?",
+      "session": "unravel",
+      "sub_en": "Find out in 6 minutes with {guide}. Free, no app needed.",
+      "world": "water"
+    },
+    "rate": {
+      "line_en": "How do you feel, 1 to 10?",
+      "session": "unravel",
+      "sub_en": "Ask again after 6 minutes with {guide}. Free, no app needed.",
+      "world": "water"
+    },
+    "keepup": {
+      "line_en": "Can you keep up with this?",
+      "session": "wake-up",
+      "sub_en": "Fast breaths, then a long hold. 6 minutes with {guide}, free.",
+      "world": "ember",
+      "card_en": "Three rounds, each one harder",
+      "start_f": 10.1,
+      "edge_sub_en": "Each round builds, then a long hold. 6 minutes with {guide}, free."
+    },
+    "night": {
+      "line_en": "Lights off. Mind still on.",
+      "sub_en": "6 slow minutes with {guide}. Fine to do lying down. Free.",
+      "session": "soft-reboot",
+      "world": "night"
+    }
+  },
+  "variants": {
+    "_about": "?v= picks a page variant for the A/B. Every event carries the variant actually shown (v).",
+    "home": {
+      "default": "eyes",
+      "options": {
+        "eyes": "the brand-film still (eyes closed): a right-hand panel on desktop, a top band on phones",
+        "land": "a landscape instead (forest at dawn), no person"
+      }
+    },
+    "breathe": {
+      "default": "g1",
+      "options": {
+        "g1": "g: one line, the sphere, Begin; swipe between the worlds (live since 29 Sep); ?v=g is the same",
+        "g2-next": "g with hold-to-breathe-in",
+        "f": "the landing loop's variant",
+        "d": "tiles",
+        "e": "square tiles",
+        "c": "one tap",
+        "b": "one breath first",
+        "a": "what it is + three steps",
+        "0": "the original question"
+      }
+    }
+  }
+}

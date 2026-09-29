@@ -1,0 +1,139 @@
+/* wehale.io design system: the app's tokens (wehale-app src/tokens, "Quiet dusk") in the partner pages'
+   layout (docs/redesign/DIRECTION.md). Imported by BaseLayout; /breathe keeps its own player CSS on the
+   same values (src/styles/breathe.css). */
+@import "tailwindcss";
+
+@font-face { font-family: "Nunito Sans"; font-style: normal; font-weight: 300 800; font-display: swap;
+  src: url("/fonts/nunito-sans-var.woff2") format("woff2"); }
+
+@theme {
+  /* colors.ts */
+  --color-bg: #090f1d;
+  --color-bg-raised: #0e1525;
+  --color-surface: #131926;
+  --color-surface-hover: #181d2b;
+  --color-accent: #45b5a0;          /* progress only (principle 3) */
+  --color-gold: #e8a84e;            /* milestones, ratings */
+  --color-rose: #c97b76;
+  --color-text: #f2f0ed;
+  --color-text-secondary: rgba(242, 240, 237, 0.72);
+  --color-text-tertiary: rgba(242, 240, 237, 0.55);  /* 5.6:1, AA */
+  --color-text-muted: rgba(242, 240, 237, 0.35);     /* decorative only */
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.15);
+  --color-glass: rgba(255, 255, 255, 0.04);
+
+  /* fonts.ts */
+  --font-sans: "Nunito Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* layout.ts */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-button: 18px;
+  --radius-pill: 999px;
+
+  /* motion.ts (m.enter, m.stagger, m.press) */
+  --ease-enter: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+:root { color-scheme: dark; --dur-enter: 500ms; --dur-reveal: 800ms; --stagger: 80ms; }
+html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { min-height: 100dvh; overflow-x: hidden; }
+::selection { background: rgba(69, 181, 160, 0.25); }
+:focus-visible { outline: 2px solid var(--color-text); outline-offset: 3px; border-radius: 6px; }
+p, li, dd, figcaption, blockquote { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; }
+
+@layer components {
+/* ── Type: the app's eight steps, scaled up for wide screens only ── */
+.t-display { font-size: clamp(2.5rem, 6.4vw, 5rem); font-weight: 500; line-height: 1.04; letter-spacing: -0.015em; }
+.t-title1  { font-size: clamp(1.75rem, 3.6vw, 2.75rem); font-weight: 500; line-height: 1.12; letter-spacing: -0.01em; }
+.t-title2  { font-size: clamp(1.375rem, 2.4vw, 1.75rem); font-weight: 500; line-height: 1.2; }
+.t-title3  { font-size: 1.125rem; font-weight: 600; line-height: 1.35; }
+.t-body    { font-size: 1rem; line-height: 1.55; color: var(--color-text-secondary); }
+@media (min-width: 768px) { .t-body { font-size: 1.0625rem; line-height: 1.6; } }
+.t-foot    { font-size: 0.875rem; line-height: 1.45; color: var(--color-text-tertiary); }
+.t-caption { font-size: 0.75rem; font-weight: 700; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-tertiary); }
+
+/* ── One white action (principle 2). Hover dims, never turns teal. ── */
+.btn { white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px;
+  border-radius: var(--radius-pill); background: var(--color-text); color: var(--color-bg);
+  padding: .85rem 1.5rem; font-weight: 700; font-size: 1rem; line-height: 1;
+  transition: transform 220ms var(--ease-enter), opacity 220ms var(--ease-enter); }
+.btn:hover { opacity: .9; } .btn:active { transform: scale(.97); transition-duration: 100ms; }
+.btn-quiet { white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px;
+  border-radius: var(--radius-pill); background: var(--color-glass); color: var(--color-text);
+  box-shadow: inset 0 0 0 1px var(--color-line-strong); padding: .85rem 1.4rem; font-weight: 600; font-size: 1rem; line-height: 1;
+  transition: background-color 220ms var(--ease-enter), transform 220ms var(--ease-enter); }
+.btn-quiet:hover { background: rgba(255,255,255,.08); } .btn-quiet:active { transform: scale(.97); }
+.link { font-weight: 600; color: var(--color-text-secondary); text-decoration: underline; text-underline-offset: 4px;
+  text-decoration-color: var(--color-line-strong); }
+.link:hover { color: var(--color-text); }
+
+/* ── Depth from light, not lines (principle 4) ── */
+.glass { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border-radius: var(--radius-lg); }
+.photo-card { border-radius: var(--radius-lg); overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+
+}
+
+/* ── Motion: one reveal per group, app curve, stagger for at most 4 ── */
+[data-reveal] { opacity: 0; transform: translateY(12px);
+  transition: opacity var(--dur-reveal) var(--ease-enter), transform var(--dur-reveal) var(--ease-enter);
+  transition-delay: calc(var(--i, 0) * var(--stagger)); }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+.hero-in { opacity: 0; transform: translateY(14px); animation: heroIn 1s var(--ease-enter) forwards; animation-delay: var(--d, 0ms); }
+@keyframes heroIn { to { opacity: 1; transform: none; } }
+@supports (animation-timeline: view()) {
+  [data-parallax] { animation: parallax linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+  @keyframes parallax { from { transform: translateY(-5%) scale(1.06); } to { transform: translateY(5%) scale(1.06); } }
+}
+/* The breathing light: a still of the /breathe sphere, breathing at the app tempo (4 s in, 6 s out). */
+.sphere { position: relative; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, rgba(255,255,255,.75) 0 6%, rgba(255,255,255,0) 18%),
+              radial-gradient(circle at 64% 70%, rgba(255,255,255,.35) 0 5%, rgba(255,255,255,0) 16%),
+              radial-gradient(closest-side, rgba(150,205,210,.55), rgba(90,150,160,.35) 70%, rgba(200,240,240,.9) 96%, rgba(200,240,240,0) 100%);
+  box-shadow: 0 0 60px rgba(120,200,210,.45), 0 0 160px rgba(79,203,214,.18); }
+.sphere-field { background: radial-gradient(closest-side, rgba(79,203,214,.16), rgba(79,203,214,.05) 60%, transparent 100%); }
+@media (prefers-reduced-motion: no-preference) {
+  .sphere { animation: breathe 10s infinite; }
+  @keyframes breathe {
+    0% { transform: scale(.9); animation-timing-function: cubic-bezier(.37,0,.63,1); }
+    40% { transform: scale(1.04); animation-timing-function: cubic-bezier(.37,0,.63,1); }
+    100% { transform: scale(.9); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* ── Small pieces shared by every page (in the components layer, so Tailwind utilities such as `hidden` win) ── */
+@layer components {
+.skip-link { position: absolute; left: 12px; top: -60px; z-index: 80; padding: .75rem 1rem; border-radius: var(--radius-md);
+  background: var(--color-text); color: var(--color-bg); font-weight: 700; }
+.skip-link:focus { top: 12px; }
+.tap { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+.hairline { border-color: var(--color-line); }
+dialog.sheet { margin: auto; max-width: min(92vw, 440px); border: 0; padding: 0; border-radius: 20px; color: var(--color-text);
+  background: linear-gradient(180deg, #171e2d, var(--color-surface)); box-shadow: 0 30px 90px rgba(0,0,0,.6); }
+dialog.sheet::backdrop { background: rgba(5, 8, 15, .66); backdrop-filter: blur(6px); }
+dialog.sheet[open] { animation: sheetIn 420ms var(--ease-enter); }
+@keyframes sheetIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.qr svg { display: block; width: 100%; height: auto; border-radius: 12px; }
+.prose-legal { color: var(--color-text-secondary); line-height: 1.65; }
+.prose-legal h2 { color: var(--color-text); font-weight: 600; font-size: 1.25rem; line-height: 1.3; margin: 3rem 0 .75rem; }
+.prose-legal h2:first-child { margin-top: 0; }
+.prose-legal h3 { color: var(--color-text); font-weight: 600; font-size: 1.0625rem; margin: 2rem 0 .5rem; }
+.prose-legal p { margin: 0 0 1rem; }
+.prose-legal ul { list-style: disc; padding-left: 1.5rem; margin: 0 0 1rem; }
+.prose-legal ol { list-style: decimal; padding-left: 1.5rem; margin: 0 0 1rem; }
+.prose-legal li { margin-bottom: .5rem; }
+.prose-legal a { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--color-line-strong); }
+.prose-legal a:hover { text-decoration-color: var(--color-text); }
+.prose-legal strong { color: var(--color-text); font-weight: 600; }
+.prose-legal table { width: 100%; border-collapse: collapse; margin: 0 0 1.5rem; font-size: .9375rem; }
+.prose-legal th, .prose-legal td { text-align: left; vertical-align: top; padding: .6rem .75rem .6rem 0; border-bottom: 1px solid var(--color-line); }
+.prose-legal th { color: var(--color-text); font-weight: 600; }
+.prose-legal .table-wrap { overflow-x: auto; }
+}

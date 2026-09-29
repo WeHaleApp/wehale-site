@@ -1,8 +1,9 @@
-// PROPOSAL, NEEDS THE OWNER OF MAIN'S APPROVAL. Not wired up: the page sends nothing here unless
-// PUBLIC_META_CAPI_URL is set, and this function does nothing unless META_CAPI_TOKEN and META_PIXEL_ID are set.
+// Off until configured: the pages send nothing here unless PUBLIC_META_PIXEL_ID is set, META_CAPI_TOKEN and
+// META_PIXEL_ID were present at build time, and the visitor accepted ad measurement; and this function does nothing
+// unless META_CAPI_TOKEN and META_PIXEL_ID are set (docs/ENV.md).
 //
 // Netlify Function: /.netlify/functions/meta-capi
-// Meta Conversions API relay for wehale.io/breathe (docs/breathe/MEASUREMENT.md).
+// Meta Conversions API relay for wehale.io and /breathe (docs/breathe/MEASUREMENT.md).
 // - Accepts only the page's own funnel events, only with consent: "granted" in the body. The page only calls it
 //   after the visitor pressed Accept.
 // - Uses the browser's event_id, so Meta de-duplicates the pixel and server copies.
@@ -14,8 +15,11 @@
 //      optional META_TEST_EVENT_CODE (only while testing).
 
 const GRAPH = "https://graph.facebook.com/v21.0";
-const ALLOWED = new Set(["PageView", "ViewContent", "Lead", "SessionPicked", "SessionStart", "Session1Min", "SessionHold", "SessionFinish", "AppTap"]);
-const PARAM_KEYS = ["session", "arm", "source", "assignment_id", "completed", "content_name", "content_category", "v", "h"];
+const ALLOWED = new Set(["PageView", "ViewContent", "Lead", "SessionPicked", "SessionStart", "Session1Min", "SessionHold", "SessionFinish", "AppTap",
+  "SaveForLater", "ReturnFromSaved", "TrySessionTap"]);
+// the funnel's own fields plus the ad-to-site contract (src/scripts/contract.js)
+const PARAM_KEYS = ["session", "arm", "source", "assignment_id", "completed", "content_name", "content_category", "option", "page", "at", "store",
+  "v", "h", "s", "src", "utm_source", "utm_medium", "utm_campaign", "utm_content"];
 const ORIGINS = new Set(["https://wehale.io", "https://www.wehale.io"]);
 const WINDOW_MS = 60_000, MAX_PER_WINDOW = 60;
 const hits = new Map();
@@ -25,7 +29,7 @@ function limited(ip) {
   if (!h || now - h.t > WINDOW_MS) { hits.set(ip, { t: now, n: 1 }); if (hits.size > 5000) hits.clear(); return false; }
   h.n += 1; return h.n > MAX_PER_WINDOW;
 }
-const str = (v, n = 80) => (typeof v === "string" ? v.slice(0, n) : typeof v === "number" ? String(v) : undefined);
+const str = (v, n = 100) => (typeof v === "string" ? v.slice(0, n) : typeof v === "number" ? String(v) : undefined);
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") return { statusCode: 405, body: "Method Not Allowed" };
@@ -46,7 +50,7 @@ exports.handler = async (event) => {
 
   const custom = {};
   for (const k of PARAM_KEYS) { const v = str(b.custom_data && b.custom_data[k]); if (v !== undefined) custom[k] = v; }
-  let url = "https://wehale.io/breathe";
+  let url = "https://wehale.io/";
   try { const u = new URL(String(b.event_source_url || "")); if (ORIGINS.has(u.origin) || preview) url = u.origin + u.pathname; } catch (_) {}
 
   const user_data = { client_ip_address: ip || undefined, client_user_agent: str(event.headers["user-agent"], 400) };

@@ -1,132 +1,86 @@
 ---
 /**
- * Base layout: every page extends this.
- *
- * Carries the global head (meta, OG, schema), font preload, GTM, the
- * skip-link, the SiteHeader, the page slot, and the SiteFooter. All
- * pages get the same base experience and can override `title`,
- * `description`, `ogImage`, and `pathname` via props.
+ * Base layout for every page except /breathe (BreatheLayout, a full-screen player).
+ * The design system (src/styles/site.css: the app's tokens, Nunito Sans), the head (canonical without .html, OG),
+ * Consent Mode v2 set to denied before anything else, the header, the footer, the consent banner and the "Get the app"
+ * sheet. No tag loads here: GTM and the pixels load only after consent (src/scripts/tags.js), from env vars (docs/ENV.md).
  */
-import "../styles/global.css";
-import SiteHeader from "../components/SiteHeader.astro";
-import SiteFooter from "../components/SiteFooter.astro";
+import "../styles/site.css";
+import Header from "../components/site/Header.astro";
+import Footer from "../components/site/Footer.astro";
+import ConsentBanner from "../components/site/ConsentBanner.astro";
+import GetApp from "../components/site/GetApp.astro";
+import { consentHead } from "../scripts/consent.js";
 
 interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  /** The canonical path, e.g. "/about". Defaults to the current path without ".html". */
   pathname?: string;
-  /** When true, header background goes solid immediately. Use on non-hero pages. */
+  current?: "home" | "sessions" | "about" | "support";
+  /** A short page name for events (home, about, support, 404, …). */
+  page?: string;
+  /** Pages without a photo hero get a solid header from the start. */
   solidHeader?: boolean;
+  noindex?: boolean;
 }
+const { title, description, ogImage = "/assets/images/og.jpg", pathname, current, page = "page", solidHeader = false, noindex = false } = Astro.props;
 
-const {
-  title,
-  description,
-  ogImage = "/assets/images/og.jpg",
-  pathname = Astro.url.pathname,
-  solidHeader = false,
-} = Astro.props;
-
-const canonical = `https://wehale.io${pathname === "/" ? "/" : pathname.replace(/\/$/, "")}`;
+const path = (pathname ?? Astro.url.pathname).replace(/\.html$/, "").replace(/\/index$/, "/").replace(/(.)\/$/, "$1") || "/";
+const canonical = `https://wehale.io${path === "/" ? "/" : path}`;
 const fullOg = ogImage.startsWith("http") ? ogImage : `https://wehale.io${ogImage}`;
+// The server copies of the pixels switch on only when their secrets exist at build time. Only booleans reach the page.
+const server = { meta: !!(process.env.META_CAPI_TOKEN && process.env.META_PIXEL_ID), tiktok: !!(process.env.TIKTOK_EVENTS_TOKEN && process.env.TIKTOK_PIXEL_ID) };
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-page={page} data-solid-header={solidHeader ? "true" : "false"}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#090f1d" />
+    <!-- Google Consent Mode v2: everything denied by default, before any tag (none loads without consent) -->
+    <script is:inline set:html={consentHead} />
+    <script is:inline set:html={`window.__WH_SERVER=${JSON.stringify(server)};`} />
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
 
-    <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={fullOg} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="WeHale: guided breathing sessions" />
     <meta property="og:site_name" content="WeHale" />
     <meta property="og:locale" content="en_US" />
-
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={fullOg} />
 
-    <!-- Favicons -->
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/assets/images/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/assets/images/favicon.png" />
-
-    <!-- Inter: self-hosted variable font (no Google Fonts request — faster
-         first paint and no third-party font fetch for EU visitors). -->
-    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-var-latin.woff2" crossorigin />
-    <link rel="stylesheet" href="/fonts/inter.css" />
-
-    <!-- Google Tag Manager -->
-    <script is:inline>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-NCPSJ2QF");
-    </script>
+    <!-- Nunito Sans, self-hosted (one variable file): no third-party font request -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/nunito-sans-var.woff2" crossorigin />
+    <slot name="head" />
   </head>
 
   <body class="bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
-    <noscript>
-      <iframe
-        src="https://www.googletagmanager.com/ns.html?id=GTM-NCPSJ2QF"
-        height="0"
-        width="0"
-        style="display: none; visibility: hidden;"
-      ></iframe>
-    </noscript>
-
     <a class="skip-link" href="#main">Skip to content</a>
-
-    <SiteHeader solid={solidHeader} />
-
-    <main id="main">
-      <slot />
-    </main>
-
-    <SiteFooter />
-
-    <!-- Scroll-reveal observer. Cheap, no JS framework needed. -->
-    <script is:inline>
-      (function () {
-        if (typeof window === "undefined" || !("IntersectionObserver" in window)) return;
-        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const els = document.querySelectorAll("[data-reveal]");
-        if (reduced) {
-          els.forEach((el) => el.classList.add("is-visible"));
-          return;
-        }
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add("is-visible");
-                io.unobserve(e.target);
-              }
-            });
-          },
-          { rootMargin: "0px 0px -10% 0px", threshold: 0.05 }
-        );
-        els.forEach((el) => io.observe(el));
-      })();
+    <Header current={current} />
+    <main id="main"><slot /></main>
+    <Footer />
+    <GetApp />
+    <ConsentBanner />
+    <script>
+      import "../scripts/site.js";
     </script>
   </body>
 </html>

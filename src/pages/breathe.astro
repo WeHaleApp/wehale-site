@@ -10,7 +10,7 @@ import path from "node:path";
 import BreatheLayout from "../layouts/BreatheLayout.astro";
 import "../styles/breathe.css";
 import SESSIONS from "../data/breathe-sessions.json";
-import HOOKS from "../data/breathe-hooks.json";
+import HOOKS from "../data/hooks.json";
 import { DEFAULT_VARIANT } from "../scripts/breathe/config.js";
 import { oneLink } from "../scripts/breathe/offers.js";
 import QRCode from "qrcode";
@@ -217,12 +217,6 @@ const description = "A guided breathing session with Edvin or Philip, right in y
       <button class="linkbtn" id="exitStart" type="button">Choose another session</button>
     </div>
   </section>
-
-  <!-- Consent: shown only when there is something to consent to (a pixel ID or the server events are configured) -->
-  <div class="consent" id="consent" role="region" aria-label="Measurement choice" hidden>
-    <p id="consentText"></p>
-    <div class="row"><button type="button" id="consentYes"></button><button type="button" id="consentNo"></button></div>
-  </div>
 
   <noscript><p class="noscript">This session needs JavaScript turned on.</p></noscript>
 

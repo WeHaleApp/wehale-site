@@ -6,6 +6,7 @@
 // - Everything the app needs rides in deep_link_value (the only field it reads; it uppercases it):
 //   WO.<OFFERID>.<ARM>.<assignmentId>, e.g. WO.WSOCT01.B.7KQ2M9XW3T. af_sub1..3 duplicate it for AppsFlyer reports.
 import BUILT_IN from "../../data/breathe-offers.json";
+import { oneLinkUrl } from "../contract.js";
 import { OFFER_URL, OFFER_TIMEOUT_MS, ONELINK_BASE, ONELINK_CAMPAIGN, ONELINK_PID, ARM_KEY } from "./config.js";
 
 export const STANDARD = BUILT_IN.standard;
@@ -75,22 +76,17 @@ export const tokenOf = (a) => (a ? `WO.${codeId(a.offerId)}.${a.arm.toUpperCase(
 export const shortCodeOf = (a) => (a ? `${codeId(a.offerId)}-${a.assignmentId}` : null);
 export const pick = (o, key, lang) => (o && ((lang === "sv" && o[key + "_sv"]) || o[key + "_en"])) || "";
 
-// The OneLink. With an assignment (only while a test offer is live): the token in deep_link_value and
-// af_sub1 = offer id, af_sub2 = arm. Always: af_sub3 = session, af_sub4 = 1 finished / 0 left early.
-export function oneLink({ session, completed, assignment, extra }) {
-  if (!ONELINK_BASE) return null;
-  const q = new URLSearchParams();
-  q.set("pid", ONELINK_PID);
-  q.set("c", ONELINK_CAMPAIGN);
-  if (assignment && completed) {
-    q.set("deep_link_value", tokenOf(assignment));
-    q.set("af_sub1", assignment.offerId);
-    q.set("af_sub2", assignment.arm);
-  }
-  q.set("af_sub3", session);
-  q.set("af_sub4", completed ? "1" : "0");
-  if (extra) for (const k of Object.keys(extra)) q.set(k, extra[k]);   // e.g. af_sub5=saved (save for later)
+// The OneLink, through the shared parameter contract (src/scripts/contract.js): with an assignment (only while a test
+// offer is live) the token in deep_link_value and af_sub1 = offer id, af_sub2 = arm. Always: af_sub3 = session,
+// af_sub4 = 1 finished / 0 left early; plus the ad's utm_*, h, v and src (c, af_channel, af_adset, af_ad, af_sub5).
+// `at` says where the tap was: end, exit, in_session, saved.
+let linkCtx = { contract: {}, v: null };
+export function setLinkContext(ctx) { linkCtx = { ...linkCtx, ...ctx }; }
+export function oneLink({ session, completed, assignment, at }) {
   // CONFIG GAP (owner of main): an app deep link that opens the session directly (af_dp / a UDL sub key), once
   // the app reads one; today the app reads only deep_link_value, which stays reserved for the offer token.
-  return ONELINK_BASE + "?" + q.toString();
+  return oneLinkUrl(ONELINK_BASE, {
+    pid: ONELINK_PID, campaign: ONELINK_CAMPAIGN, contract: linkCtx.contract, v: linkCtx.v,
+    session, completed, assignment, token: tokenOf(assignment), at: at || (completed ? "end" : "exit"),
+  });
 }
