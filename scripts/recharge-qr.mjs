@@ -35,7 +35,7 @@ if (csv) {
     rows.push({ name: "influencer-" + code.toLowerCase(), ch: "influencer", code, who: iName >= 0 ? cols[iName] : "" });
   }
 }
-const opts = { margin: 4, errorCorrectionLevel: "M", color: { dark: "#0a040f", light: "#ffffff" } };
+const opts = { margin: 4, errorCorrectionLevel: "M", color: { dark: "#0b0610", light: "#ffffff" } };
 const index = ["name,channel,code,url"];
 for (const r of rows) {
   const url = pageUrl(r.ch, r.code);

@@ -99,7 +99,7 @@ function run() {
     if (qrFor === link) { $("qrBox").hidden = false; return; }
     try {
       const QR = (await import("qrcode")).default;
-      $("qrCode").innerHTML = await QR.toString(link, { type: "svg", margin: 2, errorCorrectionLevel: "M", color: { dark: "#0a040f", light: "#f3d8f0" } });
+      $("qrCode").innerHTML = await QR.toString(link, { type: "svg", margin: 2, errorCorrectionLevel: "M", color: { dark: "#0b0610", light: "#f6ede3" } });
       qrFor = link; $("qrBox").hidden = false;
     } catch (_) { $("qrBox").hidden = true; }
   }

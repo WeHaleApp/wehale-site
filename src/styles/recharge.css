@@ -1,17 +1,18 @@
-/* The campaign page (src/pages/recharge.astro), on top of breathe.css. The Blackcurrant look (Isak, 29 Sep): deep
-   aubergine and near-black, berry and violet light. Tokens from the campaign visual's palette (recharge-visual branch):
-   ground, aubergine, berry, magenta, violet, orchid, converted from its linear values. */
+/* The campaign page (src/pages/recharge.astro), on top of breathe.css. The Blackcurrant look (Isak, 29 Sep): deep plum
+   and aubergine grounds, muted dusky berry accents, low saturation, grounded in WeHale's brand: never neon, no heavy
+   glow. Tokens from the campaign visual's ground and aubergine, the accents toned down; swap in the visual's
+   updated palette when it lands. */
 :root {
-  --bc-ground: #0a040f; --bc-aub: #29112f; --bc-berry: #5b194f; --bc-mag: #c2307a; --bc-violet: #8b5dff; --bc-orchid: #f3d8f0;
+  --bc-ground: #0b0610; --bc-aub: #24132a; --bc-plum: #3a1f3a; --bc-berry: #7a4a68; --bc-dusk: #b98aa8; --bc-orchid: #eadde6;
 }
 body.rc, html:has(body.rc) { background: var(--bc-ground); }
-body.rc { --ground: var(--bc-ground); --ink: #f7ecf5; --text: #f5eef4; --t2: rgba(245, 238, 244, .74); --t3: rgba(245, 238, 244, .6); --accent: #e7a6d8; }
+body.rc { --ground: var(--bc-ground); --ink: #f6ede3; --text: #f2f0ed; --t2: rgba(242, 240, 237, .74); --t3: rgba(242, 240, 237, .6); --accent: #d9b3cc; }
 /* before WebGL: a berry light on aubergine, so frame 0 is never black */
 body.rc #poster { background:
-  radial-gradient(circle at 50% calc(50% - 5vmin), rgba(243, 216, 240, .42) 0, rgba(194, 48, 122, .30) 9vmin, rgba(91, 25, 79, .22) 22vmin, rgba(41, 17, 47, 0) 48vmin),
-  radial-gradient(ellipse 120% 70% at 50% 60%, rgba(41, 17, 47, .7), rgba(10, 4, 15, 0) 70%), var(--bc-ground); }
-body.rc #lostGlow { background: radial-gradient(closest-side, rgba(243, 216, 240, .85), rgba(194, 48, 122, .45) 45%, rgba(41, 17, 47, 0) 100%); }
-body.rc .screen { background: linear-gradient(to top, rgba(10, 4, 15, .92) 0%, rgba(10, 4, 15, .55) 45%, rgba(10, 4, 15, 0) 72%); }
+  radial-gradient(circle at 50% calc(50% - 5vmin), rgba(234, 221, 230, .30) 0, rgba(122, 74, 104, .24) 9vmin, rgba(58, 31, 58, .20) 22vmin, rgba(36, 19, 42, 0) 48vmin),
+  radial-gradient(ellipse 120% 70% at 50% 60%, rgba(36, 19, 42, .7), rgba(11, 6, 16, 0) 70%), var(--bc-ground); }
+body.rc #lostGlow { background: radial-gradient(closest-side, rgba(234, 221, 230, .75), rgba(122, 74, 104, .40) 45%, rgba(36, 19, 42, 0) 100%); }
+body.rc .screen { background: linear-gradient(to top, rgba(11, 6, 16, .92) 0%, rgba(11, 6, 16, .55) 45%, rgba(11, 6, 16, 0) 72%); }
 body.rc:not(.in-session) #brand { opacity: 0; }   /* the lockup carries the logo outside the session */
 
 /* the co-brand lockup: WeHale, a thin ×, the partner (one swappable file) */
@@ -34,7 +35,7 @@ body.rc.arrived .rc-arrive .inner > :nth-child(n+3) { animation-delay: .18s; }
 @media (prefers-reduced-motion: reduce) { body.rc.arrived .rc-arrive .inner > *, body.rc.arrived .rc-arrive .rc-lockup { animation: none; } }
 
 /* the offer: two lines, one big button */
-.rc-offer { background: linear-gradient(to top, rgba(10, 4, 15, .96) 0%, rgba(10, 4, 15, .78) 55%, rgba(10, 4, 15, .35) 100%) !important; }
+.rc-offer { background: linear-gradient(to top, rgba(11, 6, 16, .96) 0%, rgba(11, 6, 16, .78) 55%, rgba(11, 6, 16, .35) 100%) !important; }
 .rc-offer h1 { font: 500 28px/1.15 var(--font) !important; margin-bottom: 16px !important; }
 .rc-o1 { font: 700 21px/1.3 var(--font) !important; color: var(--text) !important; max-width: 26ch !important; }
 .rc-o2 { margin-top: 6px !important; font-size: 16px !important; color: var(--t2) !important; }
@@ -42,7 +43,7 @@ body.rc.arrived .rc-arrive .inner > :nth-child(n+3) { animation-delay: .18s; }
 .rc-store { margin-top: 10px !important; font: 600 13px/1 var(--font) !important; color: var(--t3) !important; }
 .rc-again { margin-top: 8px; }
 .rc-qr { margin: 0; }
-.rc-qrcode { width: 196px; height: 196px; border-radius: 16px; overflow: hidden; background: var(--bc-orchid); margin: 0 auto; }
+.rc-qrcode { width: 196px; height: 196px; border-radius: 16px; overflow: hidden; background: #f6ede3; margin: 0 auto; }
 .rc-qrcode svg { display: block; width: 100%; height: 100%; }
 .rc-qr figcaption { margin-top: 12px; font: 600 14px/1.4 var(--font); color: var(--t2); max-width: 22ch; margin-inline: auto; text-wrap: balance; }
 
@@ -52,7 +53,7 @@ body.rc.arrived .rc-arrive .inner > :nth-child(n+3) { animation-delay: .18s; }
   .rc-arrive { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 7vh); }
   .rc-arrive .inner { max-width: 440px; }
   body.rc-desk .rc-offer .rc-card { max-width: 760px; display: grid; grid-template-columns: 1fr auto; gap: 24px 48px; align-items: center; text-align: left;
-    padding: 40px 44px; border-radius: 28px; background: rgba(41, 17, 47, .55); border: 1px solid rgba(243, 216, 240, .12); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+    padding: 40px 44px; border-radius: 28px; background: rgba(36, 19, 42, .6); border: 1px solid rgba(234, 221, 230, .1); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
   body.rc-desk .rc-offer .rc-copy p { margin-left: 0 !important; }
   body.rc-desk .rc-offer .rc-cta { width: auto; padding-inline: 32px; }
   body.rc-desk .rc-offer .rc-again { grid-column: 1 / -1; justify-self: start; padding-left: 0; }

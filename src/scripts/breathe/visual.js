@@ -19,7 +19,7 @@
     night: { hot: [.66, .72, 1], pale: [.95, .95, 1], deep: [.30, .36, .66], amp: .6 },
     moss: { hot: [.78, .82, .16], pale: [.95, .95, .72], deep: [.34, .46, .12] },
     // blackcurrant: the campaign's look (berry and violet light on aubergine); the Tide stand-in until the Cell visual lands
-    blackcurrant: { hot: [.78, .10, .52], pale: [.93, .80, .95], deep: [.30, .14, .72] },
+    blackcurrant: { hot: [.58, .20, .40], pale: [.90, .82, .88], deep: [.28, .14, .34], amp: .5 },   // grounded, low saturation: dusky berry, never neon
   };
   // the arc: lum (brightness), sat (saturation), warm (+ towards the hot tone, - towards the pale one), glow
   const ARC = {
@@ -95,7 +95,7 @@ const PALETTES = {
   dawn:  { base: [.66, .27, .22], pale: [1., .80, .70], tint: [.09, .03, .03], ground: [.0055, .0025, .0025] },
   pearl: { base: [.40, .44, .54], pale: [.93, .95, 1.], tint: [.05, .06, .11], ground: [.006, .007, .012] },
   sage:  { base: [.30, .46, .26], pale: [.87, .95, .78], tint: [.04, .07, .035], ground: [.003, .0045, .002] },
-  blackcurrant: { base: [.42, .03, .21], pale: [.89, .69, .87], tint: [.06, .01, .05], ground: [.0032, .0013, .0046] },
+  blackcurrant: { base: [.30, .08, .20], pale: [.84, .72, .80], tint: [.045, .014, .04], ground: [.0032, .0014, .0042] },
 };
 
 const VS_LINES = `#version 300 es
@@ -473,8 +473,8 @@ const TIDE_WORLDS = {
   moss: { centre: 3, warm: 0.7, label: 'Moss', pal: 'moss', accent: '#DCCB84', far: [.30, .38, .08], near: [1, .92, .55], size: 1.1, shape: 0, decay: .8, breeze: .8, curl: 1.2,
     flow: .7, hang: 1.1, swirl: 1.2, pulse: .9, fire: .9, count: .75, twinkle: .35, rise: -.008, caustic: 0, shafts: 1, room: .9, source: 'silk', glow: .95 },
   // the campaign's Blackcurrant look on the Tide field (a stand-in: the campaign's own Cell visual replaces it once integrated)
-  blackcurrant: { centre: 0, warm: .6, label: 'Blackcurrant', pal: 'blackcurrant', accent: '#E7A6D8', far: [.45, .04, .30], near: [.95, .75, .95], size: 1, shape: 0, decay: .76, breeze: 1, curl: 1.4,
-    flow: .75, hang: 1, swirl: 1.1, pulse: 1, fire: 1, count: .9, twinkle: .35, rise: 0, caustic: 0, shafts: 0, room: 1, source: 'silk', glow: 1 },
+  blackcurrant: { centre: 0, warm: .6, label: 'Blackcurrant', pal: 'blackcurrant', accent: '#D9B3CC', far: [.30, .10, .22], near: [.84, .72, .80], size: 1, shape: 0, decay: .76, breeze: .8, curl: 1.3,
+    flow: .7, hang: 1.1, swirl: .9, pulse: .85, fire: .85, count: .75, twinkle: .15, rise: 0, caustic: 0, shafts: 0, room: .85, source: 'silk', glow: .7 },
 };
 const TIDE_SIM = `#version 300 es
 precision highp float;
