@@ -44,8 +44,10 @@ d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promis
     <link rel="preload" as="image" href={L.src_dark} />
   </Fragment>
 
-  <!-- the room: a still field of faint motes and one calm orb that breathes slowly (still with reduced motion) -->
+  <!-- the room: a field of faint motes rising slowly like bubbles in still water (the canvas, added once the page has
+       arrived; the CSS field underneath is the still fallback) and one calm orb that breathes; all still with Reduce Motion -->
   <div class="rc-sky" aria-hidden="true"></div>
+  <canvas class="rc-motes" id="rcMotes" aria-hidden="true"></canvas>
 
   <main class="rc-page" id="rcMain" aria-labelledby="rcH">
     <div class="rc-lockup" aria-label={`WeHale × ${L.alt}`}>
@@ -53,7 +55,7 @@ d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promis
       <i aria-hidden="true">×</i>
       <img class="rc-partner" src={L.src_dark} alt={L.alt} width={L.width} height={L.height} />
     </div>
-    <div class="rc-orb" aria-hidden="true"><i></i><b></b></div>
+    <div class="rc-orb" id="rcOrb" aria-hidden="true"><s></s><i></i><b></b></div>
     <div class="rc-body">
       <h1 id="rcH">{T.title}</h1>
       <p class="rc-line">{T.line}</p>

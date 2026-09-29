@@ -36,7 +36,11 @@ function run() {
   if (whc) { new MutationObserver(() => requestAnimationFrame(whcFit)).observe(whc, { attributes: true, attributeFilter: ["hidden", "class"] }); addEventListener("resize", whcFit); whcFit(); }
 
   // the words wait for their font (no fallback flash), then rise in
-  let shown = false; const arrive = () => { if (!shown) { shown = true; body.classList.add("arrived"); } };
+  // then the room comes alive: the orb, its ripples and the button breathe from this moment, and the motes (a small
+  // canvas, loaded now so it never delays the first paint) rise on the same clock; nothing with Reduce Motion
+  let shown = false; const arrive = () => { if (shown) return; shown = true; body.classList.add("arrived");
+    const t0 = document.timeline && document.timeline.currentTime != null ? document.timeline.currentTime : performance.now();
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) import("./motes.js").then((m) => m.startMotes($("rcMotes"), $("rcOrb"), t0), () => {}); };
   try { Promise.all(["500 32px 'Nunito Sans'", "700 18px 'Nunito Sans'"].map((f) => document.fonts.load(f))).then(arrive, arrive); } catch (_) { arrive(); }
   setTimeout(arrive, 700);
   window.__recharge = { link };

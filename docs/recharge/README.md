@@ -7,6 +7,11 @@ The path is one config value, `route` in `src/data/recharge.json` (today `rechar
 One "get the app" page (Isak, 29 Sep): the campaign session lives only in the WeHale app, so there is no web session
 here. On the wehale.io look: the deep navy ground, a calm orb that breathes slowly (still with reduced motion), Nunito
 Sans, one white pill; the campaign shows only as the small co-brand lockup and blackcurrant as a quiet accent.
+The motion (Isak, 29 Sep: "more living"), all on the app's tokens and one 10 s breath (4 s in, 6 s out), started together
+when the words arrive: a staggered entrance over about 1.2 s; the orb swells with its halo; one thin ripple leaves its
+rim on each exhale; the cream pill (on a desktop the QR card) glows faintly with each inhale; a sparse field of motes rises
+very slowly (a small 2D canvas, `src/scripts/recharge/motes.js`, loaded after arrival, paused in a hidden tab). With
+Reduce Motion all of it is still. Check with `scripts/record-campaign.mjs` (recordings, 4x-throttled frame rate, first paint).
 
 Every outside link and QR code of the campaign points here. The screen, in order: the lockup; "Charge Your Current"
 and one line (a breathing session made for you, free in the WeHale app, yours to keep) with the guide and the length;

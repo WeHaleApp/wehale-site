@@ -2,7 +2,12 @@
    on the wehale.io look (Isak, 29 Sep: "own the design, make it more WeHale-like"): the deep navy ground, one calm orb,
    Nunito Sans, one white pill. The campaign shows only as the small co-brand lockup and blackcurrant as a quiet accent
    (the orb's inner light). */
-:root { --navy: #090f1d; --berry: #4A1D3F; --berry-l: #D9B3CC; }
+:root { --navy: #090f1d; --berry: #4A1D3F; --berry-l: #D9B3CC;
+  /* the app's motion tokens (wehale-app src/tokens/motion.ts, as in site.css and docs/MOTION.md; site.css isn't on this page) */
+  --m-press-in: 100ms; --m-press-out: 220ms; --m-enter: 500ms; --m-stagger: 80ms; --m-reveal: 800ms; --m-breath-in: 4000ms; --m-breath-out: 6000ms;
+  --curve-enter: cubic-bezier(.33, 1, .68, 1); --curve-breath: cubic-bezier(.37, 0, .63, 1);
+  /* one breath (4 s in, 6 s out); every breathing thing on the page runs on it, started together at arrival */
+  --breath: calc(var(--m-breath-in) + var(--m-breath-out)); }
 html:has(body.rc), body.rc { background: var(--navy); }
 /* a document page, not the player: it scrolls if a short screen (or the consent bar) needs it */
 html:has(body.rc) { height: auto; overflow: auto; }
@@ -30,17 +35,31 @@ body.rc :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .rc-lockup img.rc-partner { height: auto; max-height: 21px; margin-bottom: 1px; }
 .rc-lockup i { font: 300 14px/1 var(--font); font-style: normal; color: rgba(242, 240, 237, .55); margin-bottom: 2px; }
 
-/* the orb: WeHale's calm sphere, a luminous rim around a dark centre lit from within by a little blackcurrant; it
-   breathes slowly (4 s in, 6 s out, the app's breath curve) */
-.rc-orb { position: relative; flex: 1 1 auto; width: 100%; min-height: 150px; display: flex; align-items: center; justify-content: center; }
-.rc-orb i, .rc-orb b { position: absolute; left: 50%; top: 50%; width: var(--orb, 168px); height: var(--orb, 168px); margin: calc(var(--orb, 168px) / -2) 0 0 calc(var(--orb, 168px) / -2); border-radius: 50%; }
+/* the motes: a canvas (motes.js) over the still CSS field, fading in once the page has arrived; never with Reduce Motion */
+.rc-motes { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 2.4s var(--curve-enter); }
+.rc-motes.on { opacity: 1; }
+
+/* the orb: WeHale's calm sphere, a luminous rim around a dark centre lit from within by a little blackcurrant. It
+   breathes (4 s in, 6 s out, the app's breath curve): it swells with a softly brightening halo, and as each exhale begins
+   a thin ring leaves its rim and dissolves, like a ripple on still water. Transform and opacity only. */
+.rc-orb { --rip-to: 2; position: relative; flex: 1 1 auto; width: 100%; min-height: 150px; display: flex; align-items: center; justify-content: center; }
+.rc-orb i, .rc-orb b, .rc-orb s { position: absolute; left: 50%; top: 50%; width: var(--orb, 168px); height: var(--orb, 168px); margin: calc(var(--orb, 168px) / -2) 0 0 calc(var(--orb, 168px) / -2); border-radius: 50%; }
 .rc-orb i { background: radial-gradient(circle at 50% 50%, rgba(122, 64, 104, .42) 0, rgba(58, 26, 56, .55) 34%, rgba(16, 17, 36, .96) 68%, #0c1122 100%);
   box-shadow: 0 0 0 1.5px rgba(242, 236, 240, .82), 0 0 18px 2px rgba(217, 179, 204, .45), 0 0 70px 10px rgba(122, 64, 104, .28), inset 0 0 26px rgba(217, 179, 204, .22);
-  animation: rc-breathe 10s var(--curve-breath, cubic-bezier(.37, 0, .63, 1)) infinite; }
-.rc-orb b { background: radial-gradient(circle, rgba(217, 179, 204, .16) 0, rgba(74, 29, 63, .10) 45%, rgba(9, 15, 29, 0) 70%); transform: scale(2.3); animation: rc-halo 10s var(--curve-breath, ease-in-out) infinite; }
-@keyframes rc-breathe { 0%, 100% { transform: scale(.84); } 40% { transform: scale(1); } }
-@keyframes rc-halo { 0%, 100% { transform: scale(2.0); opacity: .7; } 40% { transform: scale(2.4); opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .rc-orb i, .rc-orb b { animation: none; } .rc-orb i { transform: scale(.92); } }
+  transform: scale(.92); }
+.rc-orb b { background: radial-gradient(circle, rgba(217, 179, 204, .16) 0, rgba(74, 29, 63, .10) 45%, rgba(9, 15, 29, 0) 70%); transform: scale(2.3); }
+.rc-orb s { text-decoration: none; opacity: 0; border: 1px solid rgba(236, 222, 232, .5); box-shadow: 0 0 12px rgba(217, 179, 204, .18), inset 0 0 12px rgba(217, 179, 204, .12); }
+@media (prefers-reduced-motion: no-preference) {
+  body.rc.arrived .rc-orb i { animation: rc-breathe var(--breath) var(--curve-breath) infinite; }
+  body.rc.arrived .rc-orb b { animation: rc-halo var(--breath) var(--curve-breath) infinite; }
+  body.rc.arrived .rc-orb s { animation: rc-ripple var(--breath) infinite; }
+}
+/* in over 40 % of the breath (4 s), out over 60 % (6 s) */
+@keyframes rc-breathe { 0%, 100% { transform: scale(.82); } 40% { transform: scale(1); } }
+@keyframes rc-halo { 0%, 100% { transform: scale(1.9); opacity: .55; } 40% { transform: scale(2.5); opacity: 1; } }
+/* the ripple waits through the inhale at the rim, then drifts out and fades over the exhale (the enter curve: it leaves
+   gently and slows as it goes) */
+@keyframes rc-ripple { 0%, 39% { transform: scale(1); opacity: 0; } 40% { transform: scale(1); opacity: var(--rip, .42); animation-timing-function: var(--curve-enter); } 96%, 100% { transform: scale(var(--rip-to, 2)); opacity: 0; } }
 
 /* the words, at the bottom within thumb reach: the session, the offer, the one button, the fine print */
 .rc-body { width: 100%; max-width: 400px; }
@@ -54,6 +73,15 @@ body.rc :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
   background: #F6EDE3; color: #0b1020; font: 700 17px/1 var(--font); text-decoration: none; cursor: pointer;
   transition: background .25s ease, transform var(--m-press-out, 220ms) var(--curve-enter, ease); }
 @media (hover: hover) { .rc-btn:hover { background: #fff; } }
+/* the pill breathes with the orb: a faint cream glow swells on each inhale and settles on the exhale (opacity only);
+   on a desktop the QR card takes the same breath */
+.rc-btn, .rc-qrcode { position: relative; }
+.rc-btn::after, .rc-qrcode::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+  box-shadow: 0 0 20px 1px rgba(246, 237, 227, .24), 0 0 56px 8px rgba(217, 179, 204, .12); }
+@media (prefers-reduced-motion: no-preference) {
+  body.rc.arrived .rc-btn::after, body.rc.arrived .rc-qrcode::after { animation: rc-glow var(--breath) var(--curve-breath) infinite; }
+}
+@keyframes rc-glow { 0%, 100% { opacity: .15; } 40% { opacity: .9; } }
 .rc-btn:active { transform: scale(.97); transition-duration: var(--m-press-in, 100ms); }
 .rc-fine { margin-top: 14px !important; font: 400 13px/1.5 var(--font); color: var(--t3); max-width: 42ch !important; }
 .rc-fine span { display: block; text-wrap: balance; }
@@ -69,20 +97,28 @@ body.rc-qr-on .rc-btn { display: none; }   /* on a desktop the QR code is the wa
 /* the consent bar (its measured room) never covers the button or the fine print */
 @media (max-width: 767px) { body.rc.whc-on .rc-page { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--rc-whc, 96px) + 12px); } }
 /* shorter phones (375×667): a smaller orb and title, the same order */
-@media (max-height: 700px) { .rc-orb { --orb: 124px; min-height: 120px; } .rc-body h1 { font-size: 30px; } .rc-deal { margin-top: 18px !important; } }
+@media (max-height: 700px) { .rc-orb { --orb: 124px; --rip-to: 1.75; min-height: 120px; } .rc-body h1 { font-size: 30px; } .rc-deal { margin-top: 18px !important; } }
 
-/* it rises in once its font is ready (the app's enter curve, a short stagger) */
+/* it arrives once its font is ready, in reading order over about 1.2 s (the app's enter curve and 80 ms stagger): the
+   lockup, the orb (a slow bloom), the title, the line, the chip, the offer, the button, the fine print */
 body.rc:not(.arrived) .rc-page > *, body.rc:not(.arrived) .rc-body > * { opacity: 0; }
-body.rc.arrived .rc-page > :not(.rc-body), body.rc.arrived .rc-body > * { animation: rise .8s var(--ease-enter) both; }
-body.rc.arrived .rc-body > :nth-child(n+3) { animation-delay: .08s; }
-body.rc.arrived .rc-body > :nth-child(n+4) { animation-delay: .16s; }
-@media (prefers-reduced-motion: reduce) { body.rc.arrived .rc-page > *, body.rc.arrived .rc-body > * { animation: none; } }
+body.rc.arrived .rc-lockup, body.rc.arrived .rc-body > * { animation: rise var(--m-enter) var(--curve-enter) both; animation-delay: var(--d, 0ms); }
+body.rc.arrived .rc-orb { animation: rc-bloom var(--m-reveal) var(--curve-enter) 80ms both; }
+body.rc.arrived .rc-body > h1 { --d: 240ms; }
+body.rc.arrived .rc-body > .rc-line { --d: 320ms; }
+body.rc.arrived .rc-body > .rc-only { --d: 400ms; }
+body.rc.arrived .rc-body > .rc-deal { --d: 480ms; }
+body.rc.arrived .rc-body > .rc-how { --d: 560ms; }
+body.rc.arrived .rc-body > .rc-btn, body.rc.arrived .rc-body > .rc-qr { --d: 640ms; }
+body.rc.arrived .rc-body > .rc-fine { --d: 720ms; }
+@keyframes rc-bloom { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { body.rc.arrived .rc-page > *, body.rc.arrived .rc-body > * { animation: none; } .rc-motes { display: none; } }
 
 /* desktop: composed, not stretched; the QR code in place of the button */
 @media (min-width: 700px) {
   .rc-page { padding-top: 32px; padding-bottom: 48px; }
   .rc-lockup img { height: 17px; } .rc-lockup img.rc-partner { max-height: 24px; }
-  .rc-orb { --orb: 200px; }
+  .rc-orb { --orb: 200px; --rip-to: 1.55; }   /* the ripple stays clear of the lockup and the title */
   .rc-body { max-width: 520px; }
   .rc-body h1 { font-size: 52px; }
   .rc-line { font-size: 18px; }
