@@ -60,10 +60,13 @@ async function showPop(a) {
     popFor = a;
     try { const QR = (await import("qrcode")).default; pop.innerHTML = (await QR.toString(appLink("qr_hover_" + (a.dataset.at || "page")), { type: "svg", margin: 1, errorCorrectionLevel: "M", color: { dark: "#090f1d", light: "#f2f0ed" } })) + "Scan with your phone"; } catch (_) { return; }
   }
-  const r = a.getBoundingClientRect();
-  pop.style.left = Math.round(r.left + scrollX + r.width / 2 - 88) + "px";
-  const below = r.bottom + 12 + 230 < innerHeight;
-  pop.style.top = Math.round((below ? r.bottom + 12 : r.top - 12 - 226) + scrollY) + "px";
+  // beside the button when there's room (so it never covers the headline), else below, else above
+  const r = a.getBoundingClientRect(), W = 176, H = 226;
+  let left, top;
+  if (r.right + 16 + W < innerWidth - 16 && r.top + r.height / 2 - H / 2 > 72) { left = r.right + 16; top = r.top + r.height / 2 - H / 2; }
+  else if (r.bottom + 12 + H < innerHeight) { left = r.left + r.width / 2 - W / 2; top = r.bottom + 12; }
+  else { left = r.left + r.width / 2 - W / 2; top = r.top - 12 - H; }
+  pop.style.left = Math.round(Math.max(16, left) + scrollX) + "px"; pop.style.top = Math.round(top + scrollY) + "px";
   a.setAttribute("aria-describedby", "qrPop");
   requestAnimationFrame(() => pop.classList.add("on"));
 }
