@@ -93,7 +93,7 @@ function renderChoice(fade) {
   if (SEEN) $(START_BTN).querySelector("span").textContent = "Continue with " + guideOf(selected);
   else if (VAR.g) $(START_BTN).querySelector("span").textContent = "Begin";
   else $("startTitle" + LAY).textContent = VAR.y ? s.choice : s.title;
-  $(START_BTN).setAttribute("aria-label", (LAY ? "Start " : "Play ") + s.title);
+  $(START_BTN).setAttribute("aria-label", (VAR.g && !SEEN ? "Begin " : LAY ? "Start " : "Play ") + s.title);
   $(START_BTN).disabled = !s.ready;
   body.dataset.selected = selected;
   document.querySelectorAll("[data-guide]").forEach((el) => { el.textContent = guideOf(selected); });
