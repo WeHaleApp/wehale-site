@@ -20,7 +20,7 @@ const S = DATA.session, T = DATA.copy, P = DATA.partner_logo;
 // the partner's real logo only where it exists locally (gitignored); everywhere else the committed placeholder
 const LOCAL = fs.existsSync("public" + P.local) && fs.existsSync("public" + P.local_dark);
 const L = LOCAL ? { ...P, src: P.local, src_dark: P.local_dark, width: P.local_width, height: P.local_height } : P;
-const line = T.line.replace("{minutes}", String(S.minutes)).replace("{narrator}", S.narrator);
+const line = T.line.replace(/\{minutes\}/g, String(S.minutes)).replace(/\{narrator\}/g, S.narrator);   // the guide from the session data
 // The gate runs before first paint: the page stays invisible until the key checks out, else the 404 replaces it.
 const gate = DATA.gate.on ? `(function(){var d=document.documentElement;d.classList.add("rc-locked");
 var S=${JSON.stringify(DATA.gate.salt)},H=${JSON.stringify(DATA.gate.sha256)},K="wehale.rc.k",q=new URLSearchParams(location.search),k=q.get("k"),st=null;

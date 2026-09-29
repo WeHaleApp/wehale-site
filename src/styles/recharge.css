@@ -88,3 +88,9 @@ body.rc.arrived .rc-arrive .inner > :nth-child(n+5) { animation-delay: .2s; }
   body.rc-desk .rc-offer .rc-again { grid-column: 1 / -1; justify-self: start; padding-left: 0; }
   .rc-offer h1 { font-size: 40px !important; }
 }
+
+/* the session header: a long title wraps to two lines (smaller on narrow phones), never an ellipsis */
+body.rc .ttl b { white-space: normal; overflow: visible; text-overflow: clip; text-wrap: balance; font-size: 17px; line-height: 1.2;
+}
+body.rc .ttl span { white-space: nowrap; }
+@media (max-width: 380px) { body.rc .ttl b { font-size: 16px; } body.rc .ttl span { font-size: 12.5px; } }

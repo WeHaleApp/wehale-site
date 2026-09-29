@@ -8,6 +8,7 @@ import { eventParams } from "../contract.js";
 const $ = (id) => document.getElementById(id);
 const S = DATA.session;
 const body = document.body;
+const fill = (t) => String(t || "").replace(/\{narrator\}/g, S.narrator).replace(/\{minutes\}/g, String(S.minutes));
 
 (window.__rcGate || Promise.resolve(true)).then((open) => { if (open) run(); });
 
@@ -59,7 +60,7 @@ function run() {
     if (!from && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
     if (!from) { const c = $("safeCap"); c.hidden = false; c.classList.remove("out"); setTimeout(() => c.classList.add("out"), 2600); setTimeout(() => { c.hidden = true; }, 3400); }
     const pr = player.start(at0);
-    $("ttlK").textContent = "With " + S.narrator + " · " + S.minutes + " min"; $("ttlT").textContent = DATA.copy.title;
+    $("ttlK").textContent = fill(DATA.copy.session_kicker); $("ttlT").textContent = DATA.copy.title;   // the guide and the length come from the session data
     if (pr && pr.catch) pr.catch(() => { player.exit(); show("arriveScr"); $("beginLbl").textContent = "Tap Begin again to turn the sound on."; });
     if (!from) { finished = false; started = true; track.start(params()); }
   }

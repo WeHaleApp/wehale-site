@@ -23,6 +23,7 @@
   "copy": {
     "kicker": "Meet Blackcurrant.",
     "title": "Charge Your Current",
+    "session_kicker": "With {narrator} · {minutes} min",
     "line": "{minutes} guided minutes of breathing with {narrator}, right here in your browser.",
     "begin": "Begin",
     "skip": "Skip the session, get the offer",
