@@ -20,6 +20,7 @@ const sessions = SESSIONS.sessions.map((s) => ({
   ...s,
   ready: fs.existsSync(path.join(pub, s.slug, "score.json")) && fs.existsSync(path.join(pub, s.slug, "audio.mp3")),
 }));
+const HOOK_LINES = Object.fromEntries(Object.entries(HOOKS.hooks).map(([k, h]) => [k, { l: h.line_en, s: h.session }]));
 const HOOK_WORLDS = Object.fromEntries(Object.entries(HOOKS.hooks).map(([k, h]) => [k, h.world || (SESSIONS.sessions.find((x) => x.slug === h.session) || {}).world]));
 // the end screen's QR (desktop): the same OneLink as its button, while no offer is live (no deep_link_value)
 const QRS = await Promise.all(sessions.filter((s) => s.ready).map(async (s) => {
@@ -150,10 +151,16 @@ const description = "A guided breathing session with Edvin or Philip, right in y
     <p class="vg gsr" id="gLive" aria-live="polite"></p>
   </main>
   <!-- g: before first paint, the orb glows in the session's world where the sphere sits -->
-  <script is:inline define:vars={{ HW: HOOK_WORLDS, SW: Object.fromEntries(sessions.map((x) => [x.slug, x.world])), DV: DEFAULT_VARIANT }}>(function(){try{var Q=new URLSearchParams(location.search),q=Q.get("v")||DV;if(q!=="g"&&q!=="g1"&&q!=="g2")return;
+  <script is:inline define:vars={{ HW: HOOK_WORLDS, SW: Object.fromEntries(sessions.map((x) => [x.slug, x.world])), DV: DEFAULT_VARIANT, HL: HOOK_LINES, SN: Object.fromEntries(sessions.map((x) => [x.slug, { c: x.choice, g: x.narrator, w: x.world, ready: x.ready }])) }}>(function(){try{var Q=new URLSearchParams(location.search),q=Q.get("v")||DV;if(q!=="g"&&q!=="g1"&&q!=="g2")return;
     var b=document.body;b.dataset.v=q==="g"?"g1":q;b.classList.add("f-does","f-feather","g-poster");
     var w=SW[Q.get("s")||""]||HW[Q.get("h")||""];if(!w){var h=+Q.get("hour");if(!(Q.has("hour")&&h>=0&&h<24))h=new Date().getHours();w=h<11?"ember":h<18?"water":"night";}b.dataset.world=w;
-    var W=innerWidth,H=innerHeight,U=Math.min(W,H*.5625);b.style.setProperty("--orb-y",(H/2-.1*U).toFixed(0)+"px");b.style.setProperty("--orb-r",(.2*U*.9).toFixed(0)+"px");}catch(e){}})();</script>
+    var W=innerWidth,H=innerHeight,U=Math.min(W,H*.5625);b.style.setProperty("--orb-y",(H/2-.1*U).toFixed(0)+"px");b.style.setProperty("--orb-r",(.2*U*.9).toFixed(0)+"px");
+    // the words are final before first paint (the same choice app.js makes), and the arrival doesn't wait for the script
+    var hk=HL[Q.get("h")||""],sl=SN[Q.get("s")||""]&&SN[Q.get("s")].ready?Q.get("s"):hk&&SN[hk.s]&&SN[hk.s].ready?hk.s:null;
+    if(!sl){var hh=+Q.get("hour");if(!(Q.has("hour")&&hh>=0&&hh<24))hh=new Date().getHours();sl=hh<11?"wake-up":hh<18?"unravel":"soft-reboot";if(!SN[sl]||!SN[sl].ready)sl=null;}
+    if(sl){var n=SN[sl];document.getElementById("startHy").textContent=hk&&hk.s===sl?hk.l:"Breathe with "+n.g+".";document.getElementById("ySub").textContent=n.c+" · 6 minutes · free";b.dataset.world=n.w;}
+    var go=function(){b.classList.add("arrived");};try{Promise.all([document.fonts.load("500 29px 'Nunito Sans'"),document.fonts.load("600 19px 'Nunito Sans'")]).then(go,go);}catch(e){go();}setTimeout(go,700);
+    }catch(e){}})();</script>
 
   <!-- save for later (variants d and e): bus, office, anywhere breathing isn't possible right now -->
   <div class="sscrim" id="saveScrim" hidden></div>
