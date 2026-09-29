@@ -39,12 +39,18 @@
     "begin_from_offer": "Try the session first"
   },
   "partner_logo": {
-    "_about": "PLACEHOLDER: the design session supplies the real lockup. Swap the file (same name) or point src at a new one.",
+    "_about": "One swappable file per ground: src on the light screens (black), src_dark in the session (white). The committed files are dashed PLACEHOLDERS. The partner's real logo (marked wip) is never committed: for local previews put it at local / local_dark (gitignored, public/recharge/*.local.*) and the build uses it; ask the lead before adding it to the repo. Sizes: the wordmark's cap height optically matches WeHale's (real logo trimmed, 26 px tall on an 18 px WeHale logo, one baseline).",
     "src": "/recharge/partner-logo.svg",
-    "wehale_src": "/recharge/wehale-logo-black.svg",
-    "alt": "Campaign partner",
+    "src_dark": "/recharge/partner-logo-white.svg",
     "width": 96,
-    "height": 20
+    "height": 20,
+    "local": "/recharge/partner-logo.local.png",
+    "local_dark": "/recharge/partner-logo-white.local.png",
+    "local_width": 77,
+    "local_height": 26,
+    "alt": "Campaign partner",
+    "wehale_src": "/recharge/wehale-logo-black.svg",
+    "wehale_src_dark": "/assets/images/logo.svg"
   },
   "code": {
     "_about": "The code rides in the OneLink's deep_link_value; the app applies it at sign-up (email, Apple and Google). PLACEHOLDER: the owner of main creates the real codes in the admin; RECHARGE is the campaign default, ?c=<CODE> overrides it (influencers' personal codes).",

@@ -15,7 +15,6 @@ body.rc { --ground: var(--potassium); --accent: #d9b3cc; background: var(--potas
 .rc-light { position: fixed; inset: 0; z-index: 5; background: var(--salty); pointer-events: none;
   transition: opacity 1.8s cubic-bezier(.45, 0, .25, 1), visibility 0s linear 0s; }
 body.rc-dim .rc-light { opacity: 0; visibility: hidden; transition: opacity 1.8s cubic-bezier(.45, 0, .25, 1), visibility 0s linear 1.8s; }
-body.rc:not(.rc-dim) #brand { opacity: 0; }
 
 /* screens on the light ground: no dark scrim, black type */
 body.rc .screen { background: none; color: var(--ink-l); justify-content: center;
@@ -29,8 +28,18 @@ body.rc :focus-visible { outline-color: var(--potassium); }
 /* the co-brand lockup: WeHale, a thin ×, the partner (one swappable file) */
 .rc-lockup { position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 28px); display: flex; align-items: center; justify-content: center; gap: 16px;
   padding-bottom: 20px; margin: 0 24px; border-bottom: 1px solid var(--greige); }
+/* one baseline: WeHale's letters sit 6 % above its image bottom; the partner image is trimmed to its wordmark, so it
+   rides 1 px up; its height (set by the width/height attributes) matches the two cap heights optically */
+.rc-lockup { align-items: flex-end; }
 .rc-lockup img { height: 18px; width: auto; display: block; }
-.rc-lockup i { font: 300 16px/1 var(--font); font-style: normal; color: var(--t3-l); }
+.rc-lockup img.rc-partner { height: auto; max-height: 26px; margin-bottom: 1px; }
+.rc-lockup i { font: 300 16px/1 var(--font); font-style: normal; color: var(--t3-l); align-self: flex-end; margin-bottom: 3px; }   /* on the cap middle, not the tilde */
+/* in the session: white on the dark, no rule; hidden while the controls show */
+body.rc #brand { display: none; }
+.rc-sess { position: fixed; z-index: 3; border-bottom: 0; opacity: 0; pointer-events: none; transition: opacity .45s ease; }
+.rc-sess i { color: rgba(242, 240, 237, .6); }
+body.rc.rc-dim.in-session .rc-sess { opacity: .82; }
+body.rc.in-session .chrome:not(.off) ~ .rc-sess { opacity: 0; }
 
 /* the arrival: a small blackcurrant disc (the only colour), the kicker, the title, one line, Begin */
 .rc-berry { display: block; width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 28px;
