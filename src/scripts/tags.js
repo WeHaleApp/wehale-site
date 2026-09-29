@@ -10,7 +10,10 @@
 import { current, onChange } from "./consent.js";
 
 const env = (v) => String(v || "").trim();
-export const GTM_ID = env(import.meta.env.PUBLIC_GTM_ID);
+// GTM falls back to today's container when PUBLIC_GTM_ID is unset (the lead's decision, 29 Sep): it loads only after
+// consent, in Consent Mode v2 with everything denied by default, which is strictly safer than the old always-on tag.
+export const GTM_FALLBACK = "GTM-NCPSJ2QF";
+export const GTM_ID = env(import.meta.env.PUBLIC_GTM_ID) || GTM_FALLBACK;
 export const META_PIXEL_ID = env(import.meta.env.PUBLIC_META_PIXEL_ID);
 export const TIKTOK_PIXEL_ID = env(import.meta.env.PUBLIC_TIKTOK_PIXEL_ID);
 const META_TEST_CODE = env(import.meta.env.PUBLIC_META_TEST_EVENT_CODE);

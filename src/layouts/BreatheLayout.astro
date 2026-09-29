@@ -3,7 +3,7 @@
  * BreatheLayout: the full-screen web session (wehale.io/breathe).
  *
  * Deliberately NOT BaseLayout: no site header or footer (the page is a player) and no Tailwind. It shares the site's
- * consent (Consent Mode v2 denied by default, the same banner, at the top so it never covers Begin or the session)
+ * consent (Consent Mode v2 denied by default, the same compact bar; Begin lifts above it, and it hides during the session)
  * and its tags (src/scripts/tags.js: GTM and the pixels load only after consent, from env vars, docs/ENV.md).
  */
 import ConsentBanner from "../components/site/ConsentBanner.astro";
@@ -52,6 +52,6 @@ const server = { meta: !!(process.env.META_CAPI_TOKEN && process.env.META_PIXEL_
   </head>
   <body>
     <slot />
-    <ConsentBanner placement="top" />
+    <ConsentBanner tone="warm" />
   </body>
 </html>

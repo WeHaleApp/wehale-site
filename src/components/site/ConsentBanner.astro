@@ -3,16 +3,17 @@
  * The consent banner (SITE-GOALS §5): small and calm, Accept and Decline of equal weight, and Settings for the two
  * choices (site measurement, ad measurement). Shown once, only when a tag is configured (docs/ENV.md) or with
  * ?consent=1 for review; remembered; reopened from the footer ("Privacy choices", [data-consent-open]).
- * Phones: a bottom sheet. Desktop: a small card, bottom left. /breathe (placement "top"): a card at the top of the
- * start screen, so it never sits over Begin, and it is hidden during the session.
+ * Phones: a compact bar at the bottom (one line, one row, about 84 px); pages keep their primary action above it
+ * (body.whc-on: /breathe lifts Begin). Desktop: a small card, bottom left. Hidden during a /breathe session, back after.
  * Plain CSS, no Tailwind, so /breathe (which has none) can use it too. Copy: EN, and a Swedish draft for ?lang=sv.
  */
-interface Props { placement?: "bottom" | "top" }
-const { placement = "bottom" } = Astro.props;
+interface Props { tone?: "navy" | "warm" }
+const { tone = "navy" } = Astro.props;
 const COPY = {
   en: {
     label: "Privacy choices",
     text: "May we use cookies to measure this visit? It shows us which ads bring people here and what they do next. Nothing runs unless you accept.",
+    short: "May we measure this visit with cookies?",
     privacy: "Privacy", accept: "Accept", decline: "Decline", settings: "Settings",
     heading: "Choose what we may measure",
     analytics: "Site measurement", analyticsSub: "Google Analytics: which pages are used, and how.",
@@ -22,6 +23,7 @@ const COPY = {
   sv: {   // DRAFT: for Isak to check
     label: "Integritetsval",
     text: "Får vi använda cookies för att mäta besöket? Det visar vilka annonser som leder hit och vad som händer sedan. Inget körs om du inte godkänner.",
+    short: "Får vi mäta besöket med cookies?",
     privacy: "Integritet", accept: "Godkänn", decline: "Avböj", settings: "Inställningar",
     heading: "Välj vad vi får mäta",
     analytics: "Mätning av sajten", analyticsSub: "Google Analytics: vilka sidor som används, och hur.",
@@ -30,15 +32,16 @@ const COPY = {
   },
 };
 ---
-<div class="whc" id="whConsent" data-pos={placement} role="region" aria-labelledby="whcLabel" hidden>
+<div class="whc-scrim" id="whcScrim" hidden></div>
+<div class="whc" id="whConsent" data-pos="bottom" data-tone={tone} role="region" aria-labelledby="whcLabel" hidden>
   <h2 class="whc-sr" id="whcLabel">{COPY.en.label}</h2>
   <div class="whc-ask" data-view="ask">
-    <p class="whc-t"><span data-t="text">{COPY.en.text}</span> <a href="/privacy" data-t="privacy">{COPY.en.privacy}</a></p>
+    <p class="whc-t"><span class="whc-long" data-t="text">{COPY.en.text}</span><span class="whc-short" data-t="short">{COPY.en.short}</span> <a href="/privacy" data-t="privacy">{COPY.en.privacy}</a></p>
     <div class="whc-row">
       <button type="button" class="whc-b" data-act="accept" data-t="accept">{COPY.en.accept}</button>
       <button type="button" class="whc-b" data-act="decline" data-t="decline">{COPY.en.decline}</button>
+      <button type="button" class="whc-link" data-act="settings" data-t="settings" aria-expanded="false">{COPY.en.settings}</button>
     </div>
-    <button type="button" class="whc-link" data-act="settings" data-t="settings" aria-expanded="false">{COPY.en.settings}</button>
   </div>
   <form class="whc-set" data-view="settings" hidden>
     <p class="whc-h" data-t="heading">{COPY.en.heading}</p>
@@ -57,33 +60,43 @@ const COPY = {
 <script type="application/json" id="whConsentCopy" set:html={JSON.stringify(COPY)} />
 
 <style is:global>
-  .whc { --whc-bg: linear-gradient(180deg, rgba(27, 34, 50, .97), rgba(19, 25, 38, .97)); --whc-ink: #f2f0ed; --whc-t2: rgba(242, 240, 237, .72);
-    --whc-line: rgba(242, 240, 237, .22); position: fixed; z-index: 70; left: 0; right: 0; bottom: 0; box-sizing: border-box;
-    padding: 18px 20px calc(env(safe-area-inset-bottom, 0px) + 16px); border-radius: 20px 20px 0 0; background: var(--whc-bg);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: 0 -12px 50px rgba(0, 0, 0, .45);
-    font: 400 15px/1.5 "Nunito Sans", ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--whc-t2);
+  /* Phones: a compact bar, one line and one row (about 84 px), so it never covers the page's primary action.
+     Desktop: a small card, bottom left. /breathe ("top"): the same bar at the top, never over Begin; hidden in the session. */
+  .whc { --whc-bg: linear-gradient(180deg, rgba(27, 34, 50, .97), rgba(19, 25, 38, .98)); --whc-ink: #f2f0ed; --whc-t2: rgba(242, 240, 237, .78);
+    --whc-line: rgba(242, 240, 237, .24); position: fixed; z-index: 70; left: 0; right: 0; bottom: 0; box-sizing: border-box;
+    padding: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 6px); border-radius: 16px 16px 0 0; background: var(--whc-bg);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: 0 -10px 40px rgba(0, 0, 0, .4);
+    font: 400 14px/1.35 "Nunito Sans", ui-sans-serif, system-ui, -apple-system, sans-serif; color: var(--whc-t2);
     animation: whcIn 520ms cubic-bezier(.33, 1, .68, 1) both; }
   .whc[hidden] { display: none; }
   .whc * { box-sizing: border-box; }
   @keyframes whcIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-  @media (min-width: 768px) { .whc[data-pos="bottom"] { left: 20px; right: auto; bottom: 20px; width: 384px; border-radius: 16px; padding: 18px 18px 14px; } }
-  .whc[data-pos="top"] { --whc-bg: rgba(24, 16, 11, .94); --whc-ink: #f6ede3; --whc-t2: rgba(246, 237, 227, .78); --whc-line: rgba(246, 237, 227, .3);
-    top: calc(env(safe-area-inset-top, 0px) + 10px); bottom: auto; left: 12px; right: 12px; max-width: 460px; margin: 0 auto;
-    padding: 14px 14px 10px; border-radius: 16px; font-size: 14px; box-shadow: 0 8px 30px rgba(0, 0, 0, .35); animation-name: whcInTop; }
+  .whc-long { display: none; }
+  .whc-t { margin: 0 2px 6px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .whc-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; }
+  .whc[data-tone="warm"] { --whc-bg: linear-gradient(180deg, rgba(30, 21, 15, .97), rgba(20, 13, 9, .98)); --whc-ink: #f6ede3; --whc-t2: rgba(246, 237, 227, .8); --whc-line: rgba(246, 237, 227, .3); }
   @keyframes whcInTop { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
-  body.in-session .whc { display: none; }
+  @media (min-width: 768px) {
+    .whc[data-pos="bottom"] { left: 20px; right: auto; bottom: 20px; width: 384px; border-radius: 16px; padding: 16px 16px 12px; font-size: 15px; line-height: 1.5; }
+    .whc[data-pos="bottom"] .whc-long { display: inline; }
+    .whc[data-pos="bottom"] .whc-short { display: none; }
+    .whc[data-pos="bottom"] .whc-t { white-space: normal; margin-bottom: 12px !important; }
+  }
+  body.in-session .whc, body.in-session .whc-scrim { display: none; }
+  /* Settings: the bar opens into a sheet over a scrim */
+  .whc-scrim { position: fixed; inset: 0; z-index: 69; background: rgba(5, 8, 15, .6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .whc-scrim[hidden] { display: none; }
+  .whc.is-set { padding: 16px 18px calc(env(safe-area-inset-bottom, 0px) + 14px); }
   .whc-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; margin: -1px; }
   .whc p { margin: 0; }
   .whc a { color: var(--whc-ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--whc-line); }
-  .whc-t { margin-bottom: 12px !important; }
-  .whc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .whc-row1 { grid-template-columns: 1fr; margin-top: 12px; }
   .whc-b { appearance: none; min-height: 44px; border-radius: 999px; border: 0; box-shadow: inset 0 0 0 1px var(--whc-line);
     background: rgba(255, 255, 255, .06); color: var(--whc-ink); font-family: inherit; font-weight: 700; font-size: 15px; line-height: 1; cursor: pointer;
     transition: background-color 220ms cubic-bezier(.33, 1, .68, 1), transform 220ms cubic-bezier(.33, 1, .68, 1); }
   .whc-b:hover { background: rgba(255, 255, 255, .11); }
   .whc-b:active { transform: scale(.97); }
-  .whc-link { appearance: none; display: block; margin: 4px auto 0; min-height: 44px; padding: 0 12px; border: 0; background: none; cursor: pointer;
+  .whc-link { appearance: none; display: block; min-height: 44px; min-width: 44px; padding: 0 8px; border: 0; background: none; cursor: pointer;
     color: var(--whc-t2); font-family: inherit; font-weight: 600; font-size: 14px; line-height: 1; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--whc-line); }
   .whc-h { color: var(--whc-ink); font-weight: 700; margin-bottom: 6px !important; }
   .whc-opt { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, .07); cursor: pointer; }
@@ -119,8 +132,12 @@ const COPY = {
   const form = root.querySelector("form") as HTMLFormElement;
   const box = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
   let closeTimer = 0;
+  const scrim = document.getElementById("whcScrim") as HTMLElement;
+  // body.whc-on while the bar is up, so a page can keep its primary action above it
+  new MutationObserver(() => document.body.classList.toggle("whc-on", !root.hidden)).observe(root, { attributes: true, attributeFilter: ["hidden"] });
   function open(settings = false) {
     clearTimeout(closeTimer);
+    root.classList.toggle("is-set", settings); scrim.hidden = !settings;
     const c = current();
     box("analytics").checked = !!(c && c.analytics); box("ads").checked = !!(c && c.ads);
     view(settings ? "settings" : "ask");
@@ -129,7 +146,7 @@ const COPY = {
     if (settings) box("analytics").focus({ preventScroll: true });
   }
   function done(state: { analytics: boolean; ads: boolean }, confirm = false) {
-    save(state);
+    save(state); scrim.hidden = true;
     if (!confirm) { root.hidden = true; return; }
     view("done"); closeTimer = window.setTimeout(() => { root.hidden = true; }, 2600);
   }
@@ -137,7 +154,9 @@ const COPY = {
   root.querySelector("[data-act=decline]")!.addEventListener("click", () => done({ analytics: false, ads: false }));
   root.querySelector("[data-act=settings]")!.addEventListener("click", () => open(true));
   form.addEventListener("submit", (e) => { e.preventDefault(); done({ analytics: box("analytics").checked, ads: box("ads").checked }, true); });
-  addEventListener("keydown", (e) => { if (e.key === "Escape" && !root.hidden && current()) root.hidden = true; });
+  const back = () => { scrim.hidden = true; root.classList.remove("is-set"); if (current()) root.hidden = true; else view("ask"); };
+  scrim.addEventListener("click", back);
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && !root.hidden && root.classList.contains("is-set")) back(); });
 
   // the footer link (and any [data-consent-open]) reopens the choice at any time
   document.querySelectorAll<HTMLElement>("[data-consent-open]").forEach((el) => {

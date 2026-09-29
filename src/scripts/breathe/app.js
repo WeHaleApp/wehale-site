@@ -61,7 +61,8 @@ const SEEN = !!(VAR.moment && Q.get("seen") === "round");
 function gLines() {
   const s = bySlug(selected);
   $("startHy").textContent = HOOK && HOOK.session === selected ? ((LANG === "sv" && HOOK.line_sv) || HOOK.line_en) : "Breathe with " + guideOf(selected) + ".";
-  $("ySub").textContent = s.choice + " · 6 minutes · free";
+  $("ySub").textContent = HOOK && HOOK.session === selected && HOOK.g_sub_en ? fillGuide(HOOK.g_sub_en) : s.choice + " with " + guideOf(selected) + " · 6 min · free";
+  body.classList.toggle("g-edge", !!(HOOK && HOOK.g_edge && HOOK.session === selected)); window.__breatheEdge = body.classList.contains("g-edge");
 }
 let player = null, playerSlug = null, loading = null;
 

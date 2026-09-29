@@ -116,8 +116,26 @@ for (const [vk, vp] of Object.entries(VIEWPORTS)) {
 if (SHOTS) {
   for (const p of ["/", "/about"]) for (const vk of ["m812", "d900"]) {
     const { page } = await open(BASE + p, VIEWPORTS[vk], { reduced: true });
-    await new Promise((r) => setTimeout(r, 800));
+    // scroll through once so lazy images load, then back to the top
+    await page.evaluate(async () => { const c = document.getElementById("whConsent"); if (c) c.hidden = true; for (let y = 0; y < document.body.scrollHeight; y += 400) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } scrollTo(0, 0); });
+    await new Promise((r) => setTimeout(r, 1200));
     await page.screenshot({ path: path.join(OUT, `${p === "/" ? "home" : "about"}-${vk}-full.png`), fullPage: true });
+    await page.close();
+  }
+}
+
+// arrivals from the four ads (/breathe with the hook), and the home hero's landscape variant
+if (SHOTS) {
+  for (const h of ["parked", "coffee", "keepup", "night"]) for (const vk of ["m812", "m667"]) {
+    const { page } = await open(`${BASE}/breathe?h=${h}&hint=0&utm_source=meta&utm_content=${h}`, VIEWPORTS[vk]);
+    await new Promise((r) => setTimeout(r, 1800));
+    await page.screenshot({ path: path.join(OUT, `ad-breathe-${h}-${vk}.png`) });
+    await page.close();
+  }
+  for (const vk of ["m812", "d900"]) {
+    const { page } = await open(`${BASE}/?v=hero-landscape`, VIEWPORTS[vk]);
+    await new Promise((r) => setTimeout(r, 1600));
+    await page.screenshot({ path: path.join(OUT, `home-landscape-${vk}.png`) });
     await page.close();
   }
 }

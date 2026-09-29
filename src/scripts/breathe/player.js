@@ -327,7 +327,7 @@ export function createPlayer(P) {
     if(!sessionMode && !freeMode && introT0!=null){   // the one guided breath before the session: in as it rises (4 s), out (5 s)
       const u=(now-introT0)/1000, s=x=>{ x=Math.max(0,Math.min(1,x)); return x*x*(3-2*x); };
       b = u<4 ? introFrom+(.85-introFrom)*s(u/4) : .85+(.2-.85)*s((u-4)/5); }
-    else if(!sessionMode && !freeMode){ b = .22 + .16*(.5-.5*Math.cos(now/1000*2*Math.PI/7.5));
+    else if(!sessionMode && !freeMode){ b = .22 + (window.__breatheEdge?.2:.16)*(.5-.5*Math.cos(now/1000*2*Math.PI/(window.__breatheEdge?3.2:7.5)));   // the challenger's arrival (?h=keepup) breathes faster
       if(P.gather){ const u=Math.min(1,(now-bornAt)/1200), e=1-Math.pow(1-u,3); b*=e; } }   // arrival: the sphere gathers from nothing
     else if(auto){
       const at=audio.currentTime;

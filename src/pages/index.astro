@@ -3,7 +3,7 @@
  * Home (DIRECTION.md §3): hero → try it here (/breathe) → what WeHale is → belief band → library → reviews →
  * the practice → sign-off. The feeling in order (SITE-GOALS §2): arrive, recognise, trust, invite.
  * The ad-to-site contract: ?h=<hook> puts the ad's line in the headline (src/data/hooks.json), ?v= picks the hero
- * (eyes: the brand-film still, the default; land: a landscape, no person). Both are decided before first paint.
+ * (hero-still: the brand-film still, the default; hero-landscape: a landscape, no person). Both are decided before first paint.
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import StoreButtons from "../components/site/StoreButtons.astro";
@@ -16,21 +16,15 @@ const guideOf = (slug: string) => SESSIONS.sessions.find((s) => s.slug === slug)
 const HOOKS = Object.fromEntries(Object.entries(DATA.hooks).map(([k, h]: [string, any]) => [k, { l: h.line_en, sub: String(h.sub_en || "").replace(/\{guide\}/g, guideOf(h.session)) }]));
 const HERO = { def: DATA.variants.home.default, ok: Object.keys(DATA.variants.home.options) };
 
-const sessions = [
-  { slug: "01-box-breath", title: "Box Breath", cat: "Balance", min: 8 },
-  { slug: "03-echoes-of-strength", title: "Echoes of Strength", cat: "Activate", min: 9 },
-  { slug: "05-into-stillness", title: "Into Stillness", cat: "Calm", min: 10 },
-  { slug: "06-nighttime-serenity", title: "Nighttime Serenity", cat: "Calm", min: 9 },
-];
-const ways = [
-  { k: "Activate", t: "For the morning, or before something that needs you awake." },
-  { k: "Balance", t: "For the middle of the day, between one thing and the next." },
-  { k: "Calm", t: "For the evening, to slow down and let the day go." },
-];
+// The three web sessions, by the names /breathe uses; the app's title and category second (the app's categories are
+// Activate, Balance and Calm).
+const CAT = { "wake-up": "Activate", unravel: "Balance", "soft-reboot": "Calm" };
+const web = SESSIONS.sessions.map((s) => ({ ...s, cat: CAT[s.slug] || "" }));
+// Real App Store reviews (SE storefront), quoted exactly; checked against the public reviews feed, 29 Sep 2026.
 const reviews = [
   { q: "I tried meditation apps for years. WeHale is the first one I keep coming back to.", n: "Dap tse" },
-  { q: "Good app for stress management, I like that there are different sessions depending on what outcome you're after.", n: "Hasses1" },
-  { q: "So happy to have found WeHale — professionally guided sessions and a clean, easy to use app.", n: "Philip J." },
+  { q: "Easy to follow. Professional guidance for conscious breathing. Perfect starting point for meditation.", n: "ZIggeztar" },
+  { q: "Really nice and clean app, love it!", n: "Viicktorrr" },
 ];
 const ld = {
   "@context": "https://schema.org", "@type": "MobileApplication", name: "WeHale", operatingSystem: "iOS, Android",
@@ -41,7 +35,7 @@ const ld = {
 };
 ---
 
-<BaseLayout title="WeHale · Come back to yourself" description="Guided breathing sessions with Edvin and Philip. Try six minutes free in your browser, then keep going in the app on iPhone or Android." page="home" current="home" pathname="/">
+<BaseLayout title="WeHale · Guided breathing with Edvin and Philip" description="Guided breathing sessions with Edvin and Philip. Try six minutes free in your browser, then keep going in the app on iPhone or Android." page="home" current="home" pathname="/">
   <Fragment slot="head">
     <!-- the hero variant (?v=), decided before first paint; every event carries it as v -->
     <script is:inline define:vars={{ HERO }}>(function(){try{var v=new URLSearchParams(location.search).get("v");document.documentElement.dataset.v=HERO.ok.indexOf(v)>-1?v:HERO.def;}catch(e){document.documentElement.dataset.v=HERO.def;}})();</script>
@@ -58,7 +52,7 @@ const ld = {
           <img src="/assets/images/site/hero-eyes-1440.webp" srcset="/assets/images/site/hero-eyes-1080.webp 1080w, /assets/images/site/hero-eyes-1440.webp 1440w, /assets/images/site/hero-eyes-2560.webp 2560w" sizes="60vw"
             alt="" width="1440" height="810" class="h-full w-full object-cover object-[62%_30%]" fetchpriority="high" decoding="async" />
         </picture>
-        <script is:inline>(function(){if(document.documentElement.dataset.v!=="land")return;var p=document.getElementById("heroPic"),s=p.querySelector("source"),i=p.querySelector("img");
+        <script is:inline>(function(){if(document.documentElement.dataset.v!=="hero-landscape")return;var p=document.getElementById("heroPic"),s=p.querySelector("source"),i=p.querySelector("img");
           s.srcset="/assets/images/site/forest-dawn-portrait-750.webp";i.srcset="/assets/images/site/forest-dawn-1080.webp 1080w, /assets/images/site/forest-dawn-1440.webp 1440w, /assets/images/site/forest-dawn-2560.webp 2560w";i.src="/assets/images/site/forest-dawn-1440.webp";i.style.objectPosition="50% 60%";})();</script>
         <div class="absolute inset-y-0 left-0 hidden w-[60%] bg-gradient-to-r from-[var(--color-bg)] via-[var(--color-bg)]/50 to-transparent md:block"></div>
         <div class="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-b from-transparent via-[var(--color-bg)]/75 to-[var(--color-bg)] md:hidden"></div>
@@ -66,12 +60,12 @@ const ld = {
       </div>
       <div class="absolute inset-x-0 bottom-0 hidden h-1/3 bg-gradient-to-b from-transparent to-[var(--color-bg)] md:block"></div>
     </div>
-    <div class="mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-5 pb-10 pt-[46svh] [@media(max-height:700px)]:pt-[38svh] md:min-h-[88vh] md:px-6 md:pb-24 md:pt-40">
+    <div class="mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-5 pb-24 pt-[46svh] [@media(max-height:700px)]:pt-[34svh] md:min-h-[88vh] md:px-6 md:pb-24 md:pt-40">
       <p class="t-caption hero-in" style="--d:0ms">Guided breathing · iPhone and Android</p>
-      <h1 class="t-display hero-in mt-3 max-w-2xl" style="--d:120ms" id="heroH">Come back to yourself.</h1>
-      <p class="t-body hero-in mt-4 max-w-md" style="--d:260ms" id="heroSub">Guided breathing with Edvin and Philip. Try six minutes free, right here.</p>
+      <h1 class="t-display hero-in mt-3 max-w-2xl max-[420px]:!text-[2.3rem]" style="--d:120ms" id="heroH">Six minutes. Breathe with Edvin.</h1>
+      <p class="t-body hero-in mt-4 max-w-md" style="--d:260ms" id="heroSub">A guided breathing session, free, right here in your browser.</p>
       <script is:inline define:vars={{ HOOKS }}>(function(){try{var h=HOOKS[new URLSearchParams(location.search).get("h")||""];if(!h)return;document.getElementById("heroH").textContent=h.l;if(h.sub)document.getElementById("heroSub").textContent=h.sub;document.documentElement.dataset.hooked="1";}catch(e){}})();</script>
-      <div class="hero-in mt-7 flex flex-col gap-3 sm:flex-row sm:items-center" style="--d:380ms">
+      <div class="hero-in mt-6 flex flex-row flex-wrap items-center gap-3" style="--d:380ms">
         <a href={BREATHE_URL} class="btn" data-try data-at="hero">
           <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
           Try a session
@@ -100,76 +94,27 @@ const ld = {
     </div>
   </section>
 
-  <!-- ─── What WeHale is ─── -->
-  <section class="mx-auto max-w-6xl px-5 py-16 md:px-6 md:py-28" id="app">
-    <div class="grid items-center gap-12 md:grid-cols-2">
-      <div>
-        <p class="t-caption" data-reveal>What WeHale is</p>
-        <h2 class="t-title1 mt-4" data-reveal>Guided breathing, with the care of a good class.</h2>
-        <dl class="mt-10 grid gap-7" data-reveal>
-          <div>
-            <dt class="t-title3">Sessions</dt>
-            <dd class="t-body mt-1">Activate, Balance and Calm. Each one is built on a named technique, such as box breathing or 4-7-8, and guided by voice at a pace you can follow.</dd>
-          </div>
-          <div>
-            <dt class="t-title3">A course to start</dt>
-            <dd class="t-body mt-1">One practice a day, with a short lesson before each session. For anyone who has never breathed on purpose.</dd>
-          </div>
-          <div>
-            <dt class="t-title3">Your week</dt>
-            <dd class="t-body mt-1">A small weekly goal you set yourself. Miss a day and nothing is lost.</dd>
-          </div>
-        </dl>
-      </div>
-      <div class="relative mx-auto flex w-full max-w-md items-start justify-center gap-4 md:block" data-reveal>
-        <img src="/assets/images/screens/01-home-480.webp" alt="WeHale, the Home screen" width="480" height="1043" class="w-[46%] rounded-[1.6rem] shadow-[0_30px_80px_rgba(0,0,0,.55)] md:w-[58%] md:rounded-[2rem]" loading="lazy" decoding="async" />
-        <img src="/assets/images/screens/03-player-480.webp" alt="WeHale, a session playing" width="480" height="1043" class="mt-12 w-[46%] rounded-[1.6rem] shadow-[0_30px_80px_rgba(0,0,0,.55)] md:absolute md:-right-6 md:top-24 md:mt-0 md:w-[54%] md:rounded-[2rem]" loading="lazy" decoding="async" />
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── What we believe: photo band ─── -->
-  <section class="relative isolate overflow-hidden" id="belief">
-    <div class="absolute inset-0 -z-10" aria-hidden="true">
-      <img src="/assets/images/site/forest-dawn-1440.webp" srcset="/assets/images/site/forest-dawn-640.webp 640w, /assets/images/site/forest-dawn-1440.webp 1440w, /assets/images/site/forest-dawn-2560.webp 2560w" sizes="100vw" alt="" width="1440" height="810" class="h-full w-full object-cover" data-parallax loading="lazy" decoding="async" />
-      <div class="absolute inset-0 bg-[var(--color-bg)]/60"></div>
-      <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[var(--color-bg)] to-transparent"></div>
-      <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--color-bg)] to-transparent"></div>
-    </div>
-    <div class="mx-auto max-w-6xl px-5 py-20 md:px-6 md:py-32">
-      <p class="max-w-3xl text-[clamp(1.75rem,4vw,3rem)] font-medium leading-[1.15]" data-reveal>No hype. No lofty promises.<br class="hidden md:inline" /> No guilt when you miss a day.</p>
-      <div class="mt-10 grid gap-4 md:mt-14 md:grid-cols-3 md:gap-5">
-        {ways.map((w, i) => (
-          <div class="glass p-6 backdrop-blur-sm" data-reveal style={`--i:${i}`}>
-            <p class="t-caption">{w.k}</p>
-            <p class="mt-3 text-[1.0625rem] leading-snug">{w.t}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── The library ─── -->
-  <section class="mx-auto max-w-6xl px-5 py-16 md:px-6 md:py-28" id="sessions">
+  <!-- ─── The library: the three sessions you can do right here, by the names /breathe uses ─── -->
+  <section class="mx-auto max-w-6xl px-5 py-16 md:px-6 md:py-24" id="sessions">
     <div class="md:flex md:items-end md:justify-between md:gap-12">
       <div>
-        <p class="t-caption" data-reveal>From the library</p>
-        <h2 class="t-title1 mt-4 max-w-xl" data-reveal>Sessions you come back to.</h2>
+        <p class="t-caption" data-reveal>Three to start with</p>
+        <h2 class="t-title1 mt-4 max-w-xl" data-reveal>Pick one for right now.</h2>
       </div>
-      <p class="t-body mt-5 max-w-md md:mt-0" data-reveal>Written and voiced by people who teach breathing. Most take five to fifteen minutes; a few longer journeys go deeper.</p>
+      <p class="t-body mt-5 max-w-md md:mt-0" data-reveal>Each is six minutes, free in your browser, and stays free in the app. The app has many more, most five to fifteen minutes.</p>
     </div>
-    <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-      {sessions.map((s, i) => (
-        <figure class="photo-card relative aspect-[3/4]" data-reveal style={`--i:${i}`}>
-          <img src={`/assets/images/sessions/${s.slug}-480.webp`} alt="" width="480" height="640" class="h-full w-full object-cover" loading="lazy" decoding="async" />
-          <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-4 pt-14">
-            <p class="text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-white/75">{s.cat} · {s.min} min</p>
-            <p class="mt-1 text-base font-semibold md:text-lg">{s.title}</p>
-          </figcaption>
-        </figure>
+    <div class="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3 md:gap-4">
+      {web.map((s, i) => (
+        <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card group relative block aspect-[4/3] sm:aspect-[3/4]" data-reveal style={`--i:${i}`} data-try data-at={`library_${s.slug}`}>
+          <img src={`/assets/images/sessions/graded-${s.slug}-800.webp`} srcset={`/assets/images/sessions/graded-${s.slug}-480.webp 480w, /assets/images/sessions/graded-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+          <span class="absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/85 via-black/45 to-transparent p-5 pt-16">
+            <span class="block text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-white/80">{s.cat} · 6 min · with {s.narrator}</span>
+            <span class="mt-1 block text-xl font-semibold">{s.choice}</span>
+            <span class="block text-[15px] text-white/75">{s.title}</span>
+          </span>
+        </a>
       ))}
     </div>
-    <p class="t-foot mt-5" data-reveal>After the first 14 days, three sessions stay free: The Wake Up, Unravel and The Soft Reboot.</p>
   </section>
 
   <!-- ─── Words from people who use it (real App Store reviews; no rating shown yet) ─── -->
@@ -187,31 +132,15 @@ const ld = {
     </div>
   </section>
 
-  <!-- ─── The practice: what it is, never what it does to your body ─── -->
-  <section class="mx-auto max-w-6xl px-5 py-16 md:px-6 md:py-28" id="practice">
-    <div class="grid gap-10 md:grid-cols-[1fr_1.2fr] md:gap-16">
-      <div>
-        <p class="t-caption" data-reveal>The practice</p>
-        <h2 class="t-title1 mt-4" data-reveal>Your breath is always with you.</h2>
-      </div>
-      <ul class="grid gap-6" data-reveal>
-        <li class="t-body"><span class="text-[var(--color-text)]">Slow breathing with a longer exhale</span> is one of the oldest ways people have settled themselves. Many sessions follow it.</li>
-        <li class="t-body"><span class="text-[var(--color-text)]">Every session names its technique:</span> box breathing, coherent breathing, 4-7-8, breath of fire. You always know what you're doing.</li>
-        <li class="t-body"><span class="text-[var(--color-text)]">Some sessions include breath holds,</span> always optional and always counted for you. Breathe at your own pace and stop if you feel dizzy.</li>
-        <li class="t-body"><span class="text-[var(--color-text)]">A few minutes on most days</span> is how most people make it a habit. The app keeps it easy to start again.</li>
-        <li class="t-foot">Further reading: <a class="link !font-normal" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5709795/" rel="noopener">Russo et al. (2017), the physiological effects of slow breathing</a>.</li>
-      </ul>
-    </div>
-  </section>
-
   <!-- ─── Sign-off ─── -->
   <section class="relative isolate overflow-hidden border-t border-[var(--color-line)]">
     <div class="absolute inset-0 -z-10 flex items-center justify-center" aria-hidden="true">
       <div class="sphere-field aspect-square w-[140%] max-w-[900px] rounded-full opacity-70"></div>
     </div>
-    <div class="mx-auto flex max-w-3xl flex-col items-center px-5 py-24 text-center md:py-36">
-      <h2 class="t-display" data-reveal>Come back to yourself.</h2>
-      <p class="t-body mt-5 max-w-md" data-reveal>A few minutes, nothing to bring. Start with one session here, then keep going in the app.</p>
+    <div class="mx-auto flex max-w-3xl flex-col items-center px-5 py-20 text-center md:py-32">
+      <img src="/assets/images/screens/app-home-540.webp" alt="The WeHale app: the Home screen, with the intro course" width="540" height="1169" class="mb-12 w-[180px] rounded-[1.75rem] shadow-[0_30px_80px_rgba(0,0,0,.55)] md:w-[220px]" loading="lazy" decoding="async" data-reveal />
+      <h2 class="t-display" data-reveal>Six minutes, right now.</h2>
+      <p class="t-body mt-5 max-w-md" data-reveal>Start with one session here, then keep going in the app on iPhone or Android.</p>
       <div class="mt-9 flex flex-col items-center gap-4" data-reveal>
         <a href={BREATHE_URL} class="btn" data-try data-at="signoff">Try a session</a>
         <StoreButtons class="justify-center" at="signoff" />

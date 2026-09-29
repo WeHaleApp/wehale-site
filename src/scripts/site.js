@@ -81,6 +81,15 @@ const onScroll = () => {
   lastY = y;
 };
 addEventListener("scroll", onScroll, { passive: true }); onScroll();
+// one white pill per view: the header's pill goes quiet while a white pill in the page is on screen
+if (hdr && "IntersectionObserver" in window) {
+  const seen = new Set();
+  const po = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+    hdr.dataset.pill = seen.size ? "quiet" : "solid";
+  }, { rootMargin: "-64px 0px 0px 0px" });
+  document.querySelectorAll("main .btn").forEach((b) => po.observe(b));
+}
 // the phone menu closes on a tap outside it
 document.addEventListener("click", (e) => { const d = hdr?.querySelector("details[open]"); if (d && !d.contains(e.target)) d.removeAttribute("open"); });
 

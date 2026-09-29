@@ -396,14 +396,15 @@ body[data-v^="g"] .yact .tiles, body[data-v^="g"] .yact .offerstart, body[data-v
 body[data-v^="g"] .starty { max-width: 330px; min-height: 60px; margin: 0 auto; font: 600 19px/1 var(--font); letter-spacing: .01em; transition: transform .2s var(--ease-enter), background .3s; }
 body[data-v^="g"] .starty:active { transform: scale(.98); }
 body[data-v^="g"] .starty svg { display: none; }
+/* Deliberate night variant (kept, lead 29 Sep): at night Begin is an indigo pill, not a white one, so the brightest thing in a dark bedroom is the light, not the button. Still the one primary action. */
 body[data-v^="g"][data-world="night"] .starty { background: #2a3160; border-color: #6f7cc0; color: #eef1ff; }
 .glink { appearance: none; display: block; margin: 6px auto 0; min-height: 44px; padding: 0 18px; border: 0; background: none; color: var(--t2); font: 600 15px/44px var(--font); cursor: pointer; }
 .gnav { position: absolute; left: 0; right: 0; top: calc(var(--orb-y) + var(--orb-r) + 30px); display: flex; justify-content: center; align-items: center; gap: 4px; }
 .gstep { appearance: none; width: 44px; height: 44px; border: 0; background: none; color: rgba(242, 240, 237, .92); display: grid; place-items: center; cursor: pointer; }
 .gstep svg { width: 18px; height: 18px; padding: 7px; box-sizing: content-box; border-radius: 50%; background: rgba(10, 7, 5, .55); fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.gstep:disabled { opacity: .22; cursor: default; }
+.gstep:disabled { visibility: hidden; }
 .gdots { display: flex; gap: 8px; align-items: center; }
-.gdots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(242, 240, 237, .38); transition: width .35s var(--ease-enter), background .35s; }
+.gdots i { width: 7px; height: 7px; border-radius: 4px; background: rgba(242, 240, 237, .55); transition: width .35s var(--ease-enter), background .35s; }
 .gdots i.on { width: 18px; background: rgba(246, 237, 227, .92); }
 .ghint { position: absolute; left: 0; right: 0; top: calc(var(--orb-y) + var(--orb-r) + 78px); margin: 0; text-align: center; font: 600 14px/1 var(--font); letter-spacing: .18em; color: var(--t2); transition: opacity .6s; pointer-events: none; }
 .ghint.out { opacity: 0 !important; }
@@ -447,3 +448,16 @@ body.g-fail #startScr .ylede, body.g-fail #startScr .yact { opacity: 1 !importan
 body[data-v^="g"] #endScr { background: linear-gradient(to top, rgba(8, 4, 2, .96) 0%, rgba(8, 4, 2, .9) 50%, rgba(8, 4, 2, .35) 66%, rgba(8, 4, 2, 0) 78%); }
 body[data-v^="g"] #endScr .inner { padding-top: 34vh; }
 .screen h1[tabindex="-1"]:focus { outline: none; }   /* the heading takes focus for screen readers, not a visible ring */
+
+/* g: the offer, one quiet line under Save for later (the app's own words) */
+.goffer { margin: 2px auto 0; text-align: center; font: 400 13px/1.4 var(--font); color: var(--t3); }
+body[data-v^="g"].arrived .goffer { animation: gIn .6s var(--ease-enter) .8s both; }
+body.g-going .goffer { opacity: 0 !important; transition: opacity .45s ease; }
+/* g: the challenger (?h=keepup) arrives crisper: more contrast in the room, and a faster idle breath (player.js) */
+body.g-edge #silk, body.g-edge #stage { filter: contrast(1.18) saturate(1.25); }
+/* the consent bar (phones, about 84 px) never covers Begin: the start screen's actions lift above it, the offer line steps aside */
+@media (max-width: 767px) {
+  body[data-v^="g"].whc-on #startScr { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); }
+  body.whc-on .goffer { display: none; }
+}
+body[data-v^="g"] .ysub { white-space: pre-line; }

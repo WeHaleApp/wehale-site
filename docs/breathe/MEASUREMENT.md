@@ -1,7 +1,7 @@
 # wehale.io and /breathe measurement
 
 How wehale.io measures the funnel from a paid ad to the app, and what has to be set up before anything fires. With no
-env var set, nothing does: no banner, no tag, no request to Google, Meta or TikTok. The variables are in `docs/ENV.md`.
+env var set, only GTM (the fallback container) is configured, and it loads only after Accept. The variables are in `docs/ENV.md`.
 
 Code: `src/scripts/contract.js` (the ad-to-site parameters), `src/scripts/consent.js` (the choice, Consent Mode v2),
 `src/scripts/tags.js` (GTM, Meta, TikTok, the server copies), `src/scripts/site.js` (the site's events),
@@ -14,8 +14,7 @@ Code: `src/scripts/contract.js` (the ad-to-site parameters), `src/scripts/consen
   and **Settings** with two choices, *site measurement* (GTM/GA) and *ad measurement* (Meta, TikTok). English, and a
   Swedish draft with `?lang=sv`. A bottom sheet on phones, a small card bottom left on desktop; on /breathe a card at the
   top of the start screen, hidden during the session, so it never covers Begin or the breathing.
-- It appears only when a tag ID is set (`PUBLIC_GTM_ID`, `PUBLIC_META_PIXEL_ID`, `PUBLIC_TIKTOK_PIXEL_ID`). For review,
-  `?consent=1` shows it anyway. "Privacy choices" in the footer reopens it at any time.
+- It appears on every first visit: GTM always has an ID (`PUBLIC_GTM_ID`, else the fallback `GTM-NCPSJ2QF`). "Privacy choices" in the footer reopens it at any time.
 - **Google Consent Mode v2:** the first script in every page's `<head>` sets `ad_storage`, `analytics_storage`,
   `ad_user_data`, `ad_personalization` (and the other types) to *denied*. A stored choice is applied at once; Accept
   sends `update` with the four granted. GTM loads only after a yes (basic consent mode), so nothing reaches Google before.
