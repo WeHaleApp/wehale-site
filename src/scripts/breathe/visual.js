@@ -1058,22 +1058,22 @@ function createBreathLine(host, bc, opts = {}) {
     }
     // the past: a trail that fades away behind the bead
     if (pastPts.length > 1) { path(pastPts); const g = c.createLinearGradient(xl, 0, cx, 0); g.addColorStop(0, col(0)); g.addColorStop(1, col(.34));
-      c.strokeStyle = g; c.lineWidth = 1.3 * dpr; c.globalAlpha = trail; c.stroke(); c.globalAlpha = 1; }
+      c.strokeStyle = g; c.lineWidth = 2.2 * dpr; c.globalAlpha = trail; c.stroke(); c.globalAlpha = 1; }
     // the future: a luminous thread, brightest where it meets the bead, dimmer towards the horizon
     if (futPts.length > 1) {
       const g = c.createLinearGradient(cx, 0, Math.max(cx + 1, xEnd), 0);
       g.addColorStop(0, col(.95)); g.addColorStop(.45, col(.55)); g.addColorStop(1, col(.06));
       c.save(); c.globalCompositeOperation = 'lighter';
-      path(futPts); c.strokeStyle = g; c.globalAlpha = .16; c.lineWidth = 7 * dpr; c.stroke();   // soft glow around the thread
+      path(futPts); c.strokeStyle = g; c.globalAlpha = .16; c.lineWidth = 11 * dpr; c.stroke();   // soft glow around the thread
       c.restore(); c.save();   // a soft dark halo under the crisp thread keeps it readable over a bright world (Tide, the release gold)
-      if (halo) { c.shadowColor = 'rgba(12,6,2,.55)'; c.shadowBlur = 5 * dpr; } path(futPts); c.strokeStyle = g; c.lineWidth = 2.1 * dpr; c.stroke(); c.restore();
+      if (halo) { c.shadowColor = 'rgba(12,6,2,.55)'; c.shadowBlur = 5 * dpr; } path(futPts); c.strokeStyle = g; c.lineWidth = 3.4 * dpr; c.stroke(); c.restore();
       // holds: the plateau ahead is a lit bar; its end marks the next turn; its length ahead = the time left
       for (const h of holdsIn(at - past, at + futEnd)) {
         const a0 = Math.max(0, h.t - at), a1 = Math.min(futEnd, h.t + h.dur - at); if (a1 <= a0) continue;
         const yy = y(B(h.t + h.dur * .5)), x0 = X(a0), x1 = X(a1);
         const gh = c.createLinearGradient(cx, 0, Math.max(cx + 1, xEnd), 0); gh.addColorStop(0, col(.55, [255, 214, 168])); gh.addColorStop(1, col(.08, [255, 214, 168]));
-        c.strokeStyle = gh; c.lineWidth = 3.2 * dpr; c.beginPath(); c.moveTo(x0, yy); c.lineTo(x1, yy); c.stroke();
-        if (h.t + h.dur - at <= futEnd) { c.fillStyle = col(.7 * Math.min(1, (W - x1) / (40 * dpr))); c.beginPath(); c.arc(x1, yy, 2.2 * dpr, 0, 6.283); c.fill(); }
+        c.strokeStyle = gh; c.lineWidth = 4.6 * dpr; c.beginPath(); c.moveTo(x0, yy); c.lineTo(x1, yy); c.stroke();
+        if (h.t + h.dur - at <= futEnd) { c.fillStyle = col(.7 * Math.min(1, (W - x1) / (40 * dpr))); c.beginPath(); c.arc(x1, yy, 3 * dpr, 0, 6.283); c.fill(); }
       }
       if (count === 'ticks') drawTicks(c, X, (tt) => y(B(tt)), at, futEnd, dpr, W);
       // technique names arrive on the thread, at the moment each begins, and leave once passed
