@@ -55,3 +55,24 @@
   from = "/session/*"
   to = "/"
   status = 302
+
+# The campaign page is confidential until launch (docs/recharge/README.md): never indexed, never cached by a CDN
+# in between, and it sends no referrer. The page itself also carries noindex and the key gate.
+[[headers]]
+  for = "/recharge"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Referrer-Policy = "same-origin"
+    Cache-Control = "private, no-store"
+
+[[headers]]
+  for = "/recharge.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Referrer-Policy = "same-origin"
+    Cache-Control = "private, no-store"
+
+[[headers]]
+  for = "/recharge/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"

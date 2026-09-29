@@ -1,0 +1,82 @@
+---
+/**
+ * wehale.io/recharge: the campaign landing page. CONFIDENTIAL until launch (docs/recharge/README.md).
+ * Arrival (co-brand lockup, the title, one line, Begin) -> the session in the browser (the /breathe Tide player) -> the
+ * offer (two lines, one button: an AppsFlyer OneLink carrying the code; on desktop a QR code of the same link).
+ * Everything that changes is in src/data/recharge.json: the gate, the session (a stand-in today), the copy, the code.
+ * The gate: with gate.on, the page shows only with ?k=<key>; without it, the site's 404 (obscurity, not security).
+ */
+import BreatheLayout from "../layouts/BreatheLayout.astro";
+import PlayerStage from "../components/breathe/PlayerStage.astro";
+import "../styles/breathe.css";
+import "../styles/recharge.css";
+import DATA from "../data/recharge.json";
+
+const S = DATA.session, T = DATA.copy, L = DATA.partner_logo;
+const line = T.line.replace("{minutes}", String(S.minutes)).replace("{narrator}", S.narrator);
+// The gate runs before first paint: the page stays invisible until the key checks out, else the 404 replaces it.
+const gate = DATA.gate.on ? `(function(){var d=document.documentElement;d.classList.add("rc-locked");
+var S=${JSON.stringify(DATA.gate.salt)},H=${JSON.stringify(DATA.gate.sha256)},K="wehale.rc.k",q=new URLSearchParams(location.search),k=q.get("k"),st=null;
+try{st=sessionStorage.getItem(K)}catch(e){}
+function hex(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return("0"+x.toString(16)).slice(-2)}).join("")}
+function no(){return fetch("/404.html",{credentials:"omit"}).then(function(r){return r.ok?r:fetch("/404",{credentials:"omit"})}).then(function(r){return r.text()}).then(function(t){document.open();document.write(t);document.close();return false},function(){d.classList.remove("rc-locked");document.body.innerHTML="<p style='padding:24px'>This page isn’t here.</p>";return false})}
+var h=k&&window.crypto&&crypto.subtle?crypto.subtle.digest("SHA-256",new TextEncoder().encode(S+":"+k)).then(hex):Promise.resolve(st);
+window.__rcGate=h.then(function(x){if(x!==H)return no();try{sessionStorage.setItem(K,H)}catch(e){}
+if(k){q.delete("k");var s=q.toString();history.replaceState(null,"",location.pathname+(s?"?"+s:"")+location.hash)}
+d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promise.resolve(true);`;
+---
+
+<BreatheLayout title={`${T.title} · WeHale`} description={line} hidden>
+  <Fragment slot="head">
+    <style is:inline>html.rc-locked body{visibility:hidden}</style>
+    <script is:inline set:html={gate} />
+    <link rel="preload" as="image" href={L.src} />
+  </Fragment>
+  <PlayerStage />
+
+  <!-- 1. Arrival: the lockup, the title, one line, Begin -->
+  <main class="screen rc-arrive" id="arriveScr" aria-labelledby="arriveH">
+    <div class="rc-lockup" aria-label={`WeHale × ${L.alt}`}>
+      <img src="/assets/images/logo.svg" alt="WeHale" width="96" height="20" />
+      <i aria-hidden="true">×</i>
+      <img src={L.src} alt={L.alt} width={L.width} height={L.height} />
+    </div>
+    <div class="inner">
+      <h1 id="arriveH">{T.title}</h1>
+      <p class="rc-line">{line}</p>
+      <button class="pill solid block rc-begin" id="beginBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><span>{T.begin}</span></button>
+      <span class="startlbl" id="beginLbl" aria-live="polite"></span>
+      <p class="fine">{T.safety}</p>
+      <button class="linkbtn rc-skip" id="skipBtn" type="button">{T.skip}</button>
+    </div>
+  </main>
+  <p class="safecap" id="safeCap" hidden>Breathe at your own pace. Stop if you feel dizzy.</p>
+
+  <!-- 2. The offer: after the session, after leaving it, or straight from "Skip the session" -->
+  <section class="screen gone rc-offer" id="offerScr" aria-labelledby="offerH">
+    <div class="rc-lockup rc-small" aria-hidden="true">
+      <img src="/assets/images/logo.svg" alt="" width="96" height="20" />
+      <i>×</i>
+      <img src={L.src} alt="" width={L.width} height={L.height} />
+    </div>
+    <div class="inner rc-card">
+      <div class="rc-copy">
+        <h1 id="offerH" data-done={T.done} data-title={T.title}>{T.title}</h1>
+        <p class="rc-o1">{T.offer_1}</p>
+        <p class="rc-o2">{T.offer_2}</p>
+        <a class="pill solid block rc-cta" id="ctaBtn" href="#" rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
+        <p class="rc-store" id="ctaStore" data-ios={T.cta_ios} data-android={T.cta_android}></p>
+      </div>
+      <figure class="rc-qr" id="qrBox" hidden>
+        <div class="rc-qrcode" id="qrCode" role="img" aria-label="QR code for the app link"></div>
+        <figcaption>{T.qr}</figcaption>
+      </figure>
+      <button class="linkbtn rc-again" id="sessBtn" type="button" data-first={T.begin_from_offer} data-again={T.again} data-back={T.back}>{T.begin_from_offer}</button>
+    </div>
+  </section>
+
+  <noscript><p class="noscript">This session needs JavaScript turned on.</p></noscript>
+  <script>
+    import "../scripts/recharge/app.js";
+  </script>
+</BreatheLayout>

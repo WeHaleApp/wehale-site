@@ -13,8 +13,10 @@ interface Props {
   description: string;
   ogImage?: string;
   lang?: string;
+  /** A page that must not be found (the gated campaign page): noindex, no canonical, no share tags, no referrer. */
+  hidden?: boolean;
 }
-const { title, description, ogImage = "/breathe/og.jpg", lang = "en" } = Astro.props;
+const { title, description, ogImage = "/breathe/og.jpg", lang = "en", hidden = false } = Astro.props;
 const canonical = "https://wehale.io/breathe";
 const fullOg = ogImage.startsWith("http") ? ogImage : `https://wehale.io${ogImage}`;
 const server = { meta: !!(process.env.META_CAPI_TOKEN && process.env.META_PIXEL_ID), tiktok: !!(process.env.TIKTOK_EVENTS_TOKEN && process.env.TIKTOK_PIXEL_ID) };
@@ -32,6 +34,10 @@ const server = { meta: !!(process.env.META_CAPI_TOKEN && process.env.META_PIXEL_
     <script is:inline set:html={`window.__WH_SERVER=${JSON.stringify(server)};`} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {hidden && <meta name="robots" content="noindex, nofollow, noarchive" />}
+    {hidden && <meta name="referrer" content="same-origin" />}
+    <slot name="head" />
+    {!hidden && <Fragment>
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -43,6 +49,7 @@ const server = { meta: !!(process.env.META_CAPI_TOKEN && process.env.META_PIXEL_
     <meta property="og:image:alt" content="A warm light breathing in a dark room" />
     <meta property="og:site_name" content="WeHale" />
     <meta name="twitter:card" content="summary_large_image" />
+    </Fragment>}
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/assets/images/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/assets/images/favicon.png" />

@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /recharge
 
 Sitemap: https://wehale.io/sitemap-index.xml

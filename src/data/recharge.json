@@ -1,0 +1,56 @@
+{
+  "_about": "The campaign page wehale.io/recharge (docs/recharge/README.md). Everything that changes before or at launch is here. CONFIDENTIAL until launch: the page is gated (gate), noindex, out of the sitemap, disallowed in robots.txt and linked from nowhere.",
+  "gate": {
+    "_about": "Obscurity, not security: the page renders only with ?k=<key>, whose salted SHA-256 is compared in the browser; without it the visitor gets the site's 404. The key itself is not in the repo. At launch set on to false (the one flag), and see docs/recharge/README.md for the rest of the launch list.",
+    "on": true,
+    "salt": "33e3ba2aeff4d882",
+    "sha256": "24e24cfd1f889ed16cc1ac73ea8b19ca52c7bf9f7f15dae40d2c567c53bbdbc5"
+  },
+  "session": {
+    "_about": "STAND-IN: The Wake Up (Edvin) until the campaign session is recorded (Philip). To drop the real one in: put score.json and audio.mp3 in public/recharge/session/, point score and audio there, and set narrator, minutes and start (seconds, about 1 s before the guide's first word). world: the Tide world the session plays in; the Cell visual replaces it once integrated.",
+    "stand_in": true,
+    "slug": "wake-up",
+    "title": "Recharge Your Current",
+    "narrator": "Edvin",
+    "minutes": 6,
+    "start": 4.28,
+    "score": "/breathe/sessions/wake-up/score.json",
+    "audio": "/breathe/sessions/wake-up/audio.mp3",
+    "world": "blackcurrant"
+  },
+  "copy": {
+    "title": "Recharge Your Current",
+    "line": "{minutes} guided minutes of breathing with {narrator}, right here in your browser.",
+    "begin": "Begin",
+    "skip": "Skip the session, get the offer",
+    "safety": "Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.",
+    "done": "You just did Recharge Your Current.",
+    "offer_1": "First month free, then 499 kr per year.",
+    "offer_2": "Cancel anytime before the trial ends.",
+    "cta": "Start your free month",
+    "cta_ios": "Opens the App Store",
+    "cta_android": "Opens Google Play",
+    "qr": "Scan with your phone's camera to get the app.",
+    "again": "Do the session again",
+    "back": "Back to the session",
+    "begin_from_offer": "Try the session first"
+  },
+  "partner_logo": {
+    "_about": "PLACEHOLDER: the design session supplies the real lockup. Swap the file (same name) or point src at a new one.",
+    "src": "/recharge/partner-logo.svg",
+    "alt": "Campaign partner",
+    "width": 96,
+    "height": 20
+  },
+  "code": {
+    "_about": "The code rides in the OneLink's deep_link_value; the app applies it at sign-up (email, Apple and Google). PLACEHOLDER: the owner of main creates the real codes in the admin; RECHARGE is the campaign default, ?c=<CODE> overrides it (influencers' personal codes).",
+    "default": "RECHARGE"
+  },
+  "channels": ["newsletter", "flyer", "pdp", "influencer"],
+  "onelink": {
+    "_about": "AppsFlyer OneLink, template zcid (the same as /breathe). pid is a CONFIG CHOICE for the lead and the owner of main: the media source this campaign reports under in AppsFlyer.",
+    "base": "https://wehale.onelink.me/zcid",
+    "pid": "partner_campaign",
+    "c": "recharge"
+  }
+}
