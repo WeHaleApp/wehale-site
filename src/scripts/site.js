@@ -61,7 +61,7 @@ async function showPop(a) {
     try { const QR = (await import("qrcode")).default; pop.innerHTML = (await QR.toString(appLink("qr_hover_" + (a.dataset.at || "page")), { type: "svg", margin: 1, errorCorrectionLevel: "M", color: { dark: "#090f1d", light: "#f2f0ed" } })) + "Scan with your phone"; } catch (_) { return; }
   }
   // beside the button when there's room (so it never covers the headline), else below, else above
-  const r = a.getBoundingClientRect(), W = 176, H = 226;
+  const r = (a.parentElement && a.parentElement.children.length > 1 ? a.parentElement : a).getBoundingClientRect(), W = 176, H = 226;   // beside the whole row of actions
   let left, top;
   if (r.right + 16 + W < innerWidth - 16 && r.top + r.height / 2 - H / 2 > 72) { left = r.right + 16; top = r.top + r.height / 2 - H / 2; }
   else if (r.bottom + 12 + H < innerHeight) { left = r.left + r.width / 2 - W / 2; top = r.bottom + 12; }
