@@ -16,7 +16,7 @@
 
 const GRAPH = "https://graph.facebook.com/v21.0";
 const ALLOWED = new Set(["PageView", "ViewContent", "Lead", "SessionPicked", "SessionStart", "Session1Min", "SessionHold", "SessionFinish", "AppTap",
-  "SaveForLater", "ReturnFromSaved", "TrySessionTap"]);
+  "SaveForLater", "ReturnFromSaved", "TrySessionTap", "SessionCardPlay", "GuideVoicePlay"]);
 // the funnel's own fields plus the ad-to-site contract (src/scripts/contract.js)
 const PARAM_KEYS = ["session", "arm", "source", "assignment_id", "completed", "content_name", "content_category", "option", "page", "at", "store",
   "v", "h", "s", "src", "utm_source", "utm_medium", "utm_campaign", "utm_content"];

@@ -58,4 +58,21 @@ export function swipeRows(root = document) {
   });
 }
 
-export function startMotion() { reveal(); press(); swipeRows(); }
+// session cards breathe only while on screen; lazy videos start only near the viewport and pause off it
+export function inView(root = document) {
+  if (!("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle("in-view", e.isIntersecting)), { threshold: 0.15 });
+  root.querySelectorAll(".breathing-card").forEach((el) => io.observe(el));
+  const vo = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target;
+    if (e.isIntersecting) { if (!v.src && v.dataset.lazyVideo) { v.src = v.dataset.lazyVideo; v.preload = "auto"; } if (!reduced()) v.play().catch(() => {}); }
+    else if (!v.paused) v.pause();
+  }), { rootMargin: "200px 0px", threshold: 0.2 });
+  root.querySelectorAll("video[data-lazy-video]").forEach((v) => vo.observe(v));
+  root.querySelectorAll("[data-story]").forEach((b) => b.addEventListener("click", () => {
+    const row = b.closest("section").querySelector(".story"); const it = row.firstElementChild;
+    row.scrollBy({ left: (+b.dataset.story) * (it.getBoundingClientRect().width + 16), behavior: reduced() ? "auto" : "smooth" });
+  }));
+}
+
+export function startMotion() { reveal(); press(); swipeRows(); inView(); }

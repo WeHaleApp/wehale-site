@@ -15,7 +15,7 @@
 
 const API = "https://business-api.tiktok.com/open_api/v1.3/event/track/";
 const ALLOWED = new Set(["Pageview", "ViewContent", "ClickButton", "SessionPicked", "SessionStart", "Session1Min", "SessionHold", "SessionFinish",
-  "SaveForLater", "ReturnFromSaved", "TrySessionTap"]);
+  "SaveForLater", "ReturnFromSaved", "TrySessionTap", "SessionCardPlay", "GuideVoicePlay"]);
 const PARAM_KEYS = ["session", "arm", "source", "assignment_id", "completed", "content_name", "content_category", "option", "page", "at", "store",
   "v", "h", "s", "src", "utm_source", "utm_medium", "utm_campaign", "utm_content"];
 const ORIGINS = new Set(["https://wehale.io", "https://www.wehale.io"]);

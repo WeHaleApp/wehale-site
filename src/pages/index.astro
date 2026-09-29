@@ -22,6 +22,17 @@ const CLIPS = { "hero-film": "film", "hero-valley": "valley", "hero-still": "sti
 // The three sessions you can try here, by their app titles, with the app's category (Activate, Balance, Calm).
 const CAT = { "wake-up": "Activate", unravel: "Balance", "soft-reboot": "Calm" };
 const web = SESSIONS.sessions.map((s) => ({ ...s, cat: CAT[s.slug] || "" }));
+// The app, in its official App Store screenshots (2.7.8, en-US 6.9", wehale-app store-assets at 240a8bcd): finished
+// compositions, used as they are. Slot 8 (a review quote) is left out: that review isn't in the public feed checked here.
+const store = [
+  { n: "01", alt: "Guided breathwork, whatever state you are in. Calm, Balance and Activate. Six to fifteen minutes." },
+  { n: "02", alt: "Every session, explained. The method, the level and what you can expect, before you press play." },
+  { n: "03", alt: "Five days in, you have a practice. One short lesson and one session a day. No experience needed." },
+  { n: "04", alt: "Before and after, every session. One question going in. The same question coming out." },
+  { n: "05", alt: "See what changed. Every session ends with the same question you answered going in." },
+  { n: "06", alt: "Go deeper when you are ready. Seven-day challenges that build through activation, balance and depth." },
+  { n: "07", alt: "Your practice, counted. A weekly goal you set yourself, and every session you have finished." },
+];
 const guides = [
   { name: "Edvin", role: "Co-founder · guides The Wake Up and Unravel", voice: "/assets/audio/voice-edvin.m4a", line: "“This is your morning reset.” From The Wake Up." },
   { name: "Philip Sigfridsson", role: "Co-founder · guides The Soft Reboot", voice: "/assets/audio/voice-philip.m4a", line: "“Welcome to this breathwork session.” From The Soft Reboot." },
@@ -45,7 +56,7 @@ const ld = {
 <BaseLayout title="WeHale · Come back to yourself" description="Guided breathing with Edvin and Philip, on iPhone and Android. Calm, clear, connected. Try a session free in your browser." page="home" current="home" pathname="/" ogImage="/assets/images/og/home.jpg">
   <Fragment slot="head">
     <!-- the hero variant (?v=), decided before first paint; every event carries it as v -->
-    <script is:inline define:vars={{ HERO }}>(function(){try{var v=new URLSearchParams(location.search).get("v");document.documentElement.dataset.v=HERO.ok.indexOf(v)>-1?v:HERO.def;}catch(e){document.documentElement.dataset.v=HERO.def;}})();</script>
+    <script is:inline define:vars={{ HERO }}>(function(){try{var v=new URLSearchParams(location.search).get("v");document.documentElement.dataset.v=HERO.ok.indexOf(v)>-1||v==="cardplay-orb"?v:HERO.def;if(v==="cardplay-orb")document.documentElement.classList.add("cardplay-orb");}catch(e){document.documentElement.dataset.v=HERO.def;}})();</script>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(ld)} />
   </Fragment>
 
@@ -53,15 +64,21 @@ const ld = {
   <!-- ─── 1. Who WeHale is, and the feeling: the brand film, full-bleed ─── -->
   <section class="relative isolate flex min-h-[100svh] items-end overflow-hidden md:min-h-[92vh]" id="top">
     <div class="absolute inset-0 -z-10" aria-hidden="true">
-      <video id="heroVideo" class="h-full w-full object-cover" muted loop playsinline preload="none" disablepictureinpicture></video>
+      <!-- Static autoplay attributes, so iOS starts it without waiting for a script. If autoplay is blocked (Low Power
+           Mode), the poster is the bright misty valley, and the first touch, scroll or return to the tab tries again. -->
+      <video id="heroVideo" class="h-full w-full object-cover" autoplay muted loop playsinline preload="auto" disablepictureinpicture
+        poster="/assets/video/hero/film-9x16-poster.jpg" src="/assets/video/hero/film-9x16.mp4"></video>
       <script is:inline define:vars={{ CLIPS }}>(function(){var v=document.getElementById("heroVideo"),c=CLIPS[document.documentElement.dataset.v]||"film",p=matchMedia("(max-aspect-ratio: 4/5)").matches?"9x16":"16x9",b="/assets/video/hero/"+c+"-"+p;
-        v.poster=b+"-poster.jpg";v.dataset.src=b+".mp4";if(c==="still")v.style.objectPosition=p==="16x9"?"50% 35%":"50% 30%";
-        if(!matchMedia("(prefers-reduced-motion: reduce)").matches){v.src=v.dataset.src;v.preload="auto";v.autoplay=true;var pl=v.play();if(pl&&pl.catch)pl.catch(function(){});}})();</script>
+        v.muted=true;v.defaultMuted=true;v.setAttribute("muted","");v.dataset.src=b+".mp4";
+        if(v.getAttribute("src")!==b+".mp4"){v.poster=b+"-poster.jpg";v.src=b+".mp4";}
+        if(c==="still")v.style.objectPosition=p==="16x9"?"50% 35%":"50% 30%";
+        if(matchMedia("(prefers-reduced-motion: reduce)").matches){v.removeAttribute("autoplay");v.autoplay=false;v.preload="metadata";v.pause();return;}
+        var pl=v.play();if(pl&&pl.catch)pl.catch(function(){});})();</script>
       <!-- a calm scrim: the words read, the film still shows; the bottom melts into the page's dawn -->
       <div class="absolute inset-0 bg-gradient-to-b from-[rgba(12,10,14,.35)] via-[rgba(12,10,14,.05)] to-[rgba(9,15,29,.94)] md:bg-gradient-to-r md:from-[rgba(12,10,14,.72)] md:via-[rgba(12,10,14,.2)] md:to-transparent"></div>
       <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[var(--journey-dawn)]"></div>
     </div>
-    <div class="mx-auto w-full max-w-6xl px-5 pb-12 pt-32 md:px-6 md:pb-24">
+    <div class="hero-pad mx-auto w-full max-w-6xl px-5 pb-12 pt-32 md:px-6 md:pb-24">
       <p class="t-caption hero-in" style="--d:0ms">WeHale · Guided breathing</p>
       <h1 class="t-display hero-in mt-3 max-w-xl" style="--d:120ms" id="heroH">Come back to yourself.</h1>
       <p class="t-lead hero-in mt-4 max-w-md" style="--d:260ms" id="heroSub">Calm, clear, connected. Guided breathing with Edvin and Philip, on iPhone and Android.</p>
@@ -101,12 +118,15 @@ const ld = {
       </div>
       <div class="mt-10 grid grid-cols-3 gap-5 swipe" data-swipe tabindex="0" role="region" aria-label="Three sessions, swipe to see all">
         {web.map((s, i) => (
-          <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card press-card group relative block aspect-[3/4]" data-reveal style={`--i:${i}`} data-try data-at={`library_${s.slug}`}>
-            <img src={`/assets/images/sessions/orb-${s.slug}-800.webp`} srcset={`/assets/images/sessions/orb-${s.slug}-480.webp 480w, /assets/images/sessions/orb-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-enter)] group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+          <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card press-card breathing-card group relative block aspect-[3/4]" data-reveal style={`--i:${i};--phase:${-[0, 3.4, 6.8][i]}s;--glow:${s.slug === "wake-up" ? "rgba(255,170,90,.32)" : s.slug === "unravel" ? "rgba(110,220,215,.28)" : "rgba(200,210,255,.24)"};--tint:${s.slug === "wake-up" ? "rgba(255,190,130,.14)" : s.slug === "unravel" ? "rgba(140,230,220,.12)" : "rgba(190,200,255,.12)"}`} data-try data-card-play={s.slug} data-at={`library_${s.slug}`} aria-label={`${s.title}, with ${s.narrator}. Play · 6 min`}>
+            <span class="orb-breath absolute inset-0" aria-hidden="true"><img src={`/assets/images/sessions/orb-${s.slug}-800.webp`} srcset={`/assets/images/sessions/orb-${s.slug}-480.webp 480w, /assets/images/sessions/orb-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="h-full w-full object-cover" loading="lazy" decoding="async" /></span>
+            <span class="orb-glow absolute inset-0" aria-hidden="true"></span>
+            <span class="card-play" title="Play · 6 min" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Play</span>
+            <span class="orb-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span>
             <span class="absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/85 via-black/40 to-transparent p-5 pt-16">
               <span class="block text-[0.75rem] font-bold uppercase tracking-[0.12em] text-white/80">{s.cat} · 6 min · with {s.narrator}</span>
-              <span class="mt-1 flex items-center justify-between gap-3 text-xl font-semibold">{s.title}<svg class="h-5 w-5 shrink-0 opacity-80 transition-transform duration-300 ease-[var(--ease-enter)] group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-              <span class="block text-[16px] text-white/80">{s.reason_en}</span>
+              <span class="card-text mt-1 block text-xl font-semibold">{s.title}</span>
+              <span class="card-text block text-[16px] text-white/80">{s.reason_en}</span>
             </span>
           </a>
         ))}
@@ -145,7 +165,8 @@ const ld = {
 
   <!-- ─── 5. The app ─── -->
   <section class="sec" id="app">
-    <div class="wrap grid items-center gap-10 md:grid-cols-[1fr_1.3fr] md:gap-16">
+    <div class="wrap grid gap-10">
+      <div class="md:flex md:items-end md:justify-between md:gap-12">
       <div>
         <p class="t-caption" data-reveal>The app</p>
         <h2 class="t-title1 mt-4" data-reveal>Everything, when you want more.</h2>
@@ -155,13 +176,20 @@ const ld = {
         </div>
         <OfferLine class="mt-4" />
       </div>
-      <div>
-      <div class="showcase swipe swipe-phones" data-reveal data-swipe tabindex="0" role="region" aria-label="Screens from the WeHale app, swipe to see all">
-        <img src="/assets/images/screens/app-practice-540.webp" alt="WeHale, the Practice screen with daily sessions" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-l" />
-        <img src="/assets/images/screens/app-home-540.webp" alt="WeHale, the Home screen with the intro course" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-c" />
-        <img src="/assets/images/screens/app-player-540.webp" alt="WeHale, a session playing" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-r" />
       </div>
-      <div class="dots" aria-hidden="true"></div>
+      <div class="min-w-0">
+        <div class="story" data-swipe tabindex="0" role="region" aria-label="The WeHale app in the App Store's screenshots. Swipe or use the arrow keys.">
+          {store.map((s, i) => (
+            <figure class="story-item">
+              <img src={`/assets/images/store/${s.n}-720.webp`} srcset={`/assets/images/store/${s.n}-720.webp 720w, /assets/images/store/${s.n}-1080.webp 1080w`} sizes="(min-width: 768px) 300px, 86vw" alt={s.alt} width="720" height="1564" loading={i < 2 ? "eager" : "lazy"} decoding="async" />
+            </figure>
+          ))}
+        </div>
+        <div class="dots" aria-hidden="true"></div>
+        <div class="story-nav" aria-hidden="true">
+          <button type="button" class="btn-quiet !min-h-[44px] !w-11 !p-0" data-story="-1" tabindex="-1" aria-label="Previous screen"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.5 6l-6 6 6 6"/></svg></button>
+          <button type="button" class="btn-quiet !min-h-[44px] !w-11 !p-0" data-story="1" tabindex="-1" aria-label="Next screen"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 6l6 6-6 6"/></svg></button>
+        </div>
       </div>
     </div>
   </section>
@@ -201,14 +229,22 @@ const ld = {
 </BaseLayout>
 
 <script>
-  // The film: a pause control (WCAG 2.2.2), and it pauses when off screen or when the tab is hidden.
+  // The film: robust autoplay and a pause control (WCAG 2.2.2). Only the visitor's own pause stops it; no other script
+  // pauses it. If the browser blocked autoplay, it tries again when the video can play, when the tab comes back, and on
+  // the first touch, pointer or scroll anywhere.
   const v = document.getElementById("heroVideo") as HTMLVideoElement;
   const pb = document.getElementById("heroPause")!;
-  let userPaused = false;
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let userPaused = reducedMotion;
   const icons = () => { pb.querySelector("[data-i=pause]")!.classList.toggle("hidden", v.paused); pb.querySelector("[data-i=play]")!.classList.toggle("hidden", !v.paused); pb.setAttribute("aria-label", v.paused ? "Play the film" : "Pause the film"); };
-  pb.addEventListener("click", () => { if (v.paused) { if (!v.src) v.src = v.dataset.src!; userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
+  const tryPlay = () => { if (userPaused || !v.paused) return; v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+  pb.addEventListener("click", () => { if (v.paused) { if (!v.getAttribute("src")) v.src = v.dataset.src!; userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
   v.addEventListener("play", icons); v.addEventListener("pause", icons); icons();
-  new IntersectionObserver(([e]) => { if (userPaused || !v.src) return; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }).observe(v);
+  ["loadeddata", "canplay"].forEach((ev) => v.addEventListener(ev, tryPlay));
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") tryPlay(); });
+  const firstGesture = () => { tryPlay(); ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) => removeEventListener(ev, firstGesture, true)); };
+  ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) => addEventListener(ev, firstGesture, { capture: true, passive: true }));
+  tryPlay();
 
   // The guides' voices: nothing loads or sounds until a tap; one voice at a time.
   let current: HTMLAudioElement | null = null, currentBtn: HTMLElement | null = null;
