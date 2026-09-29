@@ -15,8 +15,20 @@ mk() { # name, filter_complex (uses [0:v]), total seconds
     ffmpeg -v error -y -ss 1.4 -i "$OUT/$name-$f.mp4" -frames:v 1 -vf "scale=$W:-1" -q:v 3 "$OUT/$name-$f-poster.jpg"
   done
 }
-# film: the valley at dawn, a woman under a pink sky, eyes closed; each shot cross-fades into the next
-mk film "[0:v]trim=0.5:7.0,setpts=PTS-STARTPTS[a];[0:v]trim=20.5:26.5,setpts=PTS-STARTPTS[b];[0:v]trim=37.8:43.8,setpts=PTS-STARTPTS[c];[a][b]xfade=transition=fade:duration=1.2:offset=5.3[ab];[ab][c]xfade=transition=fade:duration=1.2:offset=10.1" 16.3
+# film (release 2): whole shots only, cut inside the film's own shot bounds (scene cuts at 6.97, 21.06, 26.53, 35.99,
+# 42.17 s), each holding 3 s or more on its own, joined by 1 s cross-dissolves, and a seamless loop: the end dissolves
+# back into the valley and the first second is trimmed, so the last frame meets the first.
+#   valley 0.3–6.8 → the woman under the pink sky 21.3–26.3 → eyes closed 36.05–38.85 (slowed to 65 %, before they open)
+#   → the valley again 0.3–1.3
+mkloop() {
+  for f in 16x9 9x16; do
+    if [[ $f == 16x9 ]]; then S="scale=1280:720"; W=1280; else S="scale=540:960"; W=540; fi
+    ffmpeg -v error -y -i "$SRC/WH_$f.mp4" -filter_complex "[0:v]trim=0.3:6.8,setpts=PTS-STARTPTS[a];[0:v]trim=21.3:26.3,setpts=PTS-STARTPTS[b];[0:v]trim=36.05:38.85,setpts=(PTS-STARTPTS)/0.65[c];[0:v]trim=0.3:1.3,setpts=PTS-STARTPTS[d];[a][b]xfade=transition=fade:duration=1:offset=5.5[ab];[ab][c]xfade=transition=fade:duration=1:offset=9.5[abc];[abc][d]xfade=transition=fade:duration=1:offset=12.8,trim=1.0,setpts=PTS-STARTPTS,$GRADE,$S,format=yuv420p[v]" \
+      -map "[v]" -an -c:v libx264 -preset slow -crf 27 -profile:v high -movflags +faststart -r 24 "$OUT/film-$f.mp4"
+    ffmpeg -v error -y -ss 1.0 -i "$OUT/film-$f.mp4" -frames:v 1 -vf "scale=$W:-1" -q:v 3 "$OUT/film-$f-poster.jpg"
+  done
+}
+mkloop
 # valley: the opening landscape only, slowed to 60 %
 mk valley "[0:v]trim=0.3:7.8,setpts=(PTS-STARTPTS)/0.6" 12.5
 # stillness: the closed-eyes shot, slowed to 75 %
