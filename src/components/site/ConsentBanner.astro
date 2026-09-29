@@ -76,11 +76,16 @@ const COPY = {
   .whc-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; }
   .whc[data-tone="warm"] { --whc-bg: linear-gradient(180deg, rgba(30, 21, 15, .97), rgba(20, 13, 9, .98)); --whc-ink: #f6ede3; --whc-t2: rgba(246, 237, 227, .8); --whc-line: rgba(246, 237, 227, .3); }
   @keyframes whcInTop { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+  /* Desktop: one slim full-width bar (about 68 px); the page gets the same room at its end (body.whc-on) */
   @media (min-width: 768px) {
-    .whc[data-pos="bottom"] { left: 20px; right: auto; bottom: 20px; width: 384px; border-radius: 16px; padding: 16px 16px 12px; font-size: 15px; line-height: 1.5; }
+    .whc-ask { display: flex; align-items: center; justify-content: center; gap: 24px; max-width: 1152px; margin: 0 auto; }
+    .whc[data-pos="bottom"] { padding: 12px 24px; border-radius: 0; font-size: 15px; }
     .whc[data-pos="bottom"] .whc-long { display: inline; }
     .whc[data-pos="bottom"] .whc-short { display: none; }
-    .whc[data-pos="bottom"] .whc-t { white-space: normal; margin-bottom: 12px !important; }
+    .whc .whc-t { margin: 0 !important; white-space: normal; max-width: 720px; }
+    .whc-row { grid-template-columns: 132px 132px auto; flex: none; }
+    .whc.is-set { left: auto; right: 24px; bottom: 24px; width: 400px; border-radius: 16px; }
+    body.whc-on { padding-bottom: 72px; }
   }
   body.in-session .whc, body.in-session .whc-scrim { display: none; }
   /* Settings: the bar opens into a sheet over a scrim */

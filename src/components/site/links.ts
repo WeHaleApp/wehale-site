@@ -9,4 +9,4 @@ export const PLAY_URL = "https://play.google.com/store/apps/details?id=com.wehal
 export const SITE_PID = "website";
 export const SITE_CAMPAIGN = "site";
 /** The offer, exactly the app's (proposed line, pending Isak). No discount, no price. */
-export const OFFER_LINE = "Your first 14 days are free, with everything open. No card needed.";
+export const OFFER_LINE = "Your first 14 days are free, with everything open. No\u00a0card\u00a0needed.";

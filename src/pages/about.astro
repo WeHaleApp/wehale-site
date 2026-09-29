@@ -4,7 +4,6 @@
  * No placeholder copy and no outcome claims. Studios and teachers get one line (DIRECTION.md §5); /for stays unlisted.
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
-import StoreButtons from "../components/site/StoreButtons.astro";
 import OfferLine from "../components/site/OfferLine.astro";
 import { BREATHE_URL } from "../components/site/links";
 
@@ -25,7 +24,7 @@ const people = [
     <div class="mx-auto flex min-h-[72svh] max-w-6xl flex-col justify-end px-5 pb-14 pt-40 md:min-h-[70vh] md:px-6 md:pb-24">
       <p class="t-caption hero-in" style="--d:0ms">About</p>
       <h1 class="t-display hero-in mt-4 max-w-3xl" style="--d:120ms">Built from the breath up.</h1>
-      <p class="t-body hero-in mt-5 max-w-xl" style="--d:260ms">Three co-founders, two of whom have taught breathing for years, making an app that is calm, plain and honest about what it is.</p>
+      <p class="t-body hero-in mt-5 max-w-xl" style="--d:260ms">Three co-founders, two of whom have practised breathwork and led group sessions for years, making an app that is calm, plain and honest about what it is.</p>
     </div>
   </section>
 
@@ -82,7 +81,7 @@ const people = [
       <p class="t-body mt-4 max-w-md" data-reveal>Six guided minutes, in your browser. Free, no account.</p>
       <div class="mt-8 flex flex-col items-center gap-4" data-reveal>
         <a href={BREATHE_URL} class="btn" data-try data-at="signoff">Try a session</a>
-        <StoreButtons class="justify-center" at="signoff" />
+        <a href="#get-the-app" class="link tap" data-get-app data-at="signoff">Get the app</a>
         <OfferLine />
       </div>
     </div>

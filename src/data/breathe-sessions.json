@@ -3,7 +3,7 @@
   "sessions": [
     {
       "slug": "wake-up",
-      "choice": "Wake up",
+      "choice": "The Wake Up",
       "title": "The Wake Up",
       "kicker": "Morning",
       "minutes": 6,
@@ -18,7 +18,7 @@
     },
     {
       "slug": "unravel",
-      "choice": "Reset",
+      "choice": "Unravel",
       "title": "Unravel",
       "kicker": "Daytime reset",
       "minutes": 6,
@@ -32,7 +32,7 @@
     },
     {
       "slug": "soft-reboot",
-      "choice": "Wind down",
+      "choice": "The Soft Reboot",
       "title": "The Soft Reboot",
       "kicker": "Evening wind-down",
       "minutes": 6,
@@ -45,5 +45,6 @@
       "web_start_f": 9.35,
       "web_continue_f": 48.38
     }
-  ]
+  ],
+  "_about_names": "choice = the app's title (one set of names across the site and the app, 29 Sep)."
 }

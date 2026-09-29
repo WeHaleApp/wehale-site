@@ -388,7 +388,7 @@ body.f-own.f-edge .tile[aria-checked="true"] { border-color: #ffb46b; box-shadow
 body[data-v^="g"] #startScr { justify-content: space-between; background: linear-gradient(to top, rgba(6, 4, 3, .7) 0%, rgba(6, 4, 3, 0) 26%);
   padding: calc(env(safe-area-inset-top, 0px) + 72px) 16px calc(env(safe-area-inset-bottom, 0px) + 18px);
   touch-action: none; overscroll-behavior: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
-body[data-v^="g"] #brand { opacity: .45; }
+body[data-v^="g"] #brand { opacity: .72; }
 body[data-v^="g"] .ylede h1 { font: 500 29px/1.2 var(--font) !important; letter-spacing: -.01em; margin: 0 auto 8px !important; max-width: 330px; }
 body[data-v^="g"] .ysub { font: 500 15px/1.3 var(--font) !important; color: rgba(242, 240, 237, .86) !important; letter-spacing: .01em; text-shadow: 0 0 3px rgba(6, 4, 3, .9), 0 0 14px rgba(6, 4, 3, .8); }
 body[data-v^="g"] .ylede h1 { text-shadow: 0 0 3px rgba(6, 4, 3, .8), 0 0 18px rgba(6, 4, 3, .6); }
@@ -457,8 +457,8 @@ body.g-going .goffer { opacity: 0 !important; transition: opacity .45s ease; }
 body.g-edge #silk, body.g-edge #stage { filter: contrast(1.18) saturate(1.25); }
 /* the consent bar (phones, about 84 px) never covers Begin: the start screen's actions lift above it, the offer line steps aside */
 @media (max-width: 767px) {
-  body[data-v^="g"].whc-on #startScr { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); }
-  body.whc-on .goffer { display: none; }
+  body[data-v^="g"].whc-on #startScr { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 90px); }
+  body[data-v^="g"].whc-on .glink { margin-top: 0; }
 }
 body[data-v^="g"] .ysub { white-space: pre-line; }
 /* g, arriving from an ad: the ad chose the session, so the arrows step aside (swipe and the dots stay) */
@@ -466,3 +466,5 @@ body.g-hooked .gstep { visibility: hidden; }
 body.g-hooked .gdots { opacity: .7; }
 /* the challenger's room runs hotter than the foggy one's: redder fire, more contrast */
 body.g-edge #silk, body.g-edge #stage { filter: contrast(1.28) saturate(1.45) hue-rotate(-12deg) !important; }
+body[data-v^="g"] .ylede h1 { text-wrap: balance; max-width: 352px !important; }
+@media (min-width: 768px) { body.whc-on { padding-bottom: 0; } body[data-v^="g"].whc-on #startScr { padding-bottom: 96px; } }

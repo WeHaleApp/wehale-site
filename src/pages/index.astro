@@ -6,7 +6,6 @@
  * (hero-still: the brand-film still, the default; hero-landscape: a landscape, no person). Both are decided before first paint.
  */
 import BaseLayout from "../layouts/BaseLayout.astro";
-import StoreButtons from "../components/site/StoreButtons.astro";
 import OfferLine from "../components/site/OfferLine.astro";
 import { BREATHE_URL } from "../components/site/links";
 import DATA from "../data/hooks.json";
@@ -16,14 +15,14 @@ const guideOf = (slug: string) => SESSIONS.sessions.find((s) => s.slug === slug)
 const HOOKS = Object.fromEntries(Object.entries(DATA.hooks).map(([k, h]: [string, any]) => [k, { l: h.line_en, sub: String(h.sub_en || "").replace(/\{guide\}/g, guideOf(h.session)) }]));
 const HERO = { def: DATA.variants.home.default, ok: Object.keys(DATA.variants.home.options) };
 
-// The three web sessions, by the names /breathe uses; the app's title and category second (the app's categories are
-// Activate, Balance and Calm).
+// The three web sessions, by their app titles (one set of names), with the app's category (Activate, Balance, Calm).
 const CAT = { "wake-up": "Activate", unravel: "Balance", "soft-reboot": "Calm" };
 const web = SESSIONS.sessions.map((s) => ({ ...s, cat: CAT[s.slug] || "" }));
-// Real App Store reviews (SE storefront), quoted exactly; checked against the public reviews feed, 29 Sep 2026.
+// Real App Store reviews (SE storefront), quoted exactly (ZIggeztar's shortened at a sentence end); checked against the
+// public reviews feed, 29 Sep 2026.
 const reviews = [
   { q: "I tried meditation apps for years. WeHale is the first one I keep coming back to.", n: "Dap tse" },
-  { q: "Easy to follow. Professional guidance for conscious breathing. Perfect starting point for meditation.", n: "ZIggeztar" },
+  { q: "Easy to follow. Professional guidance for conscious breathing.", n: "ZIggeztar" },
   { q: "Really nice and clean app, love it!", n: "Viicktorrr" },
 ];
 const ld = {
@@ -62,7 +61,7 @@ const ld = {
     </div>
     <div class="mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-5 pb-24 pt-[46svh] [@media(max-height:700px)]:pt-[34svh] md:min-h-[88vh] md:px-6 md:pb-24 md:pt-40">
       <p class="t-caption hero-in" style="--d:0ms">Guided breathing · iPhone and Android</p>
-      <h1 class="t-display hero-in mt-3 max-w-2xl max-[420px]:!text-[2.3rem]" style="--d:120ms" id="heroH">Six minutes. Breathe with Edvin.</h1>
+      <h1 class="t-display hero-in mt-3 max-w-2xl max-[420px]:!text-[2.3rem] md:!text-[clamp(2.75rem,4.6vw,4.25rem)]" style="--d:120ms" id="heroH">Six minutes. Breathe with Edvin.</h1>
       <p class="t-body hero-in mt-4 max-w-md" style="--d:260ms" id="heroSub">A guided breathing session, free, right here in your browser.</p>
       <script is:inline define:vars={{ HOOKS }}>(function(){try{var h=HOOKS[new URLSearchParams(location.search).get("h")||""];if(!h)return;document.getElementById("heroH").textContent=h.l;if(h.sub)document.getElementById("heroSub").textContent=h.sub;document.documentElement.dataset.hooked="1";}catch(e){}})();</script>
       <div class="hero-in mt-6 flex flex-row flex-wrap items-center gap-3" style="--d:380ms">
@@ -76,18 +75,21 @@ const ld = {
     </div>
   </section>
 
-  <!-- ─── Try it here: the /breathe start screen, previewed ─── -->
-  <section class="relative isolate overflow-hidden bg-gradient-to-b from-[var(--color-bg)] via-[#05080f] to-[var(--color-bg)]" id="try">
-    <div class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:gap-16 md:px-6 md:py-28">
-      <div class="order-2 md:order-1">
-        <p class="t-caption" data-reveal>Right here, right now</p>
-        <h2 class="t-title1 mt-4" data-reveal>Six guided minutes, in your browser.</h2>
-        <p class="t-body mt-5 max-w-md" data-reveal>Sound on, and follow the light: it rises as you breathe in. Edvin or Philip guides you. Free, no account.</p>
-        <div class="mt-8" data-reveal><a href={BREATHE_URL} class="btn" data-try data-at="try">Begin</a></div>
-        <p class="t-foot mt-5 max-w-md" data-reveal>Breathe at your own pace. Stop if you feel dizzy. Not in water or while driving.</p>
+  <!-- ─── The guides: who you breathe with (no photos yet; names and roles as on About) ─── -->
+  <section class="relative isolate overflow-hidden bg-gradient-to-b from-[var(--color-bg)] via-[#05080f] to-[var(--color-bg)]" id="guides">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[1.1fr_1fr] md:gap-16 md:px-6 md:py-28">
+      <div>
+        <p class="t-caption" data-reveal>Your guides</p>
+        <h2 class="t-title1 mt-4" data-reveal>Two voices. Years of practice.</h2>
+        <p class="t-body mt-5 max-w-md" data-reveal>Edvin and Philip have practised breathwork and led live group sessions for years. They wrote and voice the sessions. Sound on, and follow the light: it rises as you breathe in.</p>
+        <div class="mt-8 grid gap-3 sm:grid-cols-2" data-reveal>
+          <div class="glass p-5"><p class="t-title3">Edvin</p><p class="t-foot mt-1">Co-founder · guides The Wake Up and Unravel</p></div>
+          <div class="glass p-5"><p class="t-title3">Philip Sigfridsson</p><p class="t-foot mt-1">Co-founder · guides The Soft Reboot</p></div>
+        </div>
+        <p class="mt-6" data-reveal><a href="/about" class="link tap">Meet the team</a></p>
       </div>
-      <a href={BREATHE_URL} class="order-1 flex justify-center md:order-2" aria-hidden="true" tabindex="-1" data-try data-at="try_sphere">
-        <div class="sphere-field flex aspect-square w-[78%] max-w-[420px] items-center justify-center rounded-full">
+      <a href={BREATHE_URL} class="flex justify-center" aria-hidden="true" tabindex="-1" data-try data-at="guides_sphere">
+        <div class="sphere-field flex aspect-square w-[70%] max-w-[380px] items-center justify-center rounded-full">
           <div class="sphere w-[46%]"></div>
         </div>
       </a>
@@ -109,8 +111,8 @@ const ld = {
           <img src={`/assets/images/sessions/graded-${s.slug}-800.webp`} srcset={`/assets/images/sessions/graded-${s.slug}-480.webp 480w, /assets/images/sessions/graded-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
           <span class="absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/85 via-black/45 to-transparent p-5 pt-16">
             <span class="block text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-white/80">{s.cat} · 6 min · with {s.narrator}</span>
-            <span class="mt-1 block text-xl font-semibold">{s.choice}</span>
-            <span class="block text-[15px] text-white/75">In the app: {s.title}</span>
+            <span class="mt-1 flex items-center justify-between gap-3 text-xl font-semibold">{s.title}<svg class="h-5 w-5 shrink-0 opacity-80 transition-transform duration-300 ease-[var(--ease-enter)] group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+            <span class="block text-[15px] text-white/75">Try it here, free</span>
           </span>
         </a>
       ))}
@@ -138,12 +140,12 @@ const ld = {
       <div class="sphere-field aspect-square w-[140%] max-w-[900px] rounded-full opacity-70"></div>
     </div>
     <div class="mx-auto flex max-w-3xl flex-col items-center px-5 py-20 text-center md:py-32">
-      <img src="/assets/images/screens/app-home-540.webp" alt="The WeHale app: the Home screen, with the intro course" width="540" height="1169" class="mb-12 w-[180px] rounded-[1.75rem] shadow-[0_30px_80px_rgba(0,0,0,.55)] md:w-[220px]" loading="lazy" decoding="async" data-reveal />
-      <h2 class="t-display" data-reveal>Six minutes, right now.</h2>
+      <img src="/assets/images/screens/app-home-540.webp" alt="The WeHale app: the Home screen, with the intro course" width="540" height="1099" class="mb-12 w-[180px] rounded-[1.75rem] shadow-[0_30px_80px_rgba(0,0,0,.55)] md:w-[220px]" loading="lazy" decoding="async" data-reveal />
+      <h2 class="t-display" data-reveal>Ready when you are.</h2>
       <p class="t-body mt-5 max-w-md" data-reveal>Start with one session here, then keep going in the app on iPhone or Android.</p>
       <div class="mt-9 flex flex-col items-center gap-4" data-reveal>
         <a href={BREATHE_URL} class="btn" data-try data-at="signoff">Try a session</a>
-        <StoreButtons class="justify-center" at="signoff" />
+        <a href="#get-the-app" class="link tap" data-get-app data-at="signoff">Get the app</a>
         <OfferLine />
       </div>
     </div>
