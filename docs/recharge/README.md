@@ -10,7 +10,7 @@ Sans, one white pill; the campaign shows only as the small co-brand lockup and b
 
 Every outside link and QR code of the campaign points here. The screen, in order: the lockup; "Charge Your Current"
 and one line (a breathing session made for you, free in the WeHale app, yours to keep) with the guide and the length;
-the offer, "First month free, then 499 kr per year."; **Get the app** (the OneLink with the code); the fine print,
+the offer, "Your first month free." (the prices are chosen in the app); **Get the app** (the OneLink with the code); the fine print,
 "Cancel anytime before the trial ends." and that the free month is a trial through the App Store or Google Play. On a
 desktop, a QR code of the same link replaces the button.
 
