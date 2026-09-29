@@ -243,15 +243,16 @@ html.cardplay-orb .orb-play { position: absolute; left: 50%; top: 42%; z-index: 
 html.cardplay-orb .orb-play svg { width: 14px; height: 14px; margin-left: 2px; }
 html.cardplay-orb .breathing-card:active .orb-play { transform: scale(var(--press-button)); }
 
-/* ── The app as a story: one row of phones (the clip first), swipe on phones, arrows on desktop ── */
+/* ── The app in its App Store screenshots: one per view on phones (snap, dots), 3–4 per view on desktop (arrows) ── */
 .story { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
-  padding: 14px 4px 8px; scroll-padding-inline: 4px; -webkit-overflow-scrolling: touch; }
+  padding: 4px 0 8px; -webkit-overflow-scrolling: touch; }
 .story::-webkit-scrollbar { display: none; }
-.story-item { flex: 0 0 auto; width: 62%; max-width: 250px; margin: 0; scroll-snap-align: start; }
-.story-item .phone { display: block; width: 100%; max-width: none; height: auto; aspect-ratio: 540 / 1099; object-fit: cover; }
-.story-item figcaption { margin-top: 14px; text-align: center; font-size: .875rem; font-weight: 600; color: var(--color-text-secondary); }
+.story-item { flex: 0 0 auto; width: 100%; margin: 0; scroll-snap-align: center; }
+.story-item img { display: block; width: 100%; height: auto; aspect-ratio: 720 / 1564; border-radius: 16px; background: #0e1525;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.45); }
 .story-nav { display: none; }
-@media (min-width: 768px) { .story-item { width: 30%; } .story-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; } .story + .dots { display: none; } }
-@media (max-width: 767px) { .story { margin-inline: -1.25rem; padding-inline: 1.25rem; scroll-padding-inline: 1.25rem; } }
+@media (max-width: 767px) { .story { margin-inline: -1.25rem; padding-inline: 1.25rem; scroll-padding-inline: 1.25rem; } .story-item { width: calc(100vw - 2.5rem); max-width: 420px; scroll-snap-align: start; } }
+@media (min-width: 768px) { .story-item { width: calc((100% - 32px) / 3.3); scroll-snap-align: start; } .story-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; } .story + .dots { display: none; } }
+
 .card-text { padding-right: 92px; }
 html.cardplay-orb .card-text { padding-right: 0; }

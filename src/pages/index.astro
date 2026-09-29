@@ -22,15 +22,16 @@ const CLIPS = { "hero-film": "film", "hero-valley": "valley", "hero-still": "sti
 // The three sessions you can try here, by their app titles, with the app's category (Activate, Balance, Calm).
 const CAT = { "wake-up": "Activate", unravel: "Balance", "soft-reboot": "Calm" };
 const web = SESSIONS.sessions.map((s) => ({ ...s, cat: CAT[s.slug] || "" }));
-// The app, as a story, from the Design session's real captures (made-up personas; wehale-app admin/workspace/public/screens)
-const story = [
-  { f: "story-1-home", cap: "Home", alt: "WeHale Home: good morning, the weekly goal and the next course day" },
-  { f: "story-2-choose", cap: "Choose a session", alt: "WeHale Practice: daily sessions by Activate, Balance and Calm" },
-  { f: "story-3-breathe", cap: "Breathe", alt: "WeHale player: a session starting, with the introduction" },
-  { f: "story-4-closing", cap: "The last minute", alt: "WeHale player: a session closing" },
-  { f: "story-5-after", cap: "After", alt: "WeHale after a session: how you felt before and after" },
-  { f: "story-6-week", cap: "Your week", alt: "WeHale Progress: the weekly practice goal" },
-  { f: "story-7-milestones", cap: "Milestones", alt: "WeHale Progress: milestones earned" },
+// The app, in its official App Store screenshots (2.7.8, en-US 6.9", wehale-app store-assets at 240a8bcd): finished
+// compositions, used as they are. Slot 8 (a review quote) is left out: that review isn't in the public feed checked here.
+const store = [
+  { n: "01", alt: "Guided breathwork, whatever state you are in. Calm, Balance and Activate. Six to fifteen minutes." },
+  { n: "02", alt: "Every session, explained. The method, the level and what you can expect, before you press play." },
+  { n: "03", alt: "Five days in, you have a practice. One short lesson and one session a day. No experience needed." },
+  { n: "04", alt: "Before and after, every session. One question going in. The same question coming out." },
+  { n: "05", alt: "See what changed. Every session ends with the same question you answered going in." },
+  { n: "06", alt: "Go deeper when you are ready. Seven-day challenges that build through activation, balance and depth." },
+  { n: "07", alt: "Your practice, counted. A weekly goal you set yourself, and every session you have finished." },
 ];
 const guides = [
   { name: "Edvin", role: "Co-founder · guides The Wake Up and Unravel", voice: "/assets/audio/voice-edvin.m4a", line: "“This is your morning reset.” From The Wake Up." },
@@ -158,7 +159,8 @@ const ld = {
 
   <!-- ─── 5. The app ─── -->
   <section class="sec" id="app">
-    <div class="wrap grid items-center gap-10 md:grid-cols-[1fr_1.6fr] md:gap-12">
+    <div class="wrap grid gap-10">
+      <div class="md:flex md:items-end md:justify-between md:gap-12">
       <div>
         <p class="t-caption" data-reveal>The app</p>
         <h2 class="t-title1 mt-4" data-reveal>Everything, when you want more.</h2>
@@ -168,16 +170,12 @@ const ld = {
         </div>
         <OfferLine class="mt-4" />
       </div>
+      </div>
       <div class="min-w-0">
-        <div class="story" data-swipe tabindex="0" role="region" aria-label="The WeHale app, screen by screen. Swipe or use the arrow keys.">
-          <figure class="story-item">
-            <video class="phone story-video" muted loop playsinline preload="none" poster="/assets/video/app/app-sequence-poster.jpg" data-lazy-video="/assets/video/app/app-sequence.mp4" width="540" height="1100" aria-label="The app in motion: Home, choosing a session, the player, the after screen and your week"></video>
-            <figcaption>The app, in motion</figcaption>
-          </figure>
-          {story.map((s) => (
+        <div class="story" data-swipe tabindex="0" role="region" aria-label="The WeHale app in the App Store's screenshots. Swipe or use the arrow keys.">
+          {store.map((s, i) => (
             <figure class="story-item">
-              <img src={`/assets/images/screens/${s.f}-540.webp`} alt={s.alt} width="540" height="1099" loading="lazy" decoding="async" class="phone" />
-              <figcaption>{s.cap}</figcaption>
+              <img src={`/assets/images/store/${s.n}-720.webp`} srcset={`/assets/images/store/${s.n}-720.webp 720w, /assets/images/store/${s.n}-1080.webp 1080w`} sizes="(min-width: 768px) 300px, 86vw" alt={s.alt} width="720" height="1564" loading={i < 2 ? "eager" : "lazy"} decoding="async" />
             </figure>
           ))}
         </div>

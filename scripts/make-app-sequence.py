@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The app showcase clip. HONEST LABEL: an animated sequence of real app captures (the Design session's capture set,
+"""Not used at the moment (lead, 29 Sep: removed until a real screen recording exists). The app showcase clip. HONEST LABEL: an animated sequence of real app captures (the Design session's capture set,
 admin/workspace/public/screens in wehale-app, made-up personas), with slow push-ins and cross-fades. It is not a screen
 recording: the only simulator on this machine belongs to another session, and the capture pipeline makes stills.
   python3 scripts/make-app-sequence.py <folder of story-*.png at 720 px>"""
