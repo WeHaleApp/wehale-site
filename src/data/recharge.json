@@ -22,10 +22,12 @@
     "line": "A breathing session made for you. Free in the WeHale app, yours to keep.",
     "session_line": "With {narrator} · {minutes} min",
     "offer_1": "Your first month free.",
-    "cta": "Get the app",
+    "offer_how": "Sign up through this link to claim it.",
+    "offer_how_desktop": "Scan the code with your phone to claim it.",
+    "cta": "Claim your free month",
     "offer_2": "Cancel anytime before the trial ends.",
     "trial": "The free month is a trial through the App Store or Google Play.",
-    "qr": "Scan with your phone's camera to get the app.",
+    "qr": "The free month only comes through this code.",
     "noscript": "Turn on JavaScript to get the app link, or find WeHale in the App Store or Google Play."
   },
   "partner_logo": {

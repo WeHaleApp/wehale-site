@@ -61,6 +61,9 @@ body.rc :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .rc-qrcode { width: 168px; height: 168px; background: #fff; border-radius: 14px; padding: 10px; margin: 0 auto; }
 .rc-qrcode svg { display: block; width: 100%; height: 100%; }
 .rc-qr figcaption { margin-top: 12px; font: 600 14px/1.45 var(--font); color: var(--t2); max-width: 26ch; margin-inline: auto; text-wrap: balance; }
+.rc-how { margin-top: 6px !important; font: 600 15px/1.4 var(--font); color: var(--t2); max-width: 40ch !important; text-wrap: balance; }
+.rc-how-d { display: none; }
+body.rc-qr-on .rc-how-m { display: none; } body.rc-qr-on .rc-how-d { display: block; }
 body.rc-qr-on .rc-btn { display: none; }   /* on a desktop the QR code is the way to the app */
 
 /* the consent bar (its measured room) never covers the button or the fine print */
