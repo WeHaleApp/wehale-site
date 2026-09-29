@@ -1,0 +1,92 @@
+---
+/**
+ * About, redesign proposal. The current page's content, once (the bios were shown twice), without
+ * the placeholder line about photos, and without "a calmer nervous system" as an outcome.
+ */
+import RedesignLayout from "../../layouts/RedesignLayout.astro";
+import StoreButtons from "../../components/redesign/StoreButtons.astro";
+import OfferLine from "../../components/redesign/OfferLine.astro";
+import { BREATHE_URL } from "../../components/redesign/links";
+
+const people = [
+  { name: "Edvin", role: "Co-founder · the voice in the sessions", bio: "Years of personal breathwork practice and live group sessions. Curates the catalogue and teaches the techniques behind it." },
+  { name: "Philip Sigfridsson", role: "Co-founder", bio: "Years of breathwork practice and group facilitation. Keeps the product close to the practice as it actually works." },
+  { name: "Isak Gustafsson", role: "Co-founder", bio: "Computer science background and ten years at Precis, Sweden's largest media-tech agency, working with global app teams. Builds the app and runs growth." },
+];
+---
+
+<RedesignLayout title="About WeHale" description="The people behind WeHale, a guided breathing app made in Varberg, Sweden." current="about">
+
+  <section class="relative isolate overflow-hidden">
+    <div class="absolute inset-0 -z-10" aria-hidden="true">
+      <img src="/redesign-preview/img/forest-dawn.webp" alt="" class="h-full w-full object-cover object-[50%_60%]" data-parallax fetchpriority="high" />
+      <div class="absolute inset-0 bg-gradient-to-b from-[var(--color-bg)]/70 via-[var(--color-bg)]/55 to-[var(--color-bg)]"></div>
+    </div>
+    <div class="mx-auto flex min-h-[72svh] max-w-6xl flex-col justify-end px-5 pb-14 pt-40 md:min-h-[70vh] md:px-6 md:pb-24">
+      <p class="t-caption hero-in" style="--d:0ms">About</p>
+      <h1 class="t-display hero-in mt-4 max-w-3xl" style="--d:120ms">Built from the breath up.</h1>
+      <p class="t-body hero-in mt-5 max-w-xl" style="--d:260ms" data-was="Three co-founders started WeHale because the breathwork app we wanted didn't exist: credible, calm, technique-first.">
+        Three co-founders, two of whom have taught breathing for years, started WeHale because they wanted an app that was calm, plain and honest about what it is.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-16 md:px-6 md:py-24">
+    <div class="grid gap-10 md:grid-cols-[1fr_1.2fr] md:gap-16">
+      <div>
+        <p class="t-caption" data-reveal>Why breathing</p>
+        <h2 class="t-title1 mt-4" data-reveal data-was="Why breathwork specifically.">The breath first, everything else after.</h2>
+      </div>
+      <div class="grid gap-5" data-reveal>
+        <p class="t-body" data-was="Most wellness apps treat the breath as a feature. We treat it as the foundation. Every session is built around a real technique with a real physiological intent. Not a generic relaxation track with breathing cues bolted on.">
+          In WeHale the breath isn't a feature added to something else. Every session is built around one named technique, and the voice, music and pace follow from it.
+        </p>
+        <p class="t-body" data-was="Five minutes a day, done with attention, compounds. That's the whole thesis. The app exists to make those five minutes easy enough to actually do.">
+          A few attentive minutes are easier to fit into a day than an hour. The app is there to make those minutes easy to start, and easy to come back to after a break.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-[var(--color-bg-raised)]">
+    <div class="mx-auto max-w-6xl px-5 py-16 md:px-6 md:py-24">
+      <h2 class="t-title1" data-reveal data-was="The team. Small group, focused work. We'll add real photos once everyone's camera-ready.">The people.</h2>
+      <div class="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
+        {people.map((p, i) => (
+          <article class="glass p-6 md:p-7" data-reveal style={`--i:${i}`}>
+            <h3 class="t-title2">{p.name}</h3>
+            <p class="t-caption mt-2">{p.role}</p>
+            <p class="t-body mt-4">{p.bio}</p>
+          </article>
+        ))}
+      </div>
+      <p class="t-foot mt-6" data-reveal>With Martin Wikfalk as advisor.</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-16 md:px-6 md:py-24">
+    <div class="grid gap-12 md:grid-cols-2 md:gap-16">
+      <div>
+        <h2 class="t-title2" data-reveal>Made in Varberg, Sweden.</h2>
+        <p class="t-body mt-4 max-w-md" data-reveal data-was="Built locally, for anyone who wants a calmer nervous system on the other side of five quiet minutes.">A small team on the west coast, making something for anyone who wants a few quiet minutes in their day.</p>
+      </div>
+      <div>
+        <h2 class="t-title2" data-reveal>Say hello.</h2>
+        <p class="t-body mt-4 max-w-md" data-reveal>Press, partnerships, investors, or just hello. We read everything.</p>
+        <p class="mt-5" data-reveal><a href="mailto:hello@wehale.io" class="link text-lg">hello@wehale.io</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-[var(--color-line)]">
+    <div class="mx-auto flex max-w-3xl flex-col items-center px-5 py-20 text-center md:py-28">
+      <h2 class="t-title1" data-reveal>Hear Edvin for yourself.</h2>
+      <p class="t-body mt-4 max-w-md" data-reveal>Six guided minutes, in your browser. Free, no account.</p>
+      <div class="mt-8 flex flex-col items-center gap-4" data-reveal>
+        <a href={BREATHE_URL} class="btn">Try a session</a>
+        <StoreButtons class="justify-center" />
+        <OfferLine />
+      </div>
+    </div>
+  </section>
+</RedesignLayout>
