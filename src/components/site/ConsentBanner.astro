@@ -44,7 +44,7 @@ const COPY = {
     </div>
   </div>
   <form class="whc-set" data-view="settings" hidden>
-    <p class="whc-h" data-t="heading">{COPY.en.heading}</p>
+    <div class="whc-hrow"><p class="whc-h" data-t="heading" tabindex="-1">{COPY.en.heading}</p><button type="button" class="whc-x" data-act="close" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <label class="whc-opt">
       <span><b data-t="analytics">{COPY.en.analytics}</b><small data-t="analyticsSub">{COPY.en.analyticsSub}</small></span>
       <input type="checkbox" name="analytics" role="switch" />
@@ -103,7 +103,14 @@ const COPY = {
   .whc-b:active { transform: scale(.97); }
   .whc-link { appearance: none; display: block; min-height: 44px; min-width: 44px; padding: 0 8px; border: 0; background: none; cursor: pointer;
     color: var(--whc-t2); font-family: inherit; font-weight: 600; font-size: 14px; line-height: 1; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--whc-line); }
-  .whc-h { color: var(--whc-ink); font-weight: 700; margin-bottom: 6px !important; }
+  .whc-hrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .whc-h { color: var(--whc-ink); font-weight: 700; margin: 0 !important; outline: none; }
+  .whc-x { appearance: none; border: 0; background: none; color: var(--whc-t2); width: 44px; height: 44px; margin: -8px -10px -8px 0; display: grid; place-items: center; cursor: pointer; border-radius: 50%; }
+  .whc-x:hover { color: var(--whc-ink); }
+  .whc-opt input:focus-visible { outline: 2px solid #45b5a0; outline-offset: 3px; }
+  /* /breathe: the bar takes the session's world, so it belongs to the scene */
+  body[data-world="water"] .whc[data-tone="warm"] { --whc-bg: linear-gradient(180deg, rgba(10, 30, 32, .96), rgba(5, 16, 18, .98)); --whc-ink: #eef6f4; --whc-t2: rgba(238, 246, 244, .8); --whc-line: rgba(238, 246, 244, .28); }
+  body[data-world="night"] .whc[data-tone="warm"] { --whc-bg: linear-gradient(180deg, rgba(20, 22, 44, .96), rgba(9, 10, 24, .98)); --whc-ink: #eef1ff; --whc-t2: rgba(238, 241, 255, .8); --whc-line: rgba(238, 241, 255, .26); }
   .whc-opt { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, .07); cursor: pointer; }
   .whc-opt span { display: grid; gap: 2px; }
   .whc-opt b { color: var(--whc-ink); font-weight: 600; }
@@ -117,6 +124,7 @@ const COPY = {
   .whc-opt input:checked::after { transform: translateX(18px); }
   .whc-done { color: var(--whc-ink); }
   .whc :focus-visible { outline: 2px solid var(--whc-ink); outline-offset: 2px; }
+  .whc .whc-h:focus, .whc .whc-h:focus-visible { outline: none; }
   @media (prefers-reduced-motion: reduce) { .whc { animation: none; } .whc-b, .whc-opt input, .whc-opt input::after { transition: none; } }
 </style>
 
@@ -148,7 +156,7 @@ const COPY = {
     view(settings ? "settings" : "ask");
     root.querySelector("[data-act=settings]")!.setAttribute("aria-expanded", String(settings));
     root.hidden = false;
-    if (settings) box("analytics").focus({ preventScroll: true });
+    if (settings) (root.querySelector(".whc-h") as HTMLElement).focus({ preventScroll: true });
   }
   function done(state: { analytics: boolean; ads: boolean }, confirm = false) {
     save(state); scrim.hidden = true;
@@ -161,6 +169,7 @@ const COPY = {
   form.addEventListener("submit", (e) => { e.preventDefault(); done({ analytics: box("analytics").checked, ads: box("ads").checked }, true); });
   const back = () => { scrim.hidden = true; root.classList.remove("is-set"); if (current()) root.hidden = true; else view("ask"); };
   scrim.addEventListener("click", back);
+  root.querySelector("[data-act=close]")!.addEventListener("click", back);
   addEventListener("keydown", (e) => { if (e.key === "Escape" && !root.hidden && root.classList.contains("is-set")) back(); });
 
   // the footer link (and any [data-consent-open]) reopens the choice at any time

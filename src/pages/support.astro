@@ -5,7 +5,7 @@ import { BREATHE_URL, OFFER_LINE } from "../components/site/links";
 
 const title = "Support · WeHale";
 const description =
-  "Get help with the WeHale app: what's free, subscriptions on iPhone and Android, and technical questions. We usually reply within one business day.";
+  "Get help with the WeHale app: what’s free, subscriptions on iPhone and Android, and technical questions. We usually reply within one business day.";
 ---
 
 <BaseLayout title={title} description={description} page="support" current="support" ogImage="/assets/images/og/support.jpg" solidHeader>
@@ -19,7 +19,7 @@ const description =
 
     <h2>Common questions</h2>
 
-    <h3>What's free?</h3>
+    <h3>What’s free?</h3>
     <p>
       {OFFER_LINE} After that, three sessions stay free: The Wake Up, Unravel and
       The Soft Reboot. You can also <a href={BREATHE_URL} data-try data-at="support">try a session in your browser</a>, with no account.
@@ -39,23 +39,30 @@ const description =
     <h3>How do I restore a previous purchase?</h3>
     <p>
       In the WeHale app, go to <strong>Profile → Settings → Restore
-      Purchases</strong>. Make sure you're signed in with the same Apple ID or Google account
+      Purchases</strong>. Make sure you’re signed in with the same Apple ID or Google account
       you used for the original purchase.
     </p>
 
-    <h3>The audio won't play. What do I do?</h3>
+    <h3>The audio won’t play. What do I do?</h3>
     <p>
-      Check that your device isn't in silent mode and that the volume is up.
-      If a session still won't load, close and reopen the app: sessions are
+      Check that your device isn’t in silent mode and that the volume is up.
+      If a session still won’t load, close and reopen the app: sessions are
       streamed and a brief connection drop can interrupt loading. Downloaded
       sessions in your Library play offline.
+    </p>
+
+    <h3>What happens to my data?</h3>
+    <p>
+      Andningsappen Varberg AB is the data controller. On this website nothing is measured unless you accept in the
+      banner, and you can change that any time under <strong>Privacy choices</strong> at the bottom of every page. What the
+      app stores, and why, is in our <a href="/privacy">privacy policy</a>.
     </p>
 
     <h3>How do I delete my account and data?</h3>
     <p>
       In the app: <strong>Profile → Settings → Delete account</strong>. This
       permanently removes your account and associated data. You can also
-      email us and we'll handle it for you. See our
+      email us and we’ll handle it for you. See our
       <a href="/privacy">privacy policy</a> for details on what we store.
     </p>
 

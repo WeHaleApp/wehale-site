@@ -462,8 +462,8 @@ body.g-edge #silk, body.g-edge #stage { filter: contrast(1.18) saturate(1.25); }
 }
 body[data-v^="g"] .ysub { white-space: pre-line; }
 /* g, arriving from an ad: the ad chose the session, so the arrows step aside (swipe and the dots stay) */
-body.g-hooked .gstep { visibility: hidden; }
-body.g-hooked .gdots { opacity: .7; }
+body.g-hooked .gnav, body.g-hooked .ghint { display: none; }   /* the ad chose the session: swipe still works, nothing asks for a choice */
+body[data-v^="g"] .ghint { display: none; }                    /* the arrows are the affordance; no second one */
 /* the challenger's room runs hotter than the foggy one's: redder fire, more contrast */
 body.g-edge #silk, body.g-edge #stage { filter: contrast(1.28) saturate(1.45) hue-rotate(-12deg) !important; }
 body[data-v^="g"] .ylede h1 { text-wrap: balance; max-width: 352px !important; }

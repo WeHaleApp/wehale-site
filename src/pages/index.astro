@@ -81,14 +81,14 @@ const ld = {
       <div>
         <p class="t-caption" data-reveal>Your guides</p>
         <h2 class="t-title1 mt-4" data-reveal>Two voices. Years of practice.</h2>
-        <p class="t-body mt-5 max-w-md" data-reveal>Edvin and Philip have practised breathwork and led live group sessions for years. They wrote and voice the sessions. Sound on, and follow the light: it rises as you breathe in.</p>
+        <p class="t-body mt-5 max-w-md" data-reveal>Edvin and Philip have practised breathwork and led live group sessions for years. They wrote the sessions and guide you through them, voice first: sound on, and follow the light as it rises with your breath in.</p>
         <div class="mt-8 grid gap-3 sm:grid-cols-2" data-reveal>
           <div class="glass p-5"><p class="t-title3">Edvin</p><p class="t-foot mt-1">Co-founder · guides The Wake Up and Unravel</p></div>
           <div class="glass p-5"><p class="t-title3">Philip Sigfridsson</p><p class="t-foot mt-1">Co-founder · guides The Soft Reboot</p></div>
         </div>
         <p class="mt-6" data-reveal><a href="/about" class="link tap">Meet the team</a></p>
       </div>
-      <a href={BREATHE_URL} class="flex justify-center" aria-hidden="true" tabindex="-1" data-try data-at="guides_sphere">
+      <a href={BREATHE_URL} class="hidden justify-center md:flex" aria-hidden="true" tabindex="-1" data-try data-at="guides_sphere">
         <div class="sphere-field flex aspect-square w-[70%] max-w-[380px] items-center justify-center rounded-full">
           <div class="sphere w-[46%]"></div>
         </div>
@@ -103,16 +103,16 @@ const ld = {
         <p class="t-caption" data-reveal>Three to start with</p>
         <h2 class="t-title1 mt-4 max-w-xl" data-reveal>Pick one for right now.</h2>
       </div>
-      <p class="t-body mt-5 max-w-md md:mt-0" data-reveal>Each is six minutes, free in your browser, and stays free in the app. The app has many more, most five to fifteen minutes.</p>
+      <p class="t-body mt-5 max-w-md md:mt-0" data-reveal>Each is six minutes, free in your browser, and stays free in the app. The app has 27 short sessions and 10 longer journeys and courses, on iPhone and Android.</p>
     </div>
     <div class="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3 md:gap-4">
       {web.map((s, i) => (
         <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card group relative block aspect-[4/3] sm:aspect-[3/4]" data-reveal style={`--i:${i}`} data-try data-at={`library_${s.slug}`}>
-          <img src={`/assets/images/sessions/graded-${s.slug}-800.webp`} srcset={`/assets/images/sessions/graded-${s.slug}-480.webp 480w, /assets/images/sessions/graded-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+          <img src={`/assets/images/sessions/orb-${s.slug}-800.webp`} srcset={`/assets/images/sessions/orb-${s.slug}-480.webp 480w, /assets/images/sessions/orb-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
           <span class="absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/85 via-black/45 to-transparent p-5 pt-16">
             <span class="block text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-white/80">{s.cat} · 6 min · with {s.narrator}</span>
             <span class="mt-1 flex items-center justify-between gap-3 text-xl font-semibold">{s.title}<svg class="h-5 w-5 shrink-0 opacity-80 transition-transform duration-300 ease-[var(--ease-enter)] group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-            <span class="block text-[15px] text-white/75">Try it here, free</span>
+            <span class="block text-[15px] text-white/75">{s.reason_en}. Try it here, free.</span>
           </span>
         </a>
       ))}

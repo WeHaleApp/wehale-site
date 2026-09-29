@@ -40,7 +40,7 @@ const cols = [
       ))}
     </div>
     <div class="t-foot mt-12 flex flex-col gap-2 border-t border-[var(--color-line)] pt-6 md:flex-row md:justify-between">
-      <p>© 2026 Andningsappen Varberg AB · Org. nr 559496-1491 · Boråsgatan 12 B, 432 45 Varberg, Sweden</p>
+      <p>© 2026 Andningsappen Varberg AB · Org. nr 559496-1491 · Boråsgatan 12 B, 432 45 Varberg, Sweden</p>
       <p>Made with care in Varberg.</p>
     </div>
   </div>
@@ -62,7 +62,7 @@ const cols = [
         if (!res.ok) throw new Error(String(res.status));
         status.textContent = "Thank you. The first letter will find you."; input.value = ""; button.textContent = "Done";
       } catch {
-        status.textContent = "That didn't go through. Please try again."; button.disabled = false; button.textContent = "Subscribe";
+        status.textContent = "That didn’t go through. Please try again."; button.disabled = false; button.textContent = "Subscribe";
       }
     });
   });
