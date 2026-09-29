@@ -195,6 +195,7 @@ dialog.sheet[open] { animation: sheetIn 420ms var(--ease-enter); }
   .swipe.swipe-phones > * { flex-basis: 62%; scroll-snap-align: center; }
 }
 .dots { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+.story + .dots { display: flex; }
 .dots i { width: 7px; height: 7px; border-radius: 4px; background: rgba(242,240,237,.35); transition: width var(--m-fade) var(--curve-enter), background var(--m-fade) var(--curve-enter); }
 .dots i.on { width: 20px; background: rgba(242,240,237,.9); }
 @media (min-width: 768px) { .dots { display: none; } }
@@ -209,3 +210,34 @@ dialog.sheet[open] { animation: sheetIn 420ms var(--ease-enter); }
   opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity var(--m-fade) var(--curve-enter), transform var(--m-fade) var(--curve-enter); }
 .qr-pop.on { opacity: 1; transform: none; }
 .qr-pop svg { display: block; width: 100%; height: auto; margin-bottom: 6px; }
+
+/* ── Home session cards: each orb breathes (4 s in, 6 s out on the breath curve), phases offset, only while in view ── */
+.breathing-card { isolation: isolate; }
+.orb-breath img { transform-origin: 50% 42%; }
+.orb-glow { background: radial-gradient(circle at 50% 42%, var(--glow) 0, transparent 34%); opacity: .35; }
+@media (prefers-reduced-motion: no-preference) {
+  html.motion .breathing-card .orb-breath img { animation: cardBreath 10s var(--curve-breath) infinite; animation-delay: var(--phase, 0s); animation-play-state: paused; }
+  html.motion .breathing-card .orb-glow { animation: cardGlow 10s var(--curve-breath) infinite; animation-delay: var(--phase, 0s); animation-play-state: paused; }
+  html.motion .breathing-card .orb-breath { animation: drift 36s linear infinite; animation-delay: var(--phase, 0s); animation-play-state: paused; }
+  html.motion .breathing-card.in-view .orb-breath img, html.motion .breathing-card.in-view .orb-glow, html.motion .breathing-card.in-view .orb-breath { animation-play-state: running; }
+}
+@keyframes cardBreath { 0% { transform: scale(1); } 40% { transform: scale(1.055); } 100% { transform: scale(1); } }
+@keyframes cardGlow { 0% { opacity: .3; } 40% { opacity: 1; } 100% { opacity: .3; } }
+@keyframes drift { 0% { transform: rotate(0deg) scale(1.04); } 50% { transform: rotate(1.2deg) scale(1.04); } 100% { transform: rotate(0deg) scale(1.04); } }
+.card-play { position: absolute; right: 16px; bottom: 18px; z-index: 2; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 999px;
+  background: var(--color-text); color: var(--color-bg); box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  transition: transform var(--m-press-out) var(--curve-standard), background-color 220ms var(--curve-enter); }
+.card-play svg { width: 20px; height: 20px; margin-left: 3px; }
+.breathing-card:hover .card-play { background: #fff; }
+.breathing-card:active .card-play, .breathing-card.is-pressed .card-play { transform: scale(var(--press-button)); transition-duration: var(--m-press-in); transition-timing-function: var(--curve-enter); }
+
+/* ── The app as a story: one row of phones (the clip first), swipe on phones, arrows on desktop ── */
+.story { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none;
+  padding: 14px 4px 8px; scroll-padding-inline: 4px; -webkit-overflow-scrolling: touch; }
+.story::-webkit-scrollbar { display: none; }
+.story-item { flex: 0 0 auto; width: 62%; max-width: 250px; margin: 0; scroll-snap-align: start; }
+.story-item .phone { display: block; width: 100%; max-width: none; height: auto; aspect-ratio: 540 / 1099; object-fit: cover; }
+.story-item figcaption { margin-top: 14px; text-align: center; font-size: .875rem; font-weight: 600; color: var(--color-text-secondary); }
+.story-nav { display: none; }
+@media (min-width: 768px) { .story-item { width: 30%; } .story-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; } .story + .dots { display: none; } }
+@media (max-width: 767px) { .story { margin-inline: -1.25rem; padding-inline: 1.25rem; scroll-padding-inline: 1.25rem; } }

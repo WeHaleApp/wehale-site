@@ -22,6 +22,16 @@ const CLIPS = { "hero-film": "film", "hero-valley": "valley", "hero-still": "sti
 // The three sessions you can try here, by their app titles, with the app's category (Activate, Balance, Calm).
 const CAT = { "wake-up": "Activate", unravel: "Balance", "soft-reboot": "Calm" };
 const web = SESSIONS.sessions.map((s) => ({ ...s, cat: CAT[s.slug] || "" }));
+// The app, as a story, from the Design session's real captures (made-up personas; wehale-app admin/workspace/public/screens)
+const story = [
+  { f: "story-1-home", cap: "Home", alt: "WeHale Home: good morning, the weekly goal and the next course day" },
+  { f: "story-2-choose", cap: "Choose a session", alt: "WeHale Practice: daily sessions by Activate, Balance and Calm" },
+  { f: "story-3-breathe", cap: "Breathe", alt: "WeHale player: a session starting, with the introduction" },
+  { f: "story-4-closing", cap: "The last minute", alt: "WeHale player: a session closing" },
+  { f: "story-5-after", cap: "After", alt: "WeHale after a session: how you felt before and after" },
+  { f: "story-6-week", cap: "Your week", alt: "WeHale Progress: the weekly practice goal" },
+  { f: "story-7-milestones", cap: "Milestones", alt: "WeHale Progress: milestones earned" },
+];
 const guides = [
   { name: "Edvin", role: "Co-founder · guides The Wake Up and Unravel", voice: "/assets/audio/voice-edvin.m4a", line: "“This is your morning reset.” From The Wake Up." },
   { name: "Philip Sigfridsson", role: "Co-founder · guides The Soft Reboot", voice: "/assets/audio/voice-philip.m4a", line: "“Welcome to this breathwork session.” From The Soft Reboot." },
@@ -101,12 +111,14 @@ const ld = {
       </div>
       <div class="mt-10 grid grid-cols-3 gap-5 swipe" data-swipe tabindex="0" role="region" aria-label="Three sessions, swipe to see all">
         {web.map((s, i) => (
-          <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card press-card group relative block aspect-[3/4]" data-reveal style={`--i:${i}`} data-try data-at={`library_${s.slug}`}>
-            <img src={`/assets/images/sessions/orb-${s.slug}-800.webp`} srcset={`/assets/images/sessions/orb-${s.slug}-480.webp 480w, /assets/images/sessions/orb-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-enter)] group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+          <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card press-card breathing-card group relative block aspect-[3/4]" data-reveal style={`--i:${i};--phase:${-[0, 3.4, 6.8][i]}s;--glow:${s.slug === "wake-up" ? "rgba(255,170,90,.32)" : s.slug === "unravel" ? "rgba(110,220,215,.28)" : "rgba(200,210,255,.24)"}`} data-try data-card-play={s.slug} data-at={`library_${s.slug}`} aria-label={`${s.title}, with ${s.narrator}. Play · 6 min`}>
+            <span class="orb-breath absolute inset-0" aria-hidden="true"><img src={`/assets/images/sessions/orb-${s.slug}-800.webp`} srcset={`/assets/images/sessions/orb-${s.slug}-480.webp 480w, /assets/images/sessions/orb-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="h-full w-full object-cover" loading="lazy" decoding="async" /></span>
+            <span class="orb-glow absolute inset-0" aria-hidden="true"></span>
+            <span class="card-play" title="Play · 6 min" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></span>
             <span class="absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/85 via-black/40 to-transparent p-5 pt-16">
               <span class="block text-[0.75rem] font-bold uppercase tracking-[0.12em] text-white/80">{s.cat} · 6 min · with {s.narrator}</span>
-              <span class="mt-1 flex items-center justify-between gap-3 text-xl font-semibold">{s.title}<svg class="h-5 w-5 shrink-0 opacity-80 transition-transform duration-300 ease-[var(--ease-enter)] group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-              <span class="block text-[16px] text-white/80">{s.reason_en}</span>
+              <span class="mt-1 block pr-16 text-xl font-semibold">{s.title}</span>
+              <span class="block pr-16 text-[16px] text-white/80">{s.reason_en}</span>
             </span>
           </a>
         ))}
@@ -145,7 +157,7 @@ const ld = {
 
   <!-- ─── 5. The app ─── -->
   <section class="sec" id="app">
-    <div class="wrap grid items-center gap-10 md:grid-cols-[1fr_1.3fr] md:gap-16">
+    <div class="wrap grid items-center gap-10 md:grid-cols-[1fr_1.6fr] md:gap-12">
       <div>
         <p class="t-caption" data-reveal>The app</p>
         <h2 class="t-title1 mt-4" data-reveal>Everything, when you want more.</h2>
@@ -155,13 +167,24 @@ const ld = {
         </div>
         <OfferLine class="mt-4" />
       </div>
-      <div>
-      <div class="showcase swipe swipe-phones" data-reveal data-swipe tabindex="0" role="region" aria-label="Screens from the WeHale app, swipe to see all">
-        <img src="/assets/images/screens/app-practice-540.webp" alt="WeHale, the Practice screen with daily sessions" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-l" />
-        <img src="/assets/images/screens/app-home-540.webp" alt="WeHale, the Home screen with the intro course" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-c" />
-        <img src="/assets/images/screens/app-player-540.webp" alt="WeHale, a session playing" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-r" />
-      </div>
-      <div class="dots" aria-hidden="true"></div>
+      <div class="min-w-0">
+        <div class="story" data-swipe tabindex="0" role="region" aria-label="The WeHale app, screen by screen. Swipe or use the arrow keys.">
+          <figure class="story-item">
+            <video class="phone story-video" muted loop playsinline preload="none" poster="/assets/video/app/app-sequence-poster.jpg" data-lazy-video="/assets/video/app/app-sequence.mp4" width="540" height="1100" aria-label="The app in motion: Home, choosing a session, the player, the after screen and your week"></video>
+            <figcaption>The app, in motion</figcaption>
+          </figure>
+          {story.map((s) => (
+            <figure class="story-item">
+              <img src={`/assets/images/screens/${s.f}-540.webp`} alt={s.alt} width="540" height="1099" loading="lazy" decoding="async" class="phone" />
+              <figcaption>{s.cap}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <div class="dots" aria-hidden="true"></div>
+        <div class="story-nav" aria-hidden="true">
+          <button type="button" class="btn-quiet !min-h-[44px] !w-11 !p-0" data-story="-1" tabindex="-1" aria-label="Previous screen"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.5 6l-6 6 6 6"/></svg></button>
+          <button type="button" class="btn-quiet !min-h-[44px] !w-11 !p-0" data-story="1" tabindex="-1" aria-label="Next screen"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.5 6l6 6-6 6"/></svg></button>
+        </div>
       </div>
     </div>
   </section>

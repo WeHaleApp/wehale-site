@@ -79,7 +79,10 @@ document.querySelectorAll("[data-store]").forEach((a) => a.addEventListener("cli
   const p = params({ at: a.dataset.at || "page", store: a.dataset.store });
   send("AppTap", p); send("Lead", { ...p, content_name: "app" });
 }));
-document.querySelectorAll("[data-try]").forEach((a) => a.addEventListener("click", () => send("TrySessionTap", params({ at: a.dataset.at || "page" }))));
+document.querySelectorAll("[data-try]").forEach((a) => a.addEventListener("click", () => {
+  send("TrySessionTap", params({ at: a.dataset.at || "page" }));
+  if (a.dataset.cardPlay) send("SessionCardPlay", params({ session: a.dataset.cardPlay, at: a.dataset.at }));
+}));
 
 // ---- motion: reveals in reading order, press feel, swipe rows (motion.js) ----
 startMotion();
