@@ -4,16 +4,18 @@ The path is one config value, `route` in `src/data/recharge.json` (today `rechar
 (`src/pages/[campaign].astro`), the sitemap exclusion, the noindex headers (written into `dist/_headers` at build,
 `astro.config.mjs`) and the QR codes all follow it.
 
-Look: arrival and offer in the partner's light editorial style (Salty white #F4F3F1, Potassium black #0A0A0A type,
-Magnesium greige #DCD8D3 rules, square buttons, blackcurrant the only colour); the session stays dark with the
-berry world; Begin dims the light room in one calm 1.8 s fade. WeHale's Nunito Sans until the partner's fonts arrive.
+One "get the app" page (Isak, 29 Sep): the campaign session lives only in the WeHale app, so there is no web session
+here. On the wehale.io look: the deep navy ground, a calm orb that breathes slowly (still with reduced motion), Nunito
+Sans, one white pill; the campaign shows only as the small co-brand lockup and blackcurrant as a quiet accent.
 
-Every outside link and QR code of the campaign points here. Arrival (co-brand lockup, title, one line, **Begin**) →
-the session in the browser (the /breathe Tide player, `src/components/breathe/PlayerStage.astro` + `player.js`) →
-the offer: "First month free, then 499 kr per year. Cancel anytime before the trial ends." and one button.
+Every outside link and QR code of the campaign points here. The screen, in order: the lockup; "Charge Your Current"
+and one line (a breathing session made for you, free in the WeHale app, yours to keep) with the guide and the length;
+the offer, "First month free, then 499 kr per year."; **Get the app** (the OneLink with the code); the fine print,
+"Cancel anytime before the trial ends." and that the free month is a trial through the App Store or Google Play. On a
+desktop, a QR code of the same link replaces the button.
 
 Files: `src/pages/[campaign].astro`, `src/scripts/recharge/{app,link}.js`, `src/styles/recharge.css`,
-`src/data/recharge.json` (everything that changes), `scripts/recharge-qr.mjs`, `tests/recharge.test.js`.
+`src/data/recharge.json` (everything that changes, all the words), `scripts/recharge-qr.mjs`, `tests/recharge.test.js`.
 
 ## URL parameters
 | Param | Meaning |
@@ -22,12 +24,11 @@ Files: `src/pages/[campaign].astro`, `src/scripts/recharge/{app,link}.js`, `src/
 | `ch` | `newsletter`, `flyer`, `pdp`, `influencer` → `af_sub1` (anything else: `web`) |
 | `c` | the code → `deep_link_value` (default `RECHARGE`); influencers' personal codes arrive this way |
 | `utm_*`, `h`, `v`, `src` | the site's parameter contract (`src/scripts/contract.js`), as on /breathe |
-| `screen=offer` (`&done=1`) | review aid: open the offer directly |
 
 The OneLink: `https://wehale.onelink.me/zcid?pid=<pid>&c=recharge&deep_link_value=<CODE>&af_sub1=<ch>`, plus
 `af_channel` (utm_source), `af_ad` (utm_content), `af_adset` (h), `af_sub5` (`at=…;med=…;camp=…`). A
 `utm_campaign` never replaces `c=recharge`. The app applies `deep_link_value` at sign-up (email, Apple, Google).
-On desktop the offer shows a QR code of the same link. Nobody is ever asked to type a code.
+On desktop the page shows a QR code of the same link instead of the button (`af_sub5` `at=qr`). Nobody is ever asked to type a code.
 
 ## Codes (live on the server 29 Sep; the app side ships in 2.7.9)
 | Channel | Code | How it arrives |
@@ -41,13 +42,10 @@ they live in `channel-codes.json` in the confidential folder and reach the QR sc
 
 ## Placeholders
 - **pid:** `partner_campaign`, a config choice for the lead and the owner of main (`onelink.pid`).
-- **Session:** The Wake Up (Edvin) stands in. When the real session is recorded: `score.json` and `audio.mp3` into
-  `public/recharge/session/`, then `session.score`, `session.audio`, `narrator`, `minutes`, `start` (about 1 s
-  before the guide's first word) in `recharge.json`, and `stand_in: false`.
-- **World:** `blackcurrant`, a Tide-field stand-in in the campaign's palette (Isak, 29 Sep). The campaign's own Cell
-  visual (recharge-visual branch) replaces it once integrated; `session.world` is the switch.
-- **Partner logo:** `public/recharge/partner-logo.svg` is a dashed placeholder (black, for the light ground; the
-  WeHale logo there is `public/recharge/wehale-logo-black.svg`). Replace the file (same name), or
+- **Session:** the page names the app's campaign session from `session` in `recharge.json` (today the stand-in
+  values, Edvin, 6 min). When the real session is set, update `narrator` and `minutes`, and `stand_in: false`.
+- **Partner logo:** `public/recharge/partner-logo.svg` is a dashed placeholder (black, for a light ground) and
+  `partner-logo-white.svg` (white, used on the page's navy). Replace the file (same name), or
   set `partner_logo.src`/`width`/`height`. The design session supplies the real lockup.
 
 ## The gate (until launch): obscurity, not security

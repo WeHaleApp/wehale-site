@@ -1,16 +1,17 @@
 ---
 /**
  * wehale.io/<route> (today /recharge; the route is DATA.route): the campaign landing page. CONFIDENTIAL until launch (docs/recharge/README.md).
- * Arrival (co-brand lockup, the title, one line, Begin) -> the session in the browser (the /breathe Tide player) -> the
- * offer (two lines, one button: an AppsFlyer OneLink carrying the code; on desktop a QR code of the same link).
- * Everything that changes is in src/data/recharge.json: the gate, the session (a stand-in today), the copy, the code.
+ * One "get the app" page (Isak, 29 Sep: the campaign session lives only in the app): the co-brand lockup, the session
+ * as the hero (free in the app, theirs to keep), the offer, "Get the app" (an AppsFlyer OneLink carrying the code; on desktop a
+ * QR code of the same link), the fine print. On the wehale.io look: navy, Nunito Sans, a calm orb, one white pill.
+ * Everything that changes is in src/data/recharge.json: the gate, the session's name, the copy, the code.
  * The gate: with gate.on, the page shows only with ?k=<key>; without it, the site's 404 (obscurity, not security).
  */
 import BreatheLayout from "../layouts/BreatheLayout.astro";
-import PlayerStage from "../components/breathe/PlayerStage.astro";
 import "../styles/breathe.css";
 import "../styles/recharge.css";
 import DATA from "../data/recharge.json";
+import { campaignLink } from "../scripts/recharge/link.js";
 import fs from "node:fs";
 
 // one config value sets the path (src/data/recharge.json: route)
@@ -20,7 +21,10 @@ const S = DATA.session, T = DATA.copy, P = DATA.partner_logo;
 // the partner's real logo only where it exists locally (gitignored); everywhere else the committed placeholder
 const LOCAL = fs.existsSync("public" + P.local) && fs.existsSync("public" + P.local_dark);
 const L = LOCAL ? { ...P, src: P.local, src_dark: P.local_dark, width: P.local_width, height: P.local_height } : P;
-const line = T.line.replace(/\{minutes\}/g, String(S.minutes)).replace(/\{narrator\}/g, S.narrator);   // the guide from the session data
+const fill = (t) => String(t || "").replace(/\{minutes\}/g, String(S.minutes)).replace(/\{narrator\}/g, S.narrator);   // the guide and length from the session data
+const meta = fill(T.session_line);   // "With {narrator} · {minutes} min"
+// the button works before the script runs: the default link (the app sets this visit's own channel and code on top)
+const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "offer" }) || "#";
 // The gate runs before first paint: the page stays invisible until the key checks out, else the 404 replaces it.
 const gate = DATA.gate.on ? `(function(){var d=document.documentElement;d.classList.add("rc-locked");
 var S=${JSON.stringify(DATA.gate.salt)},H=${JSON.stringify(DATA.gate.sha256)},K="wehale.rc.k",q=new URLSearchParams(location.search),k=q.get("k"),st=null;
@@ -33,70 +37,38 @@ if(k){q.delete("k");var s=q.toString();history.replaceState(null,"",location.pat
 d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promise.resolve(true);`;
 ---
 
-<BreatheLayout title={`${T.title} · WeHale`} description={line} hidden themeColor="#F4F3F1">
+<BreatheLayout title={`${T.title} · WeHale`} description={`${T.line} ${T.offer_1}`} hidden themeColor="#090f1d">
   <Fragment slot="head">
-    <style is:inline>html{background:#F4F3F1}html.rc-locked body{visibility:hidden}</style>
+    <style is:inline>html{background:#090f1d}html.rc-locked body{visibility:hidden}</style>
     <script is:inline set:html={gate} />
-    <link rel="preload" as="image" href={L.src} />
+    <link rel="preload" as="image" href={L.src_dark} />
   </Fragment>
-  <PlayerStage />
 
-  <!-- The light room: the arrival and the offer sit on the partner's light editorial ground; Begin dims it in one
-       calm fade into the dark session, and the offer brings it back. -->
-  <div class="rc-light" id="rcLight" aria-hidden="true"></div>
+  <!-- the room: a still field of faint motes and one calm orb that breathes slowly (still with reduced motion) -->
+  <div class="rc-sky" aria-hidden="true"></div>
 
-  <!-- 1. Arrival: the lockup, the title, one line, Begin -->
-  <main class="screen rc-arrive" id="arriveScr" aria-labelledby="arriveH">
+  <main class="rc-page" id="rcMain" aria-labelledby="rcH">
     <div class="rc-lockup" aria-label={`WeHale × ${L.alt}`}>
-      <img src={L.wehale_src} alt="WeHale" width="96" height="20" />
+      <img src={L.wehale_src_dark} alt="WeHale" width="96" height="20" />
       <i aria-hidden="true">×</i>
-      <img class="rc-partner" src={L.src} alt={L.alt} width={L.width} height={L.height} />
+      <img class="rc-partner" src={L.src_dark} alt={L.alt} width={L.width} height={L.height} />
     </div>
-    <div class="inner">
-      <i class="rc-berry" aria-hidden="true"></i>
-      <p class="rc-kick">{T.kicker}</p>
-      <h1 id="arriveH">{T.title}</h1>
-      <p class="rc-line">{line}</p>
-      <button class="rc-btn rc-begin" id="beginBtn" type="button">{T.begin}</button>
-      <span class="startlbl" id="beginLbl" aria-live="polite"></span>
-      <p class="rc-fine">{T.safety}</p>
-      <button class="rc-link rc-skip" id="skipBtn" type="button">{T.skip}</button>
-    </div>
-  </main>
-  <p class="safecap" id="safeCap" hidden>Breathe at your own pace. Stop if you feel dizzy.</p>
-
-  <!-- 2. The offer: after the session, after leaving it, or straight from "Skip the session" -->
-  <section class="screen gone rc-offer" id="offerScr" aria-labelledby="offerH">
-    <div class="rc-lockup" aria-hidden="true">
-      <img src={L.wehale_src} alt="" width="96" height="20" />
-      <i>×</i>
-      <img class="rc-partner" src={L.src} alt="" width={L.width} height={L.height} />
-    </div>
-    <div class="inner rc-card">
-      <div class="rc-copy">
-        <p class="rc-kick">{T.kicker}</p>
-        <h1 id="offerH" data-done={T.done} data-title={T.title}>{T.title}</h1>
-        <p class="rc-o1">{T.offer_1}</p>
-        <p class="rc-o2">{T.offer_2}</p>
-        <a class="rc-btn rc-cta" id="ctaBtn" href="#" rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
-        <p class="rc-store" id="ctaStore" data-ios={T.cta_ios} data-android={T.cta_android}></p>
-      </div>
+    <div class="rc-orb" aria-hidden="true"><i></i><b></b></div>
+    <div class="rc-body">
+      <h1 id="rcH">{T.title}</h1>
+      <p class="rc-line">{T.line}</p>
+      <p class="rc-only">{meta}</p>
+      <p class="rc-deal">{T.offer_1}</p>
+      <a class="rc-btn" id="ctaBtn" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
       <figure class="rc-qr" id="qrBox" hidden>
         <div class="rc-qrcode" id="qrCode" role="img" aria-label="QR code for the app link"></div>
         <figcaption>{T.qr}</figcaption>
       </figure>
-      <button class="rc-link rc-again" id="sessBtn" type="button" data-first={T.begin_from_offer} data-again={T.again} data-back={T.back}>{T.begin_from_offer}</button>
+      <p class="rc-fine"><span>{T.offer_2}</span> <span>{T.trial}</span></p>
     </div>
-  </section>
+  </main>
 
-  <!-- in the session, on the dark: the same lockup in white (it hides while the controls show, as the logo does on /breathe) -->
-  <div class="rc-lockup rc-sess" aria-hidden="true">
-    <img src={L.wehale_src_dark} alt="" width="96" height="20" />
-    <i>×</i>
-    <img class="rc-partner" src={L.src_dark} alt="" width={L.width} height={L.height} />
-  </div>
-
-  <noscript><p class="noscript">This session needs JavaScript turned on.</p></noscript>
+  <noscript><p class="noscript">{T.noscript}</p></noscript>
   <script>
     import "../scripts/recharge/app.js";
   </script>

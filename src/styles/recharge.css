@@ -1,96 +1,88 @@
-/* The campaign page (src/pages/[campaign].astro), on top of breathe.css.
-   Arrival and offer: the partner's light editorial look (premium, Scandinavian, minimal, square): Salty white ground,
-   Potassium black type, Magnesium greige lines, generous whitespace, blackcurrant the only colour. WeHale's type
-   (Nunito Sans) until the partner's font files arrive.
-   The session: dark (Potassium black) with the berry world; Begin dims the light room in one calm fade. */
-:root {
-  --salty: #F4F3F1; --potassium: #0A0A0A; --greige: #DCD8D3; --hydration: #76B0F5;
-  --berry: #4A1D3F;   /* blackcurrant: the one colour on the light screens */
-  --ink-l: #0A0A0A; --t2-l: rgba(10, 10, 10, .68); --t3-l: rgba(10, 10, 10, .52);
-}
-html:has(body.rc) { background: var(--salty); }
-body.rc { --ground: var(--potassium); --accent: #d9b3cc; background: var(--potassium); }
+/* The campaign page (src/pages/[campaign].astro), on top of breathe.css (its fonts and tokens). One "get the app" page
+   on the wehale.io look (Isak, 29 Sep: "own the design, make it more WeHale-like"): the deep navy ground, one calm orb,
+   Nunito Sans, one white pill. The campaign shows only as the small co-brand lockup and blackcurrant as a quiet accent
+   (the orb's inner light). */
+:root { --navy: #090f1d; --berry: #4A1D3F; --berry-l: #D9B3CC; }
+html:has(body.rc), body.rc { background: var(--navy); }
+/* a document page, not the player: it scrolls if a short screen (or the consent bar) needs it */
+html:has(body.rc) { height: auto; overflow: auto; }
+body.rc { position: static; height: auto; min-height: 100%; overflow: visible; overscroll-behavior: auto; --ground: var(--navy); }
+body.rc :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
-/* the light room: over the canvases and the player controls, under the screens; one calm fade (the lights dimming) into the session */
-.rc-light { position: fixed; inset: 0; z-index: 5; background: var(--salty); pointer-events: none;
-  transition: opacity 1.8s cubic-bezier(.45, 0, .25, 1), visibility 0s linear 0s; }
-body.rc-dim .rc-light { opacity: 0; visibility: hidden; transition: opacity 1.8s cubic-bezier(.45, 0, .25, 1), visibility 0s linear 1.8s; }
+/* the room: faint motes, still; a soft navy light from above */
+.rc-sky { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 12% 18%, rgba(242, 240, 237, .5), transparent 60%), radial-gradient(1px 1px at 78% 12%, rgba(242, 240, 237, .4), transparent 60%),
+    radial-gradient(1.5px 1.5px at 64% 30%, rgba(217, 179, 204, .45), transparent 60%), radial-gradient(1px 1px at 30% 40%, rgba(242, 240, 237, .3), transparent 60%),
+    radial-gradient(1px 1px at 88% 46%, rgba(242, 240, 237, .35), transparent 60%), radial-gradient(1.5px 1.5px at 8% 58%, rgba(217, 179, 204, .35), transparent 60%),
+    radial-gradient(1px 1px at 52% 8%, rgba(242, 240, 237, .3), transparent 60%), radial-gradient(1px 1px at 22% 74%, rgba(242, 240, 237, .22), transparent 60%),
+    radial-gradient(1px 1px at 92% 70%, rgba(242, 240, 237, .22), transparent 60%),
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(40, 56, 96, .45), rgba(9, 15, 29, 0) 70%),
+    var(--navy); }
 
-/* screens on the light ground: no dark scrim, black type */
-body.rc .screen { background: none; color: var(--ink-l); justify-content: center;
-  padding: calc(env(safe-area-inset-top, 0px) + 88px) max(24px, env(safe-area-inset-left, 0px)) calc(env(safe-area-inset-bottom, 0px) + 32px); }
-body.rc .screen .inner { max-width: 440px; }
-body.rc .screen h1 { color: var(--ink-l); }
-body.rc .screen p { color: var(--t2-l); }
-body.rc .startlbl { color: var(--t2-l); }
-body.rc :focus-visible { outline-color: var(--potassium); }
+.rc-page { position: relative; z-index: 1; overflow-x: clip; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--text);
+  padding: calc(env(safe-area-inset-top, 0px) + 22px) max(24px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 24px) max(24px, env(safe-area-inset-left, 0px)); }
 
-/* the co-brand lockup: WeHale, a thin ×, the partner (one swappable file) */
-.rc-lockup { position: absolute; left: 0; right: 0; top: calc(env(safe-area-inset-top, 0px) + 28px); display: flex; align-items: center; justify-content: center; gap: 16px;
-  padding-bottom: 20px; margin: 0 24px; border-bottom: 1px solid var(--greige); }
-/* one baseline: WeHale's letters sit 6 % above its image bottom; the partner image is trimmed to its wordmark, so it
-   rides 1 px up; its height (set by the width/height attributes) matches the two cap heights optically */
-.rc-lockup { align-items: flex-end; }
-.rc-lockup img { height: 18px; width: auto; display: block; }
-.rc-lockup img.rc-partner { height: auto; max-height: 26px; margin-bottom: 1px; }
-.rc-lockup i { font: 300 16px/1 var(--font); font-style: normal; color: var(--t3-l); align-self: flex-end; margin-bottom: 3px; }   /* on the cap middle, not the tilde */
-/* in the session: white on the dark, no rule; hidden while the controls show */
-body.rc #brand { display: none; }
-.rc-sess { position: fixed; z-index: 3; border-bottom: 0; opacity: 0; pointer-events: none; transition: opacity .45s ease; }
-.rc-sess i { color: rgba(242, 240, 237, .6); }
-body.rc.rc-dim.in-session .rc-sess { opacity: .82; }
-body.rc.in-session .chrome:not(.off) ~ .rc-sess { opacity: 0; }
+/* the co-brand lockup: WeHale, a thin ×, the partner (one swappable file), white, small, on one baseline. WeHale's
+   letters sit 6 % above its image bottom; the partner image is trimmed to its wordmark, so it rides 1 px up */
+.rc-lockup { display: flex; align-items: flex-end; justify-content: center; gap: 12px; opacity: .92; }
+.rc-lockup img { height: 15px; width: auto; display: block; }
+.rc-lockup img.rc-partner { height: auto; max-height: 21px; margin-bottom: 1px; }
+.rc-lockup i { font: 300 14px/1 var(--font); font-style: normal; color: rgba(242, 240, 237, .55); margin-bottom: 2px; }
 
-/* the arrival: a small blackcurrant disc (the only colour), the kicker, the title, one line, Begin */
-.rc-berry { display: block; width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 28px;
-  background: radial-gradient(circle at 36% 32%, #7a4a68 0, #4A1D3F 45%, #24102a 100%); }
-.rc-kick { margin: 0 auto 12px !important; font: 600 12px/1 var(--font) !important; letter-spacing: .18em; text-transform: uppercase; color: var(--t3-l) !important; }
-.rc-arrive h1 { font: 400 38px/1.08 var(--font) !important; letter-spacing: -.02em !important; margin: 0 0 16px !important; }
-.rc-line { font-size: 17px !important; line-height: 1.5 !important; max-width: 30ch !important; }
-.rc-btn { appearance: none; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 56px; margin-top: 36px; padding: 16px 28px;
-  border: 1px solid var(--potassium); border-radius: 2px; background: var(--potassium); color: var(--salty);
-  font: 700 14px/1 var(--font); letter-spacing: .16em; text-transform: uppercase; text-decoration: none; cursor: pointer;
-  transition: background .25s ease, color .25s ease; }
-@media (hover: hover) { .rc-btn:hover { background: #262626; } }
-.rc-btn:active { transform: translateY(1px); }
-.rc-fine { margin-top: 16px !important; font-size: 13px !important; line-height: 1.5 !important; color: var(--t3-l) !important; }
-.rc-link { appearance: none; background: none; border: 0; padding: 12px; margin-top: 4px; cursor: pointer;
-  font: 600 14px/1 var(--font); color: var(--ink-l); text-decoration: underline; text-decoration-color: var(--greige); text-decoration-thickness: 1px; text-underline-offset: 5px; }
-.rc-link:hover { text-decoration-color: var(--potassium); }
-body.rc:not(.arrived) .rc-arrive .inner > *, body.rc:not(.arrived) .rc-arrive .rc-lockup { opacity: 0; }
-body.rc.arrived .rc-arrive .inner > *, body.rc.arrived .rc-arrive .rc-lockup { animation: rise .8s var(--ease-enter) both; }
-body.rc.arrived .rc-arrive .inner > :nth-child(n+3) { animation-delay: .1s; }
-body.rc.arrived .rc-arrive .inner > :nth-child(n+5) { animation-delay: .2s; }
-@media (prefers-reduced-motion: reduce) { body.rc.arrived .rc-arrive .inner > *, body.rc.arrived .rc-arrive .rc-lockup { animation: none; } .rc-light { transition-duration: .01s; } }
+/* the orb: WeHale's calm sphere, a luminous rim around a dark centre lit from within by a little blackcurrant; it
+   breathes slowly (4 s in, 6 s out, the app's breath curve) */
+.rc-orb { position: relative; flex: 1 1 auto; width: 100%; min-height: 150px; display: flex; align-items: center; justify-content: center; }
+.rc-orb i, .rc-orb b { position: absolute; left: 50%; top: 50%; width: var(--orb, 168px); height: var(--orb, 168px); margin: calc(var(--orb, 168px) / -2) 0 0 calc(var(--orb, 168px) / -2); border-radius: 50%; }
+.rc-orb i { background: radial-gradient(circle at 50% 50%, rgba(122, 64, 104, .42) 0, rgba(58, 26, 56, .55) 34%, rgba(16, 17, 36, .96) 68%, #0c1122 100%);
+  box-shadow: 0 0 0 1.5px rgba(242, 236, 240, .82), 0 0 18px 2px rgba(217, 179, 204, .45), 0 0 70px 10px rgba(122, 64, 104, .28), inset 0 0 26px rgba(217, 179, 204, .22);
+  animation: rc-breathe 10s var(--curve-breath, cubic-bezier(.37, 0, .63, 1)) infinite; }
+.rc-orb b { background: radial-gradient(circle, rgba(217, 179, 204, .16) 0, rgba(74, 29, 63, .10) 45%, rgba(9, 15, 29, 0) 70%); transform: scale(2.3); animation: rc-halo 10s var(--curve-breath, ease-in-out) infinite; }
+@keyframes rc-breathe { 0%, 100% { transform: scale(.84); } 40% { transform: scale(1); } }
+@keyframes rc-halo { 0%, 100% { transform: scale(2.0); opacity: .7; } 40% { transform: scale(2.4); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .rc-orb i, .rc-orb b { animation: none; } .rc-orb i { transform: scale(.92); } }
 
-/* the offer: two lines, one big button */
-.rc-offer h1 { font: 400 30px/1.12 var(--font) !important; letter-spacing: -.015em !important; margin: 0 0 22px !important; }
-.rc-o1 { font: 700 21px/1.3 var(--font) !important; color: var(--ink-l) !important; max-width: 24ch !important; }
-.rc-o2 { margin-top: 8px !important; font-size: 16px !important; }
-.rc-cta { margin-top: 32px; min-height: 60px; }
-.rc-store { margin-top: 12px !important; font: 600 13px/1 var(--font) !important; color: var(--t3-l) !important; }
-.rc-again { margin-top: 10px; }
-.rc-qr { margin: 0; }
-.rc-qrcode { width: 184px; height: 184px; background: #fff; border: 1px solid var(--greige); padding: 8px; margin: 0 auto; }
+/* the words, at the bottom within thumb reach: the session, the offer, the one button, the fine print */
+.rc-body { width: 100%; max-width: 400px; }
+.rc-body h1 { margin: 0 0 8px; font: 500 34px/1.08 var(--font); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+.rc-body p { margin: 0 auto; max-width: 34ch; text-wrap: balance; }
+.rc-line { font: 400 16px/1.45 var(--font); color: var(--t2); max-width: 30ch !important; }
+.rc-only { margin-top: 14px !important; display: inline-flex; align-items: center; min-height: 30px; padding: 6px 14px; border-radius: 999px;
+  border: 1px solid rgba(217, 179, 204, .34); background: rgba(74, 29, 63, .28); font: 600 13px/1.2 var(--font); color: #EBD7E4; }
+.rc-deal { margin-top: 24px !important; font: 700 18px/1.3 var(--font); color: var(--text); max-width: 40ch !important; }
+.rc-btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 58px; margin-top: 16px; padding: 16px 28px; border-radius: 999px;
+  background: #F6EDE3; color: #0b1020; font: 700 17px/1 var(--font); text-decoration: none; cursor: pointer;
+  transition: background .25s ease, transform var(--m-press-out, 220ms) var(--curve-enter, ease); }
+@media (hover: hover) { .rc-btn:hover { background: #fff; } }
+.rc-btn:active { transform: scale(.97); transition-duration: var(--m-press-in, 100ms); }
+.rc-fine { margin-top: 14px !important; font: 400 13px/1.5 var(--font); color: var(--t3); max-width: 42ch !important; }
+.rc-fine span { display: block; text-wrap: balance; }
+.rc-qr { margin: 20px 0 0; }
+.rc-qrcode { width: 168px; height: 168px; background: #fff; border-radius: 14px; padding: 10px; margin: 0 auto; }
 .rc-qrcode svg { display: block; width: 100%; height: 100%; }
-.rc-qr figcaption { margin-top: 14px; font: 600 13px/1.45 var(--font); color: var(--t2-l); max-width: 22ch; margin-inline: auto; text-wrap: balance; }
+.rc-qr figcaption { margin-top: 12px; font: 600 14px/1.45 var(--font); color: var(--t2); max-width: 26ch; margin-inline: auto; text-wrap: balance; }
+body.rc-qr-on .rc-btn { display: none; }   /* on a desktop the QR code is the way to the app */
 
-/* desktop: an editorial spread, the words left, the QR code right, a greige rule between */
+/* the consent bar (its measured room) never covers the button or the fine print */
+@media (max-width: 767px) { body.rc.whc-on .rc-page { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--rc-whc, 96px) + 12px); } }
+/* shorter phones (375×667): a smaller orb and title, the same order */
+@media (max-height: 700px) { .rc-orb { --orb: 124px; min-height: 120px; } .rc-body h1 { font-size: 30px; } .rc-deal { margin-top: 18px !important; } }
+
+/* it rises in once its font is ready (the app's enter curve, a short stagger) */
+body.rc:not(.arrived) .rc-page > *, body.rc:not(.arrived) .rc-body > * { opacity: 0; }
+body.rc.arrived .rc-page > :not(.rc-body), body.rc.arrived .rc-body > * { animation: rise .8s var(--ease-enter) both; }
+body.rc.arrived .rc-body > :nth-child(n+3) { animation-delay: .08s; }
+body.rc.arrived .rc-body > :nth-child(n+4) { animation-delay: .16s; }
+@media (prefers-reduced-motion: reduce) { body.rc.arrived .rc-page > *, body.rc.arrived .rc-body > * { animation: none; } }
+
+/* desktop: composed, not stretched; the QR code in place of the button */
 @media (min-width: 700px) {
-  .rc-lockup { margin: 0 48px; }
-  .rc-arrive h1 { font-size: 56px !important; }
-  .rc-arrive .inner { max-width: 520px !important; }
-  .rc-arrive .rc-btn { width: auto; min-width: 240px; margin-inline: auto; }
-  body.rc-desk .rc-offer .rc-card { max-width: 820px !important; display: grid; grid-template-columns: 1fr auto; gap: 24px 64px; align-items: center; text-align: left; }
-  body.rc-desk .rc-offer .rc-copy { padding-right: 64px; border-right: 1px solid var(--greige); }
-  body.rc-desk .rc-offer .rc-copy p { margin-left: 0 !important; margin-right: 0 !important; }
-  body.rc-desk .rc-offer .rc-cta { width: auto; display: inline-flex; min-width: 260px; }
-  body.rc-desk .rc-offer .rc-again { grid-column: 1 / -1; justify-self: start; padding-left: 0; }
-  .rc-offer h1 { font-size: 40px !important; }
+  .rc-page { padding-top: 32px; padding-bottom: 48px; }
+  .rc-lockup img { height: 17px; } .rc-lockup img.rc-partner { max-height: 24px; }
+  .rc-orb { --orb: 200px; }
+  .rc-body { max-width: 520px; }
+  .rc-body h1 { font-size: 52px; }
+  .rc-line { font-size: 18px; }
+  .rc-deal { font-size: 22px; }
+  .rc-btn { width: auto; min-width: 300px; margin-inline: auto; }
 }
-
-/* the session header: a long title wraps to two lines (smaller on narrow phones), never an ellipsis */
-body.rc .ttl b { white-space: normal; overflow: visible; text-overflow: clip; text-wrap: balance; font-size: 17px; line-height: 1.2;
-}
-body.rc .ttl span { white-space: nowrap; }
-@media (max-width: 380px) { body.rc .ttl b { font-size: 16px; } body.rc .ttl span { font-size: 12.5px; } }
