@@ -10,6 +10,15 @@ describe("readCampaign", () => {
     expect(readCampaign("", "", DATA)).toMatchObject({ ch: "web", code: "RECHARGE" });
     expect(readCampaign("?ch=Flyer&c=anna-rc", "", DATA)).toMatchObject({ ch: "flyer", code: "ANNA-RC" });
   });
+  it("uses the channel's code when there is no ?c=, and ?c= always wins", () => {
+    const D = { ...DATA, code: { default: "RECHARGE", by_channel: { newsletter: "RECHARGE", flyer: "FLYERCODE" } } };
+    expect(readCampaign("?ch=flyer", "", D).code).toBe("FLYERCODE");
+    expect(readCampaign("?ch=flyer&c=OTHER", "", D).code).toBe("OTHER");
+    expect(readCampaign("?ch=pdp", "", D).code).toBe("RECHARGE");
+  });
+  it("keeps codes that name the partner out of this public repo", () => {
+    expect(JSON.stringify(DATA.code)).not.toMatch(/FLYER|PRODUKT/);
+  });
   it("ignores an unknown channel and cleans the code", () => {
     expect(readCampaign("?ch=spam&c=<x>%20y", "", DATA)).toMatchObject({ ch: "web", code: "XY" });
     expect(cleanCode("", "RECHARGE")).toBe("RECHARGE");

@@ -29,9 +29,17 @@ The OneLink: `https://wehale.onelink.me/zcid?pid=<pid>&c=recharge&deep_link_valu
 `utm_campaign` never replaces `c=recharge`. The app applies `deep_link_value` at sign-up (email, Apple, Google).
 On desktop the offer shows a QR code of the same link. Nobody is ever asked to type a code.
 
+## Codes (live on the server 29 Sep; the app side ships in 2.7.9)
+| Channel | Code | How it arrives |
+|---|---|---|
+| newsletter | `RECHARGE` | `code.by_channel` (the link is just `?ch=newsletter`) |
+| flyer, product page | the partner-named codes from the owner of main | `?c=` in their URL / QR code |
+| influencer | their own code | `?c=` in their URL / QR code |
+
+The flyer and product-page codes contain the partner's name and this repo is public, so they are never committed:
+they live in `channel-codes.json` in the confidential folder and reach the QR script as `RECHARGE_CODES=<file>`.
+
 ## Placeholders
-- **Codes:** `RECHARGE` is a placeholder. The owner of main creates the real campaign code and the influencers'
-  codes in the admin; change `code.default` if the campaign code differs.
 - **pid:** `partner_campaign`, a config choice for the lead and the owner of main (`onelink.pid`).
 - **Session:** The Wake Up (Edvin) stands in. When the real session is recorded: `score.json` and `audio.mp3` into
   `public/recharge/session/`, then `session.score`, `session.audio`, `narrator`, `minutes`, `start` (about 1 s
@@ -59,6 +67,6 @@ On desktop the offer shows a QR code of the same link. Nobody is ever asked to t
    sitemap filter and the headers hook in `astro.config.mjs`. Otherwise leave them: the page works from its links and QR codes.
 
 ## QR codes
-`node scripts/recharge-qr.mjs <outDir> [influencers.csv]`: newsletter, flyer, pdp, and one per influencer from a
+`RECHARGE_CODES=<channel-codes.json> node scripts/recharge-qr.mjs <outDir> [influencers.csv]`: newsletter, flyer, pdp, and one per influencer from a
 CSV with `name,code` columns. Each QR code points at the page (`https://wehale.io/recharge?ch=…&c=…`), never
 straight at a store, and shows the 404 until the gate is off.

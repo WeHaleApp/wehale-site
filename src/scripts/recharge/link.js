@@ -2,7 +2,7 @@
 // and shared by the page and the QR script (scripts/recharge-qr.mjs).
 //
 //   ?ch=newsletter|flyer|pdp|influencer   the channel tag, into af_sub1 (anything else: "web")
-//   ?c=<CODE>                              the code, into deep_link_value (default: the campaign code)
+//   ?c=<CODE>                              the code, into deep_link_value (else the channel's code, else the default)
 //   utm_*, h, v, src                       the site's parameter contract (src/scripts/contract.js), passed on as on /breathe
 //
 // The OneLink:
@@ -26,7 +26,8 @@ export function cleanCode(value, fallback) {
 export function readCampaign(search, referrer, data) {
   const q = new URLSearchParams(search || "");
   const ch = q.get("ch") && data.channels.includes(q.get("ch").toLowerCase()) ? q.get("ch").toLowerCase() : "web";
-  const code = cleanCode(q.get("c"), data.code.default);
+  const byCh = (data.code.by_channel || {})[ch];
+  const code = cleanCode(q.get("c"), cleanCode(byCh, data.code.default));
   return { ch, code, contract: readContract(search, referrer) };
 }
 

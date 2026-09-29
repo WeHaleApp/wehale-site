@@ -54,8 +54,9 @@
     "wehale_src_dark": "/assets/images/logo.svg"
   },
   "code": {
-    "_about": "The code rides in the OneLink's deep_link_value; the app applies it at sign-up (email, Apple and Google). PLACEHOLDER: the owner of main creates the real codes in the admin; RECHARGE is the campaign default, ?c=<CODE> overrides it (influencers' personal codes).",
-    "default": "RECHARGE"
+    "_about": "The code rides in the OneLink's deep_link_value (the app applies it at sign-up: email, Apple, Google). Order: ?c=<CODE> on the URL, else by_channel[ch], else default. The server codes are live (the owner of main, 29 Sep); the app side ships in 2.7.9. The flyer and product-page codes contain the partner's name, and this repo is public, so they are NOT here: they ride in their URLs as ?c= (the QR script reads them from a local file outside the repo, docs/recharge/README.md). Influencers: their own ?c= code.",
+    "default": "RECHARGE",
+    "by_channel": { "newsletter": "RECHARGE" }
   },
   "channels": ["newsletter", "flyer", "pdp", "influencer"],
   "onelink": {
