@@ -15,6 +15,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      // The redesign proposal is an unlinked preview: keep it out of the sitemap.
+      filter: (page) => !page.includes("/redesign-preview"),
       changefreq: "weekly",
       priority: 0.7,
     }),
