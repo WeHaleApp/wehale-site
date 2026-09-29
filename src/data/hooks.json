@@ -1,5 +1,5 @@
 {
-  "_about": "The ad-to-site data (SITE-GOALS §4): hooks and page variants, so a new ad needs no code change. ?h=<id> puts the ad's first line in the headline slot (home and /breathe) and preselects its session on /breathe; unknown ids are ignored. line_en: the headline (7 words or fewer). sub_en: the one line under it ({guide} is the session's narrator). world: the colour world the ad ends in (the /breathe first frame). card_en, edge_sub_en, start_f: /breathe variant f only. Swedish lines (line_sv) not written yet. variants: what ?v= may pick on each page; anything else falls back to the default.  g_sub_en: the line under the headline in variant g for this hook (default: '<choice> with <guide> · 6 min · free'). g_edge: the crisper, faster arrival (the challenger).",
+  "_about": "The ad-to-site data (SITE-GOALS §4): hooks and page variants, so a new ad needs no code change. ?h=<id> puts the ad's first line in the headline slot (home and /breathe) and preselects its session on /breathe; unknown ids are ignored. line_en: the headline (7 words or fewer). sub_en: the one line under it ({guide} is the session's narrator). world: the colour world the ad ends in (the /breathe first frame). card_en, edge_sub_en, start_f: /breathe variant f only. Swedish lines (line_sv) not written yet. variants: what ?v= may pick on each page; anything else falls back to the default.  g_sub_en: the line under the headline in variant g for this hook (default: '<choice> with <guide> · 6 min · free'). g_edge: the crisper, faster arrival (the challenger). g_cta_en: the Begin label for this hook in variant g.",
   "hooks": {
     "coffee": {
       "line_en": "Fourth coffee. Still foggy.",
@@ -45,8 +45,9 @@
       "card_en": "Three rounds, each one harder",
       "start_f": 10.1,
       "edge_sub_en": "Each round builds, then a long hold. 6 minutes with {guide}, free.",
-      "g_sub_en": "Faster rounds · breath of fire\nwith {guide} · 6 min · free",
-      "g_edge": true
+      "g_sub_en": "Breath of fire · 3 rounds · {guide} · 6 min · free",
+      "g_edge": true,
+      "g_cta_en": "Start round 1"
     },
     "night": {
       "line_en": "Lights off. Mind still on.",

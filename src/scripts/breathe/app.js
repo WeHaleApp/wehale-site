@@ -61,7 +61,10 @@ const SEEN = !!(VAR.moment && Q.get("seen") === "round");
 function gLines() {
   const s = bySlug(selected);
   $("startHy").textContent = HOOK && HOOK.session === selected ? ((LANG === "sv" && HOOK.line_sv) || HOOK.line_en) : "Breathe with " + guideOf(selected) + ".";
-  $("ySub").textContent = HOOK && HOOK.session === selected && HOOK.g_sub_en ? fillGuide(HOOK.g_sub_en) : s.choice + " with " + guideOf(selected) + " · 6 min · free";
+  const hooked = !!(HOOK && HOOK.session === selected);   // the headline names the guide only without a hook, so the line names them only with one
+  $("ySub").textContent = hooked && HOOK.g_sub_en ? fillGuide(HOOK.g_sub_en) : hooked ? s.choice + " with " + guideOf(selected) + " · 6 min · free" : s.choice + " · 6 min · free";
+  if (VAR.g) $(START_BTN).querySelector("span").textContent = hooked && HOOK.g_cta_en ? HOOK.g_cta_en : "Begin";
+  body.classList.toggle("g-hooked", hooked);
   body.classList.toggle("g-edge", !!(HOOK && HOOK.g_edge && HOOK.session === selected)); window.__breatheEdge = body.classList.contains("g-edge");
 }
 let player = null, playerSlug = null, loading = null;
@@ -92,9 +95,9 @@ function renderChoice(fade) {
   const s = bySlug(selected);
   choiceEls.forEach((el) => el.setAttribute("aria-checked", String(el.dataset.slug === selected)));
   if (SEEN) $(START_BTN).querySelector("span").textContent = "Continue with " + guideOf(selected);
-  else if (VAR.g) $(START_BTN).querySelector("span").textContent = "Begin";
+  else if (VAR.g) $(START_BTN).querySelector("span").textContent = HOOK && HOOK.session === selected && HOOK.g_cta_en ? HOOK.g_cta_en : "Begin";
   else $("startTitle" + LAY).textContent = VAR.y ? s.choice : s.title;
-  $(START_BTN).setAttribute("aria-label", (VAR.g && !SEEN ? "Begin " : LAY ? "Start " : "Play ") + s.title);
+  $(START_BTN).setAttribute("aria-label", (VAR.g && !SEEN ? $(START_BTN).querySelector("span").textContent + ": " : LAY ? "Start " : "Play ") + s.title);
   $(START_BTN).disabled = !s.ready;
   body.dataset.selected = selected;
   document.querySelectorAll("[data-guide]").forEach((el) => { el.textContent = guideOf(selected); });

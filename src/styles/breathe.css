@@ -461,3 +461,8 @@ body.g-edge #silk, body.g-edge #stage { filter: contrast(1.18) saturate(1.25); }
   body.whc-on .goffer { display: none; }
 }
 body[data-v^="g"] .ysub { white-space: pre-line; }
+/* g, arriving from an ad: the ad chose the session, so the arrows step aside (swipe and the dots stay) */
+body.g-hooked .gstep { visibility: hidden; }
+body.g-hooked .gdots { opacity: .7; }
+/* the challenger's room runs hotter than the foggy one's: redder fire, more contrast */
+body.g-edge #silk, body.g-edge #stage { filter: contrast(1.28) saturate(1.45) hue-rotate(-12deg) !important; }

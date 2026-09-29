@@ -20,7 +20,7 @@ const sessions = SESSIONS.sessions.map((s) => ({
   ...s,
   ready: fs.existsSync(path.join(pub, s.slug, "score.json")) && fs.existsSync(path.join(pub, s.slug, "audio.mp3")),
 }));
-const HOOK_LINES = Object.fromEntries(Object.entries(HOOKS.hooks).map(([k, h]) => [k, { l: h.line_en, s: h.session, g: h.g_sub_en || null, edge: !!h.g_edge }]));
+const HOOK_LINES = Object.fromEntries(Object.entries(HOOKS.hooks).map(([k, h]) => [k, { l: h.line_en, s: h.session, g: h.g_sub_en || null, edge: !!h.g_edge, cta: h.g_cta_en || null }]));
 const HOOK_WORLDS = Object.fromEntries(Object.entries(HOOKS.hooks).map(([k, h]) => [k, h.world || (SESSIONS.sessions.find((x) => x.slug === h.session) || {}).world]));
 // the end screen's QR (desktop): the same OneLink as its button, while no offer is live (no deep_link_value)
 const QRS = await Promise.all(sessions.filter((s) => s.ready).map(async (s) => {
@@ -159,7 +159,7 @@ const description = "A guided breathing session with Edvin or Philip, right in y
     // the words are final before first paint (the same choice app.js makes), and the arrival doesn't wait for the script
     var hk=HL[Q.get("h")||""],sl=SN[Q.get("s")||""]&&SN[Q.get("s")].ready?Q.get("s"):hk&&SN[hk.s]&&SN[hk.s].ready?hk.s:null;
     if(!sl){var hh=+Q.get("hour");if(!(Q.has("hour")&&hh>=0&&hh<24))hh=new Date().getHours();sl=hh<11?"wake-up":hh<18?"unravel":"soft-reboot";if(!SN[sl]||!SN[sl].ready)sl=null;}
-    if(sl){var n=SN[sl];document.getElementById("startHy").textContent=hk&&hk.s===sl?hk.l:"Breathe with "+n.g+".";document.getElementById("ySub").textContent=hk&&hk.s===sl&&hk.g?hk.g.replace("{guide}",n.g):n.c+" with "+n.g+" · 6 min · free";if(hk&&hk.edge)b.classList.add("g-edge");b.dataset.world=n.w;}
+    if(sl){var n=SN[sl];document.getElementById("startHy").textContent=hk&&hk.s===sl?hk.l:"Breathe with "+n.g+".";var hs=hk&&hk.s===sl;document.getElementById("ySub").textContent=hs&&hk.g?hk.g.replace("{guide}",n.g):hs?n.c+" with "+n.g+" · 6 min · free":n.c+" · 6 min · free";if(hs&&hk.edge)b.classList.add("g-edge");if(hs)b.classList.add("g-hooked");if(hs&&hk.cta){var bs=document.querySelector("#startBtnY span");if(bs)bs.textContent=hk.cta;}b.dataset.world=n.w;}
     var go=function(){b.classList.add("arrived");};try{Promise.all([document.fonts.load("500 29px 'Nunito Sans'"),document.fonts.load("600 19px 'Nunito Sans'")]).then(go,go);}catch(e){go();}setTimeout(go,700);
     }catch(e){}})();</script>
 

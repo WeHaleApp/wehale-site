@@ -28,7 +28,8 @@ async function open(url, vp, { reduced = false } = {}) {
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" }]);
   const requests = [];
   await page.setRequestInterception(true);
-  page.on("request", (r) => { requests.push(r.url()); if (TRACKERS.test(new URL(r.url()).hostname)) r.abort(); else r.continue(); });
+  // trackers are recorded and aborted; Netlify's deploy-preview drawer (/.netlify/scripts/cdp) is blocked so it doesn't cover the page
+  page.on("request", (r) => { const u = r.url(); if (u.includes("/.netlify/scripts/cdp")) return r.abort(); requests.push(u); if (TRACKERS.test(new URL(u).hostname)) r.abort(); else r.continue(); });
   await page.evaluateOnNewDocument(() => {
     window.__cls = 0;
     try { new PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value; }).observe({ type: "layout-shift", buffered: true }); } catch (_) {}
@@ -103,7 +104,7 @@ for (const [vk, vp] of Object.entries(VIEWPORTS)) {
     if (sizes.length === 2 && (sizes[0][0] !== sizes[1][0] || sizes[0][1] !== sizes[1][1])) report.failures.push(`consent ${p} ${vk}: Accept and Decline differ in size ${JSON.stringify(sizes)}`);
     if (SHOTS) await page.screenshot({ path: path.join(OUT, `consent-${p === "/" ? "home" : "breathe"}-${vk}.png`) });
     if (SHOTS && p === "/") {
-      await page.click("#whConsent [data-act=settings]"); await new Promise((r) => setTimeout(r, 400));
+      await page.$eval("#whConsent [data-act=settings]", (b) => b.click()); await new Promise((r) => setTimeout(r, 700));
       await page.screenshot({ path: path.join(OUT, `consent-settings-${vk}.png`) });
     }
     const trackers = requests.filter((u) => TRACKERS.test(new URL(u).hostname));
@@ -117,7 +118,7 @@ if (SHOTS) {
   for (const p of ["/", "/about"]) for (const vk of ["m812", "d900"]) {
     const { page } = await open(BASE + p, VIEWPORTS[vk], { reduced: true });
     // scroll through once so lazy images load, then back to the top
-    await page.evaluate(async () => { const c = document.getElementById("whConsent"); if (c) c.hidden = true; for (let y = 0; y < document.body.scrollHeight; y += 400) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } scrollTo(0, 0); });
+    await page.evaluate(async () => { const c = document.getElementById("whConsent"); if (c) c.hidden = true; document.querySelectorAll("img[loading=lazy]").forEach((i) => { i.loading = "eager"; }); for (let y = 0; y < document.body.scrollHeight; y += 400) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } scrollTo(0, 0); });
     await new Promise((r) => setTimeout(r, 1200));
     await page.screenshot({ path: path.join(OUT, `${p === "/" ? "home" : "about"}-${vk}-full.png`), fullPage: true });
     await page.close();
