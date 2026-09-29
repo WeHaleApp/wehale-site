@@ -39,4 +39,4 @@ export const DAYTIME_ENDS = 18;
 
 // The landing test (docs/breathe/LANDING.md): which start screen a visitor without ?v= sees. "0" is the original.
 // Every event carries v, so the variants can be compared once traffic runs.
-export const DEFAULT_VARIANT = "f";   // the landing loop's variant, after it beat d on the persona judge (28 Sep, docs/breathe/landing-loop/LOG.md); d, c, a, e and the original (0) stay reachable
+export const DEFAULT_VARIANT = "g1";   // g (one line, the sphere, Begin; swipe between worlds), live on wehale.io 29 Sep; f, d, c, a, e and the original (0) stay reachable by ?v= for the A/B

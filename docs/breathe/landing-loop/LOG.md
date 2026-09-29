@@ -202,3 +202,13 @@ The hold-to-breathe version (g2) is built but off until the lead's go. f is unch
   (100dvh, fixed body, no bounce). In g the controls hide after 3 s without a touch (3.5 s elsewhere) and a tap
   brings them back. Leaving full screen keeps the session playing. Checked: desktop and Android emulation (full
   screen on, audio still playing after exit), iPhone WebKit (no toggle, controls hidden after 3 s, back on tap).
+
+## Launch on wehale.io (29 Sep, Isak): g is the default
+Rebased on main (the /credits commit; no conflicts). `DEFAULT_VARIANT = "g1"`; `?v=` still reaches 0, a-g for the
+A/B, and nothing links to a variant. In g: a quiet "Continue in the app" in the session controls (shown on tap), the
+exit sheet offers "Continue in the app" and "Save for later", and the end screen keeps the big app button plus, on
+desktop, a QR code of the same OneLink (built at build time with `qrcode`, a dev dependency; hidden while an offer
+token would change the link). A failed player load now shows its message in g instead of a silent Begin. Without
+WebGL the CSS light plays the session. Checked locally and on the preview: 375x812, 375x667, Android emulation and
+desktop, all three sessions, swipe, keys, full screen, the save sheet, the end screen and the OneLink; no request to
+Google or Meta and none off-site.

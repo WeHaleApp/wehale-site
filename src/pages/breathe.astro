@@ -11,6 +11,9 @@ import BreatheLayout from "../layouts/BreatheLayout.astro";
 import "../styles/breathe.css";
 import SESSIONS from "../data/breathe-sessions.json";
 import HOOKS from "../data/breathe-hooks.json";
+import { DEFAULT_VARIANT } from "../scripts/breathe/config.js";
+import { oneLink } from "../scripts/breathe/offers.js";
+import QRCode from "qrcode";
 
 const pub = path.resolve("public/breathe/sessions");
 const sessions = SESSIONS.sessions.map((s) => ({
@@ -18,6 +21,11 @@ const sessions = SESSIONS.sessions.map((s) => ({
   ready: fs.existsSync(path.join(pub, s.slug, "score.json")) && fs.existsSync(path.join(pub, s.slug, "audio.mp3")),
 }));
 const HOOK_WORLDS = Object.fromEntries(Object.entries(HOOKS.hooks).map(([k, h]) => [k, h.world || (SESSIONS.sessions.find((x) => x.slug === h.session) || {}).world]));
+// the end screen's QR (desktop): the same OneLink as its button, while no offer is live (no deep_link_value)
+const QRS = await Promise.all(sessions.filter((s) => s.ready).map(async (s) => {
+  const url = oneLink({ session: s.slug, completed: true, assignment: null });
+  return { slug: s.slug, url, svg: url ? await QRCode.toString(url, { type: "svg", margin: 2, errorCorrectionLevel: "M", color: { dark: "#140c07", light: "#f6ede3" } }) : "" };
+}));
 const first = sessions.find((s) => s.ready) || sessions[0];
 const title = "Guided breathing: a free 6-minute session · WeHale";
 const description = "A guided breathing session with Edvin or Philip, right in your browser. About 6 minutes. Free, no account.";
@@ -46,6 +54,7 @@ const description = "A guided breathing session with Edvin or Philip, right in y
         <button class="play" id="playBtn" aria-label="Pause"><svg viewBox="0 0 24 24" id="playIco"></svg></button>
         <button class="skip" id="fwdBtn" aria-label="Forward 10 seconds"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg><span>10s</span></button>
       </div>
+      <a class="ctlapp" id="ctlApp" href="#" rel="noopener" hidden>Continue in the app</a>
     </div></footer>
   </div>
   <img id="brand" src="/assets/images/logo.svg" alt="WeHale" width="96" height="20" />
@@ -141,7 +150,7 @@ const description = "A guided breathing session with Edvin or Philip, right in y
     <p class="vg gsr" id="gLive" aria-live="polite"></p>
   </main>
   <!-- g: before first paint, the orb glows in the session's world where the sphere sits -->
-  <script is:inline define:vars={{ HW: HOOK_WORLDS, SW: Object.fromEntries(sessions.map((x) => [x.slug, x.world])) }}>(function(){try{var Q=new URLSearchParams(location.search),q=Q.get("v");if(q!=="g"&&q!=="g1"&&q!=="g2")return;
+  <script is:inline define:vars={{ HW: HOOK_WORLDS, SW: Object.fromEntries(sessions.map((x) => [x.slug, x.world])), DV: DEFAULT_VARIANT }}>(function(){try{var Q=new URLSearchParams(location.search),q=Q.get("v")||DV;if(q!=="g"&&q!=="g1"&&q!=="g2")return;
     var b=document.body;b.dataset.v=q==="g"?"g1":q;b.classList.add("f-does","f-feather","g-poster");
     var w=SW[Q.get("s")||""]||HW[Q.get("h")||""];if(!w){var h=+Q.get("hour");if(!(Q.has("hour")&&h>=0&&h<24))h=new Date().getHours();w=h<11?"ember":h<18?"water":"night";}b.dataset.world=w;
     var W=innerWidth,H=innerHeight,U=Math.min(W,H*.5625);b.style.setProperty("--orb-y",(H/2-.1*U).toFixed(0)+"px");b.style.setProperty("--orb-r",(.2*U*.9).toFixed(0)+"px");}catch(e){}})();</script>
@@ -180,6 +189,10 @@ const description = "A guided breathing session with Edvin or Philip, right in y
         <button class="pill block" id="againBtn" type="button">Play again</button>
       </div>
       <p class="appline" id="endAppLine"></p>
+      <div class="endqr" id="endQr" hidden>
+        {QRS.map((q) => <figure data-slug={q.slug} hidden><Fragment set:html={q.svg} /></figure>)}
+        <p>On your phone? Scan to open the app.</p>
+      </div>
     </div>
   </section>
 

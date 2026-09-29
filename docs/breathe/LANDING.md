@@ -105,4 +105,4 @@ skips the choice. Events carry `v` (and `h`). The default for visitors without `
 `config.js`: "c" (the lead's pick, 28 Sep), A/B against `?v=a`; the original is `?v=0`.
 
 Later on 28 Sep: `?v=d` and `?v=e` (a reason, a choice, Start, save for later), then `?v=f`, the landing loop's variant
-(`docs/breathe/landing-loop/LOG.md`). The default is now "f".
+(`docs/breathe/landing-loop/LOG.md`), then `?v=g` (g1), the default from 29 Sep: one line, the sphere, Begin, swipe between the worlds.

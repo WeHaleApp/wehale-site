@@ -164,7 +164,11 @@ if (VAR.y) {
   setTimeout(arrive, 700);   // never hold the page for a slow font
 }
 
-if (VAR.g) $("safeCap").textContent = "Go at your own pace. Stop if you feel dizzy.";
+if (VAR.g) {
+  $("safeCap").textContent = "Go at your own pace. Stop if you feel dizzy.";
+  $("exitApp").textContent = "Continue in the app"; $("exitSave").textContent = "Save for later"; $("exitSave").className = "pill block";
+  $("exitStart").hidden = true;
+}
 
 // ---------- event params: {session, arm, source}; assignment_id once an offer arm exists ----------
 let assignment = null;
@@ -227,7 +231,7 @@ async function play(from) {
   $(START_BTN).setAttribute("aria-busy", "true"); $(START_LBL).textContent = "Getting the session ready…";
   unlockAudio();
   try { await ready(); begin(from); }
-  catch (_) { $(START_LBL).textContent = "The session didn't load. Check your connection and try again."; }
+  catch (_) { $(START_LBL).textContent = "The session didn't load. Check your connection and try again."; if (VAR.g) gFail(); }
   finally { $(START_BTN).removeAttribute("aria-busy"); }
 }
 // unlock the audio element inside the tap (iOS), without letting it sound: play and pause in the same tick.
@@ -262,6 +266,7 @@ function begin(from) {
   const at0 = !from && VAR.fast ? (wc > 0 ? wc : ws != null && ws > 0 ? ws : player.startAt) : (from || 0);
   if (!from && VAR.fast && at0 > 0) { try { audio.volume = 0; const t0 = performance.now(); const up = () => { const u = Math.min(1, (performance.now() - t0) / 1000); try { audio.volume = u; } catch (_) {} if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up); } catch (_) {} }
   if (!from && VAR.safety === "caption") { const c = $("safeCap"); c.hidden = false; c.classList.remove("out"); setTimeout(() => c.classList.add("out"), 2600); setTimeout(() => { c.hidden = true; }, 3400); }
+  wireCtlApp();
   const pr = player.start(at0);
   if (VAR.does) { const s = bySlug(selected); $("ttlK").textContent = "With " + guideOf(selected) + " · 6 min"; $("ttlT").textContent = s.choice; }   // one name per session
   if (pr && pr.catch) pr.catch(() => { player.exit(); showScreen("startScr"); $(START_LBL).textContent = "Tap start again to turn the sound on."; });
@@ -274,6 +279,16 @@ let exitAt = 0;
 $("resumeBtn").addEventListener("click", () => play(exitAt));
 $("exitStart").addEventListener("click", () => { showScreen("startScr"); if (VAR.y) { body.classList.add("calm-start"); sphereUp(true); } if (VAR.g) gReset(); });
 
+// g: a quiet "Continue in the app" in the controls (shown on tap); nothing visible while breathing
+function wireCtlApp() {
+  if (!VAR.g) return; const link = oneLink({ session: selected, completed: false, assignment: null, extra: { af_sub5: "in_session" } });
+  wireApp($("ctlApp"), link, () => ({ ...params(), completed: 0 }));
+}
+function showEndQr(assigned) {
+  const box = $("endQr"), desk = matchMedia("(hover: hover) and (pointer: fine) and (min-width: 700px)").matches;
+  box.hidden = !desk || !!assigned;   // while an offer is live the link carries a token, so the prebuilt QR isn't shown
+  [...box.querySelectorAll("figure")].forEach((f) => { f.hidden = f.dataset.slug !== selected; });
+}
 function tick(at) {
   if (!oneMin && at >= 60) { oneMin = true; track.oneMinute(params()); }
   // the goal marker (only an arm that has progress copy, only while its offer is live): "3 min to go · 30 days waiting"
@@ -321,7 +336,7 @@ async function finish() {
   $("endCode").hidden = true;
   $("endAppLine").textContent = fillGuide(pick(STANDARD, "app_line", LANG));
   wireApp($("endApp"), oneLink({ session: selected, completed: true, assignment: null }), () => ({ ...params(), completed: 1 }));
-  showScreen("endScr");
+  showScreen("endScr"); showEndQr(false);
   const offer = await loadOffer(selected);
   assignment = assign(offer);
   if (assignment) {
@@ -334,6 +349,7 @@ async function finish() {
       $("endCode").textContent = (LANG === "sv" ? "Ange koden när du skapar ditt konto: " : "Enter this code when you sign up: ") + code;
     }
     wireApp($("endApp"), oneLink({ session: selected, completed: true, assignment }), () => ({ ...params(), completed: 1 }));
+    showEndQr(true);
   }
   track.finish(params());
 }
@@ -348,6 +364,7 @@ function exitEarly(at) {
   wireApp($("exitApp"), oneLink({ session: selected, completed: false, assignment: null }), () => ({ ...params(), completed: 0 }));
   showScreen("exitScr");
   // d, e: leaving in the first minute often means "not now": offer to save it
+  if (VAR.g) { $("exitSave").hidden = false; return; }   // g: the exit sheet offers the app and save for later, nothing opens by itself
   if (VAR.y) { $("exitSave").hidden = false; if (exitAt < 60) openSave("Want to come back to it later?"); }
 }
 
@@ -518,6 +535,9 @@ function gGo() {   // the start screen dissolves at once; the sphere exhales and
   gScale(1, 700);
   const t0 = performance.now(), from = window.__breatheSparse || .35;
   const up = (t) => { const u = Math.min(1, (t - t0) / 1400); window.__breatheSparse = from + (1 - from) * u; if (u < 1) requestAnimationFrame(up); }; requestAnimationFrame(up);
+}
+function gFail() {   // g hides the start label; bring the screen back with the message instead of a silent Begin
+  body.classList.remove("g-going"); body.classList.add("g-fail"); window.__breatheSparse = .35;
 }
 function gReset() { body.classList.remove("g-going"); window.__breatheSparse = .35; gApply(0); gScale(1, 10); }
 if (VAR.g) {
