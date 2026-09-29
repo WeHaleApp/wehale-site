@@ -63,15 +63,21 @@ const ld = {
   <!-- ─── 1. Who WeHale is, and the feeling: the brand film, full-bleed ─── -->
   <section class="relative isolate flex min-h-[100svh] items-end overflow-hidden md:min-h-[92vh]" id="top">
     <div class="absolute inset-0 -z-10" aria-hidden="true">
-      <video id="heroVideo" class="h-full w-full object-cover" muted loop playsinline preload="none" disablepictureinpicture></video>
+      <!-- Static autoplay attributes, so iOS starts it without waiting for a script. If autoplay is blocked (Low Power
+           Mode), the poster is the bright misty valley, and the first touch, scroll or return to the tab tries again. -->
+      <video id="heroVideo" class="h-full w-full object-cover" autoplay muted loop playsinline preload="auto" disablepictureinpicture
+        poster="/assets/video/hero/film-9x16-poster.jpg" src="/assets/video/hero/film-9x16.mp4"></video>
       <script is:inline define:vars={{ CLIPS }}>(function(){var v=document.getElementById("heroVideo"),c=CLIPS[document.documentElement.dataset.v]||"film",p=matchMedia("(max-aspect-ratio: 4/5)").matches?"9x16":"16x9",b="/assets/video/hero/"+c+"-"+p;
-        v.poster=b+"-poster.jpg";v.dataset.src=b+".mp4";if(c==="still")v.style.objectPosition=p==="16x9"?"50% 35%":"50% 30%";
-        if(!matchMedia("(prefers-reduced-motion: reduce)").matches){v.src=v.dataset.src;v.preload="auto";v.autoplay=true;var pl=v.play();if(pl&&pl.catch)pl.catch(function(){});}})();</script>
+        v.muted=true;v.defaultMuted=true;v.setAttribute("muted","");v.dataset.src=b+".mp4";
+        if(v.getAttribute("src")!==b+".mp4"){v.poster=b+"-poster.jpg";v.src=b+".mp4";}
+        if(c==="still")v.style.objectPosition=p==="16x9"?"50% 35%":"50% 30%";
+        if(matchMedia("(prefers-reduced-motion: reduce)").matches){v.removeAttribute("autoplay");v.autoplay=false;v.preload="metadata";v.pause();return;}
+        var pl=v.play();if(pl&&pl.catch)pl.catch(function(){});})();</script>
       <!-- a calm scrim: the words read, the film still shows; the bottom melts into the page's dawn -->
       <div class="absolute inset-0 bg-gradient-to-b from-[rgba(12,10,14,.35)] via-[rgba(12,10,14,.05)] to-[rgba(9,15,29,.94)] md:bg-gradient-to-r md:from-[rgba(12,10,14,.72)] md:via-[rgba(12,10,14,.2)] md:to-transparent"></div>
       <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[var(--journey-dawn)]"></div>
     </div>
-    <div class="mx-auto w-full max-w-6xl px-5 pb-12 pt-32 md:px-6 md:pb-24">
+    <div class="hero-pad mx-auto w-full max-w-6xl px-5 pb-12 pt-32 md:px-6 md:pb-24">
       <p class="t-caption hero-in" style="--d:0ms">WeHale · Guided breathing</p>
       <h1 class="t-display hero-in mt-3 max-w-xl" style="--d:120ms" id="heroH">Come back to yourself.</h1>
       <p class="t-lead hero-in mt-4 max-w-md" style="--d:260ms" id="heroSub">Calm, clear, connected. Guided breathing with Edvin and Philip, on iPhone and Android.</p>
@@ -224,14 +230,22 @@ const ld = {
 </BaseLayout>
 
 <script>
-  // The film: a pause control (WCAG 2.2.2), and it pauses when off screen or when the tab is hidden.
+  // The film: robust autoplay and a pause control (WCAG 2.2.2). Only the visitor's own pause stops it; no other script
+  // pauses it. If the browser blocked autoplay, it tries again when the video can play, when the tab comes back, and on
+  // the first touch, pointer or scroll anywhere.
   const v = document.getElementById("heroVideo") as HTMLVideoElement;
   const pb = document.getElementById("heroPause")!;
-  let userPaused = false;
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let userPaused = reducedMotion;
   const icons = () => { pb.querySelector("[data-i=pause]")!.classList.toggle("hidden", v.paused); pb.querySelector("[data-i=play]")!.classList.toggle("hidden", !v.paused); pb.setAttribute("aria-label", v.paused ? "Play the film" : "Pause the film"); };
-  pb.addEventListener("click", () => { if (v.paused) { if (!v.src) v.src = v.dataset.src!; userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
+  const tryPlay = () => { if (userPaused || !v.paused) return; v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+  pb.addEventListener("click", () => { if (v.paused) { if (!v.getAttribute("src")) v.src = v.dataset.src!; userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
   v.addEventListener("play", icons); v.addEventListener("pause", icons); icons();
-  new IntersectionObserver(([e]) => { if (userPaused || !v.src) return; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }).observe(v);
+  ["loadeddata", "canplay"].forEach((ev) => v.addEventListener(ev, tryPlay));
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") tryPlay(); });
+  const firstGesture = () => { tryPlay(); ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) => removeEventListener(ev, firstGesture, true)); };
+  ["touchstart", "pointerdown", "scroll", "keydown"].forEach((ev) => addEventListener(ev, firstGesture, { capture: true, passive: true }));
+  tryPlay();
 
   // The guides' voices: nothing loads or sounds until a tap; one voice at a time.
   let current: HTMLAudioElement | null = null, currentBtn: HTMLElement | null = null;

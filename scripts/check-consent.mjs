@@ -11,8 +11,9 @@ for (const p of ["/", "/breathe"]) for (const act of ["none", "decline", "accept
   const hits = []; await page.setRequestInterception(true);
   page.on("request", (r) => { if (T.test(r.url())) { hits.push(r.url().split("?")[0]); r.abort(); } else r.continue(); });
   await page.goto(BASE + p, { waitUntil: "networkidle0" });
+  await new Promise((r) => setTimeout(r, 1800));   // the card arrives about 1.2 s after load
   const shown = await page.$eval("#whConsent", (e) => !e.hidden);
-  if (act !== "none") { await page.click(`#whConsent [data-act=${act}]`); await new Promise((r) => setTimeout(r, 1200)); }
+  if (act !== "none") { await page.$eval(`#whConsent [data-act=${act}]`, (b) => b.click()); await new Promise((r) => setTimeout(r, 1200)); }
   const cm = await page.evaluate(() => (window.dataLayer || []).filter((e) => e && e[0] === "consent").map((e) => e[1] + ":" + e[2].analytics_storage + "/" + e[2].ad_storage));
   out[`${p} ${act}`] = { bannerShown: shown, trackers: [...new Set(hits)], consentMode: cm };
   await ctx.close();
