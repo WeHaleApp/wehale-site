@@ -37,10 +37,19 @@
   --ease-enter: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-:root { color-scheme: dark; --dur-enter: 500ms; --dur-reveal: 800ms; --stagger: 80ms; }
+:root { color-scheme: dark;
+  /* The app's motion tokens (wehale-app src/tokens/motion.ts, `m` and `curve`), mapped in docs/MOTION.md */
+  --m-press-in: 100ms; --m-press-out: 220ms; --m-fade: 400ms; --m-enter: 500ms; --m-stagger: 80ms; --m-exit: 300ms;
+  --m-sheet-open: 450ms; --m-sheet-close: 300ms; --m-reveal: 800ms; --m-celebrate: 1200ms; --m-breath-in: 4000ms; --m-breath-out: 6000ms;
+  --curve-enter: cubic-bezier(.33, 1, .68, 1); --curve-exit: cubic-bezier(.32, 0, .67, 0); --curve-breath: cubic-bezier(.37, 0, .63, 1);
+  --curve-standard: cubic-bezier(.25, .1, .25, 1);
+  --press-button: .97; --press-card: .985;
+  /* older names, kept for existing rules */
+  --dur-enter: var(--m-enter); --dur-reveal: var(--m-reveal); --stagger: var(--m-stagger); }
 html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-body { min-height: 100dvh; overflow-x: hidden; }
+html, body { overflow-x: clip; }
+body { min-height: 100dvh; }
 ::selection { background: rgba(69, 181, 160, 0.25); }
 :focus-visible { outline: 2px solid var(--color-text); outline-offset: 3px; border-radius: 6px; }
 p, li, dd, figcaption, blockquote { text-wrap: pretty; }
@@ -65,12 +74,12 @@ h1, h2, h3 { text-wrap: balance; }
   border-radius: var(--radius-pill); background: var(--color-text); color: var(--color-bg);
   padding: .85rem 1.5rem; font-weight: 700; font-size: 1rem; line-height: 1;
   transition: transform 220ms var(--ease-enter), opacity 220ms var(--ease-enter); }
-.btn:hover { opacity: .9; } .btn:active { transform: scale(.97); transition-duration: 100ms; }
+.btn:hover { opacity: .92; }
 .btn-quiet { white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px;
   border-radius: var(--radius-pill); background: var(--color-glass); color: var(--color-text);
   box-shadow: inset 0 0 0 1px var(--color-line-strong); padding: .85rem 1.4rem; font-weight: 600; font-size: 1rem; line-height: 1;
   transition: background-color 220ms var(--ease-enter), transform 220ms var(--ease-enter); }
-.btn-quiet:hover { background: rgba(255,255,255,.08); } .btn-quiet:active { transform: scale(.97); }
+.btn-quiet:hover { background: rgba(255,255,255,.1); box-shadow: inset 0 0 0 1px rgba(255,255,255,.26); }
 .link { font-weight: 600; color: var(--color-text-secondary); text-decoration: underline; text-underline-offset: 4px;
   text-decoration-color: var(--color-line-strong); }
 .link:hover { color: var(--color-text); }
@@ -81,17 +90,23 @@ h1, h2, h3 { text-wrap: balance; }
 
 }
 
-/* ── Motion: one reveal per group, app curve, stagger for at most 4 ── */
-[data-reveal] { opacity: 0; transform: translateY(12px);
-  transition: opacity var(--dur-reveal) var(--ease-enter), transform var(--dur-reveal) var(--ease-enter);
-  transition-delay: calc(var(--i, 0) * var(--stagger)); }
-[data-reveal].is-visible { opacity: 1; transform: none; }
-.hero-in { opacity: 0; transform: translateY(14px); animation: heroIn 1s var(--ease-enter) forwards; animation-delay: var(--d, 0ms); }
-@keyframes heroIn { to { opacity: 1; transform: none; } }
-@supports (animation-timeline: view()) {
-  [data-parallax] { animation: parallax linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
-  @keyframes parallax { from { transform: translateY(-5%) scale(1.06); } to { transform: translateY(5%) scale(1.06); } }
-}
+/* ── Motion: the app's press feel, and one reveal per group in reading order ──
+   Press (motion audit item 2): in scale 0.97 (cards 0.985) and opacity 0.9 over m.press.in, curve.enter; out over
+   m.press.out, the standard curve; no spring. .is-pressed comes from motion.js (touch), :active covers the rest. */
+.btn, .btn-quiet, .press { transition: transform var(--m-press-out) var(--curve-standard), opacity var(--m-press-out) var(--curve-standard),
+  background-color 220ms var(--curve-enter), box-shadow 220ms var(--curve-enter); -webkit-tap-highlight-color: transparent; }
+.btn:active, .btn-quiet:active, .btn.is-pressed, .btn-quiet.is-pressed { transform: scale(var(--press-button)); opacity: .9;
+  transition-duration: var(--m-press-in); transition-timing-function: var(--curve-enter); }
+.press-card { transition: transform var(--m-press-out) var(--curve-standard); -webkit-tap-highlight-color: transparent; }
+.press-card:active, .press-card.is-pressed { transform: scale(var(--press-card)); transition-duration: var(--m-press-in); transition-timing-function: var(--curve-enter); }
+/* Reveals: visible by default. Only with JS and without Reduce Motion (html.motion, set in <head>) do groups start
+   hidden, and motion.js reveals each once as it enters the viewport, its children in reading order (--i, at most 4). */
+html.motion [data-reveal]:not(.is-visible) { opacity: 0; transform: translateY(14px); }
+html.motion [data-reveal] { transition: opacity var(--m-reveal) var(--curve-enter), transform var(--m-reveal) var(--curve-enter);
+  transition-delay: calc(min(var(--i, 0), 4) * var(--m-stagger)); }
+/* The hero enters in reading order: caption, headline, line, actions (0 / 120 / 260 / 380 ms) */
+html.motion .hero-in { animation: heroIn var(--m-reveal) var(--curve-enter) both; animation-delay: var(--d, 0ms); }
+@keyframes heroIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 /* The breathing light: a still of the /breathe sphere, breathing at the app tempo (4 s in, 6 s out). */
 .sphere { position: relative; aspect-ratio: 1; border-radius: 50%;
   background: radial-gradient(circle at 36% 30%, rgba(255,255,255,.75) 0 6%, rgba(255,255,255,0) 18%),
@@ -108,7 +123,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
-  [data-reveal] { opacity: 1; transform: none; }
+  [data-reveal], .hero-in { opacity: 1 !important; transform: none !important; }
 }
 
 /* ── Small pieces shared by every page (in the components layer, so Tailwind utilities such as `hidden` win) ── */
@@ -152,15 +167,45 @@ dialog.sheet[open] { animation: sheetIn 420ms var(--ease-enter); }
 @media (min-width: 768px) { .wrap { padding-inline: 1.5rem; } }
 
 /* ── The colour journey down the home page: warm dawn → teal balance → night calm. It breathes. ── */
-:root { --journey-dawn: #22160f; }
+:root { --journey-dawn: #090f1d; }
+/* the brand navy after the film (app colors.ts bg #090F1D), teal balance in the middle, night calm at the end */
 .journey { background: linear-gradient(180deg,
-  var(--journey-dawn) 0%, #26180f 8%, #1b1714 18%, #0f2023 32%, #0c2629 46%, #0b2226 56%, #0e1a2c 68%, #10132e 82%, #0b0c22 100%); }
+  #090f1d 0%, #090f1d 16%, #0a1a20 32%, #0b2427 46%, #0a2124 56%, #0c1a2b 68%, #0f132d 82%, #0a0b21 100%); }
 
 /* ── The app showcase: three real screens, framed like phones, overlapping ── */
 .showcase { position: relative; display: flex; justify-content: center; align-items: center; min-height: 420px; }
 .phone { width: 44%; max-width: 250px; border-radius: 2rem; box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 0 0 7px #121826, 0 0 0 8px rgba(255,255,255,.07), 0 40px 90px rgba(0,0,0,.6); }
 .phone-c { position: relative; z-index: 2; }
-.phone-l, .phone-r { position: absolute; width: 36%; max-width: 205px; opacity: .92; }
-.phone-l { left: 2%; transform: translateY(6%) rotate(-4deg); }
-.phone-r { right: 2%; transform: translateY(6%) rotate(4deg); }
-@media (min-width: 768px) { .showcase { min-height: 600px; } }
+@media (min-width: 768px) {
+  .showcase { min-height: 600px; }
+  .phone-l, .phone-r { position: absolute; width: 36%; max-width: 205px; opacity: .92; transition: transform var(--m-reveal) var(--curve-enter); }
+  .phone-l { left: 2%; transform: translateY(6%) rotate(-4deg); }
+  .phone-r { right: 2%; transform: translateY(6%) rotate(4deg); }
+  .showcase:hover .phone-l { transform: translate(-4%, 4%) rotate(-6deg); }
+  .showcase:hover .phone-r { transform: translate(4%, 4%) rotate(6deg); }
+}
+@media (max-width: 767px) { .showcase { min-height: 0; justify-content: flex-start; padding-block: 12px 4px; } .showcase > .phone { width: 62%; min-width: 62%; max-width: 62%; height: auto; } }
+
+/* ── Swipe rows (phones): sessions, reviews, app screens. Native momentum and snap; desktop keeps its grid ── */
+@media (max-width: 767px) {
+  .swipe { display: flex !important; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    margin-inline: -1.25rem; padding-inline: 1.25rem; scroll-padding-inline: 1.25rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .swipe::-webkit-scrollbar { display: none; }
+  .swipe > * { flex: 0 0 82%; scroll-snap-align: start; }
+  .swipe.swipe-phones > * { flex-basis: 62%; scroll-snap-align: center; }
+}
+.dots { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+.dots i { width: 7px; height: 7px; border-radius: 4px; background: rgba(242,240,237,.35); transition: width var(--m-fade) var(--curve-enter), background var(--m-fade) var(--curve-enter); }
+.dots i.on { width: 20px; background: rgba(242,240,237,.9); }
+@media (min-width: 768px) { .dots { display: none; } }
+/* the voice button's live waveform */
+.wave { display: none; align-items: center; gap: 2px; height: 18px; }
+.voice[aria-pressed="true"] .wave { display: inline-flex; }
+.voice[aria-pressed="true"] [data-i] { display: none; }
+.wave i { width: 3px; height: 30%; border-radius: 2px; background: currentColor; transition: height 90ms linear; }
+/* "Get the app" on desktop: the QR on hover or focus */
+.qr-pop { position: absolute; z-index: 60; width: 176px; padding: 12px; border-radius: 16px; background: #f2f0ed; color: #090f1d;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5); text-align: center; font-size: 12px; font-weight: 600; line-height: 1.3;
+  opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity var(--m-fade) var(--curve-enter), transform var(--m-fade) var(--curve-enter); }
+.qr-pop.on { opacity: 1; transform: none; }
+.qr-pop svg { display: block; width: 100%; height: auto; margin-bottom: 6px; }

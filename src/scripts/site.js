@@ -3,6 +3,7 @@
 import { readContract, eventParams, carryHref, oneLinkUrl } from "./contract.js";
 import { send } from "./tags.js";
 import { ONELINK_BASE } from "./breathe/config.js";
+import { startMotion } from "./motion.js";
 
 const SITE_PID = "website", SITE_CAMPAIGN = "site";
 const html = document.documentElement;
@@ -49,22 +50,36 @@ document.querySelectorAll("[data-get-app]").forEach((a) => {
     a.closest("details")?.removeAttribute("open");
   });
 });
+// desktop: hovering or focusing "Get the app" shows its QR right there (the click still opens the sheet)
+let pop = null, popFor = null, popTimer = 0;
+async function showPop(a) {
+  if (!desktop()) return;
+  clearTimeout(popTimer);
+  if (!pop) { pop = document.createElement("div"); pop.className = "qr-pop"; pop.setAttribute("role", "tooltip"); pop.id = "qrPop"; document.body.appendChild(pop); }
+  if (popFor !== a) {
+    popFor = a;
+    try { const QR = (await import("qrcode")).default; pop.innerHTML = (await QR.toString(appLink("qr_hover_" + (a.dataset.at || "page")), { type: "svg", margin: 1, errorCorrectionLevel: "M", color: { dark: "#090f1d", light: "#f2f0ed" } })) + "Scan with your phone"; } catch (_) { return; }
+  }
+  const r = a.getBoundingClientRect();
+  pop.style.left = Math.round(r.left + scrollX + r.width / 2 - 88) + "px";
+  const below = r.bottom + 12 + 230 < innerHeight;
+  pop.style.top = Math.round((below ? r.bottom + 12 : r.top - 12 - 226) + scrollY) + "px";
+  a.setAttribute("aria-describedby", "qrPop");
+  requestAnimationFrame(() => pop.classList.add("on"));
+}
+function hidePop() { popTimer = setTimeout(() => { if (pop) pop.classList.remove("on"); }, 120); }
+document.querySelectorAll("[data-get-app]").forEach((a) => {
+  a.addEventListener("mouseenter", () => showPop(a)); a.addEventListener("focus", () => showPop(a));
+  a.addEventListener("mouseleave", hidePop); a.addEventListener("blur", hidePop);
+});
 document.querySelectorAll("[data-store]").forEach((a) => a.addEventListener("click", () => {
   const p = params({ at: a.dataset.at || "page", store: a.dataset.store });
   send("AppTap", p); send("Lead", { ...p, content_name: "app" });
 }));
 document.querySelectorAll("[data-try]").forEach((a) => a.addEventListener("click", () => send("TrySessionTap", params({ at: a.dataset.at || "page" }))));
 
-// ---- reveals: once per group, on the app's enter curve; Reduce Motion gets still pages ----
-const els = document.querySelectorAll("[data-reveal]");
-if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  els.forEach((el) => el.classList.add("is-visible"));
-} else {
-  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-    if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); }
-  }), { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-  els.forEach((el) => io.observe(el));
-}
+// ---- motion: reveals in reading order, press feel, swipe rows (motion.js) ----
+startMotion();
 
 // ---- header: transparent over the hero, solid once scrolled; on phones it steps aside while reading down ----
 const hdr = document.querySelector("[data-header]");

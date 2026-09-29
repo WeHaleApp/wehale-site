@@ -8,5 +8,5 @@ export const PLAY_URL = "https://play.google.com/store/apps/details?id=com.wehal
 /** The OneLink's media source and default campaign for the site's own pages (/breathe uses web_session / breathe). */
 export const SITE_PID = "website";
 export const SITE_CAMPAIGN = "site";
-/** The offer, exactly the app's (proposed line, pending Isak). No discount, no price. */
-export const OFFER_LINE = "Your first 14 days are free, with everything open. No\u00a0card\u00a0needed.";
+/** The offer, exactly the app's (Isak, 29 Sep: no card promise, it may change). No discount, no price. */
+export const OFFER_LINE = "Your first 14 days are free, with everything\u00a0open.";
