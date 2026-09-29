@@ -15,6 +15,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      // Out of the sitemap: the 404, and the partner pages (/for, unlisted by design, DIRECTION.md §5) if present.
+      filter: (page) => !/\/404(\.html)?$/.test(page) && !/\/for(\/|$)/.test(page),
       changefreq: "weekly",
       priority: 0.7,
     }),

@@ -1,0 +1,40 @@
+---
+/**
+ * Header: logo, three links, "Get the app" as text and ONE white pill, "Try a session" (to /breathe).
+ * Phones: logo, the pill and a menu (details/summary, no JS needed). Investors live in the footer
+ * (audit: one job for ad traffic). "Get the app" is the smart link: the store on a phone, a QR on desktop.
+ */
+import { BREATHE_URL } from "./links";
+interface Props { current?: string }
+const { current } = Astro.props;
+const nav = [
+  { href: "/#sessions", label: "Sessions", key: "sessions" },
+  { href: "/about", label: "About", key: "about" },
+  { href: "/support", label: "Support", key: "support" },
+];
+---
+
+<header data-header data-solid="false"
+  class="group fixed inset-x-0 top-0 z-50 transition-[transform,background-color] duration-300 ease-[var(--ease-enter)] data-[solid=true]:bg-[var(--color-bg)]/85 data-[solid=true]:backdrop-blur-md">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-5 md:h-[72px] md:px-6">
+    <a href="/" aria-label="WeHale home" class="tap shrink-0"><img src="/assets/images/logo.svg" alt="WeHale" width="112" height="21" class="h-[21px] w-auto" /></a>
+    <nav aria-label="Primary" class="hidden items-center gap-8 md:flex">
+      {nav.map((n) => (
+        <a href={n.href} class:list={["tap text-[15px] font-semibold transition-colors hover:text-[var(--color-text)]", current === n.key ? "text-[var(--color-text)]" : "text-[var(--color-text-secondary)]"]} aria-current={current === n.key ? "page" : undefined}>{n.label}</a>
+      ))}
+    </nav>
+    <div class="flex items-center gap-1 md:gap-5">
+      <a href="#get-the-app" data-get-app data-at="header" class="tap hidden text-[15px] font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text)] md:inline-flex">Get the app</a>
+      <a href={BREATHE_URL} data-try data-at="header" class="btn !min-h-[44px] !px-4 !py-2.5 !text-[15px]">Try a session</a>
+      <details class="relative md:hidden" data-menu>
+        <summary class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-full text-[var(--color-text)] [&::-webkit-details-marker]:hidden" aria-label="Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg>
+        </summary>
+        <div class="absolute right-0 top-12 w-60 rounded-[var(--radius-lg)] bg-[var(--color-surface)] p-2 shadow-[0_20px_60px_rgba(0,0,0,.5)]">
+          {nav.map((n) => <a href={n.href} class="flex min-h-[48px] items-center rounded-[var(--radius-md)] px-4 text-base font-semibold hover:bg-white/5" aria-current={current === n.key ? "page" : undefined}>{n.label}</a>)}
+          <a href="#get-the-app" data-get-app data-at="menu" class="flex min-h-[48px] items-center rounded-[var(--radius-md)] px-4 text-base font-semibold hover:bg-white/5">Get the app</a>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

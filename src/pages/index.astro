@@ -1,62 +1,238 @@
 ---
+/**
+ * Home (Isak, 29 Sep): the top section is who WeHale is and the feeling. The brand film full-bleed, the brand's own
+ * words, "Get the app" first (the smart link; a QR on desktop) and "Try a session" second. Then the session to try
+ * here, the guides with their voices, the app, what people say, and a quiet close.
+ * The page is a colour journey: the brand navy after the film, teal balance in the middle, night calm at the bottom;
+ * warmth appears only in The Wake Up's own light (Isak, 29 Sep).
+ * Hero variants (?v=): hero-film (default), hero-valley, hero-still (src/data/hooks.json). ?h=<hook> sets the line.
+ * Sources for the words: docs/redesign/HOME-NOTES.md.
+ */
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Hero from "../components/Hero.astro";
-import TrustStrip from "../components/TrustStrip.astro";
-import Pillars from "../components/Pillars.astro";
-import SessionShowcase from "../components/SessionShowcase.astro";
-import PhoneSlider from "../components/PhoneSlider.astro";
-import WhyBreathwork from "../components/WhyBreathwork.astro";
-import Stories from "../components/Stories.astro";
-import FinalCta from "../components/FinalCta.astro";
-import NewsletterForm from "../components/NewsletterForm.astro";
+import OfferLine from "../components/site/OfferLine.astro";
+import { BREATHE_URL } from "../components/site/links";
+import DATA from "../data/hooks.json";
+import SESSIONS from "../data/breathe-sessions.json";
 
-const title = "WeHale · Come back to yourself";
-const description =
-  "Audio-guided breathwork sessions for activation, balance, and calm. A library of sessions, multi-day journeys, five to forty-five minutes each.";
+const guideOf = (slug: string) => SESSIONS.sessions.find((s) => s.slug === slug)?.narrator || "Edvin";
+const HOOKS = Object.fromEntries(Object.entries(DATA.hooks).map(([k, h]: [string, any]) => [k, { l: h.line_en, sub: String(h.sub_en || "").replace(/\{guide\}/g, guideOf(h.session)) }]));
+const HERO = { def: DATA.variants.home.default, ok: Object.keys(DATA.variants.home.options) };
+const CLIPS = { "hero-film": "film", "hero-valley": "valley", "hero-still": "still" };
+
+// The three sessions you can try here, by their app titles, with the app's category (Activate, Balance, Calm).
+const CAT = { "wake-up": "Activate", unravel: "Balance", "soft-reboot": "Calm" };
+const web = SESSIONS.sessions.map((s) => ({ ...s, cat: CAT[s.slug] || "" }));
+const guides = [
+  { name: "Edvin", role: "Co-founder · guides The Wake Up and Unravel", voice: "/assets/audio/voice-edvin.m4a", line: "“This is your morning reset.” From The Wake Up." },
+  { name: "Philip Sigfridsson", role: "Co-founder · guides The Soft Reboot", voice: "/assets/audio/voice-philip.m4a", line: "“Welcome to this breathwork session.” From The Soft Reboot." },
+];
+// Real App Store reviews (SE storefront), quoted exactly (ZIggeztar's shortened at a sentence end); checked against the
+// public reviews feed, 29 Sep 2026.
+const reviews = [
+  { q: "I tried meditation apps for years. WeHale is the first one I keep coming back to.", n: "Dap tse" },
+  { q: "Easy to follow. Professional guidance for conscious breathing.", n: "ZIggeztar" },
+  { q: "Really nice and clean app, love it!", n: "Viicktorrr" },
+];
+const ld = {
+  "@context": "https://schema.org", "@type": "MobileApplication", name: "WeHale", operatingSystem: "iOS, Android",
+  applicationCategory: "HealthAndFitnessApplication", description: "Guided breathing sessions with a voice to follow.",
+  url: "https://wehale.io", downloadUrl: ["https://apps.apple.com/app/id6739413667", "https://play.google.com/store/apps/details?id=com.wehale.app"],
+  offers: { "@type": "Offer", price: "0", priceCurrency: "SEK" },
+  publisher: { "@type": "Organization", name: "Andningsappen Varberg AB", url: "https://wehale.io", email: "hello@wehale.io", logo: { "@type": "ImageObject", url: "https://wehale.io/assets/images/favicon.png" } },
+};
 ---
 
-<BaseLayout title={title} description={description}>
-  <Hero />
-  <TrustStrip />
-  <Pillars />
-  <SessionShowcase />
-  <PhoneSlider />
-  <WhyBreathwork />
-  <Stories />
-  <FinalCta />
+<BaseLayout title="WeHale · Come back to yourself" description="Guided breathing with Edvin and Philip, on iPhone and Android. Calm, clear, connected. Try a session free in your browser." page="home" current="home" pathname="/" ogImage="/assets/images/og/home.jpg">
+  <Fragment slot="head">
+    <!-- the hero variant (?v=), decided before first paint; every event carries it as v -->
+    <script is:inline define:vars={{ HERO }}>(function(){try{var v=new URLSearchParams(location.search).get("v");document.documentElement.dataset.v=HERO.ok.indexOf(v)>-1?v:HERO.def;}catch(e){document.documentElement.dataset.v=HERO.def;}})();</script>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </Fragment>
 
-  <!-- Email capture: catches visitors who aren't ready to install yet. -->
-  <section class="bg-[var(--color-bg-alt)] pb-24 md:pb-32">
-    <div class="mx-auto flex max-w-6xl flex-col items-center px-6">
-      <NewsletterForm />
+  <div class="journey">
+  <!-- ─── 1. Who WeHale is, and the feeling: the brand film, full-bleed ─── -->
+  <section class="relative isolate flex min-h-[100svh] items-end overflow-hidden md:min-h-[92vh]" id="top">
+    <div class="absolute inset-0 -z-10" aria-hidden="true">
+      <video id="heroVideo" class="h-full w-full object-cover" muted loop playsinline preload="none" disablepictureinpicture></video>
+      <script is:inline define:vars={{ CLIPS }}>(function(){var v=document.getElementById("heroVideo"),c=CLIPS[document.documentElement.dataset.v]||"film",p=matchMedia("(max-aspect-ratio: 4/5)").matches?"9x16":"16x9",b="/assets/video/hero/"+c+"-"+p;
+        v.poster=b+"-poster.jpg";v.dataset.src=b+".mp4";if(c==="still")v.style.objectPosition=p==="16x9"?"50% 35%":"50% 30%";
+        if(!matchMedia("(prefers-reduced-motion: reduce)").matches){v.src=v.dataset.src;v.preload="auto";v.autoplay=true;var pl=v.play();if(pl&&pl.catch)pl.catch(function(){});}})();</script>
+      <!-- a calm scrim: the words read, the film still shows; the bottom melts into the page's dawn -->
+      <div class="absolute inset-0 bg-gradient-to-b from-[rgba(12,10,14,.35)] via-[rgba(12,10,14,.05)] to-[rgba(9,15,29,.94)] md:bg-gradient-to-r md:from-[rgba(12,10,14,.72)] md:via-[rgba(12,10,14,.2)] md:to-transparent"></div>
+      <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[var(--journey-dawn)]"></div>
+    </div>
+    <div class="mx-auto w-full max-w-6xl px-5 pb-12 pt-32 md:px-6 md:pb-24">
+      <p class="t-caption hero-in" style="--d:0ms">WeHale · Guided breathing</p>
+      <h1 class="t-display hero-in mt-3 max-w-xl" style="--d:120ms" id="heroH">Come back to yourself.</h1>
+      <p class="t-lead hero-in mt-4 max-w-md" style="--d:260ms" id="heroSub">Calm, clear, connected. Guided breathing with Edvin and Philip, on iPhone and Android.</p>
+      <script is:inline define:vars={{ HOOKS }}>(function(){try{var h=HOOKS[new URLSearchParams(location.search).get("h")||""];if(!h)return;document.getElementById("heroH").textContent=h.l;if(h.sub)document.getElementById("heroSub").textContent=h.sub;document.documentElement.dataset.hooked="1";}catch(e){}})();</script>
+      <div class="hero-in mt-7 flex flex-row flex-wrap items-center gap-3" style="--d:380ms">
+        <a href="#get-the-app" class="btn" data-get-app data-at="hero">Get the app</a>
+        <a href={BREATHE_URL} class="btn-quiet" data-try data-at="hero">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+          Try a session
+        </a>
+      </div>
+      <OfferLine class="hero-in mt-4 max-w-[calc(100%-64px)] md:max-w-none" />
+    </div>
+    <button type="button" class="absolute bottom-5 right-4 flex h-11 w-11 items-center justify-center rounded-full bg-black/25 text-white/80 backdrop-blur-sm hover:text-white md:bottom-8 md:right-8" id="heroPause" aria-label="Pause the film">
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-i="pause"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+      <svg class="hidden h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-i="play"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+    </button>
+  </section>
+
+  <!-- ─── 2. What we believe (the brand's own words) ─── -->
+  <section class="sec">
+    <div class="wrap">
+      <p class="t-title1 max-w-3xl" data-reveal>No hype. No lofty promises. No guilt when you miss a day.</p>
+      <p class="t-lead mt-5 max-w-xl" data-reveal>Each session is built on one named breathing technique, and guided by a voice you can follow.</p>
     </div>
   </section>
 
-  <!-- JSON-LD: MobileApplication schema for the App Store listing -->
-  <script
-    is:inline
-    type="application/ld+json"
-    set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "MobileApplication",
-      name: "WeHale",
-      operatingSystem: "iOS",
-      applicationCategory: "HealthApplication",
-      description:
-        "Audio-guided breathwork sessions for activation, balance, and calm.",
-      url: "https://wehale.io",
-      downloadUrl: "https://apps.apple.com/se/app/wehale/id6739413667",
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-      publisher: {
-        "@type": "Organization",
-        name: "WeHale",
-        url: "https://wehale.io",
-        email: "hello@wehale.io",
-        logo: {
-          "@type": "ImageObject",
-          url: "https://wehale.io/assets/images/favicon.png",
-        },
-      },
-    })}
-  />
+  <!-- ─── 3. Try it now: the three sessions, here in the browser ─── -->
+  <section class="sec" id="sessions">
+    <div class="wrap">
+      <div class="md:flex md:items-end md:justify-between md:gap-12">
+        <div>
+          <p class="t-caption" data-reveal>Try it now</p>
+          <h2 class="t-title1 mt-4 max-w-xl" data-reveal>Six minutes, right here.</h2>
+        </div>
+        <p class="t-lead mt-4 max-w-md md:mt-0" data-reveal>Free in your browser, no account. Each one stays free in the app.</p>
+      </div>
+      <div class="mt-10 grid grid-cols-3 gap-5 swipe" data-swipe tabindex="0" role="region" aria-label="Three sessions, swipe to see all">
+        {web.map((s, i) => (
+          <a href={`${BREATHE_URL}?s=${s.slug}`} class="photo-card press-card group relative block aspect-[3/4]" data-reveal style={`--i:${i}`} data-try data-at={`library_${s.slug}`}>
+            <img src={`/assets/images/sessions/orb-${s.slug}-800.webp`} srcset={`/assets/images/sessions/orb-${s.slug}-480.webp 480w, /assets/images/sessions/orb-${s.slug}-800.webp 800w`} sizes="(min-width: 640px) 33vw, 100vw" alt="" width="800" height="1067" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-enter)] group-hover:scale-[1.02]" loading="lazy" decoding="async" />
+            <span class="absolute inset-x-0 bottom-0 block bg-gradient-to-t from-black/85 via-black/40 to-transparent p-5 pt-16">
+              <span class="block text-[0.75rem] font-bold uppercase tracking-[0.12em] text-white/80">{s.cat} · 6 min · with {s.narrator}</span>
+              <span class="mt-1 flex items-center justify-between gap-3 text-xl font-semibold">{s.title}<svg class="h-5 w-5 shrink-0 opacity-80 transition-transform duration-300 ease-[var(--ease-enter)] group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              <span class="block text-[16px] text-white/80">{s.reason_en}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+      <div class="dots" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- ─── 4. The guides, and their voices (plays only on tap) ─── -->
+  <section class="sec" id="guides">
+    <div class="wrap grid gap-10 md:grid-cols-[1fr_1.1fr] md:items-center md:gap-16">
+      <div>
+        <p class="t-caption" data-reveal>Your guides</p>
+        <h2 class="t-title1 mt-4" data-reveal>Hear who you breathe with.</h2>
+        <p class="t-lead mt-5 max-w-md" data-reveal>Edvin and Philip have practised breathwork and led live group sessions for years. They wrote the sessions and guide every one.</p>
+        <p class="mt-5" data-reveal><a href="/about" class="link tap">Meet the team</a></p>
+      </div>
+      <div class="grid gap-3" data-reveal>
+        {guides.map((g) => (
+          <div class="glass flex items-center gap-4 p-4 md:p-5">
+            <button type="button" class="voice press-card flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--color-text)] text-[var(--color-bg)]" data-voice={g.voice} aria-label={`Play a few seconds of ${g.name.split(" ")[0]}'s voice`} aria-pressed="false">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-i="play"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+              <span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+            </button>
+            <div class="min-w-0">
+              <p class="t-title3">{g.name}</p>
+              <p class="t-foot mt-0.5">{g.role}</p>
+              <p class="t-foot mt-1 italic">{g.line}</p>
+            </div>
+          </div>
+        ))}
+        <p class="t-foot px-1">Sound plays only when you tap.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 5. The app ─── -->
+  <section class="sec" id="app">
+    <div class="wrap grid items-center gap-10 md:grid-cols-[1fr_1.3fr] md:gap-16">
+      <div>
+        <p class="t-caption" data-reveal>The app</p>
+        <h2 class="t-title1 mt-4" data-reveal>Everything, when you want more.</h2>
+        <p class="t-lead mt-5 max-w-md" data-reveal>27 short sessions, 10 longer journeys and courses, and a small weekly goal you set yourself. Miss a day and nothing is lost.</p>
+        <div class="mt-7 flex flex-wrap items-center gap-3" data-reveal>
+          <a href="#get-the-app" class="btn" data-get-app data-at="app_showcase">Get the app</a>
+        </div>
+        <OfferLine class="mt-4" />
+      </div>
+      <div>
+      <div class="showcase swipe swipe-phones" data-reveal data-swipe tabindex="0" role="region" aria-label="Screens from the WeHale app, swipe to see all">
+        <img src="/assets/images/screens/app-practice-540.webp" alt="WeHale, the Practice screen with daily sessions" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-l" />
+        <img src="/assets/images/screens/app-home-540.webp" alt="WeHale, the Home screen with the intro course" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-c" />
+        <img src="/assets/images/screens/app-player-540.webp" alt="WeHale, a session playing" width="540" height="1099" loading="lazy" decoding="async" class="phone phone-r" />
+      </div>
+      <div class="dots" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 6. In their words (real App Store reviews) ─── -->
+  <section class="sec" id="reviews">
+    <div class="wrap">
+      <h2 class="t-title1" data-reveal>In their words.</h2>
+      <div class="mt-10 grid gap-3 md:grid-cols-3 md:gap-5 swipe" data-swipe tabindex="0" role="region" aria-label="Reviews, swipe to see all">
+        {reviews.map((r, i) => (
+          <figure class="glass flex flex-col justify-between p-6 md:p-7" data-reveal style={`--i:${i}`}>
+            <blockquote class="text-lg leading-snug md:text-xl">“{r.q}”</blockquote>
+            <figcaption class="t-foot mt-6">{r.n} · App Store review</figcaption>
+          </figure>
+        ))}
+      </div>
+      <div class="dots" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- ─── 7. Night calm: the close ─── -->
+  <section class="sec relative isolate overflow-hidden">
+    <div class="absolute inset-0 -z-10 flex items-center justify-center" aria-hidden="true">
+      <div class="sphere-field aspect-square w-[140%] max-w-[860px] rounded-full opacity-60"></div>
+    </div>
+    <div class="wrap flex flex-col items-center py-10 text-center md:py-16">
+      <div class="sphere mb-10 w-20 md:w-24" aria-hidden="true"></div>
+      <h2 class="t-display" data-reveal>Come back to yourself.</h2>
+      <p class="t-lead mt-5 max-w-md" data-reveal>Start with one session here, then keep going in the app.</p>
+      <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row" data-reveal>
+        <a href="#get-the-app" class="btn" data-get-app data-at="signoff">Get the app</a>
+        <a href={BREATHE_URL} class="btn-quiet" data-try data-at="signoff">Try a session</a>
+      </div>
+    </div>
+  </section>
+  </div>
 </BaseLayout>
+
+<script>
+  // The film: a pause control (WCAG 2.2.2), and it pauses when off screen or when the tab is hidden.
+  const v = document.getElementById("heroVideo") as HTMLVideoElement;
+  const pb = document.getElementById("heroPause")!;
+  let userPaused = false;
+  const icons = () => { pb.querySelector("[data-i=pause]")!.classList.toggle("hidden", v.paused); pb.querySelector("[data-i=play]")!.classList.toggle("hidden", !v.paused); pb.setAttribute("aria-label", v.paused ? "Play the film" : "Pause the film"); };
+  pb.addEventListener("click", () => { if (v.paused) { if (!v.src) v.src = v.dataset.src!; userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
+  v.addEventListener("play", icons); v.addEventListener("pause", icons); icons();
+  new IntersectionObserver(([e]) => { if (userPaused || !v.src) return; if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }).observe(v);
+
+  // The guides' voices: nothing loads or sounds until a tap; one voice at a time.
+  let current: HTMLAudioElement | null = null, currentBtn: HTMLElement | null = null;
+  // a small live waveform from the voice itself (Web Audio analyser; a gentle synthetic one if that's unavailable)
+  let ctx: AudioContext | null = null, raf = 0;
+  const wave = (b: HTMLElement, a: HTMLAudioElement) => {
+    const bars = [...b.querySelectorAll<HTMLElement>(".wave i")];
+    let an: AnalyserNode | null = null, data: Uint8Array | null = null;
+    try { ctx = ctx || new AudioContext(); const src = ctx.createMediaElementSource(a); an = ctx.createAnalyser(); an.fftSize = 64; src.connect(an); an.connect(ctx.destination); data = new Uint8Array(an.frequencyBinCount); ctx.resume(); } catch { an = null; }
+    cancelAnimationFrame(raf);
+    const step = (t: number) => {
+      if (a.paused) { bars.forEach((x) => (x.style.height = "30%")); return; }
+      bars.forEach((x, i) => { let v: number; if (an && data) { an.getByteFrequencyData(data); v = data[2 + i * 3] / 255; } else v = .5 + .5 * Math.sin(t / 140 + i * 1.3); x.style.height = Math.round(25 + v * 75) + "%"; });
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+  };
+  const setBtn = (b: HTMLElement, on: boolean) => { b.setAttribute("aria-pressed", String(on)); };
+  document.querySelectorAll<HTMLElement>("[data-voice]").forEach((b) => b.addEventListener("click", () => {
+    if (currentBtn === b && current && !current.paused) { current.pause(); setBtn(b, false); return; }
+    if (current) { current.pause(); if (currentBtn) setBtn(currentBtn, false); }
+    current = new Audio(b.dataset.voice); currentBtn = b;
+    current.addEventListener("ended", () => setBtn(b, false));
+    const a = current;
+    a.play().then(() => { setBtn(b, true); wave(b, a); }).catch(() => setBtn(b, false));
+  }));
+</script>

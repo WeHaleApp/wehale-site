@@ -1,0 +1,21 @@
+---
+/** 404: on brand, one way forward (Try a session) and one way home. Netlify serves dist/404.html for any missing path. */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { BREATHE_URL } from "../components/site/links";
+---
+<BaseLayout title="Page not found · WeHale" description="This page isn’t here." page="404" pathname="/404" noindex>
+  <section class="relative isolate overflow-hidden">
+    <div class="absolute inset-0 -z-10 flex items-center justify-center" aria-hidden="true">
+      <div class="sphere-field aspect-square w-[150%] max-w-[860px] rounded-full opacity-70"></div>
+    </div>
+    <div class="mx-auto flex min-h-[88svh] max-w-2xl flex-col items-center justify-center px-5 pb-16 pt-28 text-center">
+      <div class="hero-in mb-10 w-24 md:w-28" aria-hidden="true"><div class="sphere w-full"></div></div>
+      <h1 class="t-title1 hero-in" style="--d:120ms">This page isn’t here.</h1>
+      <p class="t-body hero-in mt-4 max-w-sm" style="--d:260ms">The link may be old. A breath is still right here.</p>
+      <div class="hero-in mt-8 flex flex-col items-center gap-3 sm:flex-row" style="--d:380ms">
+        <a href={BREATHE_URL} class="btn" data-try data-at="404">Try a session</a>
+        <a href="/" class="btn-quiet">Home</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

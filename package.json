@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.1",
@@ -18,6 +19,8 @@
   },
   "devDependencies": {
     "puppeteer": "^24.43.0",
-    "sharp": "^0.34.5"
+    "qrcode": "^1.5.4",
+    "sharp": "^0.34.5",
+    "vitest": "^3.2.7"
   }
 }

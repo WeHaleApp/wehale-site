@@ -1,0 +1,21 @@
+---
+/**
+ * "Get the app", the smart link (SITE-GOALS §1, action 2). On a phone every [data-get-app] goes straight to the OneLink,
+ * which opens the right store (or the app). On desktop it opens this sheet: a QR of the same OneLink, and both stores.
+ * The OneLink carries the ad-to-site contract (src/scripts/site.js, contract.js); the QR is drawn when the sheet opens.
+ */
+import StoreButtons from "./StoreButtons.astro";
+import OfferLine from "./OfferLine.astro";
+---
+<dialog class="sheet" id="getApp" aria-labelledby="getAppH">
+  <div class="relative p-7 text-center md:p-8">
+    <button type="button" class="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-text-secondary)] hover:text-[var(--color-text)]" data-close aria-label="Close">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+    <h2 id="getAppH" class="t-title2">Get WeHale on your phone</h2>
+    <p class="t-body mt-2">Scan with your phone’s camera. It opens the right store.</p>
+    <div class="qr mx-auto mt-6 w-[216px] rounded-xl bg-[#f2f0ed] p-2" data-qr aria-label="QR code for the WeHale app" role="img"></div>
+    <StoreButtons class="mt-6 justify-center" at="qr_sheet" />
+    <OfferLine class="mt-5" />
+  </div>
+</dialog>
