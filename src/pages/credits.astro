@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LegalLayout from "../components/LegalLayout.astro";
+
+const title = "Credits · WeHale";
+const description = "The people and sources behind the images, music and tools in WeHale.";
+// Generic on purpose (Isak, 29 Sep 2026): credits are listed by source and author, not pinned to
+// particular images, so a new image from the same source needs no change here.
+---
+
+<BaseLayout title={title} description={description} solidHeader>
+  <LegalLayout heading="Credits" effective="September 29, 2026">
+    <p>
+      WeHale is made with the help of photographers and other creators. We are grateful for their work.
+    </p>
+
+    <h2>Photography</h2>
+    <p>
+      Some of the photographs used in the WeHale app and on this site are licensed from
+      <a href="https://www.magnific.com" rel="noopener">Magnific</a>. Photographers include wirestock.
+    </p>
+  </LegalLayout>
+</BaseLayout>
