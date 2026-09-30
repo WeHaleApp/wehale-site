@@ -251,7 +251,7 @@ html.cardplay-orb .breathing-card:active .orb-play { transform: scale(var(--pres
 .story-item img { display: block; width: 100%; height: auto; aspect-ratio: 720 / 1564; border-radius: 16px; background: #0e1525;
   box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.45); }
 .story-nav { display: none; }
-@media (max-width: 767px) { .story { margin-inline: -1.25rem; padding-inline: 1.25rem; scroll-padding-inline: 1.25rem; } .story-item { width: calc(100vw - 2.5rem); max-width: 420px; scroll-snap-align: start; } }
+@media (max-width: 767px) { .story { margin-inline: -1.25rem; padding-inline: 1.25rem; scroll-padding-inline: 1.25rem; } .story-item { width: min(calc(100vw - 2.5rem), 420px, calc(78vh * 720 / 1564)); width: min(calc(100vw - 2.5rem), 420px, calc(78svh * 720 / 1564)); scroll-snap-align: start; } }   /* the whole screenshot fits the phone's height (Isak, 30 Sep); the next one peeks in */
 @media (min-width: 768px) { .story-item { width: calc((100% - 32px) / 3.3); scroll-snap-align: start; } .story-nav { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; } .story + .dots { display: none; } }
 
 .card-text { padding-right: 92px; }
