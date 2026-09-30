@@ -37,7 +37,7 @@ if(k){q.delete("k");var s=q.toString();history.replaceState(null,"",location.pat
 d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promise.resolve(true);`;
 ---
 
-<BreatheLayout title={`${T.title} · WeHale`} description={`${T.line} ${T.offer_1}`} hidden themeColor="#090f1d">
+<BreatheLayout title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#090f1d">
   <Fragment slot="head">
     <style is:inline>html{background:#090f1d}html.rc-locked body{visibility:hidden}</style>
     <script is:inline set:html={gate} />
@@ -58,8 +58,8 @@ d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promis
     <div class="rc-orb" id="rcOrb" aria-hidden="true"><s></s><i></i><b></b></div>
     <div class="rc-body">
       <h1 id="rcH">{T.title}</h1>
-      <p class="rc-line">{T.line}</p>
-      <p class="rc-only">{meta}</p>
+      <p class="rc-line">{T.line.split("|").map((b) => <span class="rc-beat">{b}</span>)}</p>
+      {meta && <p class="rc-only">{meta}</p>}
       <p class="rc-deal">{T.offer_1}</p>
       <p class="rc-how rc-how-m">{T.offer_how}</p>
       <p class="rc-how rc-how-d">{T.offer_how_desktop}</p>
