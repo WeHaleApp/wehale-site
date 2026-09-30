@@ -187,39 +187,37 @@ const description = "A guided breathing session with Edvin or Philip, right in y
   </div>
   <p class="goal" id="goal" hidden></p>
 
-  <!-- 2. End (finished) -->
+  <!-- 2. End (finished): the offer, one cream pill, one row of quiet links -->
   <section class="screen gone" id="endScr" aria-labelledby="endH">
     <div class="inner">
       <h1 id="endH">You just did <span data-title></span>.</h1>
       <p id="endNext"></p>
       <p class="offer" id="endOffer"></p>
       <p class="offer" id="endCode" hidden></p>
-      <div class="stack">
-        <a class="pill solid block" id="endApp" href="#" rel="noopener">Continue in the WeHale app</a>
-        <button class="pill block" id="againBtn" type="button">Play again</button>
+      <a class="pill solid block restcta" id="endApp" href="#" rel="noopener">Continue in the WeHale app</a>
+      <div class="quiet">
+        <button class="qlink" id="againBtn" type="button">Play again</button>
+        <a class="qlink" id="endHome" href="/" data-home aria-label="Back to wehale.io">wehale.io</a>
       </div>
-      <p class="appline" id="endAppLine"></p>
       <div class="endqr" id="endQr" hidden>
         {QRS.map((q) => <figure data-slug={q.slug} hidden><Fragment set:html={q.svg} /></figure>)}
         <p>On your phone? Scan to open the app.</p>
       </div>
-      <a class="linkbtn homelink" id="endHome" href="/" data-home>Back to wehale.io</a>
     </div>
   </section>
 
-  <!-- 3. Exit (left early): calm, no offer -->
+  <!-- 3. Exit (left early): calm, no offer. One cream pill, then one row of quiet links (Round 2, PR 1) -->
   <section class="screen gone" id="exitScr" aria-labelledby="exitH">
     <div class="inner">
       <h1 id="exitH">Pick up where you left off</h1>
-      <p><span data-title></span> is one of the three sessions that stay free in the WeHale app.</p>
-      <div class="stack">
-        <button class="pill solid block" id="resumeBtn" type="button">Back to the session</button>
-        <a class="pill block" id="exitApp" href="#" rel="noopener">Open the WeHale app</a>
+      <p><span data-title></span> stays free in the WeHale app.</p>
+      <button class="pill solid block restcta" id="resumeBtn" type="button">Back to the session</button>
+      <div class="quiet">
+        <a class="qlink" id="exitApp" href="#" rel="noopener">Get the app</a>
+        <button class="qlink" id="exitSave" type="button" hidden>Save for later</button>
+        <button class="qlink" id="exitStart" type="button">Choose another session</button>
+        <a class="qlink" id="exitHome" href="/" data-home aria-label="Back to wehale.io">wehale.io</a>
       </div>
-      <p class="appline" id="exitAppLine"></p>
-      <button class="linkbtn" id="exitSave" type="button" hidden>Want to come back to it later?</button>
-      <button class="linkbtn" id="exitStart" type="button">Choose another session</button>
-      <a class="linkbtn homelink" id="exitHome" href="/" data-home>Back to wehale.io</a>
     </div>
   </section>
 
