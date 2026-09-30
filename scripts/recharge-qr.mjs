@@ -1,11 +1,11 @@
 // QR codes for the campaign page (docs/recharge/README.md). Every QR code points at the landing page, never straight
 // at the store: the page carries the channel and the code into the OneLink.
 //
-//   node scripts/recharge-qr.mjs [outDir]                       newsletter, flyer, pdp (the campaign code)
+//   node scripts/recharge-qr.mjs [outDir]                       newsletter, pdp (the campaign code)
 //   node scripts/recharge-qr.mjs [outDir] influencers.csv       plus one per influencer: CSV with a header row and
 //                                                              the columns name,code (other columns are ignored)
 //   RECHARGE_CODES=<file.json>                                 the channel codes that must not be in this public repo
-//                                                              (they contain the partner's name): {"flyer": "…", "pdp": "…"};
+//                                                              (they contain the partner's name): {"pdp": "…"};
 //                                                              each rides in its URL as ?c=. Keep the file outside the repo.
 // Writes <name>.svg and <name>.png (1200 px, for print) and urls.csv. The URLs work once the gate is off (launch);
 // before that they show the 404, by design.
@@ -28,7 +28,7 @@ const pageUrl = (ch, code) => {
   return BASE + "?" + q.toString();
 };
 const LOCAL = process.env.RECHARGE_CODES ? JSON.parse(fs.readFileSync(process.env.RECHARGE_CODES, "utf8")) : {};
-const rows = ["newsletter", "flyer", "pdp"].map((ch) => ({ name: ch, ch, code: cleanCode(LOCAL[ch], pageCode(ch)) }));
+const rows = ["newsletter", "pdp"].map((ch) => ({ name: ch, ch, code: cleanCode(LOCAL[ch], pageCode(ch)) }));
 for (const r of rows) if (r.ch !== "newsletter" && !LOCAL[r.ch]) console.warn(`warning: no code for ${r.ch} in RECHARGE_CODES; it falls back to ${r.code}`);
 if (csv) {
   const lines = fs.readFileSync(csv, "utf8").split(/\r?\n/).filter((l) => l.trim());

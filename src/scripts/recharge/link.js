@@ -1,7 +1,7 @@
 // The campaign page's link into the app (docs/recharge/README.md). No DOM, so it is unit-tested (tests/recharge.test.js)
 // and shared by the page and the QR script (scripts/recharge-qr.mjs).
 //
-//   ?ch=newsletter|flyer|pdp|influencer   the channel tag, into af_sub1 (anything else: "web")
+//   ?ch=newsletter|pdp|influencer|social  the channel tag, into af_sub1 (anything else: "web")
 //   ?c=<CODE>                              the code, into deep_link_value (else the channel's code, else the default)
 //   utm_*, h, v, src                       the site's parameter contract (src/scripts/contract.js), passed on as on /breathe
 //
