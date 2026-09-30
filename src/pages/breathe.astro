@@ -58,7 +58,9 @@ const description = "A guided breathing session with Edvin or Philip, right in y
       <a class="ctlapp" id="ctlApp" href="#" rel="noopener" hidden>Continue in the app</a>
     </div></footer>
   </div>
-  <img id="brand" src="/assets/images/logo.svg" alt="WeHale" width="96" height="20" />
+  <!-- the way home: the logo and a quiet "‹ wehale.io" at top left (app.js: back to the home page's place when we came from it) -->
+  <a id="brand" href="/" data-home><img src="/assets/images/logo.svg" alt="WeHale home" width="96" height="20" /></a>
+  <a class="homeback" id="homeBack" href="/" data-home aria-label="Back to wehale.io"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg><span>wehale.io</span></a>
 
   <p class="hint" id="hint" aria-hidden="true"></p>
   <div class="phase" id="phase" aria-live="polite"></div>
@@ -201,6 +203,7 @@ const description = "A guided breathing session with Edvin or Philip, right in y
         {QRS.map((q) => <figure data-slug={q.slug} hidden><Fragment set:html={q.svg} /></figure>)}
         <p>On your phone? Scan to open the app.</p>
       </div>
+      <a class="linkbtn homelink" id="endHome" href="/" data-home>Back to wehale.io</a>
     </div>
   </section>
 
@@ -216,6 +219,7 @@ const description = "A guided breathing session with Edvin or Philip, right in y
       <p class="appline" id="exitAppLine"></p>
       <button class="linkbtn" id="exitSave" type="button" hidden>Want to come back to it later?</button>
       <button class="linkbtn" id="exitStart" type="button">Choose another session</button>
+      <a class="linkbtn homelink" id="exitHome" href="/" data-home>Back to wehale.io</a>
     </div>
   </section>
 

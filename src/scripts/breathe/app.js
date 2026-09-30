@@ -577,5 +577,15 @@ if (VAR.g) {
   if (VAR.hold) $("gHoldHint").hidden = false;
 }
 
+// ---------- the way home (Round 2, PR 1): the logo, "‹ wehale.io" and "Back to wehale.io" ----------
+// Opened from our home page: go back, so the home page returns at the same place. Otherwise a plain link to /.
+// During the session the logo leaves the way the leave control does (the exit screen, nothing lost).
+const fromHome = (() => { try { const r = new URL(document.referrer); return r.origin === location.origin && r.pathname === "/"; } catch (_) { return false; } })();
+document.querySelectorAll("[data-home]").forEach((a) => a.addEventListener("click", (e) => {
+  if (e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  if (body.classList.contains("in-session")) { e.preventDefault(); $("closeBtn").click(); return; }
+  if (fromHome && history.length > 1) { e.preventDefault(); history.back(); }
+}));
+
 // test hooks for the preview checks (no effect for visitors)
 window.__breathe = { openSave, get player() { return player; }, loadPlayer, timeSlug, get selected() { return selected; }, finish, exitEarly };
