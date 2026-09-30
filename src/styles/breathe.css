@@ -348,7 +348,7 @@ body.arrived .yact > :not(.tiles) { animation-delay: .46s; }
 /* the save sheet, polished */
 .shead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 2px 2px; }
 .shead h2 { margin: 0 !important; font-size: 21px !important; }
-.sclose { appearance: none; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(246, 237, 227, .2); background: rgba(246, 237, 227, .08); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.sclose { appearance: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(246, 237, 227, .2); background: rgba(246, 237, 227, .08); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
 .sclose svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .ssub { margin: 0 2px 14px; font: 500 14px/1.3 var(--font); color: var(--t2); }
 .sopt { display: flex !important; align-items: center; gap: 14px; }
@@ -373,7 +373,6 @@ body[data-v="e"] #startScr { overflow: hidden; }
 /* ---------- variant f (the landing loop, docs/breathe/landing-loop/LOG.md) ---------- */
 .tile .rf, body.f-does .tile .rd { display: none; }
 body.f-does .tile .rf { display: block; }
-body[data-v="f"] .sclose { width: 44px; height: 44px; }
 body[data-v="f"] #startScr .savebtn { min-height: 46px; }
 /* f: while the room is scaled down behind the start screen, its edges fade out (no hard canvas rectangle) */
 body.f-feather.sphere-up #silk, body.f-feather.growing #silk {
