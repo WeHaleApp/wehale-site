@@ -167,7 +167,6 @@ if (VAR.y) {
 
 if (VAR.g) {
   $("safeCap").textContent = "Go at your own pace. Stop if you feel dizzy.";
-  $("exitApp").textContent = "Continue in the app"; $("exitSave").textContent = "Save for later"; $("exitSave").className = "pill block";
   $("exitStart").hidden = true;
 }
 
@@ -259,7 +258,7 @@ $("introSkip").addEventListener("click", endIntro);
 function begin(from) {
   hideScreens(); $("intro").hidden = true; closeSave();
   $(START_LBL).textContent = "";
-  body.classList.remove("calm-start"); sphereUp(false);
+  body.classList.remove("calm-start"); restSphere(null); sphereUp(false);
   if (VAR.feather) { clearTimeout(begin.ft); body.classList.add("growing"); begin.ft = setTimeout(() => body.classList.remove("growing"), 1100); }
   // d, e: start at the session's startAt (1 s before Edvin's first word), fading the sound in over 1 s
   const ws = VAR.openings && (VAR.edge && HOOK && HOOK.start_f && HOOK.session === selected ? HOOK.start_f : bySlug(selected) && bySlug(selected).web_start_f);   // f: skip an opening line that doesn't fit the moment
@@ -278,7 +277,7 @@ $(START_BTN).addEventListener("click", () => play(0));
 $("againBtn").addEventListener("click", () => play(0));
 let exitAt = 0;
 $("resumeBtn").addEventListener("click", () => play(exitAt));
-$("exitStart").addEventListener("click", () => { showScreen("startScr"); if (VAR.y) { body.classList.add("calm-start"); sphereUp(true); } if (VAR.g) gReset(); });
+$("exitStart").addEventListener("click", () => { restSphere(null); showScreen("startScr"); if (VAR.y) { body.classList.add("calm-start"); sphereUp(true); } if (VAR.g) gReset(); });
 
 // g: a quiet "Continue in the app" in the controls (shown on tap); nothing visible while breathing
 function wireCtlApp() {
@@ -335,15 +334,13 @@ async function finish() {
   // the offer: read (or the built-in file), draw the arm once; standard copy whenever nothing is live
   $("endOffer").textContent = pick(STANDARD, "copy", LANG);
   $("endCode").hidden = true;
-  $("endAppLine").textContent = fillGuide(pick(STANDARD, "app_line", LANG));
   wireApp($("endApp"), oneLink({ session: selected, completed: true, assignment: null }), () => ({ ...params(), completed: 1 }));
-  showScreen("endScr"); showEndQr(false);
+  showScreen("endScr"); showEndQr(false); restSphere("endScr");
   const offer = await loadOffer(selected);
   assignment = assign(offer);
   if (assignment) {
     const arm = assignment.armDef;
     $("endOffer").textContent = (LANG === "sv" && arm.copy_sv) || arm.copy_en;
-    if (arm.app_line_en) $("endAppLine").textContent = fillGuide((LANG === "sv" && arm.app_line_sv) || arm.app_line_en);
     if (arm.show_code) {
       const code = shortCodeOf(assignment);
       $("endCode").hidden = false;
@@ -361,9 +358,8 @@ function exitEarly(at) {
   const dur = player ? player.dur : 340;
   if (exitAt >= dur - 15) { finish(); return; }          // left during the last goodbye: that counts as finished
   setTitles();
-  $("exitAppLine").textContent = fillGuide(pick(STANDARD, "app_line", LANG));
   wireApp($("exitApp"), oneLink({ session: selected, completed: false, assignment: null }), () => ({ ...params(), completed: 0 }));
-  showScreen("exitScr");
+  showScreen("exitScr"); restSphere("exitScr");
   // d, e: leaving in the first minute often means "not now": offer to save it
   if (VAR.g) { $("exitSave").hidden = false; return; }   // g: the exit sheet offers the app and save for later, nothing opens by itself
   if (VAR.y) { $("exitSave").hidden = false; if (exitAt < 60) openSave("Want to come back to it later?"); }
@@ -397,6 +393,26 @@ function sphereUp(on) {
   const t0 = performance.now(); const step = () => { if (player && player.relayout) player.relayout(); if (performance.now() - t0 < 1300) requestAnimationFrame(step); }; requestAnimationFrame(step);
 }
 addEventListener("resize", placeSphere);
+
+// ---------- end and exit: the orb rests smaller, above the words, with a clear gap before the headline ----------
+// (Round 2, PR 1.) The same transform as the start's sphere; the screen's scrim starts just above the headline, so the
+// words sit on a calm, dimmed field. restSphere(null) hands the sphere back to the session / start layout.
+let restOn = null;
+function restSphere(id) {
+  restOn = id;
+  const scr = id && $(id), h = scr && [...scr.querySelectorAll("h1")].find((x) => x.offsetParent !== null);
+  body.classList.toggle("orb-rest", !!h);
+  if (!h) { ROOM.forEach((el) => { el.style.transform = ""; }); return; }
+  const H = innerHeight, U = Math.min(innerWidth, H * .5625), cy0 = H / 2 - .1 * U, r = .2 * U;
+  const hTop = h.getBoundingClientRect().top;
+  scr.style.setProperty("--scrim-top", Math.max(0, hTop - 56).toFixed(0) + "px");
+  const top = (parseFloat(getComputedStyle($("brand")).top) || 6) + 52, bottom = hTop - 32;   // under the logo; 32 px clear above the headline
+  const s = Math.max(.3, Math.min(.72, (bottom - top) / (2 * r))), cy = Math.max(top + r * s, (top + bottom) / 2);
+  const ty = cy - H / 2 - s * (cy0 - H / 2);
+  ROOM.forEach((el) => { el.style.transformOrigin = "50% 50%"; el.style.transform = `translateY(${ty.toFixed(1)}px) scale(${s.toFixed(3)})`; });
+  const t0 = performance.now(); const step = () => { if (player && player.relayout) player.relayout(); if (performance.now() - t0 < 1300) requestAnimationFrame(step); }; requestAnimationFrame(step);
+}
+addEventListener("resize", () => { if (restOn) restSphere(restOn); });
 
 // ---------- save for later (d, e): the app, a reminder, or the link ----------
 const inApp = /Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Bytedance|Snapchat|LinkedInApp/i.test(navigator.userAgent);
@@ -576,6 +592,16 @@ if (VAR.g) {
   if (seen || Q.get("hint") === "0") $("gHint").hidden = true; else setTimeout(gHideHint, 3200);
   if (VAR.hold) $("gHoldHint").hidden = false;
 }
+
+// ---------- the way home (Round 2, PR 1): the logo, "‹ wehale.io" and "Back to wehale.io" ----------
+// Opened from our home page: go back, so the home page returns at the same place. Otherwise a plain link to /.
+// During the session the logo leaves the way the leave control does (the exit screen, nothing lost).
+const fromHome = (() => { try { const r = new URL(document.referrer); return r.origin === location.origin && r.pathname === "/"; } catch (_) { return false; } })();
+document.querySelectorAll("[data-home]").forEach((a) => a.addEventListener("click", (e) => {
+  if (e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  if (body.classList.contains("in-session")) { e.preventDefault(); $("closeBtn").click(); return; }
+  if (fromHome && history.length > 1) { e.preventDefault(); history.back(); }
+}));
 
 // test hooks for the preview checks (no effect for visitors)
 window.__breathe = { openSave, get player() { return player; }, loadPlayer, timeSlug, get selected() { return selected; }, finish, exitEarly };

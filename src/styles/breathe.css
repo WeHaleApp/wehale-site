@@ -81,13 +81,17 @@ body.gl-on #poster { opacity: 0; }
 body:not(.in-session) :is(.phase, .cap, .count, #cdn, #holdRing) { visibility: hidden; }
 
 /* ---------- player controls ---------- */
-.chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; transition: opacity .45s ease; }
-.chrome.off { opacity: 0; }
+.chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
+.chrome > .ctl, .top > :not(:first-child), .top::before { transition: opacity .45s ease; }
+.chrome.off > .ctl, .chrome.off .top > :not(:first-child), .chrome.off .top::before { opacity: 0; }
 .chrome.off * { pointer-events: none !important; }
+/* the one way out stays in sight while breathing: the leave control, quiet, in the same place (Round 2, PR 1) */
+#closeBtn { transition: opacity .45s ease, background-color .45s ease, border-color .45s ease; }
+.chrome.off #closeBtn { opacity: .62; pointer-events: auto !important; background-color: rgba(14, 9, 7, .28); border-color: rgba(246, 237, 227, .16); }
 body:not(.in-session) .chrome { display: none; }
 .top { position: absolute; left: 0; right: 0; top: 0; padding: calc(env(safe-area-inset-top, 0px) + 14px) 12px 28px;
-  display: grid; grid-template-columns: 96px 1fr 96px; align-items: center;
-  background: linear-gradient(to bottom, rgba(8, 4, 2, .55), rgba(8, 4, 2, 0)); pointer-events: auto; }
+  display: grid; grid-template-columns: 96px 1fr 96px; align-items: center; pointer-events: auto; }
+.top::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(to bottom, rgba(8, 4, 2, .55), rgba(8, 4, 2, 0)); }
 .ttl { text-align: center; line-height: 1.25; min-width: 0; }
 .ttl span { display: block; font: 500 14px/1.2 var(--font); color: rgba(246, 237, 227, .72); }
 .ttl b { display: block; font: 700 19px/1.3 var(--font); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -116,9 +120,20 @@ body:not(.in-session) .chrome { display: none; }
 .play { appearance: none; border: 0; width: 76px; height: 76px; border-radius: 50%; background: var(--ink); color: #140c07;
   display: grid; place-items: center; cursor: pointer; box-shadow: 0 4px 24px rgba(0, 0, 0, .3); }
 .play svg { width: 30px; height: 30px; fill: currentColor; }
-#brand { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 18px); width: 96px; height: auto; transform: translateX(-50%);
-  opacity: .78; z-index: 5; pointer-events: none; transition: opacity .45s ease; }
-body.in-session .chrome:not(.off) ~ #brand { opacity: 0; }
+/* the logo is a link home (a 44 px target around the 96 × 20 mark); above the screens, under the save sheet and consent */
+#brand { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 6px); padding: 12px 10px; transform: translateX(-50%);
+  opacity: .78; z-index: 7; transition: opacity .45s ease; -webkit-tap-highlight-color: transparent; border-radius: 12px; }
+#brand img { display: block; width: 96px; height: auto; }
+body.in-session .chrome:not(.off) ~ #brand { opacity: 0; pointer-events: none; }
+/* start, end and exit: a quiet way back at top left; in the session the leave control takes this place */
+.homeback { position: fixed; left: max(4px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 6px); z-index: 7;
+  display: inline-flex; align-items: center; gap: 2px; min-height: 44px; padding: 0 12px 0 6px; border-radius: 22px;
+  font: 600 14px/1 var(--font); color: var(--t2); text-decoration: none; -webkit-tap-highlight-color: transparent;
+  text-shadow: 0 0 3px rgba(8, 5, 3, .9), 0 0 10px rgba(8, 5, 3, .7); transition: opacity .45s ease, color .2s; }
+.homeback svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.homeback:hover { color: var(--text); }
+body.in-session .homeback, body.g-going .homeback { opacity: 0; pointer-events: none; }
+#brand:focus-visible, .homeback:focus-visible, .qlink:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
 /* ---------- start, end and exit screens ---------- */
 .screen { position: fixed; inset: 0; z-index: 6; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
@@ -163,6 +178,21 @@ body.in-session .chrome:not(.off) ~ #brand { opacity: 0; }
 .offer { margin-top: 18px !important; padding: 14px 16px; border-radius: 16px; background: rgba(246, 237, 227, .07); color: var(--text) !important; font-weight: 500 !important; max-width: none !important; }
 .appline { margin-top: 12px !important; font-size: 14px !important; color: var(--t3) !important; }
 .linkbtn { appearance: none; background: none; border: 0; color: var(--t2); font: 600 14px/1 var(--font); padding: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+/* end and exit (Round 2, PR 1): the orb rests above the words (app.js restSphere), a soft scrim starts just above the
+   headline (--scrim-top), one cream pill, then one row of quiet links with 44 px targets */
+:is(#endScr, #exitScr) { background: linear-gradient(to bottom, rgba(8, 4, 2, 0) 0, rgba(8, 4, 2, 0) var(--scrim-top, 40%),
+  rgba(8, 4, 2, .8) calc(var(--scrim-top, 40%) + 72px), rgba(8, 4, 2, .9) 100%); }
+/* the resting (smaller) room has no hard edges: its canvases fade out towards their borders */
+body.orb-rest :is(#silk, #stage) { -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%); mask-image: radial-gradient(closest-side, #000 62%, transparent 100%); }
+.restcta { margin-top: 24px; }
+.quiet { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 8px; }
+.quiet > [hidden] { display: none; }
+.qlink { appearance: none; background: none; border: 0; display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px;
+  font: 600 15px/1 var(--font); color: var(--t2); text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent; border-radius: 12px; }
+.qlink:hover { color: var(--ink); }
+.quiet > :not([hidden]) ~ :not([hidden])::before { content: "·"; margin: 0 12px 0 -2px; color: var(--t3); }
+#endScr .offer { margin-top: 14px !important; }
 
 .noscript { position: fixed; inset: auto 16px 16px; z-index: 9; text-align: center; color: var(--t2); }
 @media (min-height: 800px) { .screen h1 { font-size: 30px; } }
@@ -318,7 +348,7 @@ body.arrived .yact > :not(.tiles) { animation-delay: .46s; }
 /* the save sheet, polished */
 .shead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 2px 2px; }
 .shead h2 { margin: 0 !important; font-size: 21px !important; }
-.sclose { appearance: none; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(246, 237, 227, .2); background: rgba(246, 237, 227, .08); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
+.sclose { appearance: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(246, 237, 227, .2); background: rgba(246, 237, 227, .08); color: var(--ink); display: grid; place-items: center; cursor: pointer; }
 .sclose svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .ssub { margin: 0 2px 14px; font: 500 14px/1.3 var(--font); color: var(--t2); }
 .sopt { display: flex !important; align-items: center; gap: 14px; }
@@ -343,7 +373,6 @@ body[data-v="e"] #startScr { overflow: hidden; }
 /* ---------- variant f (the landing loop, docs/breathe/landing-loop/LOG.md) ---------- */
 .tile .rf, body.f-does .tile .rd { display: none; }
 body.f-does .tile .rf { display: block; }
-body[data-v="f"] .sclose { width: 44px; height: 44px; }
 body[data-v="f"] #startScr .savebtn { min-height: 46px; }
 /* f: while the room is scaled down behind the start screen, its edges fade out (no hard canvas rectangle) */
 body.f-feather.sphere-up #silk, body.f-feather.growing #silk {
@@ -366,7 +395,6 @@ body.f-moment .tiles { gap: 6px; }
   body.f-moment .tile[aria-checked="false"] { min-height: 46px; padding: 4px 14px; } }
 /* f (moment): at night the Start pill is softer; the end screen's words sit on a darker ground, clear of the orb */
 body.f-moment[data-selected="soft-reboot"] .starty { background: #d9d1c7; }
-body.f-moment #endScr { background: linear-gradient(to top, rgba(8, 4, 2, .96) 0%, rgba(8, 4, 2, .9) 50%, rgba(8, 4, 2, .35) 66%, rgba(8, 4, 2, 0) 78%); }
 body.f-moment #endScr .inner { padding-top: 34vh; }
 body.f-moment .tile em { white-space: nowrap; }
 .sopt [data-guide] { display: inline !important; }
@@ -445,7 +473,6 @@ body[data-v^="g"][data-world="night"].calm-start #silk { filter: brightness(.82)
 .endqr p { max-width: none !important; text-align: center; margin: 0 auto !important; font: 500 14px/1.3 var(--font) !important; color: var(--t2) !important; }
 body.g-fail[data-v^="g"] .yact .startlbl { display: block !important; margin-top: 10px; font: 500 15px/1.35 var(--font); color: var(--text); opacity: 1 !important; animation: none !important; }
 body.g-fail #startScr .ylede, body.g-fail #startScr .yact { opacity: 1 !important; }
-body[data-v^="g"] #endScr { background: linear-gradient(to top, rgba(8, 4, 2, .96) 0%, rgba(8, 4, 2, .9) 50%, rgba(8, 4, 2, .35) 66%, rgba(8, 4, 2, 0) 78%); }
 body[data-v^="g"] #endScr .inner { padding-top: 34vh; }
 .screen h1[tabindex="-1"]:focus { outline: none; }   /* the heading takes focus for screen readers, not a visible ring */
 
@@ -458,6 +485,8 @@ body.g-edge #silk, body.g-edge #stage { filter: contrast(1.18) saturate(1.25); }
 /* the consent bar (phones, about 84 px) never covers Begin: the start screen's actions lift above it, the offer line steps aside */
 @media (max-width: 767px) {
   html.consent-pending body[data-v^="g"] #startScr { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 150px); }
+  /* the end and exit screens' actions (and "Back to wehale.io") also stay above the card while it waits */
+  html.consent-pending body.whc-on :is(#endScr, #exitScr) { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 164px); }
   body[data-v^="g"].whc-on .glink { margin-top: 0; }
 }
 body[data-v^="g"] .ysub { white-space: pre-line; }
