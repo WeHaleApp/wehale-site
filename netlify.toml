@@ -55,20 +55,3 @@
   from = "/session/*"
   to = "/"
   status = 302
-
-# Internal design prototype (Plasma Touch), behind a password: PROTO_PASSWORD in the Netlify environment.
-# Unlisted, unlinked, never indexed.
-[[redirects]]
-  from = "/proto/*"
-  to = "/.netlify/functions/proto/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/proto"
-  to = "/.netlify/functions/proto"
-  status = 200
-  force = true
-
-[functions."proto"]
-  included_files = ["netlify/proto-files/**"]
