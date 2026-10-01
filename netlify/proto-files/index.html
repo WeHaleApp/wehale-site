@@ -246,6 +246,97 @@ body.flowing .flowLink { display: none; }
 body.flowing #stage.spec .scrText, body.flowing #stage.spec .checkin { visibility: hidden; } body.flowing.fci #stage.spec .scrText, body.flowing.fci #stage.spec .checkin { visibility: visible; }
 body.flowing:not(.fci) #stage.spec .scrTop { visibility: hidden; }
 body.flowing.nocred #lkScr { opacity: 0 !important; }
+
+/* ===== the real app screens, rebuilt from the code (tokens: colors.ts, type.ts, layout.ts) ===== */
+.rl, .rdy { --rt: #F2F0ED; color: var(--rt); font-family: var(--font); }
+.rl { position: absolute; inset: 0; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .55s ease; z-index: 4; }
+.rl.on { opacity: 1; visibility: visible; transition: opacity .55s ease .15s; }
+.rl button, .rl .ci-batt, .rl .of-plans { pointer-events: none; } .rl.on button, .rl.on .ci-batt { pointer-events: auto; }
+.rl h1, .rl h2, .rl p, .rdy h1, .rdy p { margin: 0; text-shadow: 0 0 14px rgba(8, 3, 2, .5); }
+.rl-lock { position: absolute; left: 0; right: 0; display: flex; justify-content: center; }
+.rl-lock .lk2 { display: flex; align-items: flex-end; gap: calc(var(--lh, 16px) * .889); color: var(--rt); }
+.rl-lock .lk2 svg { height: var(--lh, 16px); width: auto; display: block; } .rl-lock .lk2 img { height: calc(var(--lh, 16px) * 1.444); width: auto; display: block; margin-bottom: calc(var(--lh, 16px) * .0555); }
+.rl-lock .lk2 i { font-style: normal; font: 300 var(--lh, 16px)/1 var(--font); opacity: .6; margin-bottom: calc(var(--lh, 16px) * .17); }
+.rl-display { font: 500 34px/40px var(--font); text-align: center; }
+.rl-pill { appearance: none; border: 0; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 54px; border-radius: 999px; font: 800 16px/22px var(--font); letter-spacing: .5px; cursor: pointer; }
+.rl-pill.white { background: #fff; color: #000; } .rl-pill.glass { height: 56px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .15); color: var(--rt); font-weight: 700; letter-spacing: 0; }
+.rl-pill .ic { flex: none; }
+/* welcome */
+#rlWelcome .rl-lock { top: calc(var(--rH, 844px) * .08); --lh: 16px; }
+.rl-wtext { position: absolute; left: 24px; right: 24px; top: var(--w-t, 316px); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.rl-beats p { font: 400 16px/24px var(--font); color: rgba(242, 240, 237, .72); text-align: center; }
+.rl-trial { font: 700 18px/24px var(--font); text-align: center; margin-top: 8px !important; }
+.rl-btns { position: absolute; left: 24px; right: 24px; bottom: 50px; display: flex; flex-direction: column; gap: 12px; }
+.rl-or { display: flex; align-items: center; gap: 12px; margin: 6px 0; } .rl-or i { flex: 1; height: 1px; background: rgba(255, 255, 255, .15); } .rl-or span { font: 400 12px/16px var(--font); color: rgba(242, 240, 237, .55); }
+.rl-signin { text-align: center; font: 400 14px/22px var(--font); color: rgba(242, 240, 237, .72); } .rl-signin b { color: var(--rt); font-weight: 700; }
+/* ready (the start layer in the flow) */
+.rdy { display: none; }
+body.flowing #start .rdy { display: block; position: absolute; inset: 0; pointer-events: none; }
+body.flowing #start .startTop, body.flowing #start .startBot, body.flowing #start .flowLink { display: none !important; }
+.rdy .rl-lock { top: 71px; --lh: 16px; }
+.rdy-eyebrow { position: absolute; left: 24px; right: 24px; top: var(--r-e, 486px); text-align: center; font: 700 11px/14px var(--font); letter-spacing: 1.2px; text-transform: uppercase; color: rgba(242, 240, 237, .72); }
+.rdy-title { position: absolute; left: 24px; right: 24px; top: calc(var(--r-e, 486px) + 22px); }
+.rdy-narr { position: absolute; left: 24px; right: 24px; top: calc(var(--r-e, 486px) + 70px); text-align: center; font: 400 16px/24px var(--font); color: rgba(242, 240, 237, .72); }
+.rdy-line { position: absolute; left: 24px; right: 24px; top: calc(var(--r-e, 486px) + 102px); text-align: center; font: 400 13px/18px var(--font); color: rgba(242, 240, 237, .55); }
+.rdy-btns { position: absolute; left: 24px; right: 24px; bottom: 50px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.rl-btn { appearance: none; border: 0; width: 100%; padding: 13px 24px; border-radius: 12px; background: #fff; color: #090F1D; font: 700 16px/20px var(--font); cursor: pointer; pointer-events: auto; }
+.rl-tert { appearance: none; background: none; border: 0; color: rgba(242, 240, 237, .86); font: 500 15px/20px var(--font); padding: 4px 8px; cursor: pointer; pointer-events: auto; }
+/* check-in */
+#rlCi .rl-back { position: absolute; top: 60px; left: 20px; width: 24px; height: 24px; padding: 0; background: none; border: 0; } #rlCi .rl-skip { position: absolute; top: 60px; right: 20px; padding: 0; background: none; border: 0; color: rgba(255, 255, 255, .4); font: 500 15px/20px var(--font); }
+#rlCi .rl-lock { --lh: 12px; top: var(--c-l, 150px); }
+.ci-eye { position: absolute; left: 0; right: 0; top: var(--c-e, 183px); text-align: center; font: 500 14px/17px var(--font); letter-spacing: 2px; text-transform: uppercase; color: rgba(255, 255, 255, .45); }
+.ci-q { position: absolute; left: 40px; right: 40px; top: var(--c-q, 208px); text-align: center; font: 500 26px/34px var(--font); }
+.ci-val { position: absolute; left: 0; right: 0; top: var(--c-v, 336px); height: 30px; text-align: center; }
+.ci-val span { position: absolute; left: 0; right: 0; bottom: 0; transition: opacity .2s; } #ciWord { font: 500 24px/30px var(--font); opacity: 0; } #ciHint { font: 500 14px/18px var(--font); color: rgba(242, 240, 237, .55); bottom: 2px; }
+.ci-batt { position: absolute; left: 40px; top: var(--c-b, 378px); width: calc(100% - 80px); height: 72px; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+.ci-batt .bo { flex: 1; height: 72px; box-sizing: border-box; border: 2px solid rgba(242, 240, 237, .8); border-radius: 16px; padding: 8px; display: flex; gap: 8px; }
+.ci-batt .bo i { flex: 1; border-radius: 8px; background: rgba(242, 240, 237, .1); transition: background .18s; } .ci-batt .bo i.on { background: #BE6EAA; } .ci-batt.full .bo i.on { background: #F6EDE3; }
+.ci-batt .bn { width: 9px; height: 26px; margin-left: 2px; border-radius: 0 4.5px 4.5px 0; background: rgba(242, 240, 237, .8); }
+.ci-ends { position: absolute; left: 40px; right: 49px; top: calc(var(--c-b, 378px) + 80px); display: flex; justify-content: space-between; font: 500 13px/18px var(--font); color: rgba(242, 240, 237, .55); }
+.rl-cont { position: absolute; left: 24px; right: 24px; bottom: 40px; height: 58px; border-radius: 999px; border: 0; background: rgba(255, 255, 255, .10); color: rgba(242, 240, 237, .35); font: 800 17px/22px var(--font); transition: background .2s, color .2s; }
+.rl-cont:not(:disabled) { background: #fff; color: #090F1D; }
+/* result */
+.rs-row { position: absolute; left: 0; right: 0; top: var(--s-t, 282px); display: flex; justify-content: center; align-items: baseline; gap: 12px; } .rs-row svg { align-self: center; }
+.rs-row .pre { font: 500 38px/46px var(--font); letter-spacing: -.5px; color: rgba(255, 255, 255, .55); } .rs-row .post { font: 500 38px/46px var(--font); letter-spacing: -.5px; color: #E8A84E; }
+.rs-batt { position: absolute; left: 0; right: 0; top: calc(var(--s-t, 282px) + 62px); display: flex; justify-content: center; align-items: center; gap: 12px; }
+.mb { display: flex; align-items: center; width: 72px; height: 28px; } .mb .bo { flex: 1; height: 28px; box-sizing: border-box; border: 1.5px solid rgba(242, 240, 237, .8); border-radius: 6px; padding: 3px; display: flex; gap: 3px; } .mb .bo i { flex: 1; border-radius: 2px; background: rgba(242, 240, 237, .1); } .mb .bo i.on { background: #BE6EAA; } .mb.full .bo i.on { background: #F6EDE3; } .mb .bn { width: 3px; height: 10px; margin-left: 1.5px; border-radius: 0 1.5px 1.5px 0; background: rgba(242, 240, 237, .8); }
+.rs-res { position: absolute; left: 24px; right: 24px; top: calc(var(--s-t, 282px) + 108px); text-align: center; font: 500 18px/24px var(--font); }
+.rs-self { position: absolute; left: 24px; right: 24px; top: calc(var(--s-t, 282px) + 140px); text-align: center; font: 400 13px/18px var(--font); color: rgba(242, 240, 237, .55); }
+.rs-line { position: absolute; left: 24px; right: 24px; top: calc(var(--s-t, 282px) + 186px); text-align: center; font: 400 14px/20px var(--font); color: rgba(242, 240, 237, .72); }
+.rs-chip { position: absolute; left: 50%; transform: translateX(-50%); top: calc(var(--s-t, 282px) + 234px); display: flex; align-items: center; gap: 5px; padding: 8px 16px; border-radius: 999px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .08); white-space: nowrap; }
+.rs-chip i { width: 8px; height: 8px; border-radius: 50%; background: #F2F0ED; } .rs-chip span { margin-left: 6px; font: 500 13px/18px var(--font); color: rgba(242, 240, 237, .85); }
+.rl-done { position: absolute; left: 24px; right: 24px; bottom: 76px; height: 58px; border-radius: 999px; border: 0; background: #fff; color: #090F1D; font: 800 17px/22px var(--font); }
+/* offer */
+.of-x { position: absolute; top: 51px; left: 16px; width: 32px; height: 32px; border-radius: 16px; background: rgba(9, 15, 29, .55); border: 1px solid rgba(255, 255, 255, .18); display: grid; place-items: center; padding: 0; }
+.of-pill { position: absolute; left: 50%; transform: translateX(-50%); top: var(--o-p, 118px); display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 999px; background: rgba(255, 255, 255, .10); border: 1px solid rgba(255, 255, 255, .16); white-space: nowrap; } .of-pill span { font: 700 16px/20px var(--font); letter-spacing: -.1px; }
+.of-h { position: absolute; left: 28px; right: 28px; top: calc(var(--o-p, 118px) + 70px); text-align: center; font: 500 24px/30px var(--font); letter-spacing: -.3px; }
+.of-s { position: absolute; left: 28px; right: 28px; top: calc(var(--o-p, 118px) + 106px); text-align: center; font: 400 14px/20px var(--font); color: rgba(242, 240, 237, .72); }
+.of-tl { position: absolute; left: 32px; right: 32px; top: calc(var(--o-p, 118px) + 166px); }
+.of-tl .tr { display: flex; gap: 14px; } .of-tl .bd { width: 32px; height: 32px; flex: none; border-radius: 16px; background: rgba(255, 255, 255, .10); border: 1px solid rgba(255, 255, 255, .16); display: grid; place-items: center; } .of-tl .tr { position: relative; padding-bottom: 16px; } .of-tl .tr.last { padding-bottom: 0; }
+.of-tl .ln { position: absolute; left: 15.5px; top: 36px; bottom: 4px; width: 1px; background: rgba(255, 255, 255, .16); } .of-tl .tx b { display: block; font: 700 13.5px/18px var(--font); } .of-tl .tx span { display: block; font: 400 13px/18px var(--font); color: rgba(242, 240, 237, .72); }
+.of-plans { position: absolute; left: 20px; right: 20px; top: var(--o-c, 519px); display: flex; gap: 10px; }
+.pc { flex: 1; box-sizing: border-box; border-radius: 16px; border: 1.5px solid rgba(255, 255, 255, .10); background: rgba(255, 255, 255, .05); padding: 14px; } .pc.sel { border-color: rgba(255, 255, 255, .75); background: rgba(255, 255, 255, .16); }
+.pc .plt { height: 22px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; } .pc u { text-decoration: none; background: rgba(255, 255, 255, .14); border-radius: 6px; padding: 3px 8px; font: 800 10px/14px var(--font); letter-spacing: .6px; }
+.pc .pln { display: block; font: 700 14px/18px var(--font); margin-bottom: 6px; color: rgba(242, 240, 237, .72); } .pc.sel .pln { color: #fff; } .pc .plp { display: block; font: 800 18px/24px var(--font); } .pc .plm { display: block; margin-top: 4px; height: 26px; font: 400 18px/26px var(--font); color: rgba(242, 240, 237, .72); }
+.of-cta { position: absolute; left: 20px; right: 20px; top: calc(var(--o-c, 519px) + 156px); height: 56px; border-radius: 999px; border: 0; background: #fff; color: #090F1D; font: 800 17px/22px var(--font); }
+.of-fine { position: absolute; left: 24px; right: 24px; top: calc(var(--o-c, 519px) + 223px); text-align: center; font: 500 13px/18px var(--font); color: rgba(242, 240, 237, .72); }
+.of-foot { position: absolute; left: 0; right: 0; top: calc(var(--o-c, 519px) + 271px); display: flex; justify-content: center; gap: 14px; font: 500 12px/16px var(--font); color: rgba(255, 255, 255, .55); } .of-foot i { font-style: normal; opacity: .45; }
+.rl-restart { position: absolute; left: 50%; transform: translateX(-50%); bottom: 44px; background: none; border: 0; color: rgba(242, 240, 237, .55); font: 500 11px/16px var(--font); }
+body.flowing .vis { display: none !important; }
+body.flowing #screens > .scrTop, body.flowing #screens > .scrText, body.flowing #screens > #lkScr, body.flowing #screens #checkin, body.flowing #screens #palSeg, body.flowing #screens #lvlSeg { display: none !important; }
+body.flowing #screens .scrBot { position: absolute; inset: 0; padding: 0; pointer-events: none; }
+body.flowing .cithread { display: none !important; }
+body.flowing #lkScr { display: none; }
+@media (max-height: 700px) {
+  #rlWelcome .rl-lock { top: 40px; } .rl-wtext { top: 214px; gap: 8px; } .rl-display { font-size: 30px; line-height: 36px; } .rl-btns { bottom: 24px; gap: 10px; } .rl-pill { height: 50px; }
+}
+
+@media (max-width: 380px) { .pc .plm, .pc .plp { font-size: 15px; } .pc { padding: 12px; } }
+@media (max-height: 700px) {
+  .rdy .rl-lock { top: 53px; } #stage { --r-e: 378px; --c-l: 88px; --c-e: 118px; --c-q: 142px; --c-v: 256px; --c-b: 292px; --s-t: 190px; --o-p: 54px; --o-c: 236px; --w-t: 214px; }
+  .of-tl { display: none; } .of-h { top: calc(var(--o-p) + 58px); } .of-s { top: calc(var(--o-p) + 92px); }
+  .rdy-btns { bottom: 24px; } .rl-cont { bottom: 24px; height: 52px; } .rl-done { bottom: 40px; height: 52px; } .rs-chip { display: none; }
+}
 /* ===== the composition spec: 8 pt grid, zones, type scale (see composition-audit/SPEC.md) ===== */
 .sk text.n10 { font: 700 7px/1 var(--font); fill: currentColor; text-anchor: middle; }
 #stage:not(.spec) .phl, #stage:not(.spec) .cred { display: none; }
@@ -317,6 +408,11 @@ body.dev #stage.spec #palSeg, body.dev #stage.spec #lvlSeg { position: absolute;
 <div class="layer" id="start">
   <button class="flowLink" id="flowBtn" type="button">Flow</button>
   <div class="startTop"><p class="kick" id="kickS">Plasma Touch · prototype</p><h1>The Wake Up</h1><p class="brandLine" id="brandLine"></p><p class="sub">Touch the light: it reaches for you. Press and hold it, and let go to begin.</p></div>
+  <div class="rdy">
+    <div class="rl-lock" data-lock></div>
+    <p class="rdy-eyebrow">Your session is ready</p><h1 class="rl-display rdy-title">Charge Your Current</h1><p class="rdy-narr" id="rdyNarr">With Philip</p><p class="rdy-line" id="rdyLine">Press and hold the light, or tap Start now.</p>
+    <div class="rdy-btns"><button class="rl-btn" id="rdyStart">Start now</button><button class="rl-tert" id="rdySave">Save for later</button></div>
+  </div>
   <div class="startBot">
     <p class="hintT" id="hintT">Press and hold the light. Let go to begin.</p>
     <div class="row"><button class="pill solid" id="startBtn">Or tap to begin</button><button class="pill" id="scrBtn">Screens</button><button class="pill lookb" id="lookBtn1" data-x>Look</button><button class="pill" id="fsBtn" hidden aria-label="Full screen" style="min-width:44px;padding:0 13px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
@@ -355,11 +451,54 @@ body.dev #stage.spec #palSeg, body.dev #stage.spec #lvlSeg { position: absolute;
       <div class="cis" id="ciScale" role="slider" tabindex="0" aria-label="How charged are you?" aria-valuemin="1" aria-valuemax="5"><i class="cit"></i><b class="cif" id="ciFill"></b><u class="ctk" style="left:0%"></u><u class="ctk" style="left:25%"></u><u class="ctk" style="left:50%"></u><u class="ctk" style="left:75%"></u><u class="ctk" style="left:100%"></u><span class="cik" id="ciKnob"></span></div>
       <div class="lbls"><span>Drained</span><span>Charged</span></div>
     </div>
-    <div class="fl" id="flWelcome" data-cred="1"><h2 class="t">Your session is ready</h2><p class="s" id="flWelS">A guided breathing session with Edvin. Free.</p><div class="b"><button class="flcta" data-go="start">Continue with Apple</button><button class="fllink" data-go="">Other ways</button></div></div>
-    <div class="fl" id="flResult" data-cred="1"><h2 class="t">Feel the difference?</h2><p class="s" id="flResS"></p><div class="orbs" id="orbs"></div><div class="b one"><button class="flcta" data-go="offer">Continue</button></div></div>
-    <div class="fl" id="flOffer"><h2 class="t">A month on us.</h2><div class="chips"><div class="chip2"><i></i><span><b>Ignite Your Focus</b> · Activate</span></div><div class="chip2"><i></i><span><b>Box Breath</b> · Balance</span></div><div class="chip2"><i></i><span><b>Nighttime Serenity</b> · Calm</span></div></div><p class="s s2">Free for a month<br>then 499 kr / year</p><div class="b"><button class="flcta" data-go="end" style="min-width:240px">Start free month</button><button class="fllink" data-go="end">Not now</button></div><p class="print">Cancel anytime before the trial ends.</p></div>
-    <div class="fl" id="flEnd"><h2 class="t">That's the flow.</h2><div class="b one"><button class="flcta" data-go="welcome">Restart</button></div></div>
-    <div class="fl" id="flCi" data-cred="1"><div class="b one"><button class="flcta" id="flCiBtn">Continue</button></div></div>
+    <div class="rl" id="rlWelcome">
+      <div class="rl-lock" data-lock></div>
+      <div class="rl-wtext"><h1 class="rl-display">Charge Your Current</h1><div class="rl-beats"><p>Pour a Blackcurrant.</p><p>Press play.</p><p id="rlBeat3">Breathe with Philip.</p></div><p class="rl-trial">Your first month of WeHale free.</p></div>
+      <div class="rl-btns">
+        <button class="rl-pill white" data-go="start"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="#000"><path d="M16.37 12.64c-.03-2.68 2.19-3.97 2.29-4.03-1.25-1.82-3.19-2.07-3.88-2.1-1.65-.17-3.22.97-4.06.97-.84 0-2.13-.95-3.5-.92-1.8.03-3.46 1.05-4.39 2.66-1.87 3.25-.48 8.06 1.35 10.7.89 1.29 1.95 2.74 3.35 2.69 1.34-.05 1.85-.87 3.48-.87 1.62 0 2.08.87 3.5.84 1.45-.03 2.37-1.31 3.25-2.61 1.03-1.5 1.45-2.95 1.47-3.03-.03-.01-2.82-1.08-2.85-4.3zM13.7 4.6c.74-.9 1.24-2.14 1.1-3.38-1.07.04-2.36.71-3.13 1.61-.69.79-1.29 2.06-1.13 3.28 1.19.09 2.4-.6 3.16-1.51z"/></svg><span>Continue with Apple</span></button>
+        <button class="rl-pill white"><svg class="ic" width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.45a5.52 5.52 0 0 1-2.4 3.62v3h3.88c2.27-2.09 3.57-5.17 3.57-8.81z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.91l-3.88-3c-1.07.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.28a7.2 7.2 0 0 1 0-4.56v-3.1H1.27a12 12 0 0 0 0 10.76l4-3.1z"/><path fill="#EA4335" d="M12 4.76c1.76 0 3.34.61 4.59 1.8l3.44-3.44A11.5 11.5 0 0 0 12 0 12 12 0 0 0 1.27 6.62l4 3.1C6.22 6.87 8.87 4.76 12 4.76z"/></svg><span>Continue with Google</span></button>
+        <div class="rl-or"><i></i><span>or</span><i></i></div>
+        <button class="rl-pill glass"><span>Sign up with email</span></button>
+        <p class="rl-signin">Already have an account? <b>Sign in</b></p>
+      </div>
+    </div>
+    <div class="rl" id="rlCi">
+      <button class="rl-back" id="rlBack" aria-label="Back"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><button class="rl-skip" id="rlSkip">Skip</button>
+      <div class="rl-lock sm" data-lock></div>
+      <p class="ci-eye" id="ciEye">Before we begin</p>
+      <h2 class="ci-q">How is your energy<br>right now?</h2>
+      <div class="ci-val"><span id="ciWord"></span><span id="ciHint">Slide or tap</span></div>
+      <div class="ci-batt" id="ciBatt" role="slider" aria-label="How is your energy right now?" tabindex="0"><div class="bo"><i></i><i></i><i></i><i></i><i></i></div><div class="bn"></div></div>
+      <div class="ci-ends"><span>Drained</span><span>Charged</span></div>
+      <button class="rl-cont" id="rlCont" disabled>Continue</button>
+    </div>
+    <div class="rl" id="rlResult">
+      <div class="rs-row"><span class="pre" id="rsPre">Low</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="rgba(242,240,237,.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="post" id="rsPost">Charged</span></div>
+      <div class="rs-batt" id="rsBatt"></div>
+      <p class="rs-res" id="rsRes">Current charged.</p>
+      <p class="rs-self">Self-reported, before and after</p>
+      <p class="rs-line">Charge Your Current  &middot;  With Salte</p>
+      <div class="rs-chip"><i></i><i></i><i></i><span>Weekly goal met</span></div>
+      <button class="rl-done" id="rlDone">Done</button>
+    </div>
+    <div class="rl" id="rlOffer">
+      <button class="of-x" id="ofX" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="of-pill"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><span>WeHale &times; Salte</span></div>
+      <h2 class="of-h">Keep charging your current</h2><p class="of-s">Every session, journey and course in WeHale.</p>
+      <div class="of-tl">
+        <div class="tr"><div class="bd"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0 1 9.6-2M5 11h14v10H5z"/></svg></div><div class="ln"></div><div class="tx"><b>Today</b><span>Every session, journey and insight.</span></div></div>
+        <div class="tr"><div class="bd"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15zM10 21h4"/></svg></div><div class="ln"></div><div class="tx"><b>Before it ends</b><span>We remind you 3 days before the trial ends.</span></div></div>
+        <div class="tr last"><div class="bd"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12H3zM3 10h18"/></svg></div><div class="tx"><b>After one month</b><span>First payment. Cancel anytime before.</span></div></div>
+      </div>
+      <div class="of-plans">
+        <div class="pc sel"><div class="plt"><u>SALTE OFFER</u><svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M7.5 12.5l3 3 6-7" fill="none" stroke="#090F1D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><b class="pln">Annual</b><b class="plp">499 kr/year</b><span class="plm">(41.58 kr/month)</span></div>
+        <div class="pc"><div class="plt"><u>SALTE OFFER</u></div><b class="pln">Monthly</b><b class="plp">89 kr/month</b><span class="plm"></span></div>
+      </div>
+      <button class="of-cta" id="ofCta">Start your free month</button>
+      <p class="of-fine">First month free, then 499 kr per year.<br>Cancel anytime before the trial ends.</p>
+      <p class="of-foot"><span>Restore</span><i>&middot;</i><span>Privacy</span><i>&middot;</i><span>Terms</span></p>
+    </div>
+    <div class="rl" id="rlEnd"><button class="rl-restart" id="rlRestart">Restart flow</button></div>
     <div class="seg small" id="palSeg"><button data-p="bc">Blackcurrant</button><button data-p="amber">Amber</button></div>
     <div class="seg" id="lvlSeg"></div>
   </div>
@@ -960,7 +1099,7 @@ function specPos(Hn) { const short = Hn < 760; let o;
   if (typeof L === 'function' && L().heroRule === 'screen') { o.C = Math.round(.47 * Hn); o.z0 = o.C + (short ? 58 : 66); o.z1 = o.z0 + (short ? 74 : 96); o.cap = o.z1 + (short ? 22 : 16); }
   return o; }
 function layout() { const desk = DESK(); document.body.classList.toggle('desk', desk);
-  const W0 = 393, H0 = 852, wrap = $('stageWrap'), st = $('stage'), Ls = (typeof L === 'function' ? L() : DEFAULTS), spec = Ls.layout === 'spec'; let fit, Wn = W0, Hn = H0;
+  const W0 = 393, H0 = 852, wrap = $('stageWrap'), st = $('stage'), Ls0 = (typeof L === 'function' ? L() : DEFAULTS), Ls = (typeof FLOW !== 'undefined' && FLOW.on && FLOW.step === 'session') ? Object.assign({}, Ls0, { layout: 'current', heroY: .324, lineAdj: 0, ctlOff: 0, capPos: 0 }) : Ls0, spec = Ls.layout === 'spec'; let fit, Wn = W0, Hn = H0;
   if (spec) {   // the composition spec: real points, no scaling on phones (a short phone uses its own 667 table); the desktop mock is 390 x 844
     if (desk) { Wn = 390; Hn = 844; fit = Math.max(.35, Math.min(1, (innerHeight - 32) / Hn)); wrap.style.cssText = `width:${Wn * fit}px;height:${Hn * fit}px`; $('sheet').classList.add('on'); }
     else { fit = 1; Wn = innerWidth; Hn = Math.min(innerHeight, 1100); wrap.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100dvh;overflow:hidden'; }
@@ -970,7 +1109,7 @@ function layout() { const desk = DESK(); document.body.classList.toggle('desk', 
     fit = innerWidth / W0; Hn = innerHeight / fit; if (Hn < H0) { fit = innerHeight / H0; Hn = H0; Wn = innerWidth / fit; } Hn = Math.min(Hn, 1100);
     wrap.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:100dvh;overflow:hidden'; st.style.width = Wn + 'px'; st.style.height = Hn + 'px'; }
   if (!spec) st.style.transform = `scale(${fit})`;
-  st.classList.toggle('spec', spec); st.classList.toggle('ph-pill', Ls.phaseLabel === 'pill'); st.classList.toggle('brandp', Ls.brandPlayer === 'footer' || Ls.brandPlayer === 'both');
+  st.style.setProperty('--rH', Hn + 'px'); st.classList.toggle('spec', spec); st.classList.toggle('ph-pill', Ls.phaseLabel === 'pill'); st.classList.toggle('brandp', Ls.brandPlayer === 'footer' || Ls.brandPlayer === 'both');
   const dy = Hn - H0, ox = (Wn - W0) / 2; let heroCy, hs, ls, ctl, cs, SPx = null;
   if (spec) { SPx = specPos(Hn); GEO.SP = SPx; heroCy = SPx.C; hs = heroCy - 276; ls = (SPx.z0 - 26) - 412; ctl = SPx.P - 628; cs = SPx.cap - 538;
     for (const [k, v] of [['bar', SPx.bar], ['ct', SPx.ct], ['st', SPx.st], ['ss', SPx.ss], ['sb', SPx.sb], ['btn', SPx.btn], ['val', SPx.val], ['trk', SPx.trk], ['lab', SPx.lab], ['times', SPx.times], ['ctl', SPx.ctl], ['play', SPx.play], ['skip', SPx.skip], ['cgap', SPx.cgap], ['cap', SPx.cap], ['caph', SPx.caph], ['capf', SPx.capf], ['capl', SPx.capl], ['tf', SPx.tf], ['tl', SPx.tl], ['sf', SPx.sf], ['sl', SPx.sl]]) st.style.setProperty('--sp-' + k, v + 'px');
@@ -1271,17 +1410,16 @@ const fx = (() => {
   };
   return api;
 })();
-function flowC(SP) { const T = SP.ss + SP.sl, b = SP.sb - 64;
-  switch (FLOW.step) { case 'welcome': return Math.round((T + b) / 2); case 'offer': return SP.of.C; case 'result': return Math.round((T + SP.sb - 132) / 2); case 'end': return Math.round((T + SP.sb) / 2); case 'ci1': case 'ci2': return SP.Cc; default: return SP.Cs; } }
+function flowC(SP) { const k = SP.short ? GEO.H / 844 : 1; return Math.round((FLOW_C[FLOW.step] != null ? FLOW_C[FLOW.step] : SP.Cs) * k); }
 function heroStep(dt) { if (!GEO.spec || !GEO.SP) { heroCyS = null; GEOS.scrDyn = null; return; }
-  const SP = GEO.SP; heroT = mode === 'screens' ? (FLOW.on ? flowC(SP) : (level === 5 ? SP.Cc : SP.Cs)) : SP.Cs; if (heroCyS == null) heroCyS = heroT;
-  const rt = (FLOW.on && FLOW.step === 'offer' && mode === 'screens') ? (SP.short ? .42 : .54) : ((mode === 'start' || (FLOW.on && FLOW.step === 'welcome' && mode === 'screens')) ? 1.15 : 1); heroRS += (rt - heroRS) * (1 - Math.exp(-dt / .4)); heroCyS += (heroT - heroCyS) * (1 - Math.exp(-dt / .32)); const u = GEOS.scrU || 300; GEOS.scrDyn = GEOS.scrC0 ? GEOS.scrC0(heroCyS) : null; if (GEOS.scrDyn) GEOS.scrDyn.R *= heroRS; }
+  const SP = GEO.SP; heroT = FLOW.on && FLOW.step !== 'session' ? flowC(SP) : (mode === 'screens' ? (level === 5 ? SP.Cc : SP.Cs) : SP.Cs); if (heroCyS == null) heroCyS = heroT;
+  const rt = FLOW.on ? (FLOW_RS[FLOW.step] || 1) : (mode === 'start' ? 1.15 : 1); heroRS += (rt - heroRS) * (1 - Math.exp(-dt / .4)); heroCyS += (heroT - heroCyS) * (1 - Math.exp(-dt / .32)); const u = GEOS.scrU || 300; GEOS.scrDyn = GEOS.scrC0 ? GEOS.scrC0(heroCyS) : null; if (GEOS.scrDyn) GEOS.scrDyn.R *= heroRS; }
 // ------------------------------------------------------------------ the frame ----
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(.1, (now - last) / 1000); last = now; wallT += dt;
   if (ADAPT && L().render === 'auto' && !document.hidden) { slowMs += (dt * 1000 - slowMs) * .08; slowT = slowMs > 20 ? slowT + dt : 0; if (slowT > 1.5 && (GEO.adapt || 1) > .6) { GEO.adapt = (GEO.adapt || 1) * .8; slowT = 0; slowMs = 0; layout(); } }
-  const s = L(); { const lk = s.heroY + '|' + s.lineAdj + '|' + s.ctlOff + '|' + s.capPos + '|' + s.caps + '|' + s.layout + '|' + s.phaseLabel + '|' + s.skipStyle + '|' + s.heroRule + '|' + s.brandPlayer + '|' + s.brandStyle; if (lk !== window.__lk) { window.__lk = lk; layout(); } }
+  const s = L(); { const lk = (typeof FLOW !== 'undefined' ? FLOW.step : '') + '|' + s.heroY + '|' + s.lineAdj + '|' + s.ctlOff + '|' + s.capPos + '|' + s.caps + '|' + s.layout + '|' + s.phaseLabel + '|' + s.skipStyle + '|' + s.heroRule + '|' + s.brandPlayer + '|' + s.brandStyle; if (lk !== window.__lk) { window.__lk = lk; layout(); } }
   if (mode === 'start' && testFreeze) { /* a fixed test state */ }
   else if (mode === 'start') {
     charge = holding ? Math.min(1, charge + dt / s.holdDur) : charge * Math.exp(-dt / .45);   // releasing early: the light relaxes back, smoothly
@@ -1358,7 +1496,7 @@ const WORDING = { collab: 'In collaboration with', powered: 'Powered by', with: 
 const credText = (w) => '<span class="cred" role="img" aria-label="' + WORDING[w] + ' Salte"><span class="l1">' + WORDING[w] + '</span><img src="' + SALTE_URI + '" alt="Salte"></span>';
 const pill = (w, sm, o) => '<span class="cpill' + (sm ? ' sm' : '') + (o === 'word' ? '' : ' lf') + '" role="img" aria-label="' + WORDING[w] + ' Salte"><span>' + WORDING[w] + '</span><img src="' + SALTE_URI + '" alt="Salte"></span>';
 let skipKey = '';
-function placeSkip(s) { const spec = s.layout === 'spec', text = spec && s.skipStyle === 'text', k = String(text), b = $('skipBtn'); if (k === skipKey) return; skipKey = k;
+function placeSkip(s) { const spec = s.layout === 'spec' && !(FLOW.on && FLOW.step === 'session'), text = spec && s.skipStyle === 'text', k = String(text), b = $('skipBtn'); if (k === skipKey) return; skipKey = k;
   if (text) { b.className = 'skipT' + (b.classList.contains('on') ? ' on' : ''); b.innerHTML = 'Skip'; $('player').appendChild(b); }
   else { b.className = 'skipI' + (b.classList.contains('on') ? ' on' : ''); b.innerHTML = '<span class="skipV">Skip intro <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 5v14l10-7zM17 5h2v14h-2z"/></svg></span>'; $('pills').appendChild(b); } }
 let brandKey = '';
@@ -1423,22 +1561,41 @@ function buildChrome() {
   $('skipBtn').onclick = () => setT(40.9);
   $('closeBtn').onclick = () => { pause(); if (FLOW.on) flowGo('ci2'); else show('start'); };
 }
-let GUIDE = (new URLSearchParams(location.search)).get('guide') || 'Edvin';
-const FLOW = { on: false, step: null, before: 3, after: 3 };
-const FL_IDS = { welcome: 'flWelcome', result: 'flResult', offer: 'flOffer', end: 'flEnd', ci1: 'flCi', ci2: 'flCi' };
-function flowGo(step) { $('flWelS').textContent = 'A guided breathing session with ' + GUIDE + '. Free.'; FLOW.on = true; FLOW.step = step; document.body.classList.add('flowing'); document.body.classList.toggle('fci', step === 'ci1' || step === 'ci2'); document.body.classList.toggle('nocred', step === 'offer' || step === 'end');
+let GUIDE = (new URLSearchParams(location.search)).get('guide') || 'Philip';
+const FLOW = { on: false, step: null, before: null, after: null };
+const WEH_SVG = '<svg viewBox="0 0 1865 387" fill="currentColor" aria-hidden="true"><path d="M252.571 242.911C250.777 220.577 245.364 199.845 237.433 178.964C214.94 119.773 172.537 56.3472 135.828 4.63703C133.738 1.69172 129.849 -0.0743809 126.904 0.0024056C124.518 0.0627379 120.169 1.69167 118.304 4.17626C93.9298 36.6734 71.6178 70.0591 51.1104 105.337C36.9158 129.761 24.8769 154.212 15.0372 180.604C6.66201 203.064 1.05107 225.524 0.107688 249.504C-1.46095 289.35 14.1542 326.712 43.898 352.908C83.7886 388.043 136.047 397.597 183.759 371.095C229.639 345.613 256.799 295.576 252.571 242.911ZM226.315 277.871C216.371 320.29 182.311 355.025 138.367 361.941C159.56 352.529 177.55 339.399 190.078 319.895C214.369 282.083 212.165 241.924 196.489 201.128C181.856 163.042 158.063 123.716 135.559 89.7329C133.343 86.3817 129.575 84.4511 125.928 84.5553C122.681 84.6485 118.737 86.6559 116.532 89.9578C92.6025 125.724 65.1459 171.039 52.0483 211.922C47.5673 225.903 45.1924 239.593 45.1704 254.275C45.1265 280.251 57.5605 304.307 80.0644 317.443C93.1949 325.105 108.931 327.387 123.608 322.983C147.121 315.924 163.246 294.632 164.678 270.253C166.405 240.81 152.595 209.734 136.195 186.073C134.309 183.347 130.327 181.268 127.699 180.999C124.167 180.637 119.922 182.255 117.668 185.244C102.541 205.297 87.0849 236.532 91.2971 262.036C92.2899 268.042 94.7526 273.73 98.8606 277.948C103.21 282.412 109.49 282.736 114.432 279.494C118.776 276.642 120.893 270.412 118.534 264.762C111.245 247.321 117.52 233.373 126.306 216.732C135.998 234.634 145.635 258.246 138.625 278.633C135.477 287.787 129.021 295.241 121.359 298.345C111.36 302.404 101.186 302.157 92.0925 296.903C80.3825 290.135 72.649 277.712 70.3399 264.312C68.1131 251.385 70.1919 239.11 73.2304 226.523C85.1323 188.48 104.28 154.798 125.862 120.14C146.962 154.963 172.51 196.91 181.636 236.741C189.386 270.549 178.647 305.591 152.403 328.265C120.103 356.16 71.4808 352.825 44.7152 317.158C29.8186 297.309 23.4508 273.499 24.6136 248.588C27.4656 187.438 76.3238 109.368 110.126 59.0732L126.136 35.2529L169.74 101.481C192.776 136.474 220.167 192.764 227.352 234.366C229.941 249.345 229.793 263.073 226.326 277.871H226.315Z" fill="currentColor"/> <path d="M1224.29 25.2988C1222.03 62.8694 1220.23 95.7394 1218.87 123.92C1217.58 152.095 1216.95 175.91 1216.95 195.326C1216.95 214.742 1217.58 238.678 1218.87 266.853C1220.23 295.028 1222.03 327.903 1224.29 365.474H1151.44C1153.66 329.198 1155.44 297.288 1156.73 269.743C1158 242.226 1158.66 219.048 1158.66 200.262H1008.02C1008.02 219.048 1008.65 242.226 1009.95 269.743C1011.21 297.288 1012.98 329.198 1015.24 365.474H942.391C944.617 327.903 946.395 295.033 947.689 266.853C949.044 238.678 949.735 214.835 949.735 195.326C949.735 175.817 949.044 152.095 947.689 123.92C946.395 95.7449 944.617 62.8694 942.391 25.2988H1015.24L1014.76 35.5334C1014.1 45.2579 1012.9 67.2956 1011.15 101.641C1009.37 135.932 1008.32 163.959 1008.02 185.689H1158.65C1158.33 163.953 1157.27 135.926 1155.52 101.641C1153.75 67.2901 1152.54 45.2579 1151.91 35.5334L1151.43 25.2988H1224.28H1224.29Z" fill="currentColor"/> <path d="M1463.28 331.392C1463.28 353.49 1470.87 364.509 1486.04 364.509C1489.65 364.509 1492.96 363.966 1496.03 362.825C1499.07 361.711 1501.09 360.988 1502.05 360.658V370.29C1485.92 376.46 1470.69 379.564 1456.42 379.564C1440.82 379.564 1428.6 376.071 1419.69 369.088C1410.78 362.106 1405.84 354.461 1404.88 346.091V345.608C1393.86 353.978 1380.68 361.805 1365.26 369.088C1349.91 376.372 1333.98 380.047 1317.46 380.047C1302.53 380.047 1288.23 375.835 1274.59 367.405C1261.02 358.975 1254.24 342.12 1254.24 316.83C1254.24 284.497 1265.86 262.251 1289.16 250.119C1312.52 237.926 1339.29 231.816 1369.48 231.816C1376.22 231.816 1386.73 232.48 1401.03 233.741C1401.03 221.79 1400.7 204.118 1400.07 180.759C1399.74 164.233 1398.92 151.947 1397.66 143.912C1396.36 135.817 1393.35 129.432 1388.62 124.765C1383.96 120.037 1376.4 117.662 1365.99 117.662C1354.67 117.662 1345.52 120.613 1338.53 126.454C1331.61 132.235 1326.43 139.096 1323 147.044C1319.63 154.991 1316.29 164.803 1313.01 176.426C1310.42 186.479 1307.95 193.856 1305.54 198.584C1303.13 203.252 1299.94 205.566 1296.03 205.566C1290.55 205.566 1284.65 200.871 1278.33 191.476C1271.98 182.086 1266.59 172.301 1262.2 162.094C1257.86 151.92 1255.21 145.173 1254.25 141.866C1292.12 119.231 1329.39 107.91 1365.99 107.91C1400.01 107.91 1424.76 116.669 1440.17 134.16C1455.58 151.679 1463.29 178.565 1463.29 214.841V331.403L1463.28 331.392ZM1356.36 355.711C1369.9 355.711 1385.92 349.267 1404.4 336.323C1403.74 322.051 1402.78 290.925 1401.51 243C1390.19 240.773 1383.21 239.478 1380.56 239.144C1378.64 238.842 1375.26 238.661 1370.45 238.661C1355.18 238.661 1341.7 242.813 1329.99 251.062C1318.34 259.251 1312.53 274.723 1312.53 297.425C1312.53 315.908 1316.74 330.24 1325.17 340.414C1333.6 350.621 1343.98 355.706 1356.36 355.706V355.711Z" fill="currentColor"/> <path d="M1571.07 380.045C1582.45 380.045 1592.87 377.819 1602.26 373.42C1611.65 369.087 1619.3 364.447 1625.25 359.45C1631.28 354.393 1634.29 351.563 1634.29 350.899L1629.47 341.147C1628.18 342.442 1625.41 344.883 1621.16 348.492C1616.98 352.046 1611.95 355.446 1606.11 358.726C1600.24 361.946 1594.91 363.542 1590.1 363.542C1582.93 363.542 1578.23 359.329 1576.01 350.899C1572.69 338.948 1571.07 303.303 1571.07 243.969C1571.07 189.873 1571.79 146.642 1573.24 114.282C1574.74 81.8615 1576.4 58.107 1578.17 42.9965C1579.92 27.9134 1580.82 22.0118 1580.82 25.2972H1503.03C1503.03 22.3464 1503.9 28.972 1505.68 45.1684C1507.52 61.3923 1509.17 84.6641 1510.62 115.011C1512.06 145.298 1512.78 183.406 1512.78 229.407V336.337C1512.78 343.171 1515.25 350.005 1520.25 356.806C1525.3 363.547 1532.35 369.087 1541.44 373.425C1550.5 377.819 1560.37 380.051 1571.06 380.051L1571.07 380.045Z" fill="currentColor"/> <path d="M703.911 19.5176L596.98 359.693H582.407L514.852 177.983L446.336 359.693H431.763L300.508 19.5176H368.541L466.8 267.335L507.623 158.479L456.083 19.5176H524.116L614.548 258.664L689.327 19.5176H703.9H703.911Z" fill="currentColor"/> <path d="M914.824 165.343C912.899 167.932 890.922 182.412 848.958 208.816C807.055 235.247 773.126 256.56 747.205 272.757C756.266 297.652 769.544 317.551 787.063 332.48C804.554 347.41 822.856 354.88 841.971 354.88C853.922 354.88 863.043 354.491 869.306 353.673C875.63 352.801 882.069 350.662 888.574 347.289C895.079 343.916 902.21 338.349 910.009 330.55L914.824 335.365C908.956 341.234 903.175 346.444 897.487 351.019C891.86 355.533 881.17 360.469 865.456 365.948C849.803 371.488 830.595 374.258 807.899 374.258C776.17 374.258 750.161 368.51 729.868 357.035C709.64 345.567 694.886 330.275 685.677 311.156C676.435 291.981 671.828 270.908 671.828 247.938C671.828 222.983 676.918 199.409 687.12 177.256C697.294 155.038 713.008 136.976 734.201 123.067C755.454 109.097 781.677 102.115 812.83 102.115C838.658 102.115 859.549 106.569 875.444 115.482C891.339 124.394 902.418 134.207 908.676 144.863C915 155.548 917.046 162.382 914.819 165.332L914.824 165.343ZM846.786 162.332C846.786 150.71 843.111 139.395 835.828 128.376C828.511 117.39 815.956 111.878 798.136 111.878C780.316 111.878 766.226 119.102 753.704 133.554C741.243 147.946 735.04 171.453 735.04 204.115C735.04 223.953 737.749 242.947 743.229 261.074C768.513 248.07 792.059 232.899 813.911 215.556C835.828 198.219 846.786 180.487 846.786 162.332Z" fill="currentColor"/> <path d="M1864.14 165.343C1862.21 167.932 1840.23 182.412 1798.27 208.816C1756.37 235.247 1722.44 256.56 1696.52 272.757C1705.58 297.652 1718.86 317.551 1736.38 332.48C1753.87 347.41 1772.17 354.88 1791.28 354.88C1803.23 354.88 1812.36 354.491 1818.62 353.673C1824.94 352.801 1831.38 350.662 1837.89 347.289C1844.39 343.916 1851.52 338.349 1859.32 330.55L1864.14 335.365C1858.27 341.234 1852.49 346.444 1846.8 351.019C1841.17 355.533 1830.48 360.469 1814.77 365.948C1799.12 371.488 1779.91 374.258 1757.21 374.258C1725.48 374.258 1699.47 368.51 1679.18 357.035C1658.95 345.567 1644.2 330.275 1634.99 311.156C1625.75 291.981 1621.14 270.908 1621.14 247.938C1621.14 222.983 1626.23 199.409 1636.43 177.256C1646.61 155.038 1662.32 136.976 1683.51 123.067C1704.77 109.097 1730.99 102.115 1762.14 102.115C1787.97 102.115 1808.86 106.569 1824.76 115.482C1840.65 124.394 1851.73 134.207 1857.99 144.863C1864.31 155.548 1866.36 162.382 1864.13 165.332L1864.14 165.343ZM1796.1 162.332C1796.1 150.71 1792.43 139.395 1785.15 128.376C1777.83 117.39 1765.27 111.878 1747.45 111.878C1729.63 111.878 1715.54 119.102 1703.02 133.554C1690.56 147.946 1684.36 171.453 1684.36 204.115C1684.36 223.953 1687.07 242.947 1692.55 261.074C1717.83 248.07 1741.38 232.899 1763.23 215.556C1785.15 198.219 1796.1 180.487 1796.1 162.332Z" fill="currentColor"/></svg>';
+const lockupHTML = () => '<span class="lk2" role="img" aria-label="WeHale with Salte">' + WEH_SVG + '<i>&times;</i><img src="' + SALTE_URI + '" alt=""></span>';
+const CI_WORDS = ['Drained', 'Low', 'Steady', 'Good', 'Charged'], CI_RAMP = ['#8E9BC9', '#86AFC8', '#9CCBBE', '#A9CFA6', '#E8A84E'];
+let ciLevel = 0;
+const RL = { welcome: 'rlWelcome', ci1: 'rlCi', ci2: 'rlCi', result: 'rlResult', offer: 'rlOffer', end: 'rlEnd' };
+const FLOW_C = { welcome: 225, start: 331, ci1: 322, ci2: 322, result: 150, offer: 176, end: 300 }, FLOW_RS = { welcome: .95, start: 1, ci1: .75, ci2: .75, result: .8, offer: .7, end: .9 };
+function flowFill() { for (const e of document.querySelectorAll('[data-lock]')) if (!e.firstChild) e.innerHTML = lockupHTML(); $('rlBeat3').textContent = 'Breathe with ' + GUIDE + '.'; $('rdyNarr').textContent = 'With ' + GUIDE; }
+function ciReset() { ciLevel = 0; for (const c of $('ciBatt').querySelectorAll('i')) c.classList.remove('on'); $('ciBatt').classList.remove('full'); $('ciWord').style.opacity = '0'; $('ciHint').style.opacity = '1'; $('rlCont').disabled = true; ciV = ciVs = .45; ciVel = 0; }
+function ciSet(l) { l = Math.max(1, Math.min(5, l)); if (l !== ciLevel) { try { buzz(8); } catch (e) {} } ciLevel = l; [...$('ciBatt').querySelectorAll('i')].forEach((c, k) => c.classList.toggle('on', k < l)); $('ciBatt').classList.toggle('full', l === 5);
+  const w = $('ciWord'); w.textContent = CI_WORDS[l - 1]; w.style.color = CI_RAMP[l - 1]; w.style.opacity = '1'; $('ciHint').style.opacity = '0'; $('rlCont').disabled = false; ciV = (l - 1) / 4; }
+{ const bt = $('ciBatt'); let down = false; const at = (e) => { const r = bt.querySelector('.bo').getBoundingClientRect(); ciSet(Math.floor(Math.max(0, Math.min(.9999, (e.clientX - r.left) / r.width)) * 5) + 1); };
+  bt.addEventListener('pointerdown', (e) => { down = true; ciDrag = true; try { bt.setPointerCapture(e.pointerId); } catch (_) {} at(e); }); bt.addEventListener('pointermove', (e) => { if (down) at(e); });
+  for (const ev of ['pointerup', 'pointercancel']) bt.addEventListener(ev, () => { down = false; ciDrag = false; });
+  bt.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') ciSet((ciLevel || 3) - 1); if (e.key === 'ArrowRight') ciSet((ciLevel || 3) + 1); }); }
+function miniBattery(l) { return '<span class="mb' + (l >= 5 ? ' full' : '') + '"><span class="bo">' + [1, 2, 3, 4, 5].map((k) => '<i class="' + (k <= l ? 'on' : '') + '"></i>').join('') + '</span><span class="bn"></span></span>'; }
+function flowGo(step) { flowFill(); FLOW.on = true; FLOW.step = step; document.body.classList.add('flowing');
+  for (const [k, id] of Object.entries(RL)) $(id).classList.toggle('on', RL[step] === id);
   if (step === 'start') { show('start'); return; }
-  if (step === 'session') { carryOn = false; begin(false); if (L().flowShort === 'short' && SCR) setT(Math.max(0, SCR.DUR - 62)); return; }
+  if (step === 'session') { carryOn = false; begin(false); $('kickP').textContent = 'Activate'; document.querySelector('.phd .ttl').textContent = 'Charge Your Current'; document.querySelector('.phd .sub').textContent = 'With Salte'; if (L().flowShort === 'short' && SCR) setT(Math.max(0, SCR.DUR - 62)); return; }
   level = 5; if (mode !== 'screens') show('screens'); else paintScreens();
-  if (step === 'ci1' || step === 'ci2') { ciV = ciVs = .5; ciVel = 0; checkin = 3; ciLabel = 0; setCILabel(3); }
-  if (step === 'welcome') ciV = .72; if (step === 'offer') ciV = .42; if (step === 'end') ciV = .34;
-  if (step === 'result') { ciV = .25 + .5 * (FLOW.after - 1) / 4; const o = $('orbs'), n = [FLOW.before, FLOW.after], lab = ['Before', 'After'];
-    o.innerHTML = '' + n.map((v, i) => `<div class="o"><span class="g"><i style="width:${16 + v * 8}px;height:${16 + v * 8}px;background:radial-gradient(circle, rgba(255,226,190,${(.55 + v * .09).toFixed(2)}) 0%, rgba(242,160,110,${(.30 + v * .08).toFixed(2)}) 45%, rgba(138,60,106,0) 72%);box-shadow:0 0 ${8 + v * 6}px rgba(242,160,110,${(.15 + v * .07).toFixed(2)})"></i></span><b>${CI[v]} · ${lab[i]}</b></div>`).join('<span class="ar">&rarr;</span>');
-    $('flResS').textContent = FLOW.after > FLOW.before ? 'From ' + CI[FLOW.before] + ' to ' + CI[FLOW.after] + '.' : FLOW.after === FLOW.before ? 'Steady, and that\'s fine.' : 'A quieter finish, and that\'s okay.'; }
-  for (const [k, id] of Object.entries(FL_IDS)) { const el = $(id); el.classList.toggle('on', FL_IDS[step] === id); }
+  if (step === 'ci1' || step === 'ci2') { ciReset(); $('ciEye').textContent = step === 'ci1' ? 'Before we begin' : 'Take a moment to check in'; $('rlCont').textContent = step === 'ci1' ? 'Continue' : 'Submit'; $('rlBack').style.visibility = step === 'ci1' ? 'visible' : 'hidden'; }
+  if (step === 'welcome') ciV = .7; if (step === 'offer') ciV = .45; if (step === 'end') ciV = .3;
+  if (step === 'result') { const pre = FLOW.before, post = FLOW.after; ciV = post ? .35 + .5 * (post - 1) / 4 : .5; const up = pre && post && post > pre, same = pre && post && post === pre;
+    $('rsPre').textContent = !pre || !post ? 'Well done' : same ? 'Feeling steady at “' + CI_WORDS[post - 1] + '”' : CI_WORDS[pre - 1]; $('rsPre').style.color = !pre || !post || same ? '#F2F0ED' : ''; $('rsPost').textContent = pre && post && !same ? CI_WORDS[post - 1] : ''; $('rsPost').style.color = up ? '#E8A84E' : 'rgba(242,240,237,.72)';
+    $('rsPre').nextElementSibling.style.display = pre && post && !same ? '' : 'none'; $('rsBatt').innerHTML = pre && post ? '<span style="opacity:.6">' + miniBattery(pre) + '</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgba(242,240,237,.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' + miniBattery(post) : '';
+    $('rsRes').style.display = up ? '' : 'none'; document.querySelector('#rlResult .rs-self').style.display = pre && post ? '' : 'none'; }
   paintScreens(); }
-for (const b of document.querySelectorAll('.fl [data-go]')) b.onclick = () => { const g = b.dataset.go; if (g) flowGo(g); };
-$('flCiBtn').onclick = () => { if (FLOW.step === 'ci1') { FLOW.before = Math.round(ciV * 4) + 1; flowGo('session'); } else { FLOW.after = Math.round(ciV * 4) + 1; flowGo('result'); } };
+for (const b of document.querySelectorAll('.rl [data-go]')) b.onclick = () => { const g = b.dataset.go; if (g) flowGo(g); };
+$('rdyStart').onclick = () => $('startBtn').onclick(); $('rdySave').onclick = () => {};
+$('rlBack').onclick = () => flowGo('start');
+$('rlSkip').onclick = () => { if (FLOW.step === 'ci1') { FLOW.before = null; flowGo('session'); } else { FLOW.after = null; flowGo('result'); } };
+$('rlCont').onclick = () => { if (!ciLevel) return; if (FLOW.step === 'ci1') { FLOW.before = ciLevel; flowGo('session'); } else { FLOW.after = ciLevel; flowGo('result'); } };
+$('rlDone').onclick = () => flowGo('offer'); $('ofX').onclick = () => flowGo('end'); $('ofCta').onclick = () => flowGo('end'); $('rlRestart').onclick = () => { FLOW.before = FLOW.after = null; flowGo('welcome'); };
 $('flowBtn').onclick = () => flowGo('welcome');
 function show(m) { mode = m; syncGeo(); for (const id of ['start', 'player', 'screens']) $(id).classList.toggle('gone', id !== m); if (m === 'screens') paintScreens(); if (m === 'player') wake(); }
 let beginWall = 0;
@@ -1465,11 +1622,10 @@ function setCILabel(n) { if (n === ciLabel) return; ciLabel = n; const el = $('c
   sc.addEventListener('pointerup', up); sc.addEventListener('pointercancel', up);
   sc.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') { ciV = Math.max(0, Math.round(ciV * 4) / 4 - .25); } else if (e.key === 'ArrowRight') { ciV = Math.min(1, Math.round(ciV * 4) / 4 + .25); } else return; checkin = Math.round(ciV * 4) + 1; setCILabel(checkin); if (checkin === 5) ciBloomT = wallT; }); }
 function paintScreens() {
-  if (FLOW.on) { for (const [k, id] of Object.entries(FL_IDS)) $(id).classList.toggle('on', FL_IDS[FLOW.step] === id); $('scrH').textContent = FLOW.step === 'ci2' ? 'And now?' : 'How charged are you?'; }
   for (const b of $('lvlSeg').children) b.classList.toggle('on', +b.dataset.l === level);
   for (const b of $('palSeg').children) b.classList.toggle('on', b.dataset.p === scrPal);
   $('checkin').hidden = level !== 5;
-  if (level === 5) { $('scrB').textContent = 'Check-in'; $('scrS').textContent = 'Answering, live with the scale'; $('scrH').textContent = 'How charged are you?'; $('scrP').textContent = 'Drag to answer.'; setCILabel(Math.round(ciV * 4) + 1); if (FLOW.on) $('scrH').textContent = FLOW.step === 'ci2' ? 'And now?' : 'How charged are you?'; }
+  if (level === 5) { $('scrB').textContent = 'Check-in'; $('scrS').textContent = 'Answering, live with the scale'; $('scrH').textContent = 'How charged are you?'; $('scrP').textContent = 'Drag to answer.'; setCILabel(Math.round(ciV * 4) + 1); }
   else { $('scrB').textContent = level + ' · ' + LADDER_NAMES[level][0]; $('scrS').textContent = LADDER_NAMES[level][1]; $('scrH').textContent = LADDER_TEXT[level][0]; $('scrP').textContent = LADDER_TEXT[level][1] + (level >= 1 && level <= 3 ? ' Touch the light.' : ''); }
 }
 
