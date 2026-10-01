@@ -16,6 +16,8 @@ function run() {
   const PHONE = phoneOf(navigator.userAgent, navigator.maxTouchPoints || 0);
   const DESK = !PHONE && matchMedia("(hover: hover) and (pointer: fine) and (min-width: 700px)").matches;
   body.classList.add("rc");
+  // preview of the bloom look (owner of main, 1 Oct): ?look=bloom puts cover B2 under the words; Isak picks ring or bloom
+  if (/[?&]look=bloom(&|$)/.test(location.search)) body.classList.add("rc-bloom");
   body.classList.toggle("rc-desk", DESK);
   body.dataset.phone = PHONE || "desktop";
 

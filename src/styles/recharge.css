@@ -129,3 +129,13 @@ body.rc.arrived .rc-body > .rc-fine { --d: 720ms; }
   .rc-deal { font-size: 22px; }
   .rc-btn { width: auto; min-width: 300px; margin-inline: auto; }
 }
+
+/* the bloom look (preview, ?look=bloom): the campaign cover as the ground, slowly drifting; the words over a soft scrim;
+   the orb steps aside, keeping its space so the layout is the same as the ring look */
+body.rc-bloom .rc-sky { background: #0a0a0a url(/recharge/bloom-1080.webp) center 20% / cover no-repeat; transform-origin: 50% 30%; }
+@media (max-width: 767px) { body.rc-bloom .rc-sky { background-image: url(/recharge/bloom-720.webp); } }
+body.rc-bloom .rc-sky::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(8, 8, 14, .25) 0%, rgba(8, 8, 14, .05) 28%, rgba(8, 8, 14, .55) 52%, rgba(8, 8, 14, .92) 72%, rgba(8, 8, 14, .97) 100%); }
+body.rc-bloom .rc-orb { visibility: hidden; }
+@media (prefers-reduced-motion: no-preference) { body.rc-bloom.arrived .rc-sky { animation: rc-bloom-drift 24s var(--curve-breath, ease-in-out) infinite alternate; } }
+@keyframes rc-bloom-drift { from { transform: scale(1.03); } to { transform: scale(1.1) translateY(-1.5%); } }
