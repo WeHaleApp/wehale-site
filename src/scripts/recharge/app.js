@@ -57,11 +57,14 @@ async function drawQr(link) {
 // without WebGL 2 (or on an error) the poster and its CSS glow simply stay: the page never depends on the light.
 async function mountLight() {
   const hero = $("plasma-hero"); if (!hero) return;
+  // the shape of the light while Isak chooses (?arms=calm|softer|disc): softer by default (the Design lead's pick)
+  const ARMS = (/[?&]arms=(calm|softer|disc)(&|$)/i.exec(location.search) || [, "softer"])[1].toLowerCase();
+  if (ARMS !== "softer") hero.querySelectorAll("source, img").forEach((el) => { if (el.srcset) el.srcset = el.srcset.replace("/softer/", "/" + ARMS + "/"); if (el.getAttribute("src")) el.src = el.getAttribute("src").replace("/softer/", "/" + ARMS + "/"); });
   const go = async () => {
     try {
       const url = "/plasma/plasma-web.js"; const { mount, isSupported } = await import(/* @vite-ignore */ url);
       if (!isSupported()) { hero.classList.add("fallback"); return; }
-      const light = mount(hero, { look: "balanced", step: "welcome", reduceMotion: "auto", quality: "auto", interactive: false, onFallback: () => hero.classList.add("fallback") });
+      const light = mount(hero, { look: "balanced", step: "welcome", reduceMotion: "auto", quality: "auto", arms: ARMS, heroScale: "auto", interactive: false, onFallback: () => hero.classList.add("fallback") });
       requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add("live")));
       window.__plasma = light;
     } catch (_) { hero.classList.add("fallback"); }

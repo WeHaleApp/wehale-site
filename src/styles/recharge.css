@@ -80,7 +80,7 @@ body.rc.arrived .rc-body > .rc-fine { --d: 680ms; }
 
 /* desktop: composed, not stretched; the QR code in place of the button */
 @media (min-width: 700px) {
-  body.rc { --lt: translateY(-14svh) scale(1.3); }
+  body.rc { --lt: translateY(-3svh); }
   .rc-page { padding-top: 32px; padding-bottom: 48px; }
   .rc-lockup img.rc-we { height: 17px; }
   .rc-body { max-width: 520px; }
@@ -88,7 +88,7 @@ body.rc.arrived .rc-body > .rc-fine { --d: 680ms; }
   .rc-line { font-size: 18px; }
   .rc-deal { font-size: 22px; }
   .rc-btn { width: auto; min-width: 300px; margin-inline: auto; }
-  .rc-stage { min-height: 220px; }
+  .rc-stage { min-height: 300px; }
 }
 
 /* ===== B, the pour: the light rests low, like a sunrise under the words; the three beats arrive one by one over a breath as it
@@ -125,7 +125,7 @@ body.rc-look-c .rc-body p, body.rc-look-c .rc-line, body.rc-look-c .rc-how, body
 body.rc-look-c .rc-body h1 { font-size: 40px; max-width: 8ch; }
 body.rc-look-c .rc-qr { margin-left: 0; } body.rc-look-c .rc-qrcode { margin-left: 0; } body.rc-look-c .rc-qr figcaption { margin-left: 0; }
 @media (min-width: 900px) {
-  body.rc-look-c { --lt: translate(16vw, -2svh) scale(1.45); }
+  body.rc-look-c { --lt: translate(20vw, 0); }
   body.rc-look-c .rc-page { padding-left: max(64px, 8vw); padding-right: 50vw; }
   body.rc-look-c .rc-body h1 { font-size: 64px; max-width: 9ch; }
   body.rc-look-c .rc-btn { margin-left: 0; }

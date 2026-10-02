@@ -4812,6 +4812,7 @@ uniform vec2 uBdA, uBdB, uBdC;
 uniform float uBehind, uH, uNumY, uLineT, uLineB, uPT;
 uniform float uR, uB, uI, uClk, uK, uJ, uLead, uAfter, uRetract, uSoft, uPres, uRing, uCharge, uGather, uCapY, uNvis;
 uniform vec3 uF;
+uniform float uCalm, uForce, uCap, uKnee, uNA, uFat, uBloom, uHalo, uVar, uDisc, uTipR, uArmA, uSkew, uCalmCurl, uLen;
 
 const float TAU = 6.2831853;
 const float PI = 3.1415927;
@@ -4839,10 +4840,12 @@ void main() {
   float peak = smoothstep(.8, 1., I);
   float bright = (.16 + .84 * I) * (.60 + .55 * b) * (1. - .04 * peak) * (1. + uPG * uK) * (1. + .4 * uCharge) * (1. - .35 * uRetract) * uShim;
   float reach = clamp(mix(.32, 1., I) * (.72 + .42 * b) * 1.25 * uPres * (1. + .16 * uK) * (1. - .5 * uRetract) * (1. - .24 * uAnt) * (1. + .7 * max(uEdgeX, uEdgeY) * max(max(smoothstep(.55, 1.05, I), uHT * .7), uCharge)) + .3 * uAfter * uPres, .08, 1.75 + .6 * max(uEdgeX, uEdgeY));
+  float pkC = max(max(max(smoothstep(.55, 1.05, I), uHT * .7), uCharge), uForce); float pkW = max(pkC, .75 * smoothstep(.1, .7, I));
   float ckS = mix(uClk, uFlow * 2.4 + uClk * .25, uFlowMix); float wm = 1. - uAxis * .26 * max(-uDir, 0.); float crest = 1. + .75 * max(uCrest, 0.) - .22 * max(-uCrest, 0.);
   vec2 q = p;
   float rq = length(q); float ph = atan(q.y, q.x);
   float nvis = min(7., (uNvis >= 0. ? uNvis : mix(2., 7., smoothstep(.0, .9, I))) * uNvM);
+  nvis = mix(nvis, min(nvis, mix(2., uNA, smoothstep(.0, .9, max(I, uForce * .5)))), uCalm);
   float fa = atan(uF.y, uF.x); float fl = length(uF.xy);
   vec3 col = vec3(0.);
   for (int i = 0; i < 7; i++) {
@@ -4852,9 +4855,10 @@ void main() {
     float th0 = fi * 2.3999 + uRot + .45 * sin(uClk * (.20 + .08 * h1(fi)) + fi * 1.7);
     float upA = -1.5707963; th0 = upA + wrapA(th0 - upA) * (1. - uAxis * (.30 * max(uDir, 0.) - .24 * max(-uDir, 0.) + .14 * uHT));
     float Li = reach * (.72 + .34 * h1(fi + 7.)); float pulled = 0.;
+    if (uCalm > 0.) { Li *= mix(1., uLen, uCalm * pkC); Li *= mix(1., .30 + .70 * h1(fi + 3.), uVar * pkC); float Lc = Li < uKnee ? Li : uKnee + (uCap - uKnee) * (1. - exp(-(Li - uKnee) / max(uCap - uKnee, .01))); Li = mix(Li, Lc, uCalm); th0 = mix(th0, -.7 + wrapA(th0 + .7) * (1. - uSkew), uCalm * pkC); th0 += uCalm * pkC * uVar * (h1(fi + 21.) - .5) * .5; }
     if (uF.z > 0.) { float dA = wrapA(fa - th0); float pull = clamp(uF.z, 0., 1.) * mix(exp(-dA * dA * 2.2), .9, uGather);
       th0 += dA * pull; Li = mix(Li, max(Li, fl + .02), pull); pulled = pull; }
-    float bendK = .7 * (.35 + .9 * h1(fi + 13.)) * (h1(fi + 17.) > .45 ? 1. : -1.) * (1. - .9 * pulled);
+    float bendK = .7 * (.35 + .9 * h1(fi + 13.)) * (h1(fi + 17.) > .45 ? 1. : -1.) * (1. - .9 * pulled) * mix(1., uCalmCurl, uCalm * pkC);
     float bend = .55 * sin(rq * 2.3 + s + fi * 2.3) + .22 * sin(rq * 3.7 - s * .7 + fi);
     float bend2 = .55 * sin((rq + .01) * 2.3 + s + fi * 2.3) + .22 * sin((rq + .01) * 3.7 - s * .7 + fi);
     th0 += uHT * .024 * sin(uHTm * 14. + fi * 2.1 + rq * 9.) * rq;
@@ -4863,11 +4867,12 @@ void main() {
     float u = rq / max(Li, .05);
     float along = mix(smoothstep(1., .4, u), smoothstep(1.04, .9, u), pulled) * vis * (1. + .14 * uHT * sin(uHTm * 9. + fi * 3.) * smoothstep(.45, 1., u));
     along *= mix(smoothstep(uCapY, uCapY - .7, p.y), mix(.8, 1., smoothstep(uCapY + .35, uCapY - 1.3, p.y)), uBehind * (1. - .75 * uHT));   // the strands fade out before the words
+    along *= mix(1., uArmA, uCalm * pkC);
     if (along <= 0.) continue;
     vec3 c = mix(mid, midAt(jl - .18 * uLead) * .9, smoothstep(.35, 1., u));
     // silk: twisting soft-edged bands with a light-catching fold
     float tw = cos(rq * 2.6 - s * 1.2 + fi * 1.9);
-    float w = (.052 + .17 * min(rq, 1.3)) * (.34 + .66 * abs(tw)) * sf * wm;
+    float w = (.052 + .17 * min(rq, 1.3)) * (.34 + .66 * abs(tw)) * sf * wm * (1. + uCalm * uFat * pkW) * mix(1., sqrt(clamp(1. - .85 * u * u * u, 0., 1.)), uCalm * uTipR); w += uCalm * uFat * .035 * pkW;
     float band = smoothstep(1., -.1, dist / w); band *= band * (3. - 2. * band) * .6 + band * .4;
     float fz = (sd - .5 * w * clamp(tw * 3., -1., 1.)) / (.30 * w + .004 * sf);
     float fold = exp(-(fz * fz));
@@ -4875,6 +4880,10 @@ void main() {
     col += (c * band * (.34 + .34 * edge) + mix(c, pale, .4) * fold * .24 + c * .12 * exp(-dist / (w * 2.8))) * along * .8;
   }
   col *= bright * (1. - .45 * uAfter);
+  if (uCalm > 0.) { float bl = uCalm * pkC; float angB = atan(p.y, p.x); float wb = 1. + .04 * sin(3. * angB + uRot * 1.5 + uClk * .18) + .025 * sin(5. * angB - uRot);
+    col += mix(mid, pale, .35) * exp(-r * r / (.42 + .55 * pkC)) * uBloom * bl * (.7 + .3 * b) * .30;
+    col += mix(mid, pale, .5) * exp(-pow((r / wb - (.50 + .14 * pkC + .03 * sin(uClk * .6))) / .27, 2.)) * uHalo * bl * .20 * (.75 + .25 * sin(2. * angB + uClk * .35));
+    col += mix(mid, pale, .25) * exp(-pow(r / (.40 + .50 * pkC * uDisc), 2.)) * uDisc * bl * .26; }
   // integration: a rose-amber afterglow
   col += mix(midAt(.8), vec3(.92, .40, .44), .4) * .22 * uAfter * exp(-r * r / (.45 * uPres * uPres));
   // the heart: tinted by the hue (never white), it swells with the inhale; in a hold the light draws back into it
@@ -4973,7 +4982,7 @@ void main() {
 `;
 
 // parts/silk-uniforms.js
-var SILK_UNIFORMS = { uRes: "vec2", uC: "vec2", uPG: "float", uFlow: "float", uFlowMix: "float", uDir: "float", uHT: "float", uHB: "float", uHTm: "float", uEnd: "float", uCrest: "float", uRingCue: "float", uFW: "float", uShim: "float", uAxis: "float", uNvM: "float", uRot: "float", uAnt: "float", uWave: "float", uWaveA: "float", uCoup: "float", uBgReach: "float", uBgE: "float", uBgB: "float", uBgK: "float", uBgHT: "float", uBgHB: "float", uEdgeX: "float", uEdgeY: "float", uAmb: "float", uAT: "float", uHF: "float", uSpark: "float", uHaze: "float", uHzS: "float", uVeil: "float", uBdA: "vec2", uBdB: "vec2", uBdC: "vec2", uBehind: "float", uH: "float", uNumY: "float", uLineT: "float", uLineB: "float", uPT: "float", uR: "float", uB: "float", uI: "float", uClk: "float", uK: "float", uJ: "float", uLead: "float", uAfter: "float", uRetract: "float", uSoft: "float", uPres: "float", uRing: "float", uCharge: "float", uGather: "float", uCapY: "float", uNvis: "float", uF: "vec3" };
+var SILK_UNIFORMS = { uRes: "vec2", uC: "vec2", uPG: "float", uFlow: "float", uFlowMix: "float", uDir: "float", uHT: "float", uHB: "float", uHTm: "float", uEnd: "float", uCrest: "float", uRingCue: "float", uFW: "float", uShim: "float", uAxis: "float", uNvM: "float", uRot: "float", uAnt: "float", uWave: "float", uWaveA: "float", uCoup: "float", uBgReach: "float", uBgE: "float", uBgB: "float", uBgK: "float", uBgHT: "float", uBgHB: "float", uEdgeX: "float", uEdgeY: "float", uAmb: "float", uAT: "float", uHF: "float", uSpark: "float", uHaze: "float", uHzS: "float", uVeil: "float", uBdA: "vec2", uBdB: "vec2", uBdC: "vec2", uBehind: "float", uH: "float", uNumY: "float", uLineT: "float", uLineB: "float", uPT: "float", uR: "float", uB: "float", uI: "float", uClk: "float", uK: "float", uJ: "float", uLead: "float", uAfter: "float", uRetract: "float", uSoft: "float", uPres: "float", uRing: "float", uCharge: "float", uGather: "float", uCapY: "float", uNvis: "float", uF: "vec3", uCalm: "float", uForce: "float", uCap: "float", uKnee: "float", uNA: "float", uFat: "float", uBloom: "float", uHalo: "float", uVar: "float", uDisc: "float", uTipR: "float", uArmA: "float", uSkew: "float", uCalmCurl: "float", uLen: "float" };
 
 // parts/draw2d.js
 var clamp01 = (x) => Math.max(0, Math.min(1, x)), c8 = (v) => Math.round(Math.min(1, v) * 255), rgba = (c, a) => `rgba(${c8(c[0])},${c8(c[1])},${c8(c[2])},${Math.round(clamp01(a) * 1e3) / 1e3})`, FONT = '"Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif';
@@ -5154,7 +5163,7 @@ function drawGlow(ctx, sg, S, liveM, geo, W, H) {
 }
 
 // parts/api.js
-var PRESET_NAMES = Object.keys(PRESETS);
+var ARMS_NAMES = ["calm", "softer", "disc", "off"], PRESET_NAMES = Object.keys(PRESETS);
 function isSupported() {
   try {
     if (typeof document > "u")
@@ -5250,7 +5259,11 @@ function validate(input) {
 var VERT = `#version 300 es
 void main() { vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2)); gl_Position = vec4(p * 2. - 1., 0., 1.); }`, OVER_FRAG = `#version 300 es
 precision mediump float;
-uniform sampler2D uTex; out vec4 o; void main() { o = texelFetch(uTex, ivec2(gl_FragCoord.xy), 0); }`, ONES_M = { size: 1, reachX: 1, reachY: 1, ambient: 1, softness: 1, warmth: 1, strands: 1, energy: 1, line: 1, firePulse: 1, holdDim: 1 };
+uniform sampler2D uTex; out vec4 o; void main() { o = texelFetch(uTex, ivec2(gl_FragCoord.xy), 0); }`, ARMS = {
+  calm: { len: 1.9, cap: 0.8, knee: 0.4, na: 3, fat: 1.6, tip: 1, bloom: 0.45, halo: 0.4, vary: 1, disc: 0.12, armA: 1.9, skew: 0.3, curl: 0.6 },
+  softer: { len: 1.7, cap: 0.7, knee: 0.35, na: 3, fat: 2.4, tip: 1, bloom: 0.65, halo: 0.45, vary: 1, disc: 0.25, armA: 1.3, skew: 0.35, curl: 0.5 },
+  disc: { len: 1.3, cap: 0.55, knee: 0.25, na: 2, fat: 2.4, tip: 1, bloom: 0.95, halo: 0.6, vary: 1, disc: 0.8, armA: 0.6, skew: 0.5, curl: 0.5 }
+}, ONES_M = { size: 1, reachX: 1, reachY: 1, ambient: 1, softness: 1, warmth: 1, strands: 1, energy: 1, line: 1, firePulse: 1, holdDim: 1 };
 function makeProgram(gl, vs, fs) {
   let sh = (type, src) => {
     let s = gl.createShader(type);
@@ -5333,6 +5346,7 @@ function mount(target, opts = {}) {
       let a = ext.scr, u = ext.u == null ? 1 : ext.u, m = (p, q) => p + (q - p) * u;
       geo = { ...geo, cx: m(a.cx, geo.cx), cy: m(a.cy, geo.cy), R: m(a.R, geo.R), capY: m(a.capY, geo.capY) };
     }
+    let hs = O.heroScale === "auto" ? 1.7 + 0.9 * Math.max(0, Math.min(1, W / H - 0.6)) : O.heroScale > 0 ? O.heroScale : 1;
     if (!screens) {
       let jumped = lineSt.lastT < 0 || Math.abs(t2 - lineSt.lastT) > 1, inFire = engine.SCR.phaseAt(sg.tv + 1.5) === "Breath of fire" && sg.tv > 94;
       advanceFuture(lineSt, sg.tv, inFire, dt, snap || jumped), lineSt.lastT = t2;
@@ -5341,9 +5355,16 @@ function mount(target, opts = {}) {
     let px = dpr;
     if (useGL && gl) {
       frame.haze = alive ? 0.24 * (O.aliveGain || 1) : 0, frame.veil = screens ? 0 : 1, frame.hzSoft = O.aliveGain && O.aliveGain > 1 || step === "start" ? 1 : 0, step === "start" && (frame.haze = alive ? 0.24 * 1.3 : 0);
-      let bd = layout.bands || [], fr = (i) => bd[i] && bd[i][0] >= 0 ? [bd[i][0] / H, bd[i][1] / H] : [-1, -1];
-      frame.bandsA = fr(0), frame.bandsB = fr(1), frame.bandsC = fr(2);
+      let useBands = O.bands === void 0 || O.bands === null ? step !== "welcome" : !!O.bands, bd = useBands ? layout.bands || [] : [], fr = (i) => bd[i] && bd[i][0] >= 0 ? [bd[i][0] / H, bd[i][1] / H] : [-1, -1];
+      frame.bandsA = fr(0), frame.bandsB = fr(1), frame.bandsC = fr(2), useBands || (frame.hzSoft = 1, frame.haze *= O.hazeGain ?? 0.55);
       let u = silkUniforms(frame, S, geo, canvas.width, canvas.height, px, 1);
+      useBands || (u.uBehind = 0);
+      {
+        let am = O.arms === void 0 || O.arms === null || O.arms === !0 ? step === "welcome" ? "calm" : "off" : O.arms, A = screens ? ARMS[am] : null;
+        u.uCalm = A ? 1 : 0, u.uForce = A && step === "welcome" ? 1 : 0;
+        let a = A || ARMS.calm;
+        u.uLen = a.len, u.uCap = a.cap, u.uKnee = a.knee, u.uNA = a.na, u.uFat = a.fat, u.uTipR = a.tip, u.uBloom = a.bloom, u.uHalo = a.halo, u.uVar = a.vary, u.uDisc = a.disc, u.uArmA = a.armA, u.uSkew = a.skew, u.uCalmCurl = a.curl;
+      }
       gl.viewport(0, 0, canvas.width, canvas.height), gl.disable(gl.BLEND), gl.useProgram(glProg), gl.bindVertexArray(vao);
       for (let [name, type] of Object.entries(SILK_UNIFORMS)) {
         let v = u[name], loc = uloc[name];
@@ -5531,6 +5552,8 @@ function mount(target, opts = {}) {
   return O.autoRun && (dirty = !0, schedule()), api;
 }
 export {
+  ARMS,
+  ARMS_NAMES,
   FLOW_STEPS,
   LOOK_RANGES,
   PHASE_KINDS,
