@@ -1,0 +1,101 @@
+---
+/**
+ * wehale.io/<route> (today /recharge; the route is DATA.route): the campaign landing page. CONFIDENTIAL until launch (docs/recharge/README.md).
+ * One "get the app" page (Isak, 29 Sep: the campaign session lives only in the app): the co-brand lockup, the session
+ * as the hero (free in the app, theirs to keep), the offer, "Get the app" (an AppsFlyer OneLink carrying the code; on desktop a
+ * QR code of the same link), the fine print. On the wehale.io look: navy, Nunito Sans, a calm orb, one white pill.
+ * Everything that changes is in src/data/recharge.json: the gate, the session's name, the copy, the code.
+ * The gate: with gate.on, the page shows only with ?k=<key>; without it, the site's 404 (obscurity, not security).
+ */
+import BreatheLayout from "../layouts/BreatheLayout.astro";
+import "../styles/breathe.css";
+import "../styles/recharge.css";
+import DATA from "../data/recharge.json";
+import { campaignLink } from "../scripts/recharge/link.js";
+import fs from "node:fs";
+
+// one config value sets the path (src/data/recharge.json: route)
+export function getStaticPaths() { return [{ params: { campaign: DATA.route } }]; }
+
+const S = DATA.session, T = DATA.copy, P = DATA.partner_logo;
+// the partner's real logo only where it exists locally (gitignored); everywhere else the committed placeholder
+const LOCAL = fs.existsSync("public" + P.local) && fs.existsSync("public" + P.local_dark);
+const L = LOCAL ? { ...P, src: P.local, src_dark: P.local_dark, width: P.local_width, height: P.local_height } : P;
+const fill = (t) => String(t || "").replace(/\{minutes\}/g, String(S.minutes)).replace(/\{narrator\}/g, S.narrator);   // the guide and length from the session data
+const meta = fill(T.session_line);   // "With {narrator} · {minutes} min"
+// the button works before the script runs: the default link (the app sets this visit's own channel and code on top)
+const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "offer" }) || "#";
+// The gate runs before first paint: the page stays invisible until the key checks out, else the 404 replaces it.
+const gate = DATA.gate.on ? `(function(){var d=document.documentElement;d.classList.add("rc-locked");
+var S=${JSON.stringify(DATA.gate.salt)},H=${JSON.stringify(DATA.gate.sha256)},K="wehale.rc.k",q=new URLSearchParams(location.search),k=q.get("k"),st=null;
+try{st=sessionStorage.getItem(K)}catch(e){}
+function hex(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return("0"+x.toString(16)).slice(-2)}).join("")}
+function no(){return fetch("/404.html",{credentials:"omit"}).then(function(r){return r.ok?r:fetch("/404",{credentials:"omit"})}).then(function(r){return r.text()}).then(function(t){document.open();document.write(t);document.close();return false},function(){d.classList.remove("rc-locked");document.body.innerHTML="<p style='padding:24px'>This page isn’t here.</p>";return false})}
+var h=k&&window.crypto&&crypto.subtle?crypto.subtle.digest("SHA-256",new TextEncoder().encode(S+":"+k)).then(hex):Promise.resolve(st);
+window.__rcGate=h.then(function(x){if(x!==H)return no();try{sessionStorage.setItem(K,H)}catch(e){}
+if(k){q.delete("k");var s=q.toString();history.replaceState(null,"",location.pathname+(s?"?"+s:"")+location.hash)}
+d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promise.resolve(true);`;
+---
+
+<BreatheLayout title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#0e0907">
+  <Fragment slot="head">
+    <style is:inline>html{background:#0e0907}html.rc-locked body{visibility:hidden}</style>
+    <script is:inline set:html={gate} />
+    <link rel="preload" as="image" href="/plasma/softer/poster-390x844.jpg" media="(max-width: 700px)" />
+  </Fragment>
+
+  <!-- the first screen of the Plasma flow: the app's own light (the same engine, public/plasma/) on the Welcome's warm ground.
+       The poster is the first paint and the fallback; the words are real HTML on top. The look (A, B, C) is ?look= while we choose. -->
+  <div class="rc-hero" id="plasma-hero" aria-hidden="true">
+    <div class="rc-glow"></div>
+    <picture class="rc-poster">
+      <source media="(max-width: 700px)" srcset="/plasma/softer/poster-390x844.jpg" />
+      <img src="/plasma/softer/poster-1440x900.jpg" alt="" width="1440" height="900" decoding="async" fetchpriority="high" />
+    </picture>
+    <div class="rc-win" aria-hidden="true">
+      <span class="rc-s-tag">In the WeHale app</span>
+      <div class="rc-x rc-x-ci"><p class="rc-s-h">How is your energy right now?</p><div class="rc-s-bar"><i style="left:46%"></i></div><p class="rc-s-l"><span>Drained</span><span>Charged</span></p></div>
+      <div class="rc-x rc-x-res"><p class="rc-s-h">You did that.</p><p class="rc-s-sub2">From Low to Charged.</p></div>
+      <div class="rc-sc"><i class="rc-thumb" style="background-image:url(/recharge/bloom-720.webp)"></i><div class="rc-sc-t"><small>From partner</small><b>{T.title}</b><span>With {S.narrator}</span></div><u>Start</u></div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  <main class="rc-page" id="rcMain" aria-labelledby="rcH">
+    <div class="rc-lockup" data-lockup-slot aria-label={`WeHale × ${L.alt}`}>
+      <img class="rc-we" src={L.wehale_src_dark} alt="WeHale" width="96" height="20" />
+      <span class="rc-pair"><i aria-hidden="true">×</i>
+      {LOCAL ? <img class="rc-partner" src={L.src_dark} alt={L.alt} width={L.width} height={L.height} /> : <span class="rc-partner-word">PARTNER</span>}</span>
+    </div>
+    <p class="rc-what">{T.about}</p>
+    <div class="rc-stage" id="rcStage"></div>
+    <div class="rc-body">
+      <h1 id="rcH">{T.title}</h1>
+      <p class="rc-line">{T.line.split("|").map((b) => <span class="rc-beat">{b}</span>)}</p>
+      {meta && <p class="rc-only">{meta}</p>}
+      <p class="rc-deal">{T.offer_1}</p>
+      <p class="rc-how rc-how-m">{T.offer_how}</p>
+      <p class="rc-how rc-how-d">{T.offer_how_desktop}</p>
+      <a class="rc-btn" id="ctaBtn" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
+      <div class="rc-stores" data-store-badges>
+        <a class="rc-store" id="storeIos" data-store="ios" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.8-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.700 2.400 2.900 2.300 1.200 0 1.600-.8 3-.8s1.800.8 3 .7c1.300 0 2.100-1.100 2.800-2.200.9-1.300 1.300-2.500 1.300-2.600 0 0-2.500-1-2.500-3.800zM14.200 5.700c.6-.8 1.100-1.800.9-2.900-.9 0-2 .6-2.700 1.400-.6.700-1.100 1.800-.9 2.800 1 .1 2-.5 2.700-1.300z"/></svg>
+          <span><small>Download on the</small>App Store</span></a>
+        <a class="rc-store" id="storeAnd" data-store="android" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M4.500 2.600 14.300 12 4.500 21.400c-.3-.2-.5-.6-.5-1.100V3.700c0-.5.2-.9.500-1.100zM15.700 13.400l2.900 2.800-11.700 6.500zm0-2.800L6.900 1.300l11.700 6.500zm4.400-.4c.7.400.9.800.9 1.800s-.2 1.400-.9 1.800l-2.500 1.400-3.100-3.200 3.100-3.200z"/></svg>
+          <span><small>Get it on</small>Google Play</span></a>
+      </div>
+      <figure class="rc-qr" id="qrBox" hidden>
+        <div class="rc-qrcode" id="qrCode" role="img" aria-label="QR code for the app link"></div>
+        <figcaption>{T.qr}</figcaption>
+      </figure>
+      <p class="rc-fine"><span>{T.offer_2}</span></p>
+    </div>
+  </main>
+
+  <noscript><p class="noscript">{T.noscript}</p></noscript>
+  <script>
+    import "../scripts/recharge/app.js";
+  </script>
+</BreatheLayout>

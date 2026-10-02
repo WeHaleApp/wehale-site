@@ -14,3 +14,6 @@ dist/
 .env
 .env.local
 .env.production
+
+# The partner's real logo: local previews only, never committed (docs/recharge/README.md)
+public/recharge/*.local.*

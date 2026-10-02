@@ -1,0 +1,60 @@
+{
+  "_about": "The campaign page (wehale.io/<route>, today /recharge) (docs/recharge/README.md): one \"get the app\" page. Everything that changes before or at launch is here. CONFIDENTIAL until launch: the page is gated (gate), noindex, out of the sitemap and linked from nowhere.",
+  "route": "recharge",
+  "_about_route": "The page's path, the one place it is set: the page, the sitemap exclusion, the noindex headers (written into dist/_headers at build) and the QR codes all follow it.",
+  "gate": {
+    "_about": "Obscurity, not security: the page renders only with ?k=<key>, whose salted SHA-256 is compared in the browser; without it the visitor gets the site's 404. The key itself is not in the repo. At launch set on to false (the one flag), and see docs/recharge/README.md for the rest of the launch list.",
+    "on": true,
+    "salt": "33e3ba2aeff4d882",
+    "sha256": "24e24cfd1f889ed16cc1ac73ea8b19ca52c7bf9f7f15dae40d2c567c53bbdbc5"
+  },
+  "session": {
+    "_about": "The campaign session, which lives only in the WeHale app (Isak, 29 Sep: no web session on this page; the hook, owner of main 30 Sep: the ritual, 'Pour a Blackcurrant. Press play. Breathe with Philip.', experience first, then the offer). The page names it: title, narrator and minutes. slug tags the events. STAND-IN values (The Wake Up, Edvin) until the campaign session is recorded (Philip); then set narrator and minutes, and stand_in: false. The chip is off (the ritual line names Philip); session_line stays empty.",
+    "stand_in": true,
+    "slug": "wake-up",
+    "title": "Charge Your Current",
+    "narrator": "Philip",
+    "minutes": 6
+  },
+  "copy": {
+    "_about": "All the page's words, in the order they show. {narrator} and {minutes} come from the session. The offer is decided (Isak, 29 Sep: the page says only the free month; the prices are chosen in the app): offer_1 and offer_2 exactly; never \"30 days\", never \"no card\", no claims.",
+    "title": "Charge Your Current",
+    "about": "Guided breathing with Edvin and Philip, on iPhone and Android.",
+    "line": "Pour a Blackcurrant.|Press play.|Breathe with Philip.",
+    "session_line": "",
+    "offer_1": "Your first month of WeHale free.",
+    "offer_how": "Only through this link.",
+    "offer_how_desktop": "Scan with your phone to claim it.",
+    "cta": "Start in the app",
+    "offer_2": "Cancel anytime before the trial ends.",
+    "trial": "The free month is a trial through the App Store or Google Play.",
+    "qr": "Only through this code.",
+    "noscript": "Turn on JavaScript to get the app link, or find WeHale in the App Store or Google Play."
+  },
+  "partner_logo": {
+    "_about": "One swappable file per ground: src (black, for a light ground; not used on the page today), src_dark (white, on the page's navy). The committed files are dashed PLACEHOLDERS. The partner's real logo (marked wip) is never committed: for local previews put it at local / local_dark (gitignored, public/recharge/*.local.*) and the build uses it; ask the lead before adding it to the repo. Sizes: the wordmark's cap height optically matches WeHale's (real logo trimmed, 26 px tall on an 18 px WeHale logo, one baseline).",
+    "src": "/recharge/partner-logo.svg",
+    "src_dark": "/recharge/partner-logo-white.svg",
+    "width": 96,
+    "height": 20,
+    "local": "/recharge/partner-logo.local.png",
+    "local_dark": "/recharge/partner-logo-white.local.png",
+    "local_width": 77,
+    "local_height": 26,
+    "alt": "Campaign partner",
+    "wehale_src": "/recharge/wehale-logo-black.svg",
+    "wehale_src_dark": "/assets/images/logo.svg"
+  },
+  "code": {
+    "_about": "The code rides in the OneLink's deep_link_value (the app applies it at sign-up: email, Apple, Google). Order: ?c=<CODE> on the URL, else by_channel[ch], else default. The server codes are live (the owner of main, 29 Sep); the app side ships in 2.7.9. The product-page code contains the partner's name, and this repo is public, so it is NOT here: it rides in their URLs as ?c= (the QR script reads them from a local file outside the repo, docs/recharge/README.md). Influencers: their own ?c= code.",
+    "default": "RECHARGE",
+    "by_channel": { "newsletter": "RECHARGE" }
+  },
+  "channels": ["newsletter", "pdp", "influencer", "social"],
+  "onelink": {
+    "_about": "AppsFlyer OneLink, template zcid (the same as /breathe). pid is a CONFIG CHOICE for the lead and the owner of main: the media source this campaign reports under in AppsFlyer.",
+    "base": "https://wehale.onelink.me/zcid",
+    "pid": "partner_campaign",
+    "c": "recharge"
+  }
+}

@@ -1,0 +1,194 @@
+/* The campaign page (src/pages/[campaign].astro), on top of breathe.css (its fonts and tokens). The first screen of the
+   Plasma flow, on the web (Isak, 2 Oct): the app's own light (public/plasma/plasma-web.js, the Welcome's idle breath) on
+   the Welcome's warm dark ground, the lockup, the words, one pill. Nothing that looks cheap: no dust, no strong gradients
+   on controls. Three directions while Isak chooses, set by ?look= (a, b, c): a is the default. */
+:root { --ground: #0e0907; --ink: #f6efe9; --t2: rgba(246, 239, 233, .78); --t3: rgba(246, 239, 233, .56);
+  --m-press-in: 100ms; --m-press-out: 220ms; --m-enter: 500ms; --m-stagger: 80ms; --m-reveal: 800ms; --m-breath-in: 4000ms; --m-breath-out: 6000ms;
+  --curve-enter: cubic-bezier(.33, 1, .68, 1); --curve-breath: cubic-bezier(.37, 0, .63, 1);
+  --breath: calc(var(--m-breath-in) + var(--m-breath-out)); }
+html:has(body.rc), body.rc { background: var(--ground); }
+html:has(body.rc) { height: auto; overflow: auto; }
+body.rc { --lt: translateY(-17svh); position: static; height: auto; min-height: 100%; overflow: visible; overscroll-behavior: auto; color: var(--ink); }
+body.rc :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* the light: fixed behind everything. The poster paints first and is the fallback; the canvas (added by the module) sits on top
+   of it and the poster fades once it draws. A CSS glow stands in if the poster image itself fails. */
+.rc-hero { position: fixed; inset: -26% -26%; transform: var(--lt, none); z-index: 0; overflow: hidden; background: var(--ground); isolation: isolate; pointer-events: none; }
+.rc-hero > canvas { z-index: 1; }
+.rc-hero .rc-poster, .rc-hero .rc-glow { position: absolute; inset: 0; z-index: 0; }
+.rc-hero .rc-poster img { width: 100%; height: 100%; object-fit: cover; }
+.rc-hero .rc-glow { background: radial-gradient(60% 45% at 50% 42%, rgba(255, 170, 90, .5), rgba(190, 60, 90, .28) 45%, rgba(40, 10, 25, 0) 75%); opacity: 0; }
+.rc-hero.live .rc-poster { opacity: 0; transition: opacity .6s ease; }
+.rc-hero.fallback > canvas { display: none; }
+@media (prefers-reduced-motion: reduce) { .rc-hero.live .rc-poster { transition: none; } }
+/* a soft ground under the words so the type keeps its contrast over the brightest part of the light (it stays put when the light moves) */
+body.rc::before { content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(14, 9, 7, .45) 0, rgba(14, 9, 7, 0) 18%, rgba(14, 9, 7, 0) 48%, rgba(14, 9, 7, .62) 70%, rgba(14, 9, 7, .86) 100%); }
+
+.rc-page { position: relative; z-index: 2; overflow-x: clip; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--ink);
+  padding: calc(env(safe-area-inset-top, 0px) + 22px) max(24px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 24px) max(24px, env(safe-area-inset-left, 0px)); }
+.rc-stage { flex: 1 1 auto; min-height: 120px; }
+
+/* the lockup slot (data-lockup-slot): the real WeHale × partner image drops in at launch; today WeHale, a thin ×, and the neutral word.
+   One centred object about 20-24 px tall, ink at about 80 %; capped by max-height so any aspect ratio fits */
+.rc-lockup { display: flex; align-items: center; justify-content: center; gap: 12px; opacity: .8; min-height: 22px; }
+.rc-lockup img { display: block; max-height: 24px; width: auto; }
+.rc-lockup img.rc-we { height: 15px; }
+.rc-lockup i { font: 300 14px/1 var(--font); font-style: normal; color: rgba(246, 239, 233, .6); }
+.rc-partner-word { font: 600 12px/1 var(--font); letter-spacing: .28em; padding-left: .28em; color: rgba(246, 239, 233, .9); }
+
+/* the words */
+.rc-body { width: 100%; max-width: 400px; }
+.rc-body h1 { margin: 0 0 10px; font: 500 34px/1.08 var(--font); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; text-shadow: 0 1px 24px rgba(14, 9, 7, .55); }
+.rc-body p { margin: 0 auto; max-width: 34ch; text-wrap: balance; }
+.rc-line { font: 400 16px/1.45 var(--font); color: var(--t2); max-width: 30ch !important; text-shadow: 0 1px 16px rgba(14, 9, 7, .6); }
+.rc-beat { display: block; white-space: nowrap; }   /* the ritual: three beats, never broken mid-line */
+.rc-only { margin-top: 14px !important; font: 600 13px/1.2 var(--font); color: var(--t2); }
+.rc-deal { margin-top: 22px !important; font: 700 18px/1.3 var(--font); color: var(--ink); max-width: 40ch !important; text-shadow: 0 1px 16px rgba(14, 9, 7, .6); }
+.rc-how { margin-top: 6px !important; font: 600 15px/1.4 var(--font); color: var(--t2); max-width: 40ch !important; text-wrap: balance; }
+.rc-how-d { display: none; }
+body.rc-qr-on .rc-how-m { display: none; } body.rc-qr-on .rc-how-d { display: block; }
+/* one white pill (the app's primary), a quiet press; no gradient, no glow */
+.rc-btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 58px; margin-top: 16px; padding: 16px 28px; border-radius: 999px;
+  background: #fbf7f2; color: #14090f; font: 700 17px/1 var(--font); text-decoration: none; cursor: pointer;
+  transition: background .25s ease, transform var(--m-press-out, 220ms) var(--curve-enter, ease); }
+@media (hover: hover) { .rc-btn:hover { background: #fff; } }
+.rc-btn:active { transform: scale(.97); transition-duration: var(--m-press-in, 100ms); }
+.rc-fine { margin-top: 14px !important; font: 400 13px/1.5 var(--font); color: var(--t3); max-width: 42ch !important; }
+.rc-fine span { display: block; text-wrap: balance; }
+.rc-qr { margin: 20px 0 0; }
+.rc-qrcode { width: 168px; height: 168px; background: #fff; border-radius: 14px; padding: 10px; margin: 0 auto; }
+.rc-qrcode svg { display: block; width: 100%; height: 100%; }
+.rc-qr figcaption { margin-top: 12px; font: 600 14px/1.45 var(--font); color: var(--t2); max-width: 26ch; margin-inline: auto; text-wrap: balance; }
+body.rc-qr-on .rc-btn { display: none; }   /* on a desktop the QR code is the way to the app */
+
+/* the consent bar (its measured room) never covers the button or the fine print */
+@media (max-width: 767px) { body.rc.whc-on .rc-page { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--rc-whc, 96px) + 12px); } }
+@media (max-height: 700px) { .rc-body h1 { font-size: 30px; } .rc-deal { margin-top: 16px !important; } .rc-stage { min-height: 90px; } }
+
+/* it arrives once its font is ready, in reading order over about 1.2 s (the app's enter curve and 80 ms stagger) */
+body.rc:not(.arrived) .rc-page > *, body.rc:not(.arrived) .rc-body > * { opacity: 0; }
+body.rc.arrived .rc-lockup, body.rc.arrived .rc-body > * { animation: rise var(--m-enter) var(--curve-enter) both; animation-delay: var(--d, 0ms); }
+body.rc.arrived .rc-body > h1 { --d: 200ms; }
+body.rc.arrived .rc-body > .rc-line { --d: 280ms; }
+body.rc.arrived .rc-body > .rc-only { --d: 360ms; }
+body.rc.arrived .rc-body > .rc-deal { --d: 440ms; }
+body.rc.arrived .rc-body > .rc-how { --d: 520ms; }
+body.rc.arrived .rc-body > .rc-btn, body.rc.arrived .rc-body > .rc-qr { --d: 600ms; }
+body.rc.arrived .rc-body > .rc-fine { --d: 680ms; }
+@media (prefers-reduced-motion: reduce) { body.rc.arrived .rc-page > *, body.rc.arrived .rc-body > * { animation: none; } }
+
+/* desktop: composed, not stretched; the QR code in place of the button */
+@media (min-width: 700px) {
+  body.rc { --lt: translateY(-3svh); }
+  .rc-page { padding-top: 32px; padding-bottom: 48px; }
+  .rc-lockup img.rc-we { height: 17px; }
+  .rc-body { max-width: 520px; }
+  .rc-body h1 { font-size: 52px; }
+  .rc-line { font-size: 18px; }
+  .rc-deal { font-size: 22px; }
+  .rc-btn { width: auto; min-width: 300px; margin-inline: auto; }
+  .rc-stage { min-height: 300px; }
+}
+
+/* ===== B, the pour: the light rests low, like a sunrise under the words; the three beats arrive one by one over a breath as it
+   rises into place, and the offer and the pill sit on the light. The words are in two groups, top and bottom ===== */
+body.rc-look-b { --lt: translateY(22svh); }
+body.rc-look-b .rc-body { display: contents; }
+body.rc-look-b .rc-body > * { max-width: 400px; margin-left: auto; margin-right: auto; width: 100%; }
+body.rc-look-b .rc-lockup { order: 0; } body.rc-look-b .rc-body > h1 { order: 1; margin-top: 8svh; } body.rc-look-b .rc-body > .rc-line, body.rc-look-b .rc-body > .rc-only { order: 1; }
+body.rc-look-b .rc-stage { order: 2; } 
+body.rc-look-b .rc-body > .rc-deal, body.rc-look-b .rc-body > .rc-how, body.rc-look-b .rc-body > .rc-btn, body.rc-look-b .rc-body > .rc-qr, body.rc-look-b .rc-body > .rc-fine { order: 3; }
+body.rc-look-b .rc-body > .rc-btn { width: 100%; }
+@media (min-width: 700px) { body.rc-look-b .rc-body > * { max-width: 520px; } body.rc-look-b .rc-body > .rc-btn { width: auto; } body.rc-look-b .rc-body > h1 { margin-top: 6svh; } }
+@media (prefers-reduced-motion: no-preference) {
+  body.rc-look-b.arrived .rc-hero { animation: rc-pour 3.4s var(--curve-enter) both; }
+  body.rc-look-b.arrived .rc-beat { animation: rise 700ms var(--curve-enter) both; }
+  body.rc-look-b.arrived .rc-beat:nth-child(1) { animation-delay: 600ms; }
+  body.rc-look-b.arrived .rc-beat:nth-child(2) { animation-delay: 1500ms; }
+  body.rc-look-b.arrived .rc-beat:nth-child(3) { animation-delay: 2400ms; }
+  body.rc-look-b.arrived .rc-body > .rc-line { animation: none; }
+  body.rc-look-b.arrived .rc-body > .rc-deal { --d: 3000ms; } body.rc-look-b.arrived .rc-body > .rc-how { --d: 3100ms; }
+  body.rc-look-b.arrived .rc-body > .rc-btn, body.rc-look-b.arrived .rc-body > .rc-qr { --d: 3200ms; } body.rc-look-b.arrived .rc-body > .rc-fine { --d: 3300ms; }
+}
+body.rc-look-b:not(.arrived) .rc-beat { opacity: 0; }
+@keyframes rc-pour { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: none; } }
+body.rc-look-b::before { background: linear-gradient(180deg, rgba(14, 9, 7, .55) 0, rgba(14, 9, 7, .25) 30%, rgba(14, 9, 7, 0) 48%, rgba(14, 9, 7, .0) 62%, rgba(14, 9, 7, .55) 86%, rgba(14, 9, 7, .8) 100%); }
+
+/* ===== C, off-centre: editorial. The light is large and sits off to the right, partly past the edge; the words are left-aligned
+   and the pill spans the width. On a desktop, two columns: the words left, the light right ===== */
+body.rc-look-c { --lt: translate(18vw, -12svh) scale(1.2); }
+body.rc-look-c .rc-page { text-align: left; align-items: stretch; }
+body.rc-look-c .rc-lockup { justify-content: flex-start; }
+body.rc-look-c .rc-body { max-width: none; }
+body.rc-look-c .rc-body p, body.rc-look-c .rc-line, body.rc-look-c .rc-how, body.rc-look-c .rc-deal, body.rc-look-c .rc-fine { margin-left: 0; margin-right: 0; }
+body.rc-look-c .rc-body h1 { font-size: 40px; max-width: 8ch; }
+body.rc-look-c .rc-qr { margin-left: 0; } body.rc-look-c .rc-qrcode { margin-left: 0; } body.rc-look-c .rc-qr figcaption { margin-left: 0; }
+@media (min-width: 900px) {
+  body.rc-look-c { --lt: translate(20vw, 0); }
+  body.rc-look-c .rc-page { padding-left: max(64px, 8vw); padding-right: 50vw; }
+  body.rc-look-c .rc-body h1 { font-size: 64px; max-width: 9ch; }
+  body.rc-look-c .rc-btn { margin-left: 0; }
+}
+
+/* ===== D, the session in the app (Isak, 2 Oct): the purple light lives in a window of its own, the session as it appears in
+   the app; everything else is WeHale's own navy, the logo first, and the two stores to download from ===== */
+.rc-stores, .rc-win, .rc-what { display: none; }
+body.rc-look-d { --ground: #090f1d; }
+html:has(body.rc-look-d), body.rc-look-d { background: #090f1d; }
+body.rc-look-d::before { display: none; }
+body.rc-look-d .rc-page { background: radial-gradient(ellipse 90% 40% at 50% 0%, rgba(40, 56, 96, .45), rgba(9, 15, 29, 0) 70%); }
+body.rc-look-d .rc-lockup { flex-direction: row; gap: 14px; opacity: 1; }
+body.rc-look-d .rc-lockup .rc-we { height: 22px; }
+body.rc-look-d .rc-lockup .rc-pair { display: flex; align-items: center; gap: 14px; opacity: .9; }
+body.rc-look-d .rc-lockup .rc-pair i { display: block; width: 1px; height: 24px; background: rgba(246, 239, 233, .32); font-size: 0; }
+body.rc-look-d .rc-lockup .rc-partner { max-height: 18px; }
+body.rc-look-d .rc-what { display: block; margin: 12px 0 0; max-width: 30ch; font: 500 14px/1.4 var(--font); color: rgba(242, 240, 237, .7); text-wrap: balance; }
+body.rc-look-d .rc-stage { flex: 1 1 auto; min-height: 230px; width: 100%; max-width: 380px; margin: 18px auto 20px; display: flex; }
+/* the window: a rounded screen of the app, its own warm ground, its own light; a picture, not a control */
+body.rc-look-d .rc-hero { position: relative; inset: auto; transform: none; flex: 1 1 auto; width: 100%; max-height: 440px; border-radius: 28px; border: 1px solid rgba(246, 239, 233, .14);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .45); background: #0e0907; }
+/* the window: the light, and on it the session card as the app shows it (on a desktop, two more of the app's cards beside it) */
+body.rc-look-d .rc-win { display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.rc-s-tag { position: absolute; top: 14px; left: 0; right: 0; text-align: center; font: 700 11px/1 var(--font); letter-spacing: .14em; text-transform: uppercase; color: rgba(246, 239, 233, .7); }
+.rc-s-h { margin: 0; font: 500 20px/1.2 var(--font); letter-spacing: -.01em; color: #f6efe9; text-wrap: balance; }
+.rc-s-sub2 { margin: 6px 0 0; font: 400 14px/1.3 var(--font); color: rgba(246, 239, 233, .75); }
+.rc-s-bar { position: relative; width: 100%; height: 30px; border-radius: 999px; background: rgba(246, 239, 233, .1); border: 1px solid rgba(246, 239, 233, .16); margin-top: 12px; }
+.rc-s-bar i { position: absolute; top: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; background: rgba(246, 239, 233, .24); border: 1px solid rgba(246, 239, 233, .5); }
+.rc-s-l { display: flex; justify-content: space-between; width: 100%; margin: 8px 0 0; padding: 0 4px; font: 400 12px/1 var(--font); color: rgba(246, 239, 233, .65); }
+.rc-x { display: none; position: absolute; padding: 16px 18px; border-radius: 22px; background: rgba(20, 14, 22, .62); border: 1px solid rgba(246, 239, 233, .1); backdrop-filter: blur(10px); text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, .3); }
+/* the session card, as the app shows it: a dark rounded card, the cover, "From partner", the title, the guide, a white Start */
+.rc-sc { position: absolute; left: 14px; right: 14px; bottom: 16px; display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 10px; border-radius: 18px; background: rgba(20, 14, 22, .82); border: 1px solid rgba(246, 239, 233, .1); text-align: left; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
+.rc-thumb { flex: none; width: 52px; height: 52px; border-radius: 12px; background: #2a1520 center / cover no-repeat; }
+.rc-sc-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.rc-sc-t small { font: 700 10px/1 var(--font); letter-spacing: .12em; text-transform: uppercase; color: rgba(246, 239, 233, .6); }
+.rc-sc-t b { font: 600 16px/1.15 var(--font); color: #f6efe9; }
+.rc-sc-t span { font: 400 13px/1.2 var(--font); color: rgba(246, 239, 233, .7); }
+.rc-sc u { text-decoration: none; flex: none; padding: 9px 16px; border-radius: 999px; background: #fbf7f2; color: #14090f; font: 700 13px/1 var(--font); }
+body.rc-look-d .rc-body > h1 { display: none; }   /* the window carries the title */
+body.rc-look-d .rc-line { color: rgba(242, 240, 237, .78); text-shadow: none; }
+body.rc-look-d .rc-body > .rc-deal, body.rc-look-d .rc-body h1 { text-shadow: none; }
+/* two stores: the one for this phone is the pill, the other is quiet; the single pill steps aside */
+body.rc-look-d .rc-btn { display: none; }
+body.rc-look-d .rc-stores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.rc-store { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 56px; padding: 8px 12px; border-radius: 16px; text-decoration: none; color: #f6efe9; border: 1px solid rgba(246, 239, 233, .28); background: rgba(246, 239, 233, .04); font: 700 15px/1.1 var(--font); text-align: left; }
+.rc-store small { display: block; font: 500 10px/1.1 var(--font); letter-spacing: .02em; opacity: .75; margin-bottom: 2px; }
+.rc-store svg { flex: none; }
+body[data-phone="ios"] .rc-store[data-store="ios"], body[data-phone="android"] .rc-store[data-store="android"] { background: #fbf7f2; color: #14090f; border-color: #fbf7f2; }
+body.rc-look-d.rc-qr-on .rc-stores { display: none; }
+@media (min-width: 900px) {
+  body.rc-look-d .rc-page { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto 1fr; column-gap: 6vw; align-items: center; max-width: 1180px; margin: 0 auto; text-align: left; padding-top: 40px; }
+  body.rc-look-d .rc-lockup { grid-column: 1; grid-row: 1; align-items: flex-start; justify-content: flex-start; align-self: start; }
+  body.rc-look-d .rc-what { grid-column: 1; grid-row: 2; align-self: start; margin: 12px 0 0; text-align: left; max-width: 34ch; }
+  body.rc-look-d .rc-body { grid-column: 1; grid-row: 3; max-width: 480px; align-self: center; }
+  body.rc-look-d .rc-stage { grid-column: 2; grid-row: 1 / span 3; max-width: none; margin: 0; display: flex; justify-content: center; }
+  body.rc-look-d .rc-hero { flex: none; width: min(620px, 46vw); height: min(660px, 78svh); max-height: none; border-radius: 44px; }
+  body.rc-look-d .rc-x { display: block; }
+  body.rc-look-d .rc-x-ci { top: 11%; right: 6%; width: 60%; text-align: left; }
+  body.rc-look-d .rc-x-res { top: 40%; left: 6%; width: 52%; }
+  body.rc-look-d .rc-sc { left: 6%; right: 6%; bottom: 6%; padding: 14px 18px 14px 14px; }
+  body.rc-look-d .rc-body > h1 { display: block; font-size: 56px; text-align: left; }
+  .rc-s-h { font-size: 24px; } .rc-sc-t b { font-size: 20px; } .rc-thumb { width: 68px; height: 68px; border-radius: 14px; } .rc-sc u { padding: 11px 22px; font-size: 15px; }
+  body.rc-look-d .rc-body p, body.rc-look-d .rc-fine span { margin-left: 0; }
+  body.rc-look-d .rc-qr, body.rc-look-d .rc-qrcode, body.rc-look-d .rc-qr figcaption { margin-left: 0; }
+}
