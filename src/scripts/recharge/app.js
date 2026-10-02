@@ -17,8 +17,10 @@ function run() {
   const DESK = !PHONE && matchMedia("(hover: hover) and (pointer: fine) and (min-width: 700px)").matches;
   body.classList.add("rc");
   // the three directions while Isak chooses (2 Oct): ?look=a (the first screen), b (the pour), c (off-centre). a by default.
-  const LOOK = (/[?&]look=([abc])(&|$)/i.exec(location.search) || [, "a"])[1].toLowerCase();
+  const LOOK = (/[?&]look=([abcd])(&|$)/i.exec(location.search) || [, "a"])[1].toLowerCase();
   body.classList.add("rc-look-" + LOOK);
+  // d: the light lives in a window of its own, the session as it appears in the app; the rest of the page is WeHale's own
+  if (LOOK === "d" && $("rcStage") && $("plasma-hero")) $("rcStage").appendChild($("plasma-hero"));
   body.classList.toggle("rc-desk", DESK);
   body.dataset.phone = PHONE || "desktop";
 
@@ -31,6 +33,7 @@ function run() {
   const cta = $("ctaBtn");
   if (link) cta.href = link;
   cta.addEventListener("click", () => track.appTap(params({ completed: 0, at: "offer" })));
+  document.querySelectorAll(".rc-store").forEach((a) => { if (link) a.href = link; a.addEventListener("click", () => track.appTap(params({ completed: 0, at: "store-" + a.dataset.store }))); });
   if (DESK && link) drawQr(link);
 
   // the room the consent bar takes (from its top edge to the bottom), so the button and the fine print stay clear of it
@@ -64,7 +67,7 @@ async function mountLight() {
     try {
       const url = "/plasma/plasma-web.js"; const { mount, isSupported } = await import(/* @vite-ignore */ url);
       if (!isSupported()) { hero.classList.add("fallback"); return; }
-      const light = mount(hero, { look: "balanced", step: "welcome", reduceMotion: "auto", quality: "auto", arms: ARMS, heroScale: "auto", interactive: false, onFallback: () => hero.classList.add("fallback") });
+      const light = mount(hero, { look: "balanced", step: "welcome", reduceMotion: "auto", quality: "auto", arms: ARMS, heroScale: document.body.classList.contains("rc-look-d") ? 1 : "auto", interactive: false, onFallback: () => hero.classList.add("fallback") });
       requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add("live")));
       window.__plasma = light;
     } catch (_) { hero.classList.add("fallback"); }

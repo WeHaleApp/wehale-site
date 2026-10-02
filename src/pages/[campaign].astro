@@ -52,15 +52,21 @@ d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promis
       <source media="(max-width: 700px)" srcset="/plasma/softer/poster-390x844.jpg" />
       <img src="/plasma/softer/poster-1440x900.jpg" alt="" width="1440" height="900" decoding="async" fetchpriority="high" />
     </picture>
+    <div class="rc-win" aria-hidden="true">
+      <span class="rc-win-tag">In the WeHale app</span>
+      <span class="rc-win-title">{T.title}</span>
+      <span class="rc-win-by">With {S.narrator}</span>
+    </div>
   </div>
 
   <main class="rc-page" id="rcMain" aria-labelledby="rcH">
     <div class="rc-lockup" data-lockup-slot aria-label={`WeHale × ${L.alt}`}>
       <img class="rc-we" src={L.wehale_src_dark} alt="WeHale" width="96" height="20" />
-      <i aria-hidden="true">×</i>
-      {LOCAL ? <img class="rc-partner" src={L.src_dark} alt={L.alt} width={L.width} height={L.height} /> : <span class="rc-partner-word">PARTNER</span>}
+      <span class="rc-pair"><i aria-hidden="true">×</i>
+      {LOCAL ? <img class="rc-partner" src={L.src_dark} alt={L.alt} width={L.width} height={L.height} /> : <span class="rc-partner-word">PARTNER</span>}</span>
     </div>
-    <div class="rc-stage" aria-hidden="true"></div>
+    <p class="rc-what">{T.about}</p>
+    <div class="rc-stage" id="rcStage"></div>
     <div class="rc-body">
       <h1 id="rcH">{T.title}</h1>
       <p class="rc-line">{T.line.split("|").map((b) => <span class="rc-beat">{b}</span>)}</p>
@@ -69,6 +75,14 @@ d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promis
       <p class="rc-how rc-how-m">{T.offer_how}</p>
       <p class="rc-how rc-how-d">{T.offer_how_desktop}</p>
       <a class="rc-btn" id="ctaBtn" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
+      <div class="rc-stores" data-store-badges>
+        <a class="rc-store" id="storeIos" data-store="ios" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.8-3-.8c-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.700 2.400 2.900 2.300 1.200 0 1.600-.8 3-.8s1.800.8 3 .7c1.300 0 2.100-1.100 2.800-2.200.9-1.300 1.300-2.500 1.300-2.600 0 0-2.500-1-2.500-3.800zM14.200 5.700c.6-.8 1.100-1.800.9-2.900-.9 0-2 .6-2.700 1.400-.6.700-1.100 1.800-.9 2.800 1 .1 2-.5 2.700-1.300z"/></svg>
+          <span><small>Download on the</small>App Store</span></a>
+        <a class="rc-store" id="storeAnd" data-store="android" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M4.500 2.600 14.300 12 4.500 21.400c-.3-.2-.5-.6-.5-1.100V3.700c0-.5.2-.9.500-1.100zM15.700 13.400l2.900 2.800-11.700 6.500zm0-2.800L6.900 1.300l11.700 6.500zm4.400-.4c.7.400.9.800.9 1.800s-.2 1.400-.9 1.800l-2.500 1.400-3.100-3.200 3.100-3.200z"/></svg>
+          <span><small>Get it on</small>Google Play</span></a>
+      </div>
       <figure class="rc-qr" id="qrBox" hidden>
         <div class="rc-qrcode" id="qrCode" role="img" aria-label="QR code for the app link"></div>
         <figcaption>{T.qr}</figcaption>

@@ -130,3 +130,46 @@ body.rc-look-c .rc-qr { margin-left: 0; } body.rc-look-c .rc-qrcode { margin-lef
   body.rc-look-c .rc-body h1 { font-size: 64px; max-width: 9ch; }
   body.rc-look-c .rc-btn { margin-left: 0; }
 }
+
+/* ===== D, the session in the app (Isak, 2 Oct): the purple light lives in a window of its own, the session as it appears in
+   the app; everything else is WeHale's own navy, the logo first, and the two stores to download from ===== */
+.rc-stores, .rc-win, .rc-what { display: none; }
+body.rc-look-d { --ground: #090f1d; }
+html:has(body.rc-look-d), body.rc-look-d { background: #090f1d; }
+body.rc-look-d::before { display: none; }
+body.rc-look-d .rc-page { background: radial-gradient(ellipse 90% 40% at 50% 0%, rgba(40, 56, 96, .45), rgba(9, 15, 29, 0) 70%); }
+body.rc-look-d .rc-lockup { flex-direction: column; gap: 10px; opacity: 1; }
+body.rc-look-d .rc-lockup .rc-we { height: 24px; }
+body.rc-look-d .rc-lockup .rc-pair { display: flex; align-items: center; gap: 10px; opacity: .8; }
+body.rc-look-d .rc-what { display: block; margin: 12px 0 0; max-width: 30ch; font: 500 14px/1.4 var(--font); color: rgba(242, 240, 237, .7); text-wrap: balance; }
+body.rc-look-d .rc-stage { flex: 0 0 auto; min-height: 0; width: 100%; max-width: 360px; margin: 18px auto 20px; }
+/* the window: a rounded screen of the app, its own warm ground, its own light; a picture, not a control */
+body.rc-look-d .rc-hero { position: relative; inset: auto; transform: none; width: 100%; height: 260px; border-radius: 28px; border: 1px solid rgba(246, 239, 233, .14);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .45); background: #0e0907; }
+body.rc-look-d .rc-win { display: flex; position: absolute; inset: 0; z-index: 3; flex-direction: column; align-items: center; justify-content: space-between; padding: 14px 18px 16px; text-align: center; pointer-events: none; }
+.rc-win-tag { font: 700 11px/1 var(--font); letter-spacing: .14em; text-transform: uppercase; color: rgba(246, 239, 233, .7); }
+.rc-win-title { margin-top: auto; font: 500 20px/1.15 var(--font); letter-spacing: -.01em; color: #f6efe9; text-shadow: 0 1px 14px rgba(14, 9, 7, .6); }
+.rc-win-by { margin-top: 4px; font: 400 13px/1.2 var(--font); color: rgba(246, 239, 233, .72); }
+body.rc-look-d .rc-body > h1 { display: none; }   /* the window carries the title */
+body.rc-look-d .rc-line { color: rgba(242, 240, 237, .78); text-shadow: none; }
+body.rc-look-d .rc-body > .rc-deal, body.rc-look-d .rc-body h1 { text-shadow: none; }
+/* two stores: the one for this phone is the pill, the other is quiet; the single pill steps aside */
+body.rc-look-d .rc-btn { display: none; }
+body.rc-look-d .rc-stores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.rc-store { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 56px; padding: 8px 12px; border-radius: 16px; text-decoration: none; color: #f6efe9; border: 1px solid rgba(246, 239, 233, .28); background: rgba(246, 239, 233, .04); font: 700 15px/1.1 var(--font); text-align: left; }
+.rc-store small { display: block; font: 500 10px/1.1 var(--font); letter-spacing: .02em; opacity: .75; margin-bottom: 2px; }
+.rc-store svg { flex: none; }
+body[data-phone="ios"] .rc-store[data-store="ios"], body[data-phone="android"] .rc-store[data-store="android"] { background: #fbf7f2; color: #14090f; border-color: #fbf7f2; }
+body.rc-look-d.rc-qr-on .rc-stores { display: none; }
+@media (min-width: 900px) {
+  body.rc-look-d .rc-page { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto 1fr; column-gap: 6vw; align-items: center; max-width: 1180px; margin: 0 auto; text-align: left; padding-top: 40px; }
+  body.rc-look-d .rc-lockup { grid-column: 1; grid-row: 1; align-items: flex-start; align-self: start; }
+  body.rc-look-d .rc-what { grid-column: 1; grid-row: 2; align-self: start; margin: 12px 0 0; text-align: left; max-width: 34ch; }
+  body.rc-look-d .rc-body { grid-column: 1; grid-row: 3; max-width: 480px; align-self: center; }
+  body.rc-look-d .rc-stage { grid-column: 2; grid-row: 1 / span 3; max-width: none; margin: 0; display: flex; justify-content: center; }
+  body.rc-look-d .rc-hero { width: min(340px, 30vw); height: auto; aspect-ratio: 9 / 18.2; max-height: 78svh; border-radius: 44px; }
+  body.rc-look-d .rc-body > h1 { display: block; font-size: 56px; text-align: left; }
+  body.rc-look-d .rc-win-title { font-size: 26px; }
+  body.rc-look-d .rc-body p, body.rc-look-d .rc-fine span { margin-left: 0; }
+  body.rc-look-d .rc-qr, body.rc-look-d .rc-qrcode, body.rc-look-d .rc-qr figcaption { margin-left: 0; }
+}
