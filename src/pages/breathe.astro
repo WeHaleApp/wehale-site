@@ -8,7 +8,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import BreatheLayout from "../layouts/BreatheLayout.astro";
-import PlayerStage from "../components/breathe/PlayerStage.astro";
 import "../styles/breathe.css";
 import SESSIONS from "../data/breathe-sessions.json";
 import HOOKS from "../data/hooks.json";
@@ -34,7 +33,43 @@ const description = "A guided breathing session with Edvin or Philip, right in y
 ---
 
 <BreatheLayout title={title} description={description}>
-  <PlayerStage />
+  <div id="poster" aria-hidden="true"></div>
+  <canvas id="silk" aria-hidden="true"></canvas>
+  <div id="lostGlow" aria-hidden="true"></div>
+  <canvas id="stage" width="1" height="1" aria-label="Breathing visual. Tap to show the controls."></canvas>
+
+  <div class="chrome off" id="chrome">
+    <header class="top">
+      <div><button class="icon" id="closeBtn" aria-label="Leave the session"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <div class="ttl"><span id="ttlK"></span><b id="ttlT"></b></div>
+      <div class="right">
+        <button class="icon" id="ccBtn" aria-pressed="true" aria-label="Captions"><span>CC</span></button>
+        <button class="icon" id="fsBtn" aria-label="Full screen"><svg viewBox="0 0 24 24" id="fsIco"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      </div>
+    </header>
+    <footer class="ctl"><div class="ctl-in">
+      <div class="times"><span id="tEl">0:00</span><span id="tPh"></span><span id="tRem"></span></div>
+      <div class="scrub" id="scrub" role="slider" aria-label="Session position" aria-valuemin="0" aria-valuemax="340" aria-valuenow="0" tabindex="0"><div class="segs" id="segs"></div><i class="knob" id="knob"></i></div>
+      <div class="btns">
+        <button class="skip" id="backBtn" aria-label="Back 10 seconds"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v5h5"/></svg><span>10s</span></button>
+        <button class="play" id="playBtn" aria-label="Pause"><svg viewBox="0 0 24 24" id="playIco"></svg></button>
+        <button class="skip" id="fwdBtn" aria-label="Forward 10 seconds"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg><span>10s</span></button>
+      </div>
+      <a class="ctlapp" id="ctlApp" href="#" rel="noopener" hidden>Continue in the app</a>
+    </div></footer>
+  </div>
+  <!-- the way home: the logo and a quiet "‹ wehale.io" at top left (app.js: back to the home page's place when we came from it) -->
+  <a id="brand" href="/" data-home><img src="/assets/images/logo.svg" alt="WeHale home" width="96" height="20" /></a>
+  <a class="homeback" id="homeBack" href="/" data-home aria-label="Back to wehale.io"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg><span>wehale.io</span></a>
+
+  <p class="hint" id="hint" aria-hidden="true"></p>
+  <div class="phase" id="phase" aria-live="polite"></div>
+  <div class="count" id="count"><span id="countT"></span><i class="kbar" aria-hidden="true"><b id="kbarB"></b></i></div>
+  <div class="cap" id="cap" aria-live="polite"></div>
+  <div class="meter" id="meterWrap" aria-hidden="true"><i id="meter"></i></div>
+  <div class="ring" id="ring" aria-hidden="true"></div>
+  <div id="flash" aria-hidden="true"></div><svg id="holdRing" viewBox="0 0 100 100" aria-hidden="true"><circle class="trk" cx="50" cy="50" r="48"/><circle class="prg" id="arcP" cx="50" cy="50" r="48" pathLength="100"/></svg><div id="cdn" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div><div class="pring" aria-hidden="true"></div>
+  <audio id="round" preload="none" playsinline></audio>
 
   <!-- 1. Start. Two layouts on one page for the landing test (?v=): .v0 is the original, .vx the variants a, b, c -->
   <main class="screen" id="startScr" aria-labelledby="startH">
@@ -136,7 +171,7 @@ const description = "A guided breathing session with Edvin or Philip, right in y
     <div class="grab" aria-hidden="true"></div>
     <div class="shead"><h2 id="saveH">Save it for later</h2><button class="sclose" id="saveClose" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <p class="ssub" id="saveSub"></p>
-    <a class="sopt" id="saveApp" href="#" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></i><span><b>Get it in the app, it'll be waiting</b><small>Free app. The same session with <span data-guide>{first.narrator}</span>.</small></span></a>
+    <a class="sopt" id="saveApp" href="#" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></i><span><b>Open it in the app to keep practising</b><small>Free app. The same session with <span data-guide>{first.narrator}</span>.</small></span></a>
     <a class="sopt" id="saveCal" href="#" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></i><span><b id="saveCalT">Remind me tonight</b><small id="saveCalS">A 6-minute reminder in Google Calendar</small></span></a>
     <a class="sopt" id="saveIcs" href="#" download="breathe-with-edvin.ics" hidden><i><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M9 15l2 2 4-4"/></svg></i><span><b>Add to Apple Calendar or Outlook</b><small id="saveIcsS">A calendar file with the same reminder</small></span></a>
     <button class="sopt" id="saveCopy" type="button"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg></i><span><b id="saveCopyT">Copy link</b><small id="saveCopyS">Open this page again when you're ready</small></span></button>
@@ -152,18 +187,18 @@ const description = "A guided breathing session with Edvin or Philip, right in y
   </div>
   <p class="goal" id="goal" hidden></p>
 
-  <!-- 2. End (finished) -->
+  <!-- 2. End (finished): the offer, one cream pill, one row of quiet links -->
   <section class="screen gone" id="endScr" aria-labelledby="endH">
     <div class="inner">
       <h1 id="endH">You just did <span data-title></span>.</h1>
       <p id="endNext"></p>
       <p class="offer" id="endOffer"></p>
       <p class="offer" id="endCode" hidden></p>
-      <div class="stack">
-        <a class="pill solid block" id="endApp" href="#" rel="noopener">Continue in the WeHale app</a>
-        <button class="pill block" id="againBtn" type="button">Play again</button>
+      <a class="pill solid block restcta" id="endApp" href="#" rel="noopener">Continue in the WeHale app</a>
+      <div class="quiet">
+        <button class="qlink" id="againBtn" type="button">Play again</button>
+        <a class="qlink" id="endHome" href="/" data-home aria-label="Back to wehale.io">wehale.io</a>
       </div>
-      <p class="appline" id="endAppLine"></p>
       <div class="endqr" id="endQr" hidden>
         {QRS.map((q) => <figure data-slug={q.slug} hidden><Fragment set:html={q.svg} /></figure>)}
         <p>On your phone? Scan to open the app.</p>
@@ -171,18 +206,18 @@ const description = "A guided breathing session with Edvin or Philip, right in y
     </div>
   </section>
 
-  <!-- 3. Exit (left early): calm, no offer -->
+  <!-- 3. Exit (left early): calm, no offer. One cream pill, then one row of quiet links (Round 2, PR 1) -->
   <section class="screen gone" id="exitScr" aria-labelledby="exitH">
     <div class="inner">
       <h1 id="exitH">Pick up where you left off</h1>
-      <p><span data-title></span> is one of the three sessions that stay free in the WeHale app.</p>
-      <div class="stack">
-        <button class="pill solid block" id="resumeBtn" type="button">Back to the session</button>
-        <a class="pill block" id="exitApp" href="#" rel="noopener">Open the WeHale app</a>
+      <p><span data-title></span> stays free in the WeHale app.</p>
+      <button class="pill solid block restcta" id="resumeBtn" type="button">Back to the session</button>
+      <div class="quiet">
+        <a class="qlink" id="exitApp" href="#" rel="noopener">Get the app</a>
+        <button class="qlink" id="exitSave" type="button" hidden>Save for later</button>
+        <button class="qlink" id="exitStart" type="button">Choose another session</button>
+        <a class="qlink" id="exitHome" href="/" data-home aria-label="Back to wehale.io">wehale.io</a>
       </div>
-      <p class="appline" id="exitAppLine"></p>
-      <button class="linkbtn" id="exitSave" type="button" hidden>Want to come back to it later?</button>
-      <button class="linkbtn" id="exitStart" type="button">Choose another session</button>
     </div>
   </section>
 
