@@ -74,16 +74,3 @@ async function mountLight() {
   };
   if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 150);
 }
-
-// the app carousel (look d): swipe or the arrows; the dots follow
-(function () {
-  const sl = document.getElementById("rcSlides"); if (!sl) return;
-  const dots = [...document.querySelectorAll(".rc-dots b")];
-  const at = () => Math.round(sl.scrollLeft / Math.max(1, sl.clientWidth));
-  const sync = () => { const i = at(); dots.forEach((d, k) => d.classList.toggle("on", k === i)); };
-  sl.addEventListener("scroll", () => requestAnimationFrame(sync), { passive: true });
-  const go = (d) => sl.scrollTo({ left: Math.max(0, Math.min(dots.length - 1, at() + d)) * sl.clientWidth, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-  document.querySelector(".rc-prev")?.addEventListener("click", () => go(-1));
-  document.querySelector(".rc-next")?.addEventListener("click", () => go(1));
-  sl.addEventListener("keydown", (e) => { if (e.key === "ArrowRight") go(1); if (e.key === "ArrowLeft") go(-1); });
-})();
