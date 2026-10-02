@@ -37,25 +37,30 @@ if(k){q.delete("k");var s=q.toString();history.replaceState(null,"",location.pat
 d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promise.resolve(true);`;
 ---
 
-<BreatheLayout title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#090f1d">
+<BreatheLayout title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#0e0907">
   <Fragment slot="head">
-    <style is:inline>html{background:#090f1d}html.rc-locked body{visibility:hidden}</style>
+    <style is:inline>html{background:#0e0907}html.rc-locked body{visibility:hidden}</style>
     <script is:inline set:html={gate} />
-    <link rel="preload" as="image" href={L.src_dark} />
+    <link rel="preload" as="image" href="/plasma/poster-390x844.jpg" media="(max-width: 700px)" />
   </Fragment>
 
-  <!-- the room: a field of faint motes rising slowly like bubbles in still water (the canvas, added once the page has
-       arrived; the CSS field underneath is the still fallback) and one calm orb that breathes; all still with Reduce Motion -->
-  <div class="rc-sky" aria-hidden="true"></div>
-  <canvas class="rc-motes" id="rcMotes" aria-hidden="true"></canvas>
+  <!-- the first screen of the Plasma flow: the app's own light (the same engine, public/plasma/) on the Welcome's warm ground.
+       The poster is the first paint and the fallback; the words are real HTML on top. The look (A, B, C) is ?look= while we choose. -->
+  <div class="rc-hero" id="plasma-hero" aria-hidden="true">
+    <div class="rc-glow"></div>
+    <picture class="rc-poster">
+      <source media="(max-width: 700px)" srcset="/plasma/poster-390x844.jpg" />
+      <img src="/plasma/poster-1440x900.jpg" alt="" width="1440" height="900" decoding="async" fetchpriority="high" />
+    </picture>
+  </div>
 
   <main class="rc-page" id="rcMain" aria-labelledby="rcH">
-    <div class="rc-lockup" aria-label={`WeHale × ${L.alt}`}>
-      <img src={L.wehale_src_dark} alt="WeHale" width="96" height="20" />
+    <div class="rc-lockup" data-lockup-slot aria-label={`WeHale × ${L.alt}`}>
+      <img class="rc-we" src={L.wehale_src_dark} alt="WeHale" width="96" height="20" />
       <i aria-hidden="true">×</i>
-      <img class="rc-partner" src={L.src_dark} alt={L.alt} width={L.width} height={L.height} />
+      {LOCAL ? <img class="rc-partner" src={L.src_dark} alt={L.alt} width={L.width} height={L.height} /> : <span class="rc-partner-word">PARTNER</span>}
     </div>
-    <div class="rc-orb" id="rcOrb" aria-hidden="true"><s></s><i></i><b></b></div>
+    <div class="rc-stage" aria-hidden="true"></div>
     <div class="rc-body">
       <h1 id="rcH">{T.title}</h1>
       <p class="rc-line">{T.line.split("|").map((b) => <span class="rc-beat">{b}</span>)}</p>

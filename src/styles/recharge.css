@@ -1,91 +1,58 @@
-/* The campaign page (src/pages/[campaign].astro), on top of breathe.css (its fonts and tokens). One "get the app" page
-   on the wehale.io look (Isak, 29 Sep: "own the design, make it more WeHale-like"): the deep navy ground, one calm orb,
-   Nunito Sans, one white pill. The campaign shows only as the small co-brand lockup and blackcurrant as a quiet accent
-   (the orb's inner light). */
-:root { --navy: #090f1d; --berry: #4A1D3F; --berry-l: #D9B3CC;
-  /* the app's motion tokens (wehale-app src/tokens/motion.ts, as in site.css and docs/MOTION.md; site.css isn't on this page) */
+/* The campaign page (src/pages/[campaign].astro), on top of breathe.css (its fonts and tokens). The first screen of the
+   Plasma flow, on the web (Isak, 2 Oct): the app's own light (public/plasma/plasma-web.js, the Welcome's idle breath) on
+   the Welcome's warm dark ground, the lockup, the words, one pill. Nothing that looks cheap: no dust, no strong gradients
+   on controls. Three directions while Isak chooses, set by ?look= (a, b, c): a is the default. */
+:root { --ground: #0e0907; --ink: #f6efe9; --t2: rgba(246, 239, 233, .78); --t3: rgba(246, 239, 233, .56);
   --m-press-in: 100ms; --m-press-out: 220ms; --m-enter: 500ms; --m-stagger: 80ms; --m-reveal: 800ms; --m-breath-in: 4000ms; --m-breath-out: 6000ms;
   --curve-enter: cubic-bezier(.33, 1, .68, 1); --curve-breath: cubic-bezier(.37, 0, .63, 1);
-  /* one breath (4 s in, 6 s out); every breathing thing on the page runs on it, started together at arrival */
   --breath: calc(var(--m-breath-in) + var(--m-breath-out)); }
-html:has(body.rc), body.rc { background: var(--navy); }
-/* a document page, not the player: it scrolls if a short screen (or the consent bar) needs it */
+html:has(body.rc), body.rc { background: var(--ground); }
 html:has(body.rc) { height: auto; overflow: auto; }
-body.rc { position: static; height: auto; min-height: 100%; overflow: visible; overscroll-behavior: auto; --ground: var(--navy); }
+body.rc { --lt: translateY(-17svh); position: static; height: auto; min-height: 100%; overflow: visible; overscroll-behavior: auto; color: var(--ink); }
 body.rc :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
-/* the room: faint motes, still; a soft navy light from above */
-.rc-sky { position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(1px 1px at 12% 18%, rgba(242, 240, 237, .5), transparent 60%), radial-gradient(1px 1px at 78% 12%, rgba(242, 240, 237, .4), transparent 60%),
-    radial-gradient(1.5px 1.5px at 64% 30%, rgba(217, 179, 204, .45), transparent 60%), radial-gradient(1px 1px at 30% 40%, rgba(242, 240, 237, .3), transparent 60%),
-    radial-gradient(1px 1px at 88% 46%, rgba(242, 240, 237, .35), transparent 60%), radial-gradient(1.5px 1.5px at 8% 58%, rgba(217, 179, 204, .35), transparent 60%),
-    radial-gradient(1px 1px at 52% 8%, rgba(242, 240, 237, .3), transparent 60%), radial-gradient(1px 1px at 22% 74%, rgba(242, 240, 237, .22), transparent 60%),
-    radial-gradient(1px 1px at 92% 70%, rgba(242, 240, 237, .22), transparent 60%),
-    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(40, 56, 96, .45), rgba(9, 15, 29, 0) 70%),
-    var(--navy); }
+/* the light: fixed behind everything. The poster paints first and is the fallback; the canvas (added by the module) sits on top
+   of it and the poster fades once it draws. A CSS glow stands in if the poster image itself fails. */
+.rc-hero { position: fixed; inset: -26% -26%; transform: var(--lt, none); z-index: 0; overflow: hidden; background: var(--ground); isolation: isolate; pointer-events: none; }
+.rc-hero > canvas { z-index: 1; }
+.rc-hero .rc-poster, .rc-hero .rc-glow { position: absolute; inset: 0; z-index: 0; }
+.rc-hero .rc-poster img { width: 100%; height: 100%; object-fit: cover; }
+.rc-hero .rc-glow { background: radial-gradient(60% 45% at 50% 42%, rgba(255, 170, 90, .5), rgba(190, 60, 90, .28) 45%, rgba(40, 10, 25, 0) 75%); opacity: 0; }
+.rc-hero.live .rc-poster { opacity: 0; transition: opacity .6s ease; }
+.rc-hero.fallback > canvas { display: none; }
+@media (prefers-reduced-motion: reduce) { .rc-hero.live .rc-poster { transition: none; } }
+/* a soft ground under the words so the type keeps its contrast over the brightest part of the light (it stays put when the light moves) */
+body.rc::before { content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(14, 9, 7, .45) 0, rgba(14, 9, 7, 0) 18%, rgba(14, 9, 7, 0) 48%, rgba(14, 9, 7, .62) 70%, rgba(14, 9, 7, .86) 100%); }
 
-.rc-page { position: relative; z-index: 1; overflow-x: clip; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--text);
+.rc-page { position: relative; z-index: 2; overflow-x: clip; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--ink);
   padding: calc(env(safe-area-inset-top, 0px) + 22px) max(24px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 24px) max(24px, env(safe-area-inset-left, 0px)); }
+.rc-stage { flex: 1 1 auto; min-height: 120px; }
 
-/* the co-brand lockup: WeHale, a thin ×, the partner (one swappable file), white, small, on one baseline. WeHale's
-   letters sit 6 % above its image bottom; the partner image is trimmed to its wordmark, so it rides 1 px up */
-.rc-lockup { display: flex; align-items: flex-end; justify-content: center; gap: 12px; opacity: .92; }
-.rc-lockup img { height: 15px; width: auto; display: block; }
-.rc-lockup img.rc-partner { height: auto; max-height: 21px; margin-bottom: 1px; }
-.rc-lockup i { font: 300 14px/1 var(--font); font-style: normal; color: rgba(242, 240, 237, .55); margin-bottom: 2px; }
+/* the lockup slot (data-lockup-slot): the real WeHale × partner image drops in at launch; today WeHale, a thin ×, and the neutral word.
+   One centred object about 20-24 px tall, ink at about 80 %; capped by max-height so any aspect ratio fits */
+.rc-lockup { display: flex; align-items: center; justify-content: center; gap: 12px; opacity: .8; min-height: 22px; }
+.rc-lockup img { display: block; max-height: 24px; width: auto; }
+.rc-lockup img.rc-we { height: 15px; }
+.rc-lockup i { font: 300 14px/1 var(--font); font-style: normal; color: rgba(246, 239, 233, .6); }
+.rc-partner-word { font: 600 12px/1 var(--font); letter-spacing: .28em; padding-left: .28em; color: rgba(246, 239, 233, .9); }
 
-/* the motes: a canvas (motes.js) over the still CSS field, fading in once the page has arrived; never with Reduce Motion */
-.rc-motes { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 2.4s var(--curve-enter); }
-.rc-motes.on { opacity: 1; }
-
-/* the orb: WeHale's calm sphere, a luminous rim around a dark centre lit from within by a little blackcurrant. It
-   breathes (4 s in, 6 s out, the app's breath curve): it swells with a softly brightening halo, and as each exhale begins
-   a thin ring leaves its rim and dissolves, like a ripple on still water. Transform and opacity only. */
-.rc-orb { --rip-to: 2; position: relative; flex: 1 1 auto; width: 100%; min-height: 150px; display: flex; align-items: center; justify-content: center; }
-/* on phones the orb gets a set band, so the words move up and "Start in the app" sits above the fold with the cookie card up (the owner of main, 30 Sep) */
-@media (max-width: 767px) { .rc-orb { flex: 0 0 auto; height: clamp(200px, 34svh, 300px); } }
-@media (max-width: 767px) and (max-height: 700px) { .rc-orb { height: 136px; min-height: 0; } }
-.rc-orb i, .rc-orb b, .rc-orb s { position: absolute; left: 50%; top: 50%; width: var(--orb, 168px); height: var(--orb, 168px); margin: calc(var(--orb, 168px) / -2) 0 0 calc(var(--orb, 168px) / -2); border-radius: 50%; }
-.rc-orb i { background: radial-gradient(circle at 50% 50%, rgba(122, 64, 104, .42) 0, rgba(58, 26, 56, .55) 34%, rgba(16, 17, 36, .96) 68%, #0c1122 100%);
-  box-shadow: 0 0 0 1.5px rgba(242, 236, 240, .82), 0 0 18px 2px rgba(217, 179, 204, .45), 0 0 70px 10px rgba(122, 64, 104, .28), inset 0 0 26px rgba(217, 179, 204, .22);
-  transform: scale(.92); }
-.rc-orb b { background: radial-gradient(circle, rgba(217, 179, 204, .16) 0, rgba(74, 29, 63, .10) 45%, rgba(9, 15, 29, 0) 70%); transform: scale(2.3); }
-.rc-orb s { text-decoration: none; opacity: 0; border: 1px solid rgba(236, 222, 232, .5); box-shadow: 0 0 12px rgba(217, 179, 204, .18), inset 0 0 12px rgba(217, 179, 204, .12); }
-@media (prefers-reduced-motion: no-preference) {
-  body.rc.arrived .rc-orb i { animation: rc-breathe var(--breath) var(--curve-breath) infinite; }
-  body.rc.arrived .rc-orb b { animation: rc-halo var(--breath) var(--curve-breath) infinite; }
-  body.rc.arrived .rc-orb s { animation: rc-ripple var(--breath) infinite; }
-}
-/* in over 40 % of the breath (4 s), out over 60 % (6 s) */
-@keyframes rc-breathe { 0%, 100% { transform: scale(.82); } 40% { transform: scale(1); } }
-@keyframes rc-halo { 0%, 100% { transform: scale(1.9); opacity: .55; } 40% { transform: scale(2.5); opacity: 1; } }
-/* the ripple waits through the inhale at the rim, then drifts out and fades over the exhale (the enter curve: it leaves
-   gently and slows as it goes) */
-@keyframes rc-ripple { 0%, 39% { transform: scale(1); opacity: 0; } 40% { transform: scale(1); opacity: var(--rip, .42); animation-timing-function: var(--curve-enter); } 96%, 100% { transform: scale(var(--rip-to, 2)); opacity: 0; } }
-
-/* the words, at the bottom within thumb reach: the session, the offer, the one button, the fine print */
+/* the words */
 .rc-body { width: 100%; max-width: 400px; }
-.rc-body h1 { margin: 0 0 8px; font: 500 34px/1.08 var(--font); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+.rc-body h1 { margin: 0 0 10px; font: 500 34px/1.08 var(--font); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; text-shadow: 0 1px 24px rgba(14, 9, 7, .55); }
 .rc-body p { margin: 0 auto; max-width: 34ch; text-wrap: balance; }
-.rc-line { font: 400 16px/1.45 var(--font); color: var(--t2); max-width: 30ch !important; }
-.rc-beat { display: block; white-space: nowrap; }   /* the ritual: three beats, never broken mid-line (the owner of main, 30 Sep) */
-.rc-only { margin-top: 14px !important; display: inline-flex; align-items: center; min-height: 30px; padding: 6px 14px; border-radius: 999px;
-  border: 1px solid rgba(217, 179, 204, .34); background: rgba(74, 29, 63, .28); font: 600 13px/1.2 var(--font); color: #EBD7E4; }
-.rc-deal { margin-top: 24px !important; font: 700 18px/1.3 var(--font); color: var(--text); max-width: 40ch !important; }
+.rc-line { font: 400 16px/1.45 var(--font); color: var(--t2); max-width: 30ch !important; text-shadow: 0 1px 16px rgba(14, 9, 7, .6); }
+.rc-beat { display: block; white-space: nowrap; }   /* the ritual: three beats, never broken mid-line */
+.rc-only { margin-top: 14px !important; font: 600 13px/1.2 var(--font); color: var(--t2); }
+.rc-deal { margin-top: 22px !important; font: 700 18px/1.3 var(--font); color: var(--ink); max-width: 40ch !important; text-shadow: 0 1px 16px rgba(14, 9, 7, .6); }
+.rc-how { margin-top: 6px !important; font: 600 15px/1.4 var(--font); color: var(--t2); max-width: 40ch !important; text-wrap: balance; }
+.rc-how-d { display: none; }
+body.rc-qr-on .rc-how-m { display: none; } body.rc-qr-on .rc-how-d { display: block; }
+/* one white pill (the app's primary), a quiet press; no gradient, no glow */
 .rc-btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 58px; margin-top: 16px; padding: 16px 28px; border-radius: 999px;
-  background: #F6EDE3; color: #0b1020; font: 700 17px/1 var(--font); text-decoration: none; cursor: pointer;
+  background: #fbf7f2; color: #14090f; font: 700 17px/1 var(--font); text-decoration: none; cursor: pointer;
   transition: background .25s ease, transform var(--m-press-out, 220ms) var(--curve-enter, ease); }
 @media (hover: hover) { .rc-btn:hover { background: #fff; } }
-/* the pill breathes with the orb: a faint cream glow swells on each inhale and settles on the exhale (opacity only);
-   on a desktop the QR card takes the same breath */
-.rc-btn, .rc-qrcode { position: relative; }
-.rc-btn::after, .rc-qrcode::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
-  box-shadow: 0 0 20px 1px rgba(246, 237, 227, .24), 0 0 56px 8px rgba(217, 179, 204, .12); }
-@media (prefers-reduced-motion: no-preference) {
-  body.rc.arrived .rc-btn::after, body.rc.arrived .rc-qrcode::after { animation: rc-glow var(--breath) var(--curve-breath) infinite; }
-}
-@keyframes rc-glow { 0%, 100% { opacity: .15; } 40% { opacity: .9; } }
 .rc-btn:active { transform: scale(.97); transition-duration: var(--m-press-in, 100ms); }
 .rc-fine { margin-top: 14px !important; font: 400 13px/1.5 var(--font); color: var(--t3); max-width: 42ch !important; }
 .rc-fine span { display: block; text-wrap: balance; }
@@ -93,49 +60,73 @@ body.rc :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .rc-qrcode { width: 168px; height: 168px; background: #fff; border-radius: 14px; padding: 10px; margin: 0 auto; }
 .rc-qrcode svg { display: block; width: 100%; height: 100%; }
 .rc-qr figcaption { margin-top: 12px; font: 600 14px/1.45 var(--font); color: var(--t2); max-width: 26ch; margin-inline: auto; text-wrap: balance; }
-.rc-how { margin-top: 6px !important; font: 600 15px/1.4 var(--font); color: var(--t2); max-width: 40ch !important; text-wrap: balance; }
-.rc-how-d { display: none; }
-body.rc-qr-on .rc-how-m { display: none; } body.rc-qr-on .rc-how-d { display: block; }
 body.rc-qr-on .rc-btn { display: none; }   /* on a desktop the QR code is the way to the app */
 
 /* the consent bar (its measured room) never covers the button or the fine print */
 @media (max-width: 767px) { body.rc.whc-on .rc-page { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--rc-whc, 96px) + 12px); } }
-/* shorter phones (375×667): a smaller orb and title, the same order */
-@media (max-height: 700px) { .rc-orb { --orb: 124px; --rip-to: 1.75; min-height: 120px; } .rc-body h1 { font-size: 30px; } .rc-deal { margin-top: 18px !important; } }
+@media (max-height: 700px) { .rc-body h1 { font-size: 30px; } .rc-deal { margin-top: 16px !important; } .rc-stage { min-height: 90px; } }
 
-/* it arrives once its font is ready, in reading order over about 1.2 s (the app's enter curve and 80 ms stagger): the
-   lockup, the orb (a slow bloom), the title, the line, the chip, the offer, the button, the fine print */
+/* it arrives once its font is ready, in reading order over about 1.2 s (the app's enter curve and 80 ms stagger) */
 body.rc:not(.arrived) .rc-page > *, body.rc:not(.arrived) .rc-body > * { opacity: 0; }
 body.rc.arrived .rc-lockup, body.rc.arrived .rc-body > * { animation: rise var(--m-enter) var(--curve-enter) both; animation-delay: var(--d, 0ms); }
-body.rc.arrived .rc-orb { animation: rc-bloom var(--m-reveal) var(--curve-enter) 80ms both; }
-body.rc.arrived .rc-body > h1 { --d: 240ms; }
-body.rc.arrived .rc-body > .rc-line { --d: 320ms; }
-body.rc.arrived .rc-body > .rc-only { --d: 400ms; }
-body.rc.arrived .rc-body > .rc-deal { --d: 480ms; }
-body.rc.arrived .rc-body > .rc-how { --d: 560ms; }
-body.rc.arrived .rc-body > .rc-btn, body.rc.arrived .rc-body > .rc-qr { --d: 640ms; }
-body.rc.arrived .rc-body > .rc-fine { --d: 720ms; }
-@keyframes rc-bloom { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { body.rc.arrived .rc-page > *, body.rc.arrived .rc-body > * { animation: none; } .rc-motes { display: none; } }
+body.rc.arrived .rc-body > h1 { --d: 200ms; }
+body.rc.arrived .rc-body > .rc-line { --d: 280ms; }
+body.rc.arrived .rc-body > .rc-only { --d: 360ms; }
+body.rc.arrived .rc-body > .rc-deal { --d: 440ms; }
+body.rc.arrived .rc-body > .rc-how { --d: 520ms; }
+body.rc.arrived .rc-body > .rc-btn, body.rc.arrived .rc-body > .rc-qr { --d: 600ms; }
+body.rc.arrived .rc-body > .rc-fine { --d: 680ms; }
+@media (prefers-reduced-motion: reduce) { body.rc.arrived .rc-page > *, body.rc.arrived .rc-body > * { animation: none; } }
 
 /* desktop: composed, not stretched; the QR code in place of the button */
 @media (min-width: 700px) {
+  body.rc { --lt: translateY(-14svh) scale(1.3); }
   .rc-page { padding-top: 32px; padding-bottom: 48px; }
-  .rc-lockup img { height: 17px; } .rc-lockup img.rc-partner { max-height: 24px; }
-  .rc-orb { --orb: 200px; --rip-to: 1.55; }   /* the ripple stays clear of the lockup and the title */
+  .rc-lockup img.rc-we { height: 17px; }
   .rc-body { max-width: 520px; }
   .rc-body h1 { font-size: 52px; }
   .rc-line { font-size: 18px; }
   .rc-deal { font-size: 22px; }
   .rc-btn { width: auto; min-width: 300px; margin-inline: auto; }
+  .rc-stage { min-height: 220px; }
 }
 
-/* the bloom look (preview, ?look=bloom): the campaign cover as the ground, slowly drifting; the words over a soft scrim;
-   the orb steps aside, keeping its space so the layout is the same as the ring look */
-body.rc-bloom .rc-sky { background: #0a0a0a url(/recharge/bloom-1080.webp) center 20% / cover no-repeat; transform-origin: 50% 30%; }
-@media (max-width: 767px) { body.rc-bloom .rc-sky { background-image: url(/recharge/bloom-720.webp); } }
-body.rc-bloom .rc-sky::after { content: ""; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(8, 8, 14, .25) 0%, rgba(8, 8, 14, .05) 28%, rgba(8, 8, 14, .55) 52%, rgba(8, 8, 14, .92) 72%, rgba(8, 8, 14, .97) 100%); }
-body.rc-bloom .rc-orb { visibility: hidden; }
-@media (prefers-reduced-motion: no-preference) { body.rc-bloom.arrived .rc-sky { animation: rc-bloom-drift 24s var(--curve-breath, ease-in-out) infinite alternate; } }
-@keyframes rc-bloom-drift { from { transform: scale(1.03); } to { transform: scale(1.1) translateY(-1.5%); } }
+/* ===== B, the pour: the light rests low, like a sunrise under the words; the three beats arrive one by one over a breath as it
+   rises into place, and the offer and the pill sit on the light. The words are in two groups, top and bottom ===== */
+body.rc-look-b { --lt: translateY(22svh); }
+body.rc-look-b .rc-body { display: contents; }
+body.rc-look-b .rc-body > * { max-width: 400px; margin-left: auto; margin-right: auto; width: 100%; }
+body.rc-look-b .rc-lockup { order: 0; } body.rc-look-b .rc-body > h1 { order: 1; margin-top: 8svh; } body.rc-look-b .rc-body > .rc-line, body.rc-look-b .rc-body > .rc-only { order: 1; }
+body.rc-look-b .rc-stage { order: 2; } 
+body.rc-look-b .rc-body > .rc-deal, body.rc-look-b .rc-body > .rc-how, body.rc-look-b .rc-body > .rc-btn, body.rc-look-b .rc-body > .rc-qr, body.rc-look-b .rc-body > .rc-fine { order: 3; }
+body.rc-look-b .rc-body > .rc-btn { width: 100%; }
+@media (min-width: 700px) { body.rc-look-b .rc-body > * { max-width: 520px; } body.rc-look-b .rc-body > .rc-btn { width: auto; } body.rc-look-b .rc-body > h1 { margin-top: 6svh; } }
+@media (prefers-reduced-motion: no-preference) {
+  body.rc-look-b.arrived .rc-hero { animation: rc-pour 3.4s var(--curve-enter) both; }
+  body.rc-look-b.arrived .rc-beat { animation: rise 700ms var(--curve-enter) both; }
+  body.rc-look-b.arrived .rc-beat:nth-child(1) { animation-delay: 600ms; }
+  body.rc-look-b.arrived .rc-beat:nth-child(2) { animation-delay: 1500ms; }
+  body.rc-look-b.arrived .rc-beat:nth-child(3) { animation-delay: 2400ms; }
+  body.rc-look-b.arrived .rc-body > .rc-line { animation: none; }
+  body.rc-look-b.arrived .rc-body > .rc-deal { --d: 3000ms; } body.rc-look-b.arrived .rc-body > .rc-how { --d: 3100ms; }
+  body.rc-look-b.arrived .rc-body > .rc-btn, body.rc-look-b.arrived .rc-body > .rc-qr { --d: 3200ms; } body.rc-look-b.arrived .rc-body > .rc-fine { --d: 3300ms; }
+}
+body.rc-look-b:not(.arrived) .rc-beat { opacity: 0; }
+@keyframes rc-pour { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: none; } }
+body.rc-look-b::before { background: linear-gradient(180deg, rgba(14, 9, 7, .55) 0, rgba(14, 9, 7, .25) 30%, rgba(14, 9, 7, 0) 48%, rgba(14, 9, 7, .0) 62%, rgba(14, 9, 7, .55) 86%, rgba(14, 9, 7, .8) 100%); }
+
+/* ===== C, off-centre: editorial. The light is large and sits off to the right, partly past the edge; the words are left-aligned
+   and the pill spans the width. On a desktop, two columns: the words left, the light right ===== */
+body.rc-look-c { --lt: translate(18vw, -12svh) scale(1.2); }
+body.rc-look-c .rc-page { text-align: left; align-items: stretch; }
+body.rc-look-c .rc-lockup { justify-content: flex-start; }
+body.rc-look-c .rc-body { max-width: none; }
+body.rc-look-c .rc-body p, body.rc-look-c .rc-line, body.rc-look-c .rc-how, body.rc-look-c .rc-deal, body.rc-look-c .rc-fine { margin-left: 0; margin-right: 0; }
+body.rc-look-c .rc-body h1 { font-size: 40px; max-width: 8ch; }
+body.rc-look-c .rc-qr { margin-left: 0; } body.rc-look-c .rc-qrcode { margin-left: 0; } body.rc-look-c .rc-qr figcaption { margin-left: 0; }
+@media (min-width: 900px) {
+  body.rc-look-c { --lt: translate(16vw, -2svh) scale(1.45); }
+  body.rc-look-c .rc-page { padding-left: max(64px, 8vw); padding-right: 50vw; }
+  body.rc-look-c .rc-body h1 { font-size: 64px; max-width: 9ch; }
+  body.rc-look-c .rc-btn { margin-left: 0; }
+}

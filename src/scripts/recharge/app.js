@@ -16,8 +16,9 @@ function run() {
   const PHONE = phoneOf(navigator.userAgent, navigator.maxTouchPoints || 0);
   const DESK = !PHONE && matchMedia("(hover: hover) and (pointer: fine) and (min-width: 700px)").matches;
   body.classList.add("rc");
-  // preview of the bloom look (owner of main, 1 Oct): ?look=bloom puts cover B2 under the words; Isak picks ring or bloom
-  if (/[?&]look=bloom(&|$)/.test(location.search)) body.classList.add("rc-bloom");
+  // the three directions while Isak chooses (2 Oct): ?look=a (the first screen), b (the pour), c (off-centre). a by default.
+  const LOOK = (/[?&]look=([abc])(&|$)/i.exec(location.search) || [, "a"])[1].toLowerCase();
+  body.classList.add("rc-look-" + LOOK);
   body.classList.toggle("rc-desk", DESK);
   body.dataset.phone = PHONE || "desktop";
 
@@ -37,15 +38,11 @@ function run() {
   const whcFit = () => { if (whc && !whc.hidden) body.style.setProperty("--rc-whc", Math.max(0, Math.ceil(innerHeight - whc.offsetTop)) + "px"); };
   if (whc) { new MutationObserver(() => requestAnimationFrame(whcFit)).observe(whc, { attributes: true, attributeFilter: ["hidden", "class"] }); addEventListener("resize", whcFit); whcFit(); }
 
-  // the words wait for their font (no fallback flash), then rise in
-  // then the room comes alive: the orb, its ripples and the button breathe from this moment, and the motes (a small
-  // canvas, loaded now so it never delays the first paint) rise on the same clock; nothing with Reduce Motion
-  let shown = false; const arrive = () => { if (shown) return; shown = true; body.classList.add("arrived");
-    const t0 = document.timeline && document.timeline.currentTime != null ? document.timeline.currentTime : performance.now();
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) import("./motes.js").then((m) => m.startMotes($("rcMotes"), $("rcOrb"), t0), () => {}); };
+  // the words wait for their font (no fallback flash), then arrive; the light mounts right after, so it never delays first paint
+  let shown = false; const arrive = () => { if (shown) return; shown = true; body.classList.add("arrived"); mountLight(); };
   try { Promise.all(["500 32px 'Nunito Sans'", "700 18px 'Nunito Sans'"].map((f) => document.fonts.load(f))).then(arrive, arrive); } catch (_) { arrive(); }
   setTimeout(arrive, 700);
-  window.__recharge = { link };
+  window.__recharge = { link, look: LOOK };
 }
 
 async function drawQr(link) {
@@ -54,4 +51,20 @@ async function drawQr(link) {
     $("qrCode").innerHTML = await QR.toString(link, { type: "svg", margin: 2, errorCorrectionLevel: "M", color: { dark: "#090f1d", light: "#FFFFFF" } });
     $("qrBox").hidden = false; body.classList.add("rc-qr-on");
   } catch (_) { $("qrBox").hidden = true; }
+}
+
+// the app's own Plasma light (public/plasma/plasma-web.js, the Welcome's idle breath). The poster stays until the first drawn frame;
+// without WebGL 2 (or on an error) the poster and its CSS glow simply stay: the page never depends on the light.
+async function mountLight() {
+  const hero = $("plasma-hero"); if (!hero) return;
+  const go = async () => {
+    try {
+      const url = "/plasma/plasma-web.js"; const { mount, isSupported } = await import(/* @vite-ignore */ url);
+      if (!isSupported()) { hero.classList.add("fallback"); return; }
+      const light = mount(hero, { look: "balanced", step: "welcome", reduceMotion: "auto", quality: "auto", interactive: false, onFallback: () => hero.classList.add("fallback") });
+      requestAnimationFrame(() => requestAnimationFrame(() => hero.classList.add("live")));
+      window.__plasma = light;
+    } catch (_) { hero.classList.add("fallback"); }
+  };
+  if ("requestIdleCallback" in window) requestIdleCallback(go, { timeout: 1200 }); else setTimeout(go, 150);
 }
