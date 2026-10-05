@@ -55,3 +55,29 @@
   from = "/session/*"
   to = "/"
   status = 302
+
+# A short, readable link to ask someone for a store review: wehale.io/review.
+#
+# WHY NOT PASTE THE STORE URL. Mail clients rewrite links through their own
+# redirector, and a long `apps.apple.com/...?action=write-review` arriving that way
+# can surface a browser interstitial showing an unfamiliar URL — exactly the wrong
+# note in a personal message from a founder. Our own short domain reads as ours, and the
+# last hop is still Apple's, so iOS hands off to the App Store and opens the review
+# sheet rather than the product page.
+#
+# `force = true` because these paths have no page of their own to lose to.
+[[redirects]]
+  from = "/review"
+  to = "https://apps.apple.com/app/id6739413667?action=write-review"
+  status = 302
+  force = true
+
+# Google Play has no write-a-review deep link, so this is the listing; the rating
+# control sits on it. Kept separate rather than sniffing the user agent: the sender
+# knows which store the person is on, and a guess that lands an iPhone user on Play
+# is worse than two links.
+[[redirects]]
+  from = "/review/android"
+  to = "https://play.google.com/store/apps/details?id=com.wehale.app"
+  status = 302
+  force = true
