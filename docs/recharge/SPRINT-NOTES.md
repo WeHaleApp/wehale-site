@@ -15,7 +15,7 @@ Commit: see git log. Evidence in `docs/recharge/evidence/`: `page-{390,768,1280}
 colour scheme and look the same on purpose (`color-scheme: dark`, the app's ink ground).
 
 **Performance** (phone UA 390x844, Slow 4G 1.6 Mbit/s + 150 ms, 4x CPU, cold cache, 5 runs, headless Chrome on the production build):
-median first contentful paint 712 ms, largest contentful paint 968 ms (the poster), layout shift 0, load event 949 ms, 84 kB at load
+median first contentful paint 796 ms, largest contentful paint 1088 ms (the poster), layout shift 0, load event 1071 ms, 85 kB at load (re-run after the measurement code)
 (poster 15 kB, fonts, the page). The 2.1 MB loop is requested only after load (one request per run) and fades in. Reduce Motion: 0 video requests (checked at 390 and 1280).
 Not measured: a real phone on a real network (that is Isak's phone test).
 
