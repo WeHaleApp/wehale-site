@@ -2,57 +2,57 @@
   "conditions": "iPhone UA, 390x844, Slow 4G (1.6 Mbit/s down, 150 ms), 4x CPU throttle, cache disabled, 5 runs, headless Chrome",
   "runs": [
     {
-      "fcp": 1092,
-      "lcp": 1344,
+      "fcp": 796,
+      "lcp": 1088,
       "cls": 0,
-      "load": 1333.8999999761581,
-      "bytesAtLoad": 85605,
-      "bytesTotal": 85605,
+      "load": 1070.800000011921,
+      "bytesAtLoad": 86711,
+      "bytesTotal": 86711,
       "video": 1
     },
     {
-      "fcp": 712,
-      "lcp": 968,
+      "fcp": 640,
+      "lcp": 932,
       "cls": 0,
-      "load": 948.5,
-      "bytesAtLoad": 85605,
-      "bytesTotal": 85605,
+      "load": 911.4000000059605,
+      "bytesAtLoad": 86711,
+      "bytesTotal": 86711,
       "video": 1
     },
     {
-      "fcp": 676,
-      "lcp": 960,
+      "fcp": 644,
+      "lcp": 936,
       "cls": 0,
-      "load": 942.8000000119209,
-      "bytesAtLoad": 85605,
-      "bytesTotal": 85605,
+      "load": 918.8999999761581,
+      "bytesAtLoad": 86711,
+      "bytesTotal": 86711,
       "video": 1
     },
     {
-      "fcp": 680,
-      "lcp": 952,
+      "fcp": 944,
+      "lcp": 1500,
       "cls": 0,
-      "load": 941.0999999940395,
-      "bytesAtLoad": 85605,
-      "bytesTotal": 85605,
+      "load": 1613.9000000059605,
+      "bytesAtLoad": 86711,
+      "bytesTotal": 86711,
       "video": 1
     },
     {
-      "fcp": 732,
-      "lcp": 1024,
+      "fcp": 952,
+      "lcp": 1212,
       "cls": 0,
-      "load": 999.9000000059605,
-      "bytesAtLoad": 85605,
-      "bytesTotal": 85605,
+      "load": 1199.800000011921,
+      "bytesAtLoad": 86711,
+      "bytesTotal": 86711,
       "video": 1
     }
   ],
   "median": {
-    "fcp_ms": 712,
-    "lcp_ms": 968,
+    "fcp_ms": 796,
+    "lcp_ms": 1088,
     "cls": 0,
-    "load_ms": 949,
-    "kb_at_load": 84,
-    "kb_total_after_2_5s": 84
+    "load_ms": 1071,
+    "kb_at_load": 85,
+    "kb_total_after_2_5s": 85
   }
 }
