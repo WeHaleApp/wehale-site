@@ -1,0 +1,58 @@
+{
+  "conditions": "iPhone UA, 390x844, Slow 4G (1.6 Mbit/s down, 150 ms), 4x CPU throttle, cache disabled, 5 runs, headless Chrome",
+  "runs": [
+    {
+      "fcp": 1092,
+      "lcp": 1344,
+      "cls": 0,
+      "load": 1333.8999999761581,
+      "bytesAtLoad": 85605,
+      "bytesTotal": 85605,
+      "video": 1
+    },
+    {
+      "fcp": 712,
+      "lcp": 968,
+      "cls": 0,
+      "load": 948.5,
+      "bytesAtLoad": 85605,
+      "bytesTotal": 85605,
+      "video": 1
+    },
+    {
+      "fcp": 676,
+      "lcp": 960,
+      "cls": 0,
+      "load": 942.8000000119209,
+      "bytesAtLoad": 85605,
+      "bytesTotal": 85605,
+      "video": 1
+    },
+    {
+      "fcp": 680,
+      "lcp": 952,
+      "cls": 0,
+      "load": 941.0999999940395,
+      "bytesAtLoad": 85605,
+      "bytesTotal": 85605,
+      "video": 1
+    },
+    {
+      "fcp": 732,
+      "lcp": 1024,
+      "cls": 0,
+      "load": 999.9000000059605,
+      "bytesAtLoad": 85605,
+      "bytesTotal": 85605,
+      "video": 1
+    }
+  ],
+  "median": {
+    "fcp_ms": 712,
+    "lcp_ms": 968,
+    "cls": 0,
+    "load_ms": 949,
+    "kb_at_load": 84,
+    "kb_total_after_2_5s": 84
+  }
+}

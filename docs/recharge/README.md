@@ -4,23 +4,25 @@ The path is one config value, `route` in `src/data/recharge.json` (today `rechar
 (`src/pages/[campaign].astro`), the sitemap exclusion, the noindex headers (written into `dist/_headers` at build,
 `astro.config.mjs`) and the QR codes all follow it.
 
-One "get the app" page (Isak, 29 Sep): the campaign session lives only in the WeHale app, so there is no web session
-here. On the wehale.io look: the deep navy ground, a calm orb that breathes slowly (still with reduced motion), Nunito
-Sans, one white pill; the campaign shows only as the small co-brand lockup and blackcurrant as a quiet accent.
-The motion (Isak, 29 Sep: "more living"), all on the app's tokens and one 10 s breath (4 s in, 6 s out), started together
-when the words arrive: a staggered entrance over about 1.2 s; the orb swells with its halo; one thin ripple leaves its
-rim on each exhale; the cream pill (on a desktop the QR card) glows faintly with each inhale; a sparse field of motes rises
-very slowly (a small 2D canvas, `src/scripts/recharge/motes.js`, loaded after arrival, paused in a hidden tab). With
-Reduce Motion all of it is still. Check with `scripts/record-campaign.mjs` (recordings, 4x-throttled frame rate, first paint).
+One "get the app" page (Isak, 29 Sep): the campaign session lives only in the WeHale app, so there is no web session here.
+On the app's ink design (7 Oct): it looks like the app's Ready and offer screens. The campaign's `ink_long` loop is the ground
+(`public/recharge/ink-long.mp4`, 2.1 MB, with its still `ink-poster.webp`, 15 kB), under the app's veil; Nunito Sans; the words in
+a block at the bottom; one lilac pill with a deep violet label (`#C9B6F2` / `#150C2B`, the app's Start now). Dark by design in every colour scheme.
+- The poster is the first paint and the Reduce Motion picture. The loop is added only after the page has loaded and never for Reduce
+  Motion or Save-Data, and fades in over the poster, so there is no jump. The words are in the HTML from the first byte; they rise
+  in over about a second (CSS only, off with Reduce Motion).
+- A desktop (a mouse and 700 px or more, decided in CSS so nothing moves) shows a QR code of the same link in a glass card instead of
+  the pill; a phone shows the pill.
+- Evidence: `scripts/capture-campaign.mjs` (screenshots at 390, 768 and 1280 px, light and dark, Reduce Motion, a recording,
+  and throttled performance numbers) writes `docs/recharge/evidence/`.
 
-Every outside link and QR code of the campaign points here. The screen, in order: the lockup; "Charge Your Current"
-and one line (a breathing session made for you, free in the WeHale app, yours to keep) with the guide and the length;
-the offer, "Your first month free." (the prices are chosen in the app); **Get the app** (the OneLink with the code); the fine print,
-"Cancel anytime before the trial ends." and that the free month is a trial through the App Store or Google Play. On a
-desktop, a QR code of the same link replaces the button.
+The screen, in order: the lockup (WeHale × the partner); "Charge Your Current" and the ritual (three beats); the offer, "Your first month
+of WeHale free." (the second line of the hook; the prices are chosen in the app) and "Only through this link."; **Start in the app** (the OneLink
+with the code); the fine print, "Cancel anytime before the trial ends." On a desktop, the QR code and "Only through this code." replace the pill.
 
 Files: `src/pages/[campaign].astro`, `src/scripts/recharge/{app,link}.js`, `src/styles/recharge.css`,
-`src/data/recharge.json` (everything that changes, all the words), `scripts/recharge-qr.mjs`, `tests/recharge.test.js`.
+`src/data/recharge.json` (everything that changes, all the words), `netlify/edge-functions/recharge-gate.ts`, `scripts/recharge-qr.mjs`,
+`scripts/capture-campaign.mjs`, `tests/recharge*.test.js`.
 
 ## URL parameters
 | Param | Meaning |
@@ -67,7 +69,7 @@ password, for the team and for outside people.
   AppsFlyer changes.
 - Also: `noindex, nofollow, noarchive` (meta and `X-Robots-Tag`, also on the form), no referrer, out of the sitemap, no links from
   anywhere. Deliberately **not** in robots.txt: a Disallow would name the path publicly.
-- Not in the gate: `/plasma/*` and `/_astro/*` (shared engine and site code, not the campaign) and the other pages.
+- Not in the gate: `/_astro/*` (shared site code, not the campaign) and the other pages.
 - Limits, honestly: one password for everyone, no per-person revocation (change `RECHARGE_PASS` to sign everybody out), no
   rate limit beyond a 0.4 s delay on a wrong guess. Enough for a confidential preview; not for secrets.
 
@@ -78,8 +80,8 @@ Test it locally (Deno, the same runtime as Netlify's edge; changes nothing onlin
 
 ### Turn it on in Netlify (Isak logs in; needs his yes first)
 1. Netlify → the WeHale site → **Site configuration** → **Environment variables** → **Add a variable** → **Add a single variable**.
-2. Key `RECHARGE_PASS`; value: the password you choose (not in chat or the repo); tick **Contains secret values**; scopes: all,
-   at least **Functions** and **Runtime**; deploy contexts: **All** (production, deploy previews, branch deploys), **Save variable**.
+2. Key `RECHARGE_PASS`; value: the password you choose (not in chat or the repo); tick **Contains secret values**; scopes: all scopes (including Functions and Runtime);
+   deploy contexts: all (production, deploy previews, branch deploys), **Save variable**.
 3. Merge this branch (the function ships with it; `gate.on` is `true`). Netlify redeploys.
 4. Verify on the live site, from a phone and a laptop that never had the cookie (a private window): `/recharge` shows the
    password form, `/recharge/bloom-720.webp` shows the form, a wrong password stays on the form, the right one shows the page,
