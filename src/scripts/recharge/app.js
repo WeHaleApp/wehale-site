@@ -38,7 +38,7 @@ function run() {
     body.classList.add("rc-test");
     cta.textContent = "Open in the test build";
     const cap = document.querySelector("#qrBox figcaption"); if (cap) cap.textContent = "Test build: scan with your phone's camera, then tap Open.";
-    document.querySelectorAll(".rc-how").forEach((el) => { el.textContent = "For the team: the link only works in the TestFlight build, and signs you in to a test account."; });
+    document.querySelectorAll(".rc-how").forEach((el) => { el.textContent = "For the team: the link only works for the team test code, in a test build, and signs you in to a test account."; });
   } else {
     cta.addEventListener("click", () => track.appTap(params({ completed: 0, at: "offer" })));
     document.querySelectorAll(".rc-store").forEach((a) => { if (link) a.href = link; a.addEventListener("click", () => track.appTap(params({ completed: 0, at: "store-" + a.dataset.store }))); });
