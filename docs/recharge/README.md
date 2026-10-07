@@ -89,6 +89,50 @@ Test it locally (Deno, the same runtime as Netlify's edge; changes nothing onlin
 The first real run of the function is that deploy; locally it has run in Deno and in the unit tests, not on Netlify itself.
 Rollback: delete the variable (the page then answers 404) or revert the merge.
 
+## Measurement (item 5)
+Events follow `docs/salte-flow/MEASUREMENT.md` (the funnel) and the site's contract (`src/scripts/contract.js`, `src/scripts/tags.js`): nothing is sent before the
+visitor's yes (Consent Mode v2 denied by default; GTM, Meta and TikTok load only after consent, and the pixels stay keyless until `PUBLIC_*_PIXEL_ID` are set).
+Every event carries the contract (`source`, `utm_*`, `h`, `v`, `src`) plus `session`, `page: recharge`, `campaign: recharge`, `ch`, `code`, `device`, `inapp`.
+| Event | When | Notes |
+|---|---|---|
+| `PageView` | the pixels' own, once, after ads consent | as on every page |
+| `CampaignView` | on arrival (or when consent arrives later) | `at` = `offer` (phone) or `qr` (desktop) |
+| `AppTap` + `Lead` | the tap on "Start in the app" | `completed: 0`; Lead is the standard event Meta can optimise for |
+| `StoreOpened` | the page is hidden within 5 s of the tap | **inferred** (`inferred: 1`): the store or the app took over; not proof of an install (AppsFlyer is) |
+| `InAppHint`, `InAppCopy` | the in-app fallback shown / "Copy link" tapped | only when the hint is on |
+A desktop visitor scans the QR code with a phone: that scan is not seen by the page, only by AppsFlyer (the link's `at=qr`) and by the app. Tester mode (`#test=`) measures nothing.
+One local run, with consent given, late, never, in Instagram's browser and in tester mode: `docs/recharge/evidence/events-local-run.txt` (`node scripts/check-campaign-events.mjs`).
+**What the page sets** (Isak and the measurement lead write the cookie wording): the page itself sets no cookie; `localStorage` `wehale.consent.v1` (the visitor's choice);
+while the gate is on, the cookie `wehale_rc` (functional: HttpOnly, Secure, 7 days, only after the password); after "Accept" the tags set `_ga*` (GA via GTM), `_fbp`/`_fbc`
+(Meta), `_ttp` (TikTok). The OneLink's host (`wehale.onelink.me`, AppsFlyer) sets its own when the button is followed. `code` is a campaign string (an influencer's code), no person's data.
+
+## In-app browsers (item 4)
+Influencer and newsletter traffic often opens inside Instagram, TikTok, Facebook, Snapchat, LinkedIn or X, which use their own web view. There, a OneLink often does not hand over
+to the app or the store as it does from Safari or Chrome (iOS Universal Links are not followed in web views; Android intents can be blocked). The page cannot fix that, but it can say so:
+`inAppBrowser(ua)` (`link.js`) names those browsers and unnamed web views; the page then shows a quiet line and a **Copy link** button ("Opened inside Instagram? For the best result, open this page in Safari." /
+"Link copied. Paste it in Safari."). The words are **proposed** and the hint is **off** (`inapp.on: false` in `recharge.json`) until Isak picks them; `?inapp=1` previews it (`evidence/page-390-inapp-hint-preview.jpg`).
+The button and the QR code stay as they are. A QR code is scanned by the phone's camera, which opens the system browser, so the QR path avoids the problem.
+| Browser | Tested | How |
+|---|---|---|
+| Instagram, Facebook, TikTok, Snapchat, unnamed web view (user agent detection) | yes, in unit tests (`tests/recharge.test.js`) and a headless run with Instagram's user agent | detection, hint, copy |
+| The OneLink hand-over inside those apps | **no, needs a phone** (phone-test list in `LINK-MATRIX.md`) | whether the store/app opens |
+| Safari, Chrome (desktop, in the pane), Chrome with an iPhone user agent | yes | page, button, QR |
+| Mail apps (Gmail, Apple Mail, Outlook) | no | most open the system browser or a Custom Tab/SFSafariViewController, which cannot be told apart by user agent |
+| Real Android Chrome / iPhone Safari | **no, needs a phone** | |
+
+## At launch (item 7)
+Before: (1) the gate verified on the live address (steps above) and the phone tests in `LINK-MATRIX.md` passed; (2) Isak has picked the copy (`SPRINT-NOTES.md` proposals) and the
+in-app hint (`inapp.on`); (3) the partner's real logo and the real session are in (`stand_in: false`); (4) the Android deep-link question answered (AppsFlyer, Isak); (5) the cookie wording and
+privacy text cover what the page sets (above), and pixel keys are set if wanted; (6) the codes for pdp and influencers exist on the server.
+Flip: **one flag**, `gate.on: false` in `src/data/recharge.json`, merge, let Netlify deploy. The edge function then lets everyone through (it stays in place; `RECHARGE_PASS` can stay). The page stays
+`noindex`, out of the sitemap and unlinked, so it works from its links and QR codes only. To make it findable later: drop the `hidden` prop in `[campaign].astro`, the sitemap filter and the headers hook in `astro.config.mjs`.
+Rollback, fastest first: Netlify → **Deploys** → the last good deploy → **Publish deploy**; or set `gate.on: true` and redeploy (the password form is back); or delete `RECHARGE_PASS` with the gate on (the page answers 404).
+First hour (open a private window on a phone and on a laptop, never signed in):
+- minute 0: `/recharge` loads, `?ch=influencer&c=<test code>` button goes to the OneLink, the QR code on a laptop scans to the same link; `/breathe` still fine.
+- minute 5: AppsFlyer, the app's overview filtered to media source `partner_campaign`: clicks and installs begin; Netlify → **Logs** → **Edge functions**/**Functions**: no errors from `recharge-gate`, `meta-capi`, `tiktok-events`.
+- minute 15 and 60: the admin Partners → Campaigns → Results: members joined, the right channel and code per channel (a member with no channel means the link data did not reach the app: stop and check `deep_link_sub1/2`); Meta/TikTok Events Manager (if keyed): `CampaignView` and `AppTap` arriving, none before consent.
+- Stop and roll back if: the page errors or is blank, the button does not reach a store, installs arrive with no code/channel, or the page can be reached without the password while `gate.on` is still true.
+
 ## QR codes
 `RECHARGE_CODES=<channel-codes.json> node scripts/recharge-qr.mjs <outDir> [influencers.csv]`: newsletter, pdp, and one per influencer from a
 CSV with `name,code` columns. Each QR code points at the page (`https://wehale.io/recharge?ch=…&c=…`), never

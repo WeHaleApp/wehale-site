@@ -45,3 +45,21 @@ Defined in recharge.json but not shown: `about`, `session_line`, `trial`.
 - P3. "Cancel anytime before the trial ends." was marked TO VERIFY in the prototype README (does the store flow allow it); confirm before launch or replace with P1 alone.
 - P4. Button: keep "Start in the app", or "Start my free month" (the prototype's offer button) which repeats the offer.
 - P5. The desktop line "Scan with your phone to claim it." and the caption "Only through this code." say almost the same; propose dropping the caption.
+
+## Item 3: every link carries its code (done locally; phone list for Isak)
+`docs/recharge/LINK-MATRIX.md`. Found and fixed a real gap: the app reads the channel from `deep_link_sub1` and the reference from `deep_link_sub2`; the page sent neither (the reference would have been the campaign name `recharge`). Now both ride the link; the app's own parser is run on every generated link in `tests/recharge-matrix.test.js`. AppsFlyer read through the connector (read only): template `zcid`, iOS Universal Links, re-engagement attribution OFF on both apps, probabilistic modelling on; **unknown: Android deep-link config for an installed app** (Isak/AppsFlyer, phone test).
+
+## Item 4: in-app browsers (built, hint off until Isak picks words)
+In `README.md` ("In-app browsers") with the tested/not-tested table. `inapp.on: false` in recharge.json; `?inapp=1` previews it. Proposed words are in the file; not applied.
+
+## Item 5: measurement
+`CampaignView`, `AppTap`+`Lead`, `StoreOpened` (inferred), `InAppHint`/`InAppCopy`; local run in `evidence/events-local-run.txt` (no events without consent, view follows a late yes, nothing in tester mode). What the page sets is in README "Measurement". Cookie wording is Isak's and the measurement lead's.
+
+## Item 7 and 8
+Launch checklist: README "At launch". `npm test` (53 tests) and `npm run build` pass.
+
+## Open for the planning chat / Isak
+1. The public repo now holds the campaign's ink media (see my check-in): decide before any merge/push.
+2. Copy picks (P1-P5, the in-app words).
+3. Android installed-app behaviour (AppsFlyer template), iOS deferred matching: phone tests.
+4. The Netlify edge runtime has not run the gate yet.

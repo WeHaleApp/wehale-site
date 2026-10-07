@@ -75,3 +75,9 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
 }
 /* tester mode (#test=<team test code>): the quick-start link; on a desktop its QR code, on a phone its button (the same two places) */
 .rc-test .rc-btn { background: #fff; }
+
+/* inside another app's own browser: a quiet way out (hidden unless the script shows it) */
+.rc-inapp { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12); display: flex; align-items: center; gap: 12px; }
+.rc-inapp[hidden] { display: none; }
+.rc-inapp p { margin: 0; flex: 1; font: 500 13px/17px var(--font); color: var(--t2); }
+.rc-inapp button { flex: none; border: 0; border-radius: 999px; padding: 9px 14px; background: rgba(241, 238, 251, .14); color: var(--ink); font: 700 13px/1 var(--font); cursor: pointer; }

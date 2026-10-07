@@ -82,3 +82,21 @@ export function quickStartLink(code) {
   const c = testCodeFrom("#test=" + String(code || ""));
   return c ? "wehale:///quick-start?code=" + c : null;
 }
+
+/**
+ * Is the page open inside another app's own browser (Instagram, TikTok, Facebook, Snapchat, LinkedIn, X, Pinterest, Line, or an unnamed
+ * web view)? Returns { name, os } or null. Those browsers often do not hand a OneLink to the app or the store the way Safari or Chrome do
+ * (Universal Links are not followed, Android intents can be blocked), so the page can offer a way out. User agents only: a mail app that
+ * uses the system browser (Gmail on Android, Apple Mail, most others) cannot be told apart from Safari or Chrome, which is fine, they work.
+ */
+export function inAppBrowser(ua) {
+  const s = String(ua || "");
+  const os = /android/i.test(s) ? "android" : /iphone|ipad|ipod/i.test(s) ? "ios" : null;
+  if (!os) return null;
+  const names = [["Instagram", /Instagram/i], ["Facebook", /FBAN|FBAV|FB_IAB|FBIOS/], ["TikTok", /musical_ly|TikTok|BytedanceWebview|trill_|Bytedance/i], ["Snapchat", /Snapchat/i],
+    ["LinkedIn", /LinkedInApp/i], ["X", /Twitter|TwitterAndroid/i], ["Pinterest", /Pinterest/i], ["Line", /\bLine\//]];
+  for (const [name, re] of names) if (re.test(s)) return { name, os };
+  if (os === "android" && /; wv\)/.test(s)) return { name: "this app", os };                       // an unnamed Android web view
+  if (os === "ios" && /AppleWebKit/.test(s) && !/Safari\/|CriOS|FxiOS|EdgiOS|OPiOS/.test(s)) return { name: "this app", os };   // iOS web views lack the Safari token
+  return null;
+}

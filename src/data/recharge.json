@@ -48,6 +48,13 @@
     "default": "RECHARGE",
     "by_channel": { "newsletter": "RECHARGE" }
   },
+  "inapp": {
+    "_about": "A way out of other apps' own browsers (Instagram, TikTok, Facebook ...), which often do not pass a OneLink to the app or the store. PROPOSED WORDS (Isak picks): it stays off (on: false) until he does. ?inapp=1 on the address previews it in any browser. {app} is the app's name, {browser} Safari on an iPhone, Chrome on Android.",
+    "on": false,
+    "text": "Opened inside {app}? For the best result, open this page in {browser}.",
+    "copy": "Copy link",
+    "copied": "Link copied. Paste it in {browser}."
+  },
   "channels": ["newsletter", "pdp", "influencer", "social"],
   "onelink": {
     "_about": "AppsFlyer OneLink, template zcid (the same as /breathe). pid is a CONFIG CHOICE for the lead and the owner of main: the media source this campaign reports under in AppsFlyer.",

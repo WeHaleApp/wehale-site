@@ -1,7 +1,7 @@
 // The campaign page's link (src/scripts/recharge/link.js). Run: npm test
 import { describe, it, expect } from "vitest";
 import DATA from "../src/data/recharge.json";
-import { readCampaign, campaignLink, cleanCode, phoneOf, testCodeFrom, quickStartLink } from "../src/scripts/recharge/link.js";
+import { readCampaign, campaignLink, cleanCode, phoneOf, testCodeFrom, quickStartLink, inAppBrowser } from "../src/scripts/recharge/link.js";
 
 const params = (url) => Object.fromEntries(new URL(url).searchParams);
 
@@ -74,5 +74,23 @@ describe("the tester's quick start link", () => {
     expect(quickStartLink("abc123")).toBe("wehale:///quick-start?code=ABC123");
     expect(quickStartLink("")).toBe(null);
     expect(quickStartLink("a b")).toBe(null);
+  });
+});
+
+describe("inAppBrowser", () => {
+  const IOS = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)";
+  it("names the apps whose own browser it is", () => {
+    expect(inAppBrowser(IOS + " Mobile/15E148 Instagram 350.0.0.0.0 (iPhone14,5; iOS 18_0)")).toEqual({ name: "Instagram", os: "ios" });
+    expect(inAppBrowser(IOS + " Mobile/15E148 [FBAN/FBIOS;FBAV/480.0;FBDV/iPhone14,5]")).toEqual({ name: "Facebook", os: "ios" });
+    expect(inAppBrowser("Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36 musical_ly_35.0.0 trill_350000")).toEqual({ name: "TikTok", os: "android" });
+    expect(inAppBrowser(IOS + " Mobile/15E148 Snapchat/12.0")).toEqual({ name: "Snapchat", os: "ios" });
+  });
+  it("catches an unnamed web view, and leaves real browsers alone", () => {
+    expect(inAppBrowser("Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/AP1A; wv) AppleWebKit/537.36 Version/4.0 Chrome/120 Mobile Safari/537.36")).toEqual({ name: "this app", os: "android" });
+    expect(inAppBrowser(IOS + " Mobile/15E148")).toEqual({ name: "this app", os: "ios" });
+    expect(inAppBrowser(IOS + " Version/18.0 Mobile/15E148 Safari/604.1")).toBe(null);
+    expect(inAppBrowser(IOS + " CriOS/120.0 Mobile/15E148 Safari/604.1")).toBe(null);
+    expect(inAppBrowser("Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36")).toBe(null);
+    expect(inAppBrowser("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/120 Safari/537.36")).toBe(null);
   });
 });

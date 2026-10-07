@@ -55,6 +55,9 @@ const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "o
       <p class="rc-how rc-how-m">{T.offer_how}</p>
       <p class="rc-how rc-how-d">{T.offer_how_desktop}</p>
       <a class="rc-btn" id="ctaBtn" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
+      <div class="rc-inapp" id="inApp" data-on={DATA.inapp.on ? "1" : "0"} data-text={DATA.inapp.text} data-copied={DATA.inapp.copied} hidden>
+        <p id="inAppText"></p><button type="button" id="inAppCopy">{DATA.inapp.copy}</button>
+      </div>
       <figure class="rc-qr" id="qrBox">
         <div class="rc-qrcode" id="qrCode" role="img" aria-label="QR code for the app link"></div>
         <figcaption>{T.qr}</figcaption>
