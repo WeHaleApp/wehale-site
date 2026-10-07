@@ -192,3 +192,8 @@ body.rc-look-d.rc-qr-on .rc-stores { display: none; }
   body.rc-look-d .rc-body p, body.rc-look-d .rc-fine span { margin-left: 0; }
   body.rc-look-d .rc-qr, body.rc-look-d .rc-qrcode, body.rc-look-d .rc-qr figcaption { margin-left: 0; }
 }
+
+/* tester mode (#test=<code>): only the quick-start button or its QR code; no store badges */
+body.rc-test .rc-stores, body.rc-look-d.rc-test .rc-stores { display: none; }
+body.rc-look-d.rc-test .rc-btn { display: flex; }
+body.rc-look-d.rc-test.rc-qr-on .rc-btn { display: none; }   /* on a desktop the QR code is the way in */

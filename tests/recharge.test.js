@@ -1,7 +1,7 @@
 // The campaign page's link (src/scripts/recharge/link.js). Run: npm test
 import { describe, it, expect } from "vitest";
 import DATA from "../src/data/recharge.json";
-import { readCampaign, campaignLink, cleanCode, phoneOf } from "../src/scripts/recharge/link.js";
+import { readCampaign, campaignLink, cleanCode, phoneOf, testCodeFrom, quickStartLink } from "../src/scripts/recharge/link.js";
 
 const params = (url) => Object.fromEntries(new URL(url).searchParams);
 
@@ -62,5 +62,25 @@ describe("the copy", () => {
     expect(DATA.copy.offer_2).toBe("Cancel anytime before the trial ends.");
     const all = Object.entries(DATA.copy).filter(([k]) => !k.startsWith("_")).map(([, v]) => v).join(" ").toLowerCase();
     expect(all).not.toMatch(/30 days|no card|1 minute|one minute/);
+  });
+});
+
+describe("the tester's quick start link", () => {
+  it("reads the team test code from the #fragment only, upper-cased", () => {
+    expect(testCodeFrom("#test=abc123")).toBe("ABC123");
+    expect(testCodeFrom("#x=1&test=ABC123&y=2")).toBe("ABC123");
+    expect(testCodeFrom("?test=ABC123")).toBe(null);
+    expect(testCodeFrom("")).toBe(null);
+  });
+  it("accepts only a plain code, so a fragment cannot inject into the link", () => {
+    expect(testCodeFrom("#test=ab")).toBe(null);
+    expect(testCodeFrom("#test=a%20b")).toBe(null);
+    expect(testCodeFrom("#test=a/../b")).toBe(null);
+    expect(testCodeFrom("#test=" + "A".repeat(41))).toBe(null);
+  });
+  it("builds the app's quick-start link, and nothing without a code", () => {
+    expect(quickStartLink("abc123")).toBe("wehale:///quick-start?code=ABC123");
+    expect(quickStartLink("")).toBe(null);
+    expect(quickStartLink("a b")).toBe(null);
   });
 });

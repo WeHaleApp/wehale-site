@@ -61,3 +61,19 @@ export function phoneOf(ua, maxTouchPoints = 0) {
   if (/Macintosh/.test(s) && maxTouchPoints > 1) return "ios";   // iPadOS reports itself as a Mac
   return null;
 }
+
+/**
+ * The tester's quick way in (the app's `wehale:///quick-start`, wehale-app src/lib/quick-start.ts): the TEAM TEST CODE rides in the
+ * address's #fragment (`/recharge?k=...#test=<CODE>`), which the browser never sends to a server and which is not in this public repo.
+ * Without it the page is the ordinary campaign page. Only a plain code (letters and digits, 3 to 40) is accepted.
+ */
+export function testCodeFrom(hash) {
+  const m = /^#?(?:.*&)?test=([A-Za-z0-9]{3,40})(?:&.*)?$/.exec(String(hash || ""));
+  return m ? m[1].toUpperCase() : null;
+}
+
+/** The link a TestFlight / development build opens; a store build ignores it. */
+export function quickStartLink(code) {
+  const c = testCodeFrom("#test=" + String(code || ""));
+  return c ? "wehale:///quick-start?code=" + c : null;
+}

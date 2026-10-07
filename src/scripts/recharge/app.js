@@ -2,7 +2,7 @@
 // (the channel and its code, link.js) on "Get the app", and on a desktop shows a QR code of the same link instead.
 // Waits for the gate (window.__rcGate); nothing loads or measures on a page that turned into the 404.
 import DATA from "../../data/recharge.json";
-import { readCampaign, campaignLink, phoneOf } from "./link.js";
+import { readCampaign, campaignLink, phoneOf, testCodeFrom, quickStartLink } from "./link.js";
 import { initMeasurement, track } from "../breathe/measure.js";
 import { eventParams } from "../contract.js";
 
@@ -26,14 +26,23 @@ function run() {
 
   // every event: the contract, plus the campaign's own fields (no personal data; the code is a campaign code)
   const params = (extra = {}) => eventParams(CAMP.contract, { session: DATA.session.slug, page: "recharge", campaign: DATA.onelink.c, ch: CAMP.ch, code: CAMP.code, arm: "none", ...extra });
-  initMeasurement();
+  if (!testCodeFrom(location.hash)) initMeasurement();
 
   // "Get the app": the OneLink with this visit's channel and code; on a desktop, a QR code of the same link instead
-  const link = campaignLink(DATA, { ...CAMP, at: DESK ? "qr" : "offer" });
+  // Tester mode (#test=<team test code>): the quick-start link of the TestFlight build instead of the store link, on a desktop as the QR code. Nothing is measured.
+  const TEST = quickStartLink(testCodeFrom(location.hash));
+  const link = TEST || campaignLink(DATA, { ...CAMP, at: DESK ? "qr" : "offer" });
   const cta = $("ctaBtn");
   if (link) cta.href = link;
-  cta.addEventListener("click", () => track.appTap(params({ completed: 0, at: "offer" })));
-  document.querySelectorAll(".rc-store").forEach((a) => { if (link) a.href = link; a.addEventListener("click", () => track.appTap(params({ completed: 0, at: "store-" + a.dataset.store }))); });
+  if (TEST) {
+    body.classList.add("rc-test");
+    cta.textContent = "Open in the test build";
+    const cap = document.querySelector("#qrBox figcaption"); if (cap) cap.textContent = "Test build: scan with your phone's camera, then tap Open.";
+    document.querySelectorAll(".rc-how").forEach((el) => { el.textContent = "For the team: the link only works in the TestFlight build, and signs you in to a test account."; });
+  } else {
+    cta.addEventListener("click", () => track.appTap(params({ completed: 0, at: "offer" })));
+    document.querySelectorAll(".rc-store").forEach((a) => { if (link) a.href = link; a.addEventListener("click", () => track.appTap(params({ completed: 0, at: "store-" + a.dataset.store }))); });
+  }
   if (DESK && link) drawQr(link);
 
   // the room the consent bar takes (from its top edge to the bottom), so the button and the fine print stay clear of it
