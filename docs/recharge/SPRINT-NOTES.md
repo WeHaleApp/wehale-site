@@ -24,7 +24,7 @@ lilac pill (#C9B6F2 / #150C2B, 56 pt), the words at the bottom, the rise-in in r
 look variants (?look=, ?arms=) and the old store badges are removed. A desktop shows a QR card instead of the pill (decided in CSS, so no
 jump). `#test=<code>` still turns the button/QR into the quick-start link (checked in a run: phone button
 `wehale:///quick-start?code=ABC123`, desktop QR drawn, "Open in the test build"). The partner is still the "PARTNER" placeholder word
-(the real Salte logo is not committed; it goes in `public/recharge/partner-logo-white.local.png`, see recharge.json).
+(the partner's real logo is not committed; it goes in `public/recharge/partner-logo-white.local.png`, see recharge.json).
 
 **Every word on the page today (unchanged from before the redesign; the default view showed these):**
 1. Lockup: "WeHale" (logo, alt "WeHale"), "×", "PARTNER" (placeholder)
@@ -63,3 +63,9 @@ Launch checklist: README "At launch". `npm test` (53 tests) and `npm run build` 
 2. Copy picks (P1-P5, the in-app words).
 3. Android installed-app behaviour (AppsFlyer template), iOS deferred matching: phone tests.
 4. The Netlify edge runtime has not run the gate yet.
+
+## Media out of git (planning chat's decision, 7 Oct)
+History rewritten on the unpushed branch (filter-branch, then reflog/gc): the loop, the poster and the screenshots/recording are in no commit (`git rev-list --objects --all` shows none). Gitignored, with a local copy (`npm run media:local`).
+Production: build-time fetch from private storage (`scripts/fetch-campaign-media.mjs`, tested against a local token server); click-path in README "The campaign's media". Nothing set up.
+**Found, not mine to fix:** `origin/claude/marketing-recharge` (already on GitHub) holds `public/recharge/bloom-720.webp`, `bloom-1080.webp` and the Plasma poster stills (`public/plasma/*/poster-*.jpg`) from earlier campaign-page work: the planning chat should decide whether those branches need rewriting/deleting.
+No product-page code, QR file, password or real partner logo is in git (checked with `git grep` and `git ls-files`). The partner's name is no longer written in these notes.

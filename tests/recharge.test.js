@@ -1,5 +1,6 @@
 // The campaign page's link (src/scripts/recharge/link.js). Run: npm test
 import { describe, it, expect } from "vitest";
+import fs from "node:fs";
 import DATA from "../src/data/recharge.json";
 import { readCampaign, campaignLink, cleanCode, phoneOf, testCodeFrom, quickStartLink, inAppBrowser } from "../src/scripts/recharge/link.js";
 
@@ -92,5 +93,12 @@ describe("inAppBrowser", () => {
     expect(inAppBrowser(IOS + " CriOS/120.0 Mobile/15E148 Safari/604.1")).toBe(null);
     expect(inAppBrowser("Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36")).toBe(null);
     expect(inAppBrowser("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/120 Safari/537.36")).toBe(null);
+  });
+});
+
+describe("the campaign's media stays out of git (this repo is public)", () => {
+  it("is ignored: the loop, the poster, the page's screenshots and recording, the partner's real logo", () => {
+    const ig = fs.readFileSync(".gitignore", "utf8");
+    for (const p of ["public/recharge/ink-long.mp4", "public/recharge/ink-poster.webp", "public/recharge/*.local.*", "docs/recharge/evidence/*.jpg", "docs/recharge/evidence/*.webm"]) expect(ig).toContain(p);
   });
 });

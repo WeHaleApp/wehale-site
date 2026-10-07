@@ -90,7 +90,7 @@ The first real run of the function is that deploy; locally it has run in Deno an
 Rollback: delete the variable (the page then answers 404) or revert the merge.
 
 ## Measurement (item 5)
-Events follow `docs/salte-flow/MEASUREMENT.md` (the funnel) and the site's contract (`src/scripts/contract.js`, `src/scripts/tags.js`): nothing is sent before the
+Events follow the app repo's `docs/…/MEASUREMENT.md` (the funnel) and the site's contract (`src/scripts/contract.js`, `src/scripts/tags.js`): nothing is sent before the
 visitor's yes (Consent Mode v2 denied by default; GTM, Meta and TikTok load only after consent, and the pixels stay keyless until `PUBLIC_*_PIXEL_ID` are set).
 Every event carries the contract (`source`, `utm_*`, `h`, `v`, `src`) plus `session`, `page: recharge`, `campaign: recharge`, `ch`, `code`, `device`, `inapp`.
 | Event | When | Notes |
@@ -132,6 +132,27 @@ First hour (open a private window on a phone and on a laptop, never signed in):
 - minute 5: AppsFlyer, the app's overview filtered to media source `partner_campaign`: clicks and installs begin; Netlify → **Logs** → **Edge functions**/**Functions**: no errors from `recharge-gate`, `meta-capi`, `tiktok-events`.
 - minute 15 and 60: the admin Partners → Campaigns → Results: members joined, the right channel and code per channel (a member with no channel means the link data did not reach the app: stop and check `deep_link_sub1/2`); Meta/TikTok Events Manager (if keyed): `CampaignView` and `AppTap` arriving, none before consent.
 - Stop and roll back if: the page errors or is blank, the button does not reach a store, installs arrive with no code/channel, or the page can be reached without the password while `gate.on` is still true.
+
+## The campaign's media: not in git (decided 7 Oct)
+This repo is public, so the campaign's confidential media is never committed, and is in no commit's history of this branch:
+`public/recharge/ink-long.mp4` (the ink loop), `ink-poster.webp` (its still), the screenshots and recording of the page (`docs/recharge/evidence/*.jpg|webm`), and the partner's real logo
+(`public/recharge/*.local.*`). All are in `.gitignore`. Also not committed: product-page codes, QR files with codes (`recharge-qr.mjs` reads them from a file outside the repo), the password.
+Placeholders (the dashed partner logo SVGs) are the only partner files in git. (Earlier branches, not this sprint's work, still carry `bloom-*.webp` and the Plasma poster stills: see SPRINT-NOTES.)
+- **Local dev copy:** `npm run media:local` copies it from the app repo's stand-in cache into `public/recharge/` (ignored by git). Without the files the page is still complete, on its dark ground.
+- **Production, chosen: fetch at build time from the campaign's private storage.** `npm run build` runs `scripts/fetch-campaign-media.mjs` first (`prebuild`). With two Netlify
+  variables set it downloads the two files (`GET <base>/<file>`, `Authorization: Bearer <token>`) into `public/recharge/`; the build publishes them under `/recharge/`, which is
+  **behind the same password gate** (the function covers `/recharge/*`, on production, deploy previews and each deploy's own address). Nothing is stored in git or by hand per
+  deploy; the master copy stays in the campaign's private storage (for example a private Supabase Storage bucket and a read-only key, or the app server's media route if it can
+  check a bearer token). Tested here against a local token-protected server (no variables: skipped with a warning; wrong token: the build fails; right token: both files fetched).
+  Needs from the owner of main: the storage address and a read-only token. **Do not merge to main before the two variables are set**, or the production page has no picture.
+- **Fallback if that is awkward: Netlify Blobs**, filled once by hand with the Netlify CLI (`netlify blobs:set campaign-media ink-long.mp4 --input ink-long.mp4`), and the edge function serving
+  `/recharge/ink-*` from the store after the password check. More code in the gate; not chosen.
+### Set it up in Netlify (Isak logs in; needs his yes; the sprint-planning chat clicks with him)
+1. Netlify → the WeHale site → **Site configuration** → **Environment variables** → **Add a variable** → **Add a single variable**.
+2. Key `CAMPAIGN_MEDIA_BASE_URL`, value the storage address (no trailing slash); scopes: **Builds**; deploy contexts: all; **Create variable**.
+3. Again: key `CAMPAIGN_MEDIA_TOKEN`, value the read-only token, tick **Contains secret values**, scopes **Builds**, contexts all; **Create variable**.
+4. After the next deploy: Deploys → the deploy → **Deploy log**: two lines "[campaign media] … fetched". Then in a private window: `/recharge/ink-poster.webp` shows the password form, not the picture.
+Rollback: delete the two variables (the page shows its dark ground); the files are never in git.
 
 ## QR codes
 `RECHARGE_CODES=<channel-codes.json> node scripts/recharge-qr.mjs <outDir> [influencers.csv]`: newsletter, pdp, and one per influencer from a
