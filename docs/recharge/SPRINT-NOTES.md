@@ -39,12 +39,13 @@ jump). `#test=<code>` still turns the button/QR into the quick-start link (check
 10. Consent bar (the site's component, unchanged). Tester mode only: "Open in the test build", "Test build: scan with your phone's camera, then tap Open.", "For the team: the link only works for the team test code, in a test build, and signs you in to a test account."
 Defined in recharge.json but not shown: `about`, `session_line`, `trial`.
 
-**Copy proposals for Isak (nothing applied; he picks):**
-- P1. Show the store line under the fine print: "The free month is a trial through the App Store or Google Play." (already in recharge.json as `trial`; a visitor currently never learns the free month goes through the store.)
-- P2. Keep "Your first month of WeHale free." as the second line, as the hook says. The title + ritual stay as the first line.
-- P3. "Cancel anytime before the trial ends." was marked TO VERIFY in the prototype README (does the store flow allow it); confirm before launch or replace with P1 alone.
-- P4. Button: keep "Start in the app", or "Start my free month" (the prototype's offer button) which repeats the offer.
-- P5. The desktop line "Scan with your phone to claim it." and the caption "Only through this code." say almost the same; propose dropping the caption.
+**Copy proposals for Isak (nothing applied; he picks). THE SINGLE SOURCE: P1 to P6.**
+- P1. Add the store-trial line under the fine print: "The free month is a trial through the App Store or Google Play." (already in recharge.json as `trial`; today a visitor never learns the free month goes through the store.)
+- P2. Keep the order: title + the ritual first, "Your first month of WeHale free." as the second line (as the hook says). No change.
+- P3. "Cancel anytime before the trial ends." was marked TO VERIFY in the prototype README (does the store flow allow it): confirm before launch, or drop it in favour of P1 alone.
+- P4. Button: keep "Start in the app", or "Start my free month" (the prototype's offer button), which repeats the offer.
+- P5. Desktop: "Scan with your phone to claim it." and the QR caption "Only through this code." say almost the same; propose dropping the caption.
+- P6. In-app hint (off until picked): "Opened inside {app}? For the best result, open this page in {browser}." with a "Copy link" button, then "Link copied. Paste it in {browser}." (words in recharge.json, `inapp`).
 
 ## Item 3: every link carries its code (done locally; phone list for Isak)
 `docs/recharge/LINK-MATRIX.md`. Found and fixed a real gap: the app reads the channel from `deep_link_sub1` and the reference from `deep_link_sub2`; the page sent neither (the reference would have been the campaign name `recharge`). Now both ride the link; the app's own parser is run on every generated link in `tests/recharge-matrix.test.js`. AppsFlyer read through the connector (read only): template `zcid`, iOS Universal Links, re-engagement attribution OFF on both apps, probabilistic modelling on; **unknown: Android deep-link config for an installed app** (Isak/AppsFlyer, phone test).
@@ -66,6 +67,6 @@ Launch checklist: README "At launch". `npm test` (53 tests) and `npm run build` 
 
 ## Media out of git (planning chat's decision, 7 Oct)
 History rewritten on the unpushed branch (filter-branch, then reflog/gc): the loop, the poster and the screenshots/recording are in no commit (`git rev-list --objects --all` shows none). Gitignored, with a local copy (`npm run media:local`).
-Production: build-time fetch from private storage (`scripts/fetch-campaign-media.mjs`, tested against a local token server); click-path in README "The campaign's media". Nothing set up.
+Production: two signed links to the private Supabase bucket `media` (wehale-prod; the files exist, read-only check), fetched at build time by `scripts/fetch-campaign-media.mjs` (variables `CAMPAIGN_MEDIA_LOOP_URL`, `CAMPAIGN_MEDIA_POSTER_URL`; tested against a local token server). Exact dashboard/API steps and the Netlify click-path: README "The campaign's media". Nothing set up.
 **Found, not mine to fix:** `origin/claude/marketing-recharge` (already on GitHub) holds `public/recharge/bloom-720.webp`, `bloom-1080.webp` and the Plasma poster stills (`public/plasma/*/poster-*.jpg`) from earlier campaign-page work: the planning chat should decide whether those branches need rewriting/deleting.
 No product-page code, QR file, password or real partner logo is in git (checked with `git grep` and `git ls-files`). The partner's name is no longer written in these notes.

@@ -137,22 +137,35 @@ First hour (open a private window on a phone and on a laptop, never signed in):
 This repo is public, so the campaign's confidential media is never committed, and is in no commit's history of this branch:
 `public/recharge/ink-long.mp4` (the ink loop), `ink-poster.webp` (its still), the screenshots and recording of the page (`docs/recharge/evidence/*.jpg|webm`), and the partner's real logo
 (`public/recharge/*.local.*`). All are in `.gitignore`. Also not committed: product-page codes, QR files with codes (`recharge-qr.mjs` reads them from a file outside the repo), the password.
-Placeholders (the dashed partner logo SVGs) are the only partner files in git. (Earlier branches, not this sprint's work, still carry `bloom-*.webp` and the Plasma poster stills: see SPRINT-NOTES.)
+Placeholders (the dashed partner logo SVGs) are the only partner files in git.
 - **Local dev copy:** `npm run media:local` copies it from the app repo's stand-in cache into `public/recharge/` (ignored by git). Without the files the page is still complete, on its dark ground.
-- **Production, chosen: fetch at build time from the campaign's private storage.** `npm run build` runs `scripts/fetch-campaign-media.mjs` first (`prebuild`). With two Netlify
-  variables set it downloads the two files (`GET <base>/<file>`, `Authorization: Bearer <token>`) into `public/recharge/`; the build publishes them under `/recharge/`, which is
-  **behind the same password gate** (the function covers `/recharge/*`, on production, deploy previews and each deploy's own address). Nothing is stored in git or by hand per
-  deploy; the master copy stays in the campaign's private storage (for example a private Supabase Storage bucket and a read-only key, or the app server's media route if it can
-  check a bearer token). Tested here against a local token-protected server (no variables: skipped with a warning; wrong token: the build fails; right token: both files fetched).
-  Needs from the owner of main: the storage address and a read-only token. **Do not merge to main before the two variables are set**, or the production page has no picture.
-- **Fallback if that is awkward: Netlify Blobs**, filled once by hand with the Netlify CLI (`netlify blobs:set campaign-media ink-long.mp4 --input ink-long.mp4`), and the edge function serving
-  `/recharge/ink-*` from the store after the password check. More code in the gate; not chosen.
-### Set it up in Netlify (Isak logs in; needs his yes; the sprint-planning chat clicks with him)
+- **Production, chosen: two signed links to the app's private media bucket, fetched at build time.** The files already live in the private Supabase bucket `media` (project `wehale-prod`,
+  checked read-only: `partners/salte/look/v1/ink_long.mp4`, 2,169,487 bytes, and `ink_long_poster.jpg`, 24,003 bytes; the bucket is not public). `npm run build` first runs
+  `scripts/fetch-campaign-media.mjs` (`prebuild`): with the two variables below set, it downloads both files into `public/recharge/` (the poster is turned into a WebP), and the build publishes
+  them under `/recharge/`, **behind the password gate** (on production, deploy previews and each deploy's own address). Nothing in git, nothing uploaded by hand, the master copy stays where it is.
+  Tested here against a local server that wants a token (no variables: skipped with a warning; a wrong or expired link: the build fails with the HTTP status, never printing the link; right links: both files fetched).
+- **Fallback, not chosen:** Netlify Blobs filled by hand with the Netlify CLI, and the edge function serving `/recharge/ink-*` from the store after the password check. More code in the gate.
+
+### 1. Make the two signed links (Isak logs in to Supabase; the sprint-planning chat clicks with him; nothing is stored in the repo)
+A signed link is the file's address plus a token that lets anyone holding the link read that one file until it expires. The bucket stays private. Make **one year** links (a link cannot be revoked
+on its own; to cut one off, move or rename the file; so one year, with the renewal date in the launch checklist, rather than ten).
+*In the dashboard:* supabase.com/dashboard → project **wehale-prod** → **Storage** → bucket **media** → open the folders `partners` → `salte` → `look` → `v1` → click **ink_long.mp4** → **Get URL** (or the
+three dots **… → Get signed URL**) → choose an expiry (a custom value in seconds, 31536000 = 1 year, if the list stops at a shorter time use the API below) → **Create URL** → copy. Do the same for **ink_long_poster.jpg**.
+*Or with the API* (shell; the secret key is typed once in the terminal and never saved): Settings → **API Keys** (or **Data API → API keys**) → reveal the `service_role` key, then
+```
+export SB=https://zoruaegmbakzqmvokhmu.supabase.co; read -s KEY   # paste the key, Enter
+for f in ink_long.mp4 ink_long_poster.jpg; do
+  curl -s -X POST "$SB/storage/v1/object/sign/media/partners/salte/look/v1/$f" -H "Authorization: Bearer $KEY" -H "apikey: $KEY" -H "Content-Type: application/json" -d '{"expiresIn":31536000}'; echo; done
+```
+Each answer is `{"signedURL":"/object/sign/media/partners/salte/look/v1/<file>?token=<long token>"}`. The full link is `https://zoruaegmbakzqmvokhmu.supabase.co/storage/v1` + that `signedURL`.
+Check each in a private browser window: the file downloads; the same address with one character of the token changed gives an error.
+### 2. The two Netlify variables (Isak logs in; needs his yes)
 1. Netlify → the WeHale site → **Site configuration** → **Environment variables** → **Add a variable** → **Add a single variable**.
-2. Key `CAMPAIGN_MEDIA_BASE_URL`, value the storage address (no trailing slash); scopes: **Builds**; deploy contexts: all; **Create variable**.
-3. Again: key `CAMPAIGN_MEDIA_TOKEN`, value the read-only token, tick **Contains secret values**, scopes **Builds**, contexts all; **Create variable**.
-4. After the next deploy: Deploys → the deploy → **Deploy log**: two lines "[campaign media] … fetched". Then in a private window: `/recharge/ink-poster.webp` shows the password form, not the picture.
-Rollback: delete the two variables (the page shows its dark ground); the files are never in git.
+2. Key `CAMPAIGN_MEDIA_LOOP_URL`; value: the full signed link of `ink_long.mp4`; tick **Contains secret values**; scopes: **Builds** only; deploy contexts: all; **Create variable**.
+3. Again: key `CAMPAIGN_MEDIA_POSTER_URL`; value: the full signed link of `ink_long_poster.jpg`; same settings.
+4. After the next deploy: Deploys → the deploy → **Deploy log**: one line "[campaign media] fetched: ink-long.mp4 (…), ink-poster.webp (…)". Then in a private window: `/recharge/ink-poster.webp` shows the password form, not the picture.
+Do not merge to main before both variables are set, or production has no picture (the page then shows its dark ground, still complete).
+Rollback: delete the two variables (the page shows its dark ground); to cut the links off, move the two files in the bucket. Renewal: make new links before the year ends and replace the two values.
 
 ## QR codes
 `RECHARGE_CODES=<channel-codes.json> node scripts/recharge-qr.mjs <outDir> [influencers.csv]`: newsletter, pdp, and one per influencer from a
