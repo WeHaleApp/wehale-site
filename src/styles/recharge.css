@@ -1,0 +1,82 @@
+/* The campaign page (src/pages/[campaign].astro), on the app's ink design: the READY and offer screens (wehale-app src/tokens/inkReady.ts):
+   the ink bloom as the ground under a veil, Nunito Sans, the words in a block at the bottom (28 from the sides), one lilac pill.
+   Dark by design in every colour scheme. Fonts and the consent bar come from breathe.css and the consent component. */
+:root { --ground: #050814; --ink: #f1eefb; --t2: rgba(241, 238, 251, .78); --t3: rgba(241, 238, 251, .6);
+  --pill: #C9B6F2; --pill-text: #150C2B; --curve-enter: cubic-bezier(.2, .7, .2, 1); }
+html:has(.rc-page), body:has(.rc-page) { background: var(--ground); }
+html:has(.rc-page) { height: auto; overflow: auto; }
+body:has(.rc-page) { position: static; height: auto; min-height: 100%; overflow: visible; overscroll-behavior: auto; color: var(--ink); }
+body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* the ground: fixed, so nothing in the page can move it. Poster first, the loop fades in once it plays. */
+.rc-ink { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--ground); pointer-events: none; }
+.rc-ink img, .rc-ink video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.rc-loop { opacity: 0; transition: opacity 1.2s ease; }
+.rc-ink.playing .rc-loop { opacity: 1; }
+/* the app's veil: clear by a third, a little under the middle, solid toward the words */
+.rc-veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 8, 20, .45) 0, rgba(5, 8, 20, 0) 32%, rgba(5, 8, 20, .3) 50%, rgba(5, 8, 20, .92) 100%); }
+
+.rc-page { position: relative; z-index: 2; min-height: 100vh; min-height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; text-align: left; color: var(--ink);
+  padding: calc(env(safe-area-inset-top, 0px) + 22px) max(28px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 54px) max(28px, env(safe-area-inset-left, 0px)); }
+
+/* the lockup: WeHale, a thin ×, the partner */
+.rc-lockup { display: flex; align-items: center; gap: 12px; min-height: 24px; }
+.rc-lockup img { display: block; max-height: 24px; width: auto; }
+.rc-lockup img.rc-we { height: 17px; }
+.rc-pair { display: flex; align-items: center; gap: 12px; opacity: .9; }
+.rc-pair i { display: block; width: 1px; height: 22px; background: rgba(241, 238, 251, .32); font-size: 0; }
+.rc-partner-word { font: 600 12px/1 var(--font); letter-spacing: .28em; color: rgba(241, 238, 251, .9); }
+
+/* the words: a block at the bottom */
+.rc-body { margin-top: auto; width: 100%; max-width: 400px; }
+.rc-body h1 { margin: 0; font: 700 38px/41px var(--font); letter-spacing: -.95px; color: var(--ink); text-wrap: balance; }
+.rc-body p { margin: 0; }
+.rc-line { margin-top: 12px !important; font: 400 17px/24px var(--font); color: var(--t2); }
+.rc-beat { display: block; }   /* the ritual: three beats, one per line */
+.rc-only { margin-top: 10px !important; font: 600 13px/1.2 var(--font); color: var(--t2); }
+.rc-deal { margin-top: 18px !important; font: 700 18px/1.3 var(--font); color: var(--ink); }
+.rc-how { margin-top: 4px !important; font: 500 14px/1.4 var(--font); color: var(--t2); }
+.rc-how-d { display: none; }
+/* one lilac pill (the app's Start now), a quiet press */
+.rc-btn { display: flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; height: 56px; margin-top: 22px; border-radius: 999px; background: var(--pill); color: var(--pill-text);
+  font: 700 17px/1 var(--font); letter-spacing: -.17px; text-decoration: none; cursor: pointer; transition: transform 220ms var(--curve-enter), filter .25s ease; }
+@media (hover: hover) { .rc-btn:hover { filter: brightness(1.06); } }
+.rc-btn:active { transform: scale(.97); transition-duration: 100ms; }
+.rc-fine { margin-top: 12px !important; font: 400 12.5px/17px var(--font); color: var(--t3); }
+.rc-qr { display: none; margin: 0; }
+
+/* it arrives in reading order over about a second; the words are in the page from the first byte (no script, no hidden state) */
+@media (prefers-reduced-motion: no-preference) {
+  .rc-lockup, .rc-body > * { animation: rc-rise 800ms var(--curve-enter) both; }
+  .rc-body > h1 { animation-delay: 80ms; } .rc-body > .rc-line { animation-delay: 220ms; } .rc-body > .rc-only { animation-delay: 300ms; } .rc-body > .rc-deal { animation-delay: 380ms; }
+  .rc-body > .rc-how { animation-delay: 440ms; } .rc-body > .rc-btn, .rc-body > .rc-qr { animation-delay: 520ms; } .rc-body > .rc-fine { animation-delay: 600ms; }
+}
+@keyframes rc-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* the consent bar's room, measured by the script, so the button and the fine print stay clear of it */
+@media (max-width: 767px) { body.whc-on .rc-page { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--rc-whc, 96px) + 12px); } }
+@media (max-height: 700px) { .rc-page { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 30px); } .rc-body h1 { font-size: 32px; line-height: 35px; } }
+
+/* a desktop (a mouse, room): the QR code replaces the pill. The words left, the code in a glass card right; decided here in CSS, so nothing moves when the script draws the code. */
+@media (hover: hover) and (pointer: fine) and (min-width: 700px) {
+  .rc-page { padding: 32px max(48px, 5vw) 56px; }
+  .rc-body { max-width: 460px; }
+  .rc-body h1 { font-size: 54px; line-height: 57px; letter-spacing: -1.35px; }
+  .rc-line { font-size: 19px; line-height: 27px; }
+  .rc-deal { font-size: 22px; }
+  .rc-how { font-size: 15px; }
+  .rc-how-m { display: none; } .rc-how-d { display: block; }
+  .rc-btn { display: none; }
+  .rc-qr { display: block; width: 224px; margin-top: 24px; padding: 14px; box-sizing: border-box; border-radius: 22px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16); text-align: center; backdrop-filter: blur(14px); }
+  .rc-qrcode { width: 196px; height: 196px; background: #fff; border-radius: 14px; padding: 10px; box-sizing: border-box; }
+  .rc-qrcode svg { display: block; width: 100%; height: 100%; }
+  .rc-fine { margin-top: 18px !important; }
+}
+/* tester mode (#test=<team test code>): the quick-start link; on a desktop its QR code, on a phone its button (the same two places) */
+.rc-test .rc-btn { background: #fff; }
+
+/* inside another app's own browser: a quiet way out (hidden unless the script shows it) */
+.rc-inapp { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12); display: flex; align-items: center; gap: 12px; }
+.rc-inapp[hidden] { display: none; }
+.rc-inapp p { margin: 0; flex: 1; font: 500 13px/17px var(--font); color: var(--t2); }
+.rc-inapp button { flex: none; border: 0; border-radius: 999px; padding: 9px 14px; background: rgba(241, 238, 251, .14); color: var(--ink); font: 700 13px/1 var(--font); cursor: pointer; }

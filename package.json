@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node scripts/fetch-campaign-media.mjs",
+    "media:local": "sh scripts/campaign-media-local.sh",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

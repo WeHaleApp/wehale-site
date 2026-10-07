@@ -25,6 +25,11 @@ export const track = {
   saveForLater: (p) => send("SaveForLater", p),   // p.option: app | calendar | ics | share | copy
   returnFromSaved: (p) => send("ReturnFromSaved", p),
   appTap: (p) => { send("AppTap", p); send("Lead", { content_name: p.session, ...p }); },
+  // the campaign page (/recharge, docs/recharge/README.md): each returns the event id, or null when no consent allows it yet
+  campaignView: (p) => send("CampaignView", p),
+  storeOpened: (p) => send("StoreOpened", p),     // inferred: the page was hidden within a few seconds of the tap on the button (the store or the app took over)
+  inAppHint: (p) => send("InAppHint", p),
+  inAppCopy: (p) => send("InAppCopy", p),
 };
 
 export function initMeasurement() { startTags(); }
