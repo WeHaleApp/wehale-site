@@ -55,3 +55,5 @@
   from = "/session/*"
   to = "/"
   status = 302
+
+# The campaign page's noindex headers are written into dist/_headers at build (astro.config.mjs), from its route.

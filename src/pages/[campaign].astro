@@ -1,0 +1,72 @@
+---
+/**
+ * wehale.io/<route> (today /recharge; the route is DATA.route): the campaign landing page. CONFIDENTIAL until launch (docs/recharge/README.md).
+ * One "get the app" page (Isak, 29 Sep: the campaign session lives only in the app), on the app's ink design (7 Oct): the ink
+ * bloom (the campaign's ink_long loop, with its still poster) as the ground, the co-brand lockup, the words, the offer, one lilac
+ * pill ("Start in the app": an AppsFlyer OneLink carrying the code; on a desktop a QR code of the same link instead).
+ * Everything that changes is in src/data/recharge.json: the gate, the session's name, the copy, the code.
+ * The gate is the server's (netlify/edge-functions/recharge-gate.ts): the page and its files are not sent without the password.
+ */
+import BreatheLayout from "../layouts/BreatheLayout.astro";
+import "../styles/breathe.css";
+import "../styles/recharge.css";
+import DATA from "../data/recharge.json";
+import { campaignLink } from "../scripts/recharge/link.js";
+import fs from "node:fs";
+
+// one config value sets the path (src/data/recharge.json: route)
+export function getStaticPaths() { return [{ params: { campaign: DATA.route } }]; }
+
+const S = DATA.session, T = DATA.copy, P = DATA.partner_logo;
+// the partner's real logo only where it exists locally (gitignored); everywhere else the committed placeholder
+const LOCAL = fs.existsSync("public" + P.local) && fs.existsSync("public" + P.local_dark);
+const L = LOCAL ? { ...P, src: P.local, src_dark: P.local_dark, width: P.local_width, height: P.local_height } : P;
+const fill = (t) => String(t || "").replace(/\{minutes\}/g, String(S.minutes)).replace(/\{narrator\}/g, S.narrator);   // the guide and length from the session data
+const meta = fill(T.session_line);   // "With {narrator} · {minutes} min"
+// the button works before the script runs: the default link (the app sets this visit's own channel and code on top)
+const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "offer" }) || "#";
+---
+
+<BreatheLayout title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#050814">
+  <Fragment slot="head">
+    <style is:inline>html{background:#050814}</style>
+    <link rel="preload" as="image" href="/recharge/ink-poster.webp" type="image/webp" fetchpriority="high" />
+  </Fragment>
+
+  <!-- the ground: the campaign's ink bloom. The still poster is the first paint, the Reduce Motion picture and the fallback; the loop
+       is added after the page has loaded (never for Reduce Motion or Save-Data) and fades in over it. Fixed, so nothing here can move the words. -->
+  <div class="rc-ink" aria-hidden="true">
+    <img class="rc-poster" src="/recharge/ink-poster.webp" alt="" width="540" height="958" decoding="async" fetchpriority="high" />
+    <video class="rc-loop" muted loop playsinline preload="none" data-src="/recharge/ink-long.mp4" tabindex="-1"></video>
+    <div class="rc-veil"></div>
+  </div>
+
+  <main class="rc-page" id="rcMain" aria-labelledby="rcH">
+    <div class="rc-lockup" aria-label={`WeHale × ${L.alt}`}>
+      <img class="rc-we" src={L.wehale_src_dark} alt="WeHale" width="96" height="20" />
+      <span class="rc-pair"><i aria-hidden="true">×</i>
+      {LOCAL ? <img class="rc-partner" src={L.src_dark} alt={L.alt} width={L.width} height={L.height} /> : <span class="rc-partner-word">PARTNER</span>}</span>
+    </div>
+    <div class="rc-body">
+      <h1 id="rcH">{T.title}</h1>
+      <p class="rc-line">{T.line.split("|").map((b) => <span class="rc-beat">{b}</span>)}</p>
+      {meta && <p class="rc-only">{meta}</p>}
+      <p class="rc-deal">{T.offer_1}</p>
+      <p class="rc-how rc-how-m">{T.offer_how}</p>
+      <p class="rc-how rc-how-d">{T.offer_how_desktop}</p>
+      <a class="rc-btn" id="ctaBtn" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
+      <div class="rc-inapp" id="inApp" data-on={DATA.inapp.on ? "1" : "0"} data-text={DATA.inapp.text} data-copied={DATA.inapp.copied} hidden>
+        <p id="inAppText"></p><button type="button" id="inAppCopy">{DATA.inapp.copy}</button>
+      </div>
+      <figure class="rc-qr" id="qrBox">
+        <div class="rc-qrcode" id="qrCode" role="img" aria-label="QR code for the app link"></div>
+      </figure>
+      <p class="rc-fine"><span>{T.trial}</span></p>
+    </div>
+  </main>
+
+  <noscript><p class="noscript">{T.noscript}</p></noscript>
+  <script>
+    import "../scripts/recharge/app.js";
+  </script>
+</BreatheLayout>

@@ -14,3 +14,14 @@ dist/
 .env
 .env.local
 .env.production
+
+# The partner's real logo: local previews only, never committed (docs/recharge/README.md)
+public/recharge/*.local.*
+
+# The campaign's media is confidential until launch and this repo is public: never in git (docs/recharge/README.md, "The campaign's media").
+# A local dev copy lives here; production gets it from private storage at build time.
+public/recharge/ink-long.mp4
+public/recharge/ink-poster.webp
+public/recharge/*.local.*
+docs/recharge/evidence/*.jpg
+docs/recharge/evidence/*.webm
