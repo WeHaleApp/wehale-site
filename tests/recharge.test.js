@@ -47,14 +47,6 @@ describe("phoneOf", () => {
   });
 });
 
-describe("the gate", () => {
-  it("is on until launch, with a salted SHA-256 and no key in the repo", () => {
-    expect(DATA.gate.on).toBe(true);
-    expect(DATA.gate.sha256).toMatch(/^[0-9a-f]{64}$/);
-    expect(JSON.stringify(DATA)).not.toMatch(/"k"\s*:/);
-  });
-});
-
 describe("the copy", () => {
   it("says the decided offer exactly, and nothing it must not", () => {
     expect(DATA.copy.offer_1).toBe("Your first month of WeHale free.");

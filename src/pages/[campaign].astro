@@ -5,7 +5,7 @@
  * as the hero (free in the app, theirs to keep), the offer, "Get the app" (an AppsFlyer OneLink carrying the code; on desktop a
  * QR code of the same link), the fine print. On the wehale.io look: navy, Nunito Sans, a calm orb, one white pill.
  * Everything that changes is in src/data/recharge.json: the gate, the session's name, the copy, the code.
- * The gate: with gate.on, the page shows only with ?k=<key>; without it, the site's 404 (obscurity, not security).
+ * The gate is the server's (netlify/edge-functions/recharge-gate.ts): the page and its files are not sent without the password.
  */
 import BreatheLayout from "../layouts/BreatheLayout.astro";
 import "../styles/breathe.css";
@@ -25,22 +25,11 @@ const fill = (t) => String(t || "").replace(/\{minutes\}/g, String(S.minutes)).r
 const meta = fill(T.session_line);   // "With {narrator} · {minutes} min"
 // the button works before the script runs: the default link (the app sets this visit's own channel and code on top)
 const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "offer" }) || "#";
-// The gate runs before first paint: the page stays invisible until the key checks out, else the 404 replaces it.
-const gate = DATA.gate.on ? `(function(){var d=document.documentElement;d.classList.add("rc-locked");
-var S=${JSON.stringify(DATA.gate.salt)},H=${JSON.stringify(DATA.gate.sha256)},K="wehale.rc.k",q=new URLSearchParams(location.search),k=q.get("k"),st=null;
-try{st=sessionStorage.getItem(K)}catch(e){}
-function hex(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return("0"+x.toString(16)).slice(-2)}).join("")}
-function no(){return fetch("/404.html",{credentials:"omit"}).then(function(r){return r.ok?r:fetch("/404",{credentials:"omit"})}).then(function(r){return r.text()}).then(function(t){document.open();document.write(t);document.close();return false},function(){d.classList.remove("rc-locked");document.body.innerHTML="<p style='padding:24px'>This page isn’t here.</p>";return false})}
-var h=k&&window.crypto&&crypto.subtle?crypto.subtle.digest("SHA-256",new TextEncoder().encode(S+":"+k)).then(hex):Promise.resolve(st);
-window.__rcGate=h.then(function(x){if(x!==H)return no();try{sessionStorage.setItem(K,H)}catch(e){}
-if(k){q.delete("k");var s=q.toString();history.replaceState(null,"",location.pathname+(s?"?"+s:"")+location.hash)}
-d.classList.remove("rc-locked");return true},no)})();` : `window.__rcGate=Promise.resolve(true);`;
 ---
 
 <BreatheLayout title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#0e0907">
   <Fragment slot="head">
-    <style is:inline>html{background:#0e0907}html.rc-locked body{visibility:hidden}</style>
-    <script is:inline set:html={gate} />
+    <style is:inline>html{background:#0e0907}</style>
     <link rel="preload" as="image" href="/plasma/softer/poster-390x844.jpg" media="(max-width: 700px)" />
   </Fragment>
 

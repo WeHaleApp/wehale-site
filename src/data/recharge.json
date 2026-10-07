@@ -1,12 +1,10 @@
 {
-  "_about": "The campaign page (wehale.io/<route>, today /recharge) (docs/recharge/README.md): one \"get the app\" page. Everything that changes before or at launch is here. CONFIDENTIAL until launch: the page is gated (gate), noindex, out of the sitemap and linked from nowhere.",
+  "_about": "The campaign page (wehale.io/<route>, today /recharge) (docs/recharge/README.md): one \"get the app\" page. Everything that changes before or at launch is here. CONFIDENTIAL until launch: the page is behind a server-side password (gate), noindex, out of the sitemap and linked from nowhere.",
   "route": "recharge",
   "_about_route": "The page's path, the one place it is set: the page, the sitemap exclusion, the noindex headers (written into dist/_headers at build) and the QR codes all follow it.",
   "gate": {
-    "_about": "Obscurity, not security: the page renders only with ?k=<key>, whose salted SHA-256 is compared in the browser; without it the visitor gets the site's 404. The key itself is not in the repo. At launch set on to false (the one flag), and see docs/recharge/README.md for the rest of the launch list.",
-    "on": true,
-    "salt": "33e3ba2aeff4d882",
-    "sha256": "24e24cfd1f889ed16cc1ac73ea8b19ca52c7bf9f7f15dae40d2c567c53bbdbc5"
+    "_about": "The one flag. true = the server asks for the shared password (netlify/edge-functions/recharge-gate.ts, password in the Netlify variable RECHARGE_PASS, never in the repo): the page and its files are not sent without it. At launch set on to false. See docs/recharge/README.md.",
+    "on": true
   },
   "session": {
     "_about": "The campaign session, which lives only in the WeHale app (Isak, 29 Sep: no web session on this page; the hook, owner of main 30 Sep: the ritual, 'Pour a Blackcurrant. Press play. Breathe with Philip.', experience first, then the offer). The page names it: title, narrator and minutes. slug tags the events. STAND-IN values (The Wake Up, Edvin) until the campaign session is recorded (Philip); then set narrator and minutes, and stand_in: false. The chip is off (the ritual line names Philip); session_line stays empty.",

@@ -1,5 +1,5 @@
 // Muted recordings, stills and a frame-rate check of the campaign page (src/pages/[campaign].astro) on a local build.
-//   RC_KEY=<gate key> node scripts/record-campaign.mjs <base-url> <out-dir> [--video] [--fps]
+//   node scripts/record-campaign.mjs <base-url> <out-dir> [--video] [--fps]
 // The key comes from the environment only (never argv, never printed). Consent is answered (declined) before load.
 // --video: phone 375×812 @2×, desktop 1440×900 and the phone with Reduce Motion, 9 s each (WebM, then H.264 via ffmpeg).
 // --fps:   rAF frame times over 8 s on the phone at 4× CPU throttle, first contentful paint, and layout shift.
@@ -7,7 +7,7 @@ import puppeteer from "puppeteer";
 import fs from "node:fs"; import path from "node:path"; import { execFileSync } from "node:child_process";
 import DATA from "../src/data/recharge.json" with { type: "json" };
 const BASE = (process.argv[2] || "http://127.0.0.1:4330").replace(/\/$/, ""), OUT = process.argv[3] || "campaign-out";
-const KEY = process.env.RC_KEY || "", URL_ = `${BASE}/${DATA.route}${KEY ? "?k=" + encodeURIComponent(KEY) : ""}`;
+const URL_ = `${BASE}/${DATA.route}`;
 fs.mkdirSync(OUT, { recursive: true });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const b = await puppeteer.launch({ headless: "new", args: ["--mute-audio", "--autoplay-policy=user-gesture-required", "--no-first-run"] });

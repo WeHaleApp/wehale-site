@@ -1,6 +1,5 @@
 // The campaign page's controller (src/pages/[campaign].astro): one "get the app" page. It sets this visit's OneLink
 // (the channel and its code, link.js) on "Get the app", and on a desktop shows a QR code of the same link instead.
-// Waits for the gate (window.__rcGate); nothing loads or measures on a page that turned into the 404.
 import DATA from "../../data/recharge.json";
 import { readCampaign, campaignLink, phoneOf, testCodeFrom, quickStartLink } from "./link.js";
 import { initMeasurement, track } from "../breathe/measure.js";
@@ -9,7 +8,7 @@ import { eventParams } from "../contract.js";
 const $ = (id) => document.getElementById(id);
 const body = document.body;
 
-(window.__rcGate || Promise.resolve(true)).then((open) => { if (open) run(); });
+run();
 
 function run() {
   const CAMP = readCampaign(location.search, document.referrer, DATA);
