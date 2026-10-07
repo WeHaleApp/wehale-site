@@ -67,10 +67,9 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
   .rc-how { font-size: 15px; }
   .rc-how-m { display: none; } .rc-how-d { display: block; }
   .rc-btn { display: none; }
-  .rc-qr { display: block; width: 224px; margin-top: 24px; padding: 14px 14px 12px; box-sizing: border-box; border-radius: 22px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16); text-align: center; backdrop-filter: blur(14px); }
+  .rc-qr { display: block; width: 224px; margin-top: 24px; padding: 14px; box-sizing: border-box; border-radius: 22px; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .16); text-align: center; backdrop-filter: blur(14px); }
   .rc-qrcode { width: 196px; height: 196px; background: #fff; border-radius: 14px; padding: 10px; box-sizing: border-box; }
   .rc-qrcode svg { display: block; width: 100%; height: 100%; }
-  .rc-qr figcaption { margin-top: 10px; font: 600 13px/1.3 var(--font); color: var(--t2); }
   .rc-fine { margin-top: 18px !important; }
 }
 /* tester mode (#test=<team test code>): the quick-start link; on a desktop its QR code, on a phone its button (the same two places) */

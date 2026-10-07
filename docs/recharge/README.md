@@ -18,7 +18,7 @@ a block at the bottom; one lilac pill with a deep violet label (`#C9B6F2` / `#15
 
 The screen, in order: the lockup (WeHale × the partner); "Charge Your Current" and the ritual (three beats); the offer, "Your first month
 of WeHale free." (the second line of the hook; the prices are chosen in the app) and "Only through this link."; **Start in the app** (the OneLink
-with the code); the fine print, "Cancel anytime before the trial ends." On a desktop, the QR code and "Only through this code." replace the pill.
+with the code); the fine print, "The free month is a trial through the App Store or Google Play." On a desktop, the QR code (no caption) replaces the pill.
 
 Files: `src/pages/[campaign].astro`, `src/scripts/recharge/{app,link}.js`, `src/styles/recharge.css`,
 `src/data/recharge.json` (everything that changes, all the words), `netlify/edge-functions/recharge-gate.ts`, `scripts/recharge-qr.mjs`,
@@ -110,7 +110,7 @@ while the gate is on, the cookie `wehale_rc` (functional: HttpOnly, Secure, 7 da
 Influencer and newsletter traffic often opens inside Instagram, TikTok, Facebook, Snapchat, LinkedIn or X, which use their own web view. There, a OneLink often does not hand over
 to the app or the store as it does from Safari or Chrome (iOS Universal Links are not followed in web views; Android intents can be blocked). The page cannot fix that, but it can say so:
 `inAppBrowser(ua)` (`link.js`) names those browsers and unnamed web views; the page then shows a quiet line and a **Copy link** button ("Opened inside Instagram? For the best result, open this page in Safari." /
-"Link copied. Paste it in Safari."). The words are **proposed** and the hint is **off** (`inapp.on: false` in `recharge.json`) until Isak picks them; `?inapp=1` previews it (`evidence/page-390-inapp-hint-preview.jpg`).
+"Link copied. Paste it in Safari."). The words are Isak's pick (7 Oct) and the hint is **on** (`inapp.on` in `recharge.json`; false switches it off); `?inapp=1` previews it anywhere (`evidence/page-390-inapp-hint-preview.jpg`).
 The button and the QR code stay as they are. A QR code is scanned by the phone's camera, which opens the system browser, so the QR path avoids the problem.
 | Browser | Tested | How |
 |---|---|---|
@@ -121,8 +121,7 @@ The button and the QR code stay as they are. A QR code is scanned by the phone's
 | Real Android Chrome / iPhone Safari | **no, needs a phone** | |
 
 ## At launch (item 7)
-Before: (1) the gate verified on the live address (steps above) and the phone tests in `LINK-MATRIX.md` passed; (2) Isak has picked the copy (`SPRINT-NOTES.md` proposals) and the
-in-app hint (`inapp.on`); (3) the partner's real logo and the real session are in (`stand_in: false`); (4) the Android deep-link question answered (AppsFlyer, Isak); (5) the cookie wording and
+Before: (1) the gate verified on the live address (steps above) and the phone tests in `LINK-MATRIX.md` passed; (2) the copy and the in-app hint are Isak's picks of 7 Oct (`SPRINT-NOTES.md`); (3) the partner's real logo and the real session are in (`stand_in: false`); (4) the Android deep-link question answered (AppsFlyer, Isak); (5) the cookie wording and
 privacy text cover what the page sets (above), and pixel keys are set if wanted; (6) the codes for pdp and influencers exist on the server.
 Flip: **one flag**, `gate.on: false` in `src/data/recharge.json`, merge, let Netlify deploy. The edge function then lets everyone through (it stays in place; `RECHARGE_PASS` can stay). The page stays
 `noindex`, out of the sitemap and unlinked, so it works from its links and QR codes only. To make it findable later: drop the `hidden` prop in `[campaign].astro`, the sitemap filter and the headers hook in `astro.config.mjs`.

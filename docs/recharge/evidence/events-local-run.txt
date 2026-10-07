@@ -21,9 +21,9 @@
    CampaignView {"source":"ig","utm_source":"ig","utm_medium":"social","utm_campaign":"autumn","utm_content":"story1","session":"wake-up","page":"recharge","campaign":"recharge","ch":"influencer","code":"ANNA-RC","arm":"none","at":"offer","device":"ios","inapp":"none"}
  in-app hint: null | localStorage keys: wehale.consent.v1 | cookies set by the page: none | blocked hosts: www.googletagmanager.com
 
-## Instagram's browser, hint is OFF in the data (today)
+## Instagram's browser, no consent: the hint shows, nothing is sent
  events: (none)
- in-app hint: null | localStorage keys: - | cookies set by the page: none | blocked hosts: -
+ in-app hint: Opened inside Instagram? For the best result, open this page in Safari. | localStorage keys: - | cookies set by the page: none | blocked hosts: -
 
 ## Instagram's browser with ?inapp=1 (the hint, previewed)
  events: 

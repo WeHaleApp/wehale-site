@@ -29,7 +29,7 @@ await run("phone, consent given, taps the button", { ua: UA.iphone, vp: phone, c
 await run("desktop, consent given (the QR code; nothing to tap)", { vp: desk, consent: true });
 await run("phone, no consent yet: nothing is sent", { ua: UA.iphone, vp: phone, consent: false });
 await run("phone, consent given AFTER the page loaded: the view follows", { ua: UA.iphone, vp: phone, consent: "late" });
-await run("Instagram's browser, hint is OFF in the data (today)", { ua: UA.instagram, vp: phone, consent: false });
+await run("Instagram's browser, no consent: the hint shows, nothing is sent", { ua: UA.instagram, vp: phone, consent: false });
 await run("Instagram's browser with ?inapp=1 (the hint, previewed)", { ua: UA.instagram, vp: phone, consent: true, query: "?ch=influencer&c=anna-rc&inapp=1" });
 await run("tester mode (#test=): nothing is measured", { ua: UA.iphone, vp: phone, consent: true, hash: "#test=ABC123" });
 await b.close();

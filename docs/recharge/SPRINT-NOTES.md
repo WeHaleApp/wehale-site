@@ -15,7 +15,7 @@ Commit: see git log. Evidence in `docs/recharge/evidence/`: `page-{390,768,1280}
 colour scheme and look the same on purpose (`color-scheme: dark`, the app's ink ground).
 
 **Performance** (phone UA 390x844, Slow 4G 1.6 Mbit/s + 150 ms, 4x CPU, cold cache, 5 runs, headless Chrome on the production build):
-median first contentful paint 796 ms, largest contentful paint 1088 ms (the poster), layout shift 0, load event 1071 ms, 85 kB at load (re-run after the measurement code)
+median first contentful paint 780 ms, largest contentful paint 1084 ms (the poster), layout shift 0, load event 1060 ms, 85 kB at load (re-run 7 Oct after the copy change; a first re-run read 1.6 s while the machine was loaded by other sprints, load average 21, so I ran it again)
 (poster 15 kB, fonts, the page). The 2.1 MB loop is requested only after load (one request per run) and fades in. Reduce Motion: 0 video requests (checked at 390 and 1280).
 Not measured: a real phone on a real network (that is Isak's phone test).
 
@@ -32,14 +32,14 @@ jump). `#test=<code>` still turns the button/QR into the quick-start link (check
 3. Ritual, three lines: "Pour a Blackcurrant." / "Press play." / "Breathe with Philip."
 4. Offer: "Your first month of WeHale free."
 5. Phone: "Only through this link." Desktop: "Scan with your phone to claim it."
-6. Button (phone): "Start in the app". Desktop QR caption: "Only through this code."
-7. Fine print: "Cancel anytime before the trial ends."
+6. Button (phone): "Start in the app". Desktop: the QR code, no caption (P5)
+7. Fine print: "The free month is a trial through the App Store or Google Play." (P1; replaces "Cancel anytime before the trial ends.", P3)
 8. No script: "Turn on JavaScript to get the app link, or find WeHale in the App Store or Google Play."
 9. Page title/description (not seen on the page): "Charge Your Current · WeHale"; "Pour a Blackcurrant. Press play. Breathe with Philip. Your first month of WeHale free."
 10. Consent bar (the site's component, unchanged). Tester mode only: "Open in the test build", "Test build: scan with your phone's camera, then tap Open.", "For the team: the link only works for the team test code, in a test build, and signs you in to a test account."
 Defined in recharge.json but not shown: `about`, `session_line`, `trial`.
 
-**Copy proposals for Isak (nothing applied; he picks). THE SINGLE SOURCE: P1 to P6.**
+**Copy: P1 to P6, ALL ACCEPTED by Isak 7 Oct and applied (P1 store line added, P2 kept, P3 the "Cancel anytime" line replaced by P1 alone, P4 "Start in the app" kept, P5 the QR caption dropped, P6 the in-app hint on).**
 - P1. Add the store-trial line under the fine print: "The free month is a trial through the App Store or Google Play." (already in recharge.json as `trial`; today a visitor never learns the free month goes through the store.)
 - P2. Keep the order: title + the ritual first, "Your first month of WeHale free." as the second line (as the hook says). No change.
 - P3. "Cancel anytime before the trial ends." was marked TO VERIFY in the prototype README (does the store flow allow it): confirm before launch, or drop it in favour of P1 alone.
@@ -50,8 +50,8 @@ Defined in recharge.json but not shown: `about`, `session_line`, `trial`.
 ## Item 3: every link carries its code (done locally; phone list for Isak)
 `docs/recharge/LINK-MATRIX.md`. Found and fixed a real gap: the app reads the channel from `deep_link_sub1` and the reference from `deep_link_sub2`; the page sent neither (the reference would have been the campaign name `recharge`). Now both ride the link; the app's own parser is run on every generated link in `tests/recharge-matrix.test.js`. AppsFlyer read through the connector (read only): template `zcid`, iOS Universal Links, re-engagement attribution OFF on both apps, probabilistic modelling on; **unknown: Android deep-link config for an installed app** (Isak/AppsFlyer, phone test).
 
-## Item 4: in-app browsers (built, hint off until Isak picks words)
-In `README.md` ("In-app browsers") with the tested/not-tested table. `inapp.on: false` in recharge.json; `?inapp=1` previews it. Proposed words are in the file; not applied.
+## Item 4: in-app browsers (built; hint ON since 7 Oct, Isak's words)
+In `README.md` ("In-app browsers") with the tested/not-tested table. `inapp.on: true` in recharge.json; `?inapp=1` previews it anywhere.
 
 ## Item 5: measurement
 `CampaignView`, `AppTap`+`Lead`, `StoreOpened` (inferred), `InAppHint`/`InAppCopy`; local run in `evidence/events-local-run.txt` (no events without consent, view follows a late yes, nothing in tester mode). What the page sets is in README "Measurement". Cookie wording is Isak's and the measurement lead's.
@@ -70,3 +70,6 @@ History rewritten on the unpushed branch (filter-branch, then reflog/gc): the lo
 Production: two signed links to the private Supabase bucket `media` (wehale-prod; the files exist, read-only check), fetched at build time by `scripts/fetch-campaign-media.mjs` (variables `CAMPAIGN_MEDIA_LOOP_URL`, `CAMPAIGN_MEDIA_POSTER_URL`; tested against a local token server). Exact dashboard/API steps and the Netlify click-path: README "The campaign's media". Nothing set up.
 **Found, not mine to fix:** `origin/claude/marketing-recharge` (already on GitHub) holds `public/recharge/bloom-720.webp`, `bloom-1080.webp` and the Plasma poster stills (`public/plasma/*/poster-*.jpg`) from earlier campaign-page work: the planning chat should decide whether those branches need rewriting/deleting.
 No product-page code, QR file, password or real partner logo is in git (checked with `git grep` and `git ls-files`). The partner's name is no longer written in these notes.
+
+## Copy applied (7 Oct, Isak's answers)
+recharge.json: `offer_2` and `qr` removed, `trial` shown as the fine print, `inapp.on: true`. Tests pin each (tests/recharge.test.js). Words on the page now: lockup, "Charge Your Current", the three ritual lines, "Your first month of WeHale free.", "Only through this link." (phone) / "Scan with your phone to claim it." (desktop, QR without caption), "Start in the app", "The free month is a trial through the App Store or Google Play.", plus the in-app hint (in-app browsers only) and the no-script line.

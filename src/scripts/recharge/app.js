@@ -33,7 +33,6 @@ function run() {
   if (TEST) {
     body.classList.add("rc-test");
     cta.textContent = "Open in the test build";
-    const cap = document.querySelector("#qrBox figcaption"); if (cap) cap.textContent = "Test build: scan with your phone's camera, then tap Open.";
     document.querySelectorAll(".rc-how").forEach((el) => { el.textContent = "For the team: the link only works for the team test code, in a test build, and signs you in to a test account."; });
   } else {
     // the funnel (docs/recharge/README.md "Measurement"): CampaignView on arrival, AppTap (+Lead) on the button, StoreOpened (inferred) if the page is
