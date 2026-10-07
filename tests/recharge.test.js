@@ -30,7 +30,7 @@ describe("campaignLink", () => {
   it("carries pid, c=recharge, the code in deep_link_value and the channel in af_sub1", () => {
     const u = campaignLink(DATA, { ...readCampaign("?ch=newsletter", "", DATA), at: "offer" });
     expect(u.startsWith("https://wehale.onelink.me/zcid?")).toBe(true);
-    expect(params(u)).toEqual({ pid: DATA.onelink.pid, c: "recharge", deep_link_value: "RECHARGE", af_sub1: "newsletter", af_sub5: "at=offer" });
+    expect(params(u)).toEqual({ pid: DATA.onelink.pid, c: "recharge", deep_link_value: "RECHARGE", af_sub1: "newsletter", deep_link_sub1: "newsletter", deep_link_sub2: "RECHARGE", af_sub5: "at=offer" });
   });
   it("passes the UTMs on, and a utm_campaign never replaces c", () => {
     const u = campaignLink(DATA, readCampaign("?ch=influencer&c=ANNA-RC&utm_source=ig&utm_medium=social&utm_campaign=x&utm_content=story1", "", DATA));

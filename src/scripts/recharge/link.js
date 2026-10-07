@@ -9,7 +9,10 @@
 //   pid              the campaign's media source (src/data/recharge.json)
 //   c                recharge (fixed: a utm_campaign never replaces it; it rides in af_sub5 as camp=)
 //   deep_link_value  the code; the app applies it at sign-up, including Apple and Google sign-in
-//   af_sub1          the channel tag
+//   deep_link_sub1   the channel tag, and deep_link_sub2 the code again as the reference: the names the app reads for where a member
+//                    came from (wehale-app src/lib/link-attribution.ts: channel = deep_link_sub1, then ch, then af_sub2; reference =
+//                    deep_link_sub2, then c, then af_sub3). Without them the app would read `c=recharge` as the reference.
+//   af_sub1          the channel tag again (AppsFlyer's reports; the app's fallback for the code if deep_link_value were missing)
 //   af_channel       utm_source (as on /breathe), af_ad utm_content, af_adset h
 //   af_sub5          "at=<where>;med=<utm_medium>;camp=<utm_campaign>;v=…;src=…"
 import { readContract, clean } from "../contract.js";
@@ -39,6 +42,8 @@ export function campaignLink(data, { ch, code, contract = {}, at } = {}) {
   q.set("pid", o.pid);
   q.set("c", o.c);
   q.set("deep_link_value", cleanCode(code, data.code.default));
+  q.set("deep_link_sub1", ch || "web");
+  q.set("deep_link_sub2", cleanCode(code, data.code.default));
   q.set("af_sub1", ch || "web");
   if (contract.utm_source) q.set("af_channel", contract.utm_source);
   if (contract.h) q.set("af_adset", contract.h);
