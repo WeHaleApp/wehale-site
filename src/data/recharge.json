@@ -29,7 +29,6 @@
   },
   "partner_logo": {
     "_about": "One swappable file per ground: src (black, for a light ground; not used on the page today), src_dark (white, on the page's navy). The committed files are dashed PLACEHOLDERS. The partner's real logo (marked wip) is never committed: for local previews put it at local / local_dark (gitignored, public/recharge/*.local.*) and the build uses it; ask the lead before adding it to the repo. Sizes: the wordmark's cap height optically matches WeHale's (real logo trimmed, 26 px tall on an 18 px WeHale logo, one baseline).",
-    "src": "/recharge/partner-logo.svg",
     "src_dark": "/recharge/partner-logo-white.svg",
     "width": 96,
     "height": 20,
@@ -38,7 +37,6 @@
     "local_width": 77,
     "local_height": 26,
     "alt": "Campaign partner",
-    "wehale_src": "/recharge/wehale-logo-black.svg",
     "wehale_src_dark": "/assets/images/logo.svg"
   },
   "code": {

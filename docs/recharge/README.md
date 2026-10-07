@@ -51,9 +51,8 @@ they live in `channel-codes.json` in the confidential folder and reach the QR sc
 - **pid:** `partner_campaign`, a config choice for the lead and the owner of main (`onelink.pid`).
 - **Session:** the page names the app's campaign session from `session` in `recharge.json` (today the stand-in
   values, Edvin, 6 min). When the real session is set, update `narrator` and `minutes`, and `stand_in: false`.
-- **Partner logo:** `public/recharge/partner-logo.svg` is a dashed placeholder (black, for a light ground) and
-  `partner-logo-white.svg` (white, used on the page's navy). Replace the file (same name), or
-  set `partner_logo.src`/`width`/`height`. The design session supplies the real lockup.
+- **Partner logo:** `public/recharge/partner-logo-white.svg` is a dashed placeholder (white, for the page's dark ground). Replace the file (same name), or
+  set `partner_logo.src_dark`/`width`/`height`. The real logo is never committed: a local copy at `public/recharge/partner-logo-white.local.png` is used by the build and ignored by git. The design session supplies the real lockup.
 
 ## The gate (until launch): a server-side password
 `netlify/edge-functions/recharge-gate.ts`, a Netlify Edge Function on `/recharge`, `/recharge.html` and `/recharge/*` (the page
