@@ -48,6 +48,14 @@
     Content-Type = "application/json"
     Cache-Control = "public, max-age=3600"
 
+# Android App Links: proof that the app (com.wehale.app) may open wehale.io links. Same content as the
+# OneLink host's file. Serve JSON directly with a 200, no redirect; short cache so a fingerprint change lands fast.
+[[headers]]
+  for = "/.well-known/assetlinks.json"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "public, max-age=3600"
+
 # Browser fallback, including no app, older app versions, and an explicit browser
 # preference. The front page carries the store links; installation does not retain
 # the requested session (deferred deep linking is outside this change).

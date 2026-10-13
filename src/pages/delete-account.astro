@@ -1,0 +1,103 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import LegalLayout from "../components/LegalLayout.astro";
+
+const title = "Delete your account · WeHale";
+const description =
+  "How to delete your WeHale account and data, in the app or by email, and what we delete and keep.";
+---
+
+<BaseLayout title={title} description={description} solidHeader>
+  <LegalLayout heading="Delete your WeHale account" lastUpdated="14 October 2026">
+    <p>
+      This page explains how to delete your WeHale account and the data in it.
+      The app is WeHale, from Andningsappen Varberg AB (organisation number
+      559496-1491), for iPhone and Android.
+    </p>
+
+    <h2>Delete it in the app</h2>
+    <ol>
+      <li>Open WeHale and sign in.</li>
+      <li>Tap <strong>More</strong> (bottom right).</li>
+      <li>Tap <strong>Profile &amp; Settings</strong>.</li>
+      <li>Scroll to <strong>Danger zone</strong> and tap <strong>Delete account</strong>.</li>
+      <li>
+        If you have a subscription bought through the App Store or Google Play,
+        the app tells you it keeps renewing and links to where you cancel it.
+        Cancel it there first.
+      </li>
+      <li>Confirm twice. Your account is deleted straight away and you are signed out.</li>
+    </ol>
+
+    <h2>No access to the app? Ask us by email</h2>
+    <p>
+      Write to
+      <a href="mailto:support@wehale.io?subject=Delete%20my%20account">support@wehale.io</a>
+      from the email address on your account, with the subject "Delete my
+      account". We may ask one question to check it is you. We delete the
+      account and tell you when it is done, within one month at the latest.
+    </p>
+    <p>
+      You can also ask us to delete only some of your data, for example your
+      check-ins or feedback, without deleting the account. Write to the same
+      address.
+    </p>
+
+    <h2>What is deleted</h2>
+    <p>When your account is deleted we erase, from our live systems, in one step:</p>
+    <ul>
+      <li>your account: email, name, sign-in details, avatar</li>
+      <li>your practice: sessions, ratings, likes, weekly goals, reminders, progress and milestones</li>
+      <li>your answers when you started the app, and your check-ins</li>
+      <li>your support messages, feedback, scores and any welcome period</li>
+      <li>your push notification tokens and your subscription record in our database</li>
+      <li>your feedback screenshots, removed from our file storage</li>
+      <li>your contact at our email service (Loops)</li>
+      <li>your name, email and ID from the usage events we keep (the events stay, with nothing that points to you)</li>
+    </ul>
+    <p>
+      If you signed in with Apple, you can also remove the connection yourself:
+      Settings &rarr; your name &rarr; Sign-In &amp; Security &rarr; Sign in with
+      Apple &rarr; WeHale.
+    </p>
+
+    <h2>What we keep, and for how long</h2>
+    <ul>
+      <li>
+        <strong>A deletion record</strong>: a one-way hash of your email
+        address (it cannot be turned back into the address), your sign-in
+        method, the date and counts of what was removed, to show that we
+        honoured your request. We keep it for as long as we need to be able to
+        show that, and review it from time to time.
+      </li>
+      <li>
+        <strong>Purchase records</strong> at the stores and at RevenueCat (our
+        subscription service), as financial records, for as long as accounting
+        law requires. Deleting your account does not cancel a subscription:
+        Apple or Google keep billing until you cancel in their settings.
+      </li>
+      <li>
+        <strong>Lifetime access</strong>, if you have it from before: your email
+        address and the fact of that access, so it is not lost.
+      </li>
+      <li>
+        <strong>Usage events</strong> with your name, email and ID removed. They
+        no longer point to a person.
+      </li>
+      <li>
+        <strong>Backups</strong> of our database, until they expire in our
+        provider's normal backup cycle.
+      </li>
+      <li>
+        <strong>Service providers' own copies</strong> (for example crash
+        reports and measurement data). We do not currently send them a deletion
+        request. You can ask us to contact a provider for you.
+      </li>
+    </ul>
+
+    <p>
+      More detail is in our <a href="/privacy">privacy policy</a>. Questions:
+      <a href="mailto:support@wehale.io">support@wehale.io</a>.
+    </p>
+  </LegalLayout>
+</BaseLayout>
