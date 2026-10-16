@@ -6,8 +6,8 @@ import { gate, config } from "../netlify/edge-functions/recharge-gate.ts";
 
 const PASS = "correct horse", NOW = 1_800_000_000;
 const page = () => Promise.resolve(new Response("<h1>the campaign page</h1>", { headers: { "Content-Type": "text/html" } }));
-const get = (url = "https://wehale.io/recharge?ch=pdp&c=X1", headers = {}) => new Request(url, { headers });
-const post = (password, url = "https://wehale.io/recharge?ch=pdp&c=X1") => new Request(url, { method: "POST", body: new URLSearchParams({ password }) });
+const get = (url = "https://wehale.io/campaign/charge-your-current?ch=pdp&c=X1", headers = {}) => new Request(url, { headers });
+const post = (password, url = "https://wehale.io/campaign/charge-your-current?ch=pdp&c=X1") => new Request(url, { method: "POST", body: new URLSearchParams({ password }) });
 const cookieFrom = (res) => /wehale_rc=([^;]+)/.exec(res.headers.get("set-cookie"))[1];
 
 describe("the gate", () => {
@@ -29,9 +29,9 @@ describe("the gate", () => {
   it("the right password returns to the same address, query string kept, with a signed cookie", async () => {
     const res = await gate(post(PASS), PASS, page, NOW, true);
     expect(res.status).toBe(303);
-    expect(res.headers.get("location")).toBe("/recharge?ch=pdp&c=X1");
+    expect(res.headers.get("location")).toBe("/campaign/charge-your-current?ch=pdp&c=X1");
     expect(res.headers.get("set-cookie")).toMatch(/HttpOnly; Secure; SameSite=Lax/);
-    const ok = await gate(get("https://wehale.io/recharge?ch=pdp&c=X1", { cookie: "a=b; wehale_rc=" + cookieFrom(res) }), PASS, page, NOW + 60, true);
+    const ok = await gate(get("https://wehale.io/campaign/charge-your-current?ch=pdp&c=X1", { cookie: "a=b; wehale_rc=" + cookieFrom(res) }), PASS, page, NOW + 60, true);
     expect(ok.status).toBe(200);
     expect(await ok.text()).toContain("the campaign page");
     expect(ok.headers.get("x-robots-tag")).toMatch(/noindex/);
@@ -59,7 +59,7 @@ describe("the gate", () => {
   });
   it("is on in the repo, covers the page and all its files, and follows the route", () => {
     expect(DATA.gate.on).toBe(true);
-    expect(config.path).toEqual(["/" + DATA.route, "/" + DATA.route + ".html", "/" + DATA.route + "/*"]);
+    expect(config.path).toEqual(["/" + DATA.route, "/" + DATA.route + ".html", "/" + DATA.route + "/*", "/recharge/*"]);
     expect(JSON.stringify(DATA)).not.toMatch(/"(salt|sha256|k)"\s*:/);
     expect(fs.readFileSync("netlify/edge-functions/recharge-gate.ts", "utf8")).not.toMatch(/RECHARGE_PASS\s*=\s*["']/);
   });

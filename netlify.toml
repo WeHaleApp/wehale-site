@@ -65,3 +65,10 @@
   status = 302
 
 # The campaign page's noindex headers are written into dist/_headers at build (astro.config.mjs), from its route.
+
+# The campaign page moved from /recharge to /campaign/charge-your-current (the query string, with the code, is kept).
+# The media under /recharge/* stays where it is (and stays behind the gate); only the bare page address redirects.
+[[redirects]]
+  from = "/recharge"
+  to = "/campaign/charge-your-current"
+  status = 302
