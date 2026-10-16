@@ -4,8 +4,19 @@
 // publishes them under /recharge/, behind the password gate. The poster (a JPEG in storage) is turned into a WebP. Without the variables it does nothing and
 // keeps any local copy (`npm run media:local`). The links are never printed.
 import fs from "node:fs"; import path from "node:path";
-const OUT = "public/recharge", LOOP = process.env.CAMPAIGN_MEDIA_LOOP_URL || "", POSTER = process.env.CAMPAIGN_MEDIA_POSTER_URL || "";
+const OUT = "public/recharge", LOOP = process.env.CAMPAIGN_MEDIA_LOOP_URL || "", POSTER = process.env.CAMPAIGN_MEDIA_POSTER_URL || "", HERO = process.env.CAMPAIGN_MEDIA_HERO_URL || "";
 const FILES = ["ink-long.mp4", "ink-poster.webp"], have = (f) => fs.existsSync(path.join(OUT, f));
+// the hero photo (optional, the flow review's landing picture): fetched on its own, independent of the two above
+async function fetchHero() {
+  if (!HERO) return;
+  fs.mkdirSync(OUT, { recursive: true });
+  const r = await fetch(HERO);
+  if (!r.ok) { console.error(`[campaign media] hero: HTTP ${r.status} (an expired or wrong link?)`); process.exit(1); }
+  const sharp = (await import("sharp")).default;
+  await sharp(Buffer.from(await r.arrayBuffer())).resize({ width: 1080, withoutEnlargement: true }).webp({ quality: 74 }).toFile(path.join(OUT, "hero.webp"));
+  console.log("[campaign media] fetched: hero.webp");
+}
+await fetchHero();
 if (!LOOP || !POSTER) {
   const missing = FILES.filter((f) => !have(f));
   console.log(`[campaign media] no CAMPAIGN_MEDIA_* variables: ${missing.length ? "MISSING " + missing.join(", ") + " (the page falls back to its dark ground)" : "using the local copy"}`);

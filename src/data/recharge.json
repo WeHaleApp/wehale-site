@@ -23,11 +23,18 @@
     "offer_1": "Your first month of WeHale free.",
     "offer_how": "Only through this link.",
     "offer_how_desktop": "Scan with your phone to claim it.",
-    "cta": "Start in the app",
+    "made_with": "A guided breathing session, made with {partner}. Seven minutes, just for you.",
+    "cta": "Get the app",
     "trial": "The free month is a trial through the App Store or Google Play, for new members where eligible.",
     "privacy": "Privacy",
     "terms": "Terms",
     "noscript": "Turn on JavaScript to get the app link, or find WeHale in the App Store or Google Play."
+  },
+  "partner_name": "our partner",
+  "hero": {
+    "_about": "The target design (the flow review's Landing page): a full-bleed photo under a veil, the lockup on top, the words at the bottom, one white button. The photo is confidential, so like the ink media it is NOT in git: public/recharge/hero.webp (local copy: npm run media:local; production: the signed link in CAMPAIGN_MEDIA_HERO_URL). Without it the page keeps the ink ground. partner_name fills {partner} in made_with: set it to the partner's name when Isak says so (the repo is public).",
+    "src": "/recharge/hero.webp",
+    "focus": "50% 28%"
   },
   "copy_sv": {
     "_about": "Swedish version at <route>/sv. DRAFT for Isak's approval (16 Oct); it overrides the English words one by one, so anything missing here falls back to English. The partner code and the link are the same as in English.",
@@ -36,7 +43,8 @@
     "offer_1": "Din första månad av WeHale gratis.",
     "offer_how": "Bara via den här länken.",
     "offer_how_desktop": "Skanna med mobilen för att få den.",
-    "cta": "Starta i appen",
+    "made_with": "En guidad andningssession, gjord med {partner}. Sju minuter, bara för dig.",
+    "cta": "Ladda ner appen",
     "trial": "Den gratis månaden är en provperiod via App Store eller Google Play, för nya medlemmar där det är möjligt.",
     "privacy": "Integritet",
     "terms": "Villkor",

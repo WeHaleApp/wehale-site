@@ -25,6 +25,8 @@ const INAPP = lang === "sv" ? { ...DATA.inapp, ...DATA.inapp_sv } : DATA.inapp;
 // the partner's real logo only where it exists locally (gitignored); everywhere else the committed placeholder
 const LOCAL = fs.existsSync("public" + P.local) && fs.existsSync("public" + P.local_dark);
 const L = LOCAL ? { ...P, src: P.local, src_dark: P.local_dark, width: P.local_width, height: P.local_height } : P;
+const HERO = fs.existsSync("public" + DATA.hero.src);   // the photo ground, only where the file exists (never in git)
+const made = String(T.made_with || "").replace(/\{partner\}/g, DATA.partner_name);
 const fill = (t) => String(t || "").replace(/\{minutes\}/g, String(S.minutes)).replace(/\{narrator\}/g, S.narrator);   // the guide and length from the session data
 const meta = fill(T.session_line);   // "With {narrator} · {minutes} min"
 // the button works before the script runs: the default link (the app sets this visit's own channel and code on top)
@@ -34,14 +36,15 @@ const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "o
 <BreatheLayout lang={lang} title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#050814">
   <Fragment slot="head">
     <style is:inline>html{background:#050814}</style>
-    <link rel="preload" as="image" href="/recharge/ink-poster.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" href={HERO ? DATA.hero.src : "/recharge/ink-poster.webp"} type="image/webp" fetchpriority="high" />
   </Fragment>
 
   <!-- the ground: the campaign's ink bloom. The still poster is the first paint, the Reduce Motion picture and the fallback; the loop
        is added after the page has loaded (never for Reduce Motion or Save-Data) and fades in over it. Fixed, so nothing here can move the words. -->
-  <div class="rc-ink" aria-hidden="true">
+  <div class={HERO ? "rc-ink rc-photo" : "rc-ink"} aria-hidden="true">
+    {HERO ? <img class="rc-poster" src={DATA.hero.src} alt="" width="1080" height="1620" decoding="async" fetchpriority="high" style={`object-position:${DATA.hero.focus}`} /> : <Fragment>
     <img class="rc-poster" src="/recharge/ink-poster.webp" alt="" width="540" height="958" decoding="async" fetchpriority="high" />
-    <video class="rc-loop" muted loop playsinline preload="none" data-src="/recharge/ink-long.mp4" tabindex="-1"></video>
+    <video class="rc-loop" muted loop playsinline preload="none" data-src="/recharge/ink-long.mp4" tabindex="-1"></video></Fragment>}
     <div class="rc-veil"></div>
   </div>
 
@@ -56,6 +59,7 @@ const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "o
       <p class="rc-line">{T.line.split("|").map((b) => <span class="rc-beat">{b}</span>)}</p>
       {meta && <p class="rc-only">{meta}</p>}
       <p class="rc-deal">{T.offer_1}</p>
+      {made && <p class="rc-made">{made}</p>}
       <p class="rc-how rc-how-m">{T.offer_how}</p>
       <p class="rc-how rc-how-d">{T.offer_how_desktop}</p>
       <a class="rc-btn" id="ctaBtn" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>

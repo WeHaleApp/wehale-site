@@ -55,7 +55,7 @@ describe("the copy", () => {
     expect(DATA.copy.trial).toBe("The free month is a trial through the App Store or Google Play, for new members where eligible.");   // Isak, 7 Oct: the store line (P1); 16 Oct brief: "for new members where eligible" added, no unconditional promise; the unverified "Cancel anytime" line is gone (P3)
     expect(DATA.copy.offer_2).toBeUndefined();
     expect(DATA.copy.qr).toBeUndefined();   // P5: no desktop caption under the QR code
-    expect(DATA.copy.cta).toBe("Start in the app");   // P4
+    expect(DATA.copy.cta).toBe("Get the app");   // P4, then the flow review's landing page (16 Oct): "Get the app"
     expect(DATA.inapp.on).toBe(true);
     const all = Object.entries(DATA.copy).filter(([k]) => !k.startsWith("_")).map(([, v]) => v).join(" ").toLowerCase();
     expect(all).not.toMatch(/30 days|no card|1 minute|one minute/);

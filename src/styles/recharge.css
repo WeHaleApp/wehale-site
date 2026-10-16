@@ -81,3 +81,13 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
 .rc-inapp[hidden] { display: none; }
 .rc-inapp p { margin: 0; flex: 1; font: 500 13px/17px var(--font); color: var(--t2); }
 .rc-inapp button { flex: none; border: 0; border-radius: 999px; padding: 9px 14px; background: rgba(241, 238, 251, .14); color: var(--ink); font: 700 13px/1 var(--font); cursor: pointer; }
+
+/* the target design (flow review, Landing page): with the hero photo present, a full-bleed photo under a bottom veil, the partner left and WeHale right
+   on top, the words at the bottom, one white button with a spaced upper-case label. Without the photo the ink ground above is unchanged. */
+.rc-made { margin-top: 8px !important; font: 400 15px/21px var(--font); color: var(--t2); max-width: 340px; }
+.rc-photo .rc-veil { background: linear-gradient(180deg, rgba(5, 8, 20, .38) 0, rgba(5, 8, 20, 0) 24%, rgba(5, 8, 20, 0) 40%, rgba(5, 8, 20, .62) 66%, rgba(5, 8, 20, .9) 100%); }
+.rc-photo ~ .rc-page .rc-lockup { flex-direction: row-reverse; justify-content: space-between; }
+.rc-photo ~ .rc-page .rc-pair i { display: none; }
+.rc-photo ~ .rc-page .rc-body h1 { font-weight: 600; letter-spacing: -1.1px; }
+.rc-photo ~ .rc-page .rc-btn { border-radius: 4px; background: #fff; color: #0b0f1c; height: 52px; font: 700 13px/1 var(--font); letter-spacing: .16em; text-transform: uppercase; }
+@media (hover: hover) and (pointer: fine) and (min-width: 700px) { .rc-photo .rc-veil { background: linear-gradient(90deg, rgba(5, 8, 20, .88) 0, rgba(5, 8, 20, .6) 42%, rgba(5, 8, 20, 0) 75%); } .rc-made { font-size: 17px; line-height: 25px; } }

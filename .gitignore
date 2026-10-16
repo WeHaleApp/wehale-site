@@ -22,6 +22,7 @@ public/recharge/*.local.*
 # A local dev copy lives here; production gets it from private storage at build time.
 public/recharge/ink-long.mp4
 public/recharge/ink-poster.webp
+public/recharge/hero.webp
 public/recharge/*.local.*
 docs/recharge/evidence/*.jpg
 docs/recharge/evidence/*.webm
