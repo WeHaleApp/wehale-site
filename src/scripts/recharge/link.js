@@ -28,7 +28,8 @@ export function cleanCode(value, fallback) {
 /** Reads the channel, the code and the contract from a query string. */
 export function readCampaign(search, referrer, data) {
   const q = new URLSearchParams(search || "");
-  const ch = q.get("ch") && data.channels.includes(q.get("ch").toLowerCase()) ? q.get("ch").toLowerCase() : "web";
+  const byMedium = (data.channel_by_medium || {})[String(q.get("utm_medium") || "").toLowerCase()];
+  const ch = q.get("ch") && data.channels.includes(q.get("ch").toLowerCase()) ? q.get("ch").toLowerCase() : byMedium && data.channels.includes(byMedium) ? byMedium : "web";
   const byCh = (data.code.by_channel || {})[ch];
   const code = cleanCode(q.get("c"), cleanCode(byCh, data.code.default));
   return { ch, code, contract: readContract(search, referrer) };

@@ -79,11 +79,14 @@
     "copy": "Copy link",
     "copied": "Link copied. Paste it in {browser}."
   },
+  "channel_by_medium": { "_about": "Partner UTM scheme (utm_source=salte&utm_medium=<...>&utm_campaign=charge-your-current): when a link has no ?ch=, the channel comes from utm_medium. Anything else (a creator's name) stays web. The code is unaffected.", "email": "newsletter", "pack-qr": "pdp", "instagram": "social", "tiktok": "social" },
   "channels": ["newsletter", "pdp", "influencer", "social"],
   "onelink": {
     "_about": "AppsFlyer OneLink, template zcid (the same as /breathe). pid is a CONFIG CHOICE for the lead and the owner of main: the media source this campaign reports under in AppsFlyer.",
     "base": "https://wehale.onelink.me/zcid",
     "pid": "partner_campaign",
-    "c": "recharge"
+    "c": "recharge",
+    "creator_pid": "partner_creators",
+    "_about_creator_pid": "PROPOSED media source for creator links that skip the page (docs/campaign/CREATOR-LINKS.md), so AppsFlyer and the funnel tell them from page customers (pid above). Isak/the measurement lead confirm the name."
   }
 }

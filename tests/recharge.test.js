@@ -20,6 +20,17 @@ describe("readCampaign", () => {
   it("keeps codes that name the partner out of this public repo", () => {
     expect(JSON.stringify(DATA.code)).not.toMatch(/FLYER|PRODUKT/);
   });
+  it("takes the channel from utm_medium when there is no ?ch= (the partner's UTM scheme)", () => {
+    const u = "utm_source=salte&utm_campaign=charge-your-current&utm_medium=";
+    expect(readCampaign("?" + u + "email", "", DATA).ch).toBe("newsletter");
+    expect(readCampaign("?" + u + "pack-qr", "", DATA).ch).toBe("pdp");
+    expect(readCampaign("?" + u + "tiktok", "", DATA).ch).toBe("social");
+    expect(readCampaign("?" + u + "some-creator", "", DATA).ch).toBe("web");
+    expect(readCampaign("?ch=influencer&" + u + "email", "", DATA).ch).toBe("influencer");
+    const l = params(campaignLink(DATA, { ...readCampaign("?" + u + "instagram&utm_content=a1", "", DATA), at: "offer" }));
+    expect(l).toMatchObject({ af_channel: "salte", af_ad: "a1", deep_link_sub1: "social" });
+    expect(l.af_sub5).toContain("med=instagram"); expect(l.af_sub5).toContain("camp=charge-your-current");
+  });
   it("ignores an unknown channel and cleans the code", () => {
     expect(readCampaign("?ch=spam&c=<x>%20y", "", DATA)).toMatchObject({ ch: "web", code: "XY" });
     expect(cleanCode("", "RECHARGE")).toBe("RECHARGE");
