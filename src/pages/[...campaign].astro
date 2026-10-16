@@ -15,9 +15,13 @@ import { campaignLink } from "../scripts/recharge/link.js";
 import fs from "node:fs";
 
 // one config value sets the path (src/data/recharge.json: route)
-export function getStaticPaths() { return [{ params: { campaign: DATA.route } }]; }
+// and the Swedish draft sits at <route>/sv (same code, same link)
+export function getStaticPaths() { return [{ params: { campaign: DATA.route }, props: { lang: "en" } }, { params: { campaign: DATA.route + "/sv" }, props: { lang: "sv" } }]; }
 
-const S = DATA.session, T = DATA.copy, P = DATA.partner_logo;
+const { lang } = Astro.props;
+const S = DATA.session, P = DATA.partner_logo;
+const T = lang === "sv" ? { ...DATA.copy, ...DATA.copy_sv } : DATA.copy;
+const INAPP = lang === "sv" ? { ...DATA.inapp, ...DATA.inapp_sv } : DATA.inapp;
 // the partner's real logo only where it exists locally (gitignored); everywhere else the committed placeholder
 const LOCAL = fs.existsSync("public" + P.local) && fs.existsSync("public" + P.local_dark);
 const L = LOCAL ? { ...P, src: P.local, src_dark: P.local_dark, width: P.local_width, height: P.local_height } : P;
@@ -27,7 +31,7 @@ const meta = fill(T.session_line);   // "With {narrator} · {minutes} min"
 const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "offer" }) || "#";
 ---
 
-<BreatheLayout title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#050814">
+<BreatheLayout lang={lang} title={`${T.title} · WeHale`} description={`${T.line.split("|").join(" ")} ${T.offer_1}`} hidden themeColor="#050814">
   <Fragment slot="head">
     <style is:inline>html{background:#050814}</style>
     <link rel="preload" as="image" href="/recharge/ink-poster.webp" type="image/webp" fetchpriority="high" />
@@ -55,13 +59,13 @@ const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "o
       <p class="rc-how rc-how-m">{T.offer_how}</p>
       <p class="rc-how rc-how-d">{T.offer_how_desktop}</p>
       <a class="rc-btn" id="ctaBtn" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
-      <div class="rc-inapp" id="inApp" data-on={DATA.inapp.on ? "1" : "0"} data-text={DATA.inapp.text} data-copied={DATA.inapp.copied} hidden>
-        <p id="inAppText"></p><button type="button" id="inAppCopy">{DATA.inapp.copy}</button>
+      <div class="rc-inapp" id="inApp" data-on={INAPP.on ? "1" : "0"} data-text={INAPP.text} data-copied={INAPP.copied} hidden>
+        <p id="inAppText"></p><button type="button" id="inAppCopy">{INAPP.copy}</button>
       </div>
       <figure class="rc-qr" id="qrBox">
         <div class="rc-qrcode" id="qrCode" role="img" aria-label="QR code for the app link"></div>
       </figure>
-      <p class="rc-fine"><span>{T.trial}</span></p>
+      <p class="rc-fine"><span>{T.trial}</span> <span class="rc-legal"><a href="/privacy">{T.privacy}</a> · <a href="/terms">{T.terms}</a></span></p>
     </div>
   </main>
 

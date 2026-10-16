@@ -52,7 +52,7 @@ describe("the copy", () => {
   it("says the decided offer exactly, and nothing it must not", () => {
     expect(DATA.copy.offer_1).toBe("Your first month of WeHale free.");
     expect(JSON.stringify(DATA.copy)).not.toMatch(/499|kr/);
-    expect(DATA.copy.trial).toBe("The free month is a trial through the App Store or Google Play.");   // Isak, 7 Oct: the store line alone (P1); the unverified "Cancel anytime" line is gone (P3)
+    expect(DATA.copy.trial).toBe("The free month is a trial through the App Store or Google Play, for new members where eligible.");   // Isak, 7 Oct: the store line (P1); 16 Oct brief: "for new members where eligible" added, no unconditional promise; the unverified "Cancel anytime" line is gone (P3)
     expect(DATA.copy.offer_2).toBeUndefined();
     expect(DATA.copy.qr).toBeUndefined();   // P5: no desktop caption under the QR code
     expect(DATA.copy.cta).toBe("Start in the app");   // P4

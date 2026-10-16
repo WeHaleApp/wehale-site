@@ -24,8 +24,28 @@
     "offer_how": "Only through this link.",
     "offer_how_desktop": "Scan with your phone to claim it.",
     "cta": "Start in the app",
-    "trial": "The free month is a trial through the App Store or Google Play.",
+    "trial": "The free month is a trial through the App Store or Google Play, for new members where eligible.",
+    "privacy": "Privacy",
+    "terms": "Terms",
     "noscript": "Turn on JavaScript to get the app link, or find WeHale in the App Store or Google Play."
+  },
+  "copy_sv": {
+    "_about": "Swedish version at <route>/sv. DRAFT for Isak's approval (16 Oct); it overrides the English words one by one, so anything missing here falls back to English. The partner code and the link are the same as in English.",
+    "about": "Guidad andning med Edvin och Philip, på iPhone och Android.",
+    "line": "Häll upp en Blackcurrant.|Tryck på play.|Andas med Philip.",
+    "offer_1": "Din första månad av WeHale gratis.",
+    "offer_how": "Bara via den här länken.",
+    "offer_how_desktop": "Skanna med mobilen för att få den.",
+    "cta": "Starta i appen",
+    "trial": "Den gratis månaden är en provperiod via App Store eller Google Play, för nya medlemmar där det är möjligt.",
+    "privacy": "Integritet",
+    "terms": "Villkor",
+    "noscript": "Slå på JavaScript för att få applänken, eller hitta WeHale i App Store eller Google Play."
+  },
+  "inapp_sv": {
+    "text": "Öppnad i {app}? Bäst resultat får du om du öppnar sidan i {browser}.",
+    "copy": "Kopiera länk",
+    "copied": "Länken är kopierad. Klistra in den i {browser}."
   },
   "partner_logo": {
     "_about": "One swappable file per ground: src (black, for a light ground; not used on the page today), src_dark (white, on the page's navy). The committed files are dashed PLACEHOLDERS. The partner's real logo (marked wip) is never committed: for local previews put it at local / local_dark (gitignored, public/recharge/*.local.*) and the build uses it; ask the lead before adding it to the repo. Sizes: the wordmark's cap height optically matches WeHale's (real logo trimmed, 26 px tall on an 18 px WeHale logo, one baseline).",

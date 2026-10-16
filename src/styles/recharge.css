@@ -42,6 +42,7 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
   font: 700 17px/1 var(--font); letter-spacing: -.17px; text-decoration: none; cursor: pointer; transition: transform 220ms var(--curve-enter), filter .25s ease; }
 @media (hover: hover) { .rc-btn:hover { filter: brightness(1.06); } }
 .rc-btn:active { transform: scale(.97); transition-duration: 100ms; }
+.rc-legal { white-space: nowrap; } .rc-legal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .rc-fine { margin-top: 12px !important; font: 400 12.5px/17px var(--font); color: var(--t3); }
 .rc-qr { display: none; margin: 0; }
 

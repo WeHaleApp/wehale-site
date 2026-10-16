@@ -64,7 +64,7 @@ function run() {
 function inAppHint(inapp, test, params) {
   const box = $("inApp"); if (!box || test) return;
   const preview = /[?&]inapp=1(&|$)/.test(location.search);
-  if (!((DATA.inapp.on && inapp) || preview)) return;
+  if (!((box.dataset.on === "1" && inapp) || preview)) return;
   const os = inapp ? inapp.os : phoneOf(navigator.userAgent, navigator.maxTouchPoints || 0);
   const browser = os === "ios" ? "Safari" : os === "android" ? "Chrome" : "your browser", app = inapp ? inapp.name : "Instagram";
   $("inAppText").textContent = box.dataset.text.replace("{app}", app).replace("{browser}", browser);
