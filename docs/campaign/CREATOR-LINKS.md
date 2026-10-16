@@ -23,5 +23,5 @@ On a desktop a OneLink goes to wehale.io without a code (template default), so c
 
 ## UTM scheme for Salte (Lovisa), links to the page
 `utm_source=salte`, `utm_medium=<email|instagram|tiktok|pack-qr|creator-name>`, `utm_campaign=charge-your-current`, optional `utm_content`.
-The page reads them and: sends them with every pixel/GTM event (after consent); passes them to the OneLink (`af_channel`=source, `af_ad`=content, `af_sub5` = `med=` and `camp=`); and, with no `?ch=`, maps the medium to the channel (`email`->newsletter, `pack-qr`->pdp, `instagram`/`tiktok`->social, anything else -> web). A `utm_campaign` never replaces the campaign.
+The page reads them and: sends them with every pixel/GTM event (after consent); passes them to the OneLink (`af_channel`=source, `af_ad`=content, `af_sub5` = `med=` and `camp=`); and, with no `?ch=`, maps the medium to the channel (`email`->newsletter, `pack-qr` and `website`->pdp (product page), `instagram`/`tiktok`->social, anything else -> web). A `utm_campaign` never replaces the campaign.
 Example: `https://wehale.io/campaign/charge-your-current?utm_source=salte&utm_medium=pack-qr&utm_campaign=charge-your-current`

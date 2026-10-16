@@ -79,7 +79,7 @@
     "copy": "Copy link",
     "copied": "Link copied. Paste it in {browser}."
   },
-  "channel_by_medium": { "_about": "Partner UTM scheme (utm_source=salte&utm_medium=<...>&utm_campaign=charge-your-current): when a link has no ?ch=, the channel comes from utm_medium. Anything else (a creator's name) stays web. The code is unaffected.", "email": "newsletter", "pack-qr": "pdp", "instagram": "social", "tiktok": "social" },
+  "channel_by_medium": { "_about": "Partner UTM scheme (utm_source=salte&utm_medium=<...>&utm_campaign=charge-your-current): when a link has no ?ch=, the channel comes from utm_medium. Anything else (a creator's name) stays web. The code is unaffected.", "email": "newsletter", "pack-qr": "pdp", "website": "pdp", "instagram": "social", "tiktok": "social" },
   "channels": ["newsletter", "pdp", "influencer", "social"],
   "onelink": {
     "_about": "AppsFlyer OneLink, template zcid (the same as /breathe). pid is a CONFIG CHOICE for the lead and the owner of main: the media source this campaign reports under in AppsFlyer.",

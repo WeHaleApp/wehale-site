@@ -24,6 +24,7 @@ describe("readCampaign", () => {
     const u = "utm_source=salte&utm_campaign=charge-your-current&utm_medium=";
     expect(readCampaign("?" + u + "email", "", DATA).ch).toBe("newsletter");
     expect(readCampaign("?" + u + "pack-qr", "", DATA).ch).toBe("pdp");
+    expect(readCampaign("?" + u + "website&utm_content=product-page", "", DATA).ch).toBe("pdp");
     expect(readCampaign("?" + u + "tiktok", "", DATA).ch).toBe("social");
     expect(readCampaign("?" + u + "some-creator", "", DATA).ch).toBe("web");
     expect(readCampaign("?ch=influencer&" + u + "email", "", DATA).ch).toBe("influencer");
