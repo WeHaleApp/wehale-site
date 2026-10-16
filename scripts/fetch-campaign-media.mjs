@@ -7,6 +7,18 @@ import fs from "node:fs"; import path from "node:path";
 const OUT = "public/recharge", LOOP = process.env.CAMPAIGN_MEDIA_LOOP_URL || "", POSTER = process.env.CAMPAIGN_MEDIA_POSTER_URL || "", HERO = process.env.CAMPAIGN_MEDIA_HERO_URL || "", HERO_FILM = process.env.CAMPAIGN_MEDIA_HERO_FILM_URL || "";
 const FILES = ["ink-long.mp4", "ink-poster.webp"], have = (f) => fs.existsSync(path.join(OUT, f));
 // the hero photo (optional, the flow review's landing picture): fetched on its own, independent of the two above
+// the two app screens under the first screen (optional): webp conversions of two signed links
+async function fetchShots() {
+  for (const [env, name] of [["CAMPAIGN_MEDIA_APP_HOME_URL", "app-home.webp"], ["CAMPAIGN_MEDIA_APP_RESULT_URL", "app-result.webp"]]) {
+    const u = process.env[env] || ""; if (!u) continue;
+    fs.mkdirSync(OUT, { recursive: true });
+    const r = await fetch(u);
+    if (!r.ok) { console.error(`[campaign media] ${name}: HTTP ${r.status}`); process.exit(1); }
+    await (await import("sharp")).default(Buffer.from(await r.arrayBuffer())).webp({ quality: 80 }).toFile(path.join(OUT, name));
+    console.log(`[campaign media] fetched: ${name}`);
+  }
+}
+await fetchShots();
 async function fetchHero() {
   if (!HERO) return;
   fs.mkdirSync(OUT, { recursive: true });

@@ -26,6 +26,8 @@ const INAPP = lang === "sv" ? { ...DATA.inapp, ...DATA.inapp_sv } : DATA.inapp;
 const LOCAL = fs.existsSync("public" + P.local) && fs.existsSync("public" + P.local_dark);
 const L = LOCAL ? { ...P, src: P.local, src_dark: P.local_dark, width: P.local_width, height: P.local_height } : P;
 const HERO = fs.existsSync("public" + DATA.hero.src);   // the photo ground, only where the file exists (never in git)
+const SHOTS = HERO && fs.existsSync("public/recharge/app-home.webp") && fs.existsSync("public/recharge/app-result.webp");
+const M = lang === "sv" ? { ...DATA.more, ...DATA.more_sv } : DATA.more;
 const HERO_FILM = HERO && fs.existsSync("public" + DATA.hero.film);
 // the partner's name: the PARTNER_NAME build variable (Netlify, not secret) wins over the repo value, so the public repo never has to carry it
 const made = String(T.made_with || "").replace(/\{partner\}/g, process.env.PARTNER_NAME || DATA.partner_name);
@@ -75,6 +77,27 @@ const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "o
       <p class="rc-fine"><span>{T.trial}</span> <span class="rc-legal"><a href="/privacy">{T.privacy}</a></span></p>
     </div>
   </main>
+
+  {HERO && (
+    <section class="rc-more" aria-labelledby="rcMoreH">
+      <div class="rc-more-in">
+        <div class="rc-more-copy">
+          <p class="rc-eyebrow">{M.eyebrow}</p>
+          <h2 id="rcMoreH">{M.title}</h2>
+          <p class="rc-more-text">{M.text}</p>
+          <ol class="rc-steps">{M.steps.map(([h, t], i) => <li><span class="rc-n" aria-hidden="true">{i + 1}</span><div><b>{h}</b><span>{t}</span></div></li>)}</ol>
+          <a class="rc-btn rc-btn2" id="ctaBtn2" href={fallback} rel="noopener noreferrer" referrerpolicy="no-referrer">{T.cta}</a>
+          <a class="rc-up" href="#rcMain">{M.again}</a>
+        </div>
+        {SHOTS && (
+          <div class="rc-shots">
+            <figure class="rc-shot rc-shot-a"><img src="/recharge/app-home.webp" alt={M.alt_home} width="460" height="1000" loading="lazy" decoding="async" /><figcaption>{M.shot_home}</figcaption></figure>
+            <figure class="rc-shot rc-shot-b"><img src="/recharge/app-result.webp" alt={M.alt_result} width="402" height="874" loading="lazy" decoding="async" /><figcaption>{M.shot_result}</figcaption></figure>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
 
   <noscript><p class="noscript">{T.noscript}</p></noscript>
   <script>

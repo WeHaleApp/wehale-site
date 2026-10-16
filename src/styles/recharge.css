@@ -137,3 +137,31 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
 .whc.is-in { transform: none; }
 @media (min-width: 768px) { .whc { left: auto !important; right: 24px; bottom: 24px; } }
 @media (prefers-reduced-motion: reduce) { .rc-page { transition: none; } }
+
+/* under the first screen (only with the hero photo): what WeHale is, the app's screens, three steps. Its own solid ground over the fixed picture. */
+.rc-more { position: relative; z-index: 2; background: #0b0d10; color: var(--ink); padding: 72px max(28px, env(safe-area-inset-left, 0px)) 96px; }
+.rc-more-in { max-width: 1080px; margin: 0 auto; display: grid; gap: 48px; }
+.rc-eyebrow { margin: 0; font: 700 12px/1.2 var(--font); letter-spacing: .16em; text-transform: uppercase; color: var(--t3); }
+.rc-more h2 { margin: 14px 0 0; font: 400 34px/36px var(--font); letter-spacing: -.9px; text-wrap: balance; }
+.rc-more-text { margin: 16px 0 0; font: 400 17px/25px var(--font); color: var(--t2); max-width: 460px; }
+.rc-steps { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 22px; max-width: 460px; }
+.rc-steps li { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; }
+.rc-n { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .28); font: 700 14px/1 var(--font); }
+.rc-steps b { display: block; font: 700 17px/24px var(--font); }
+.rc-steps li span:not(.rc-n) { display: block; margin-top: 2px; font: 400 15px/22px var(--font); color: var(--t2); }
+.rc-btn2 { margin-top: 36px; border-radius: 0; background: #fff; color: #111; height: 52px; font: 700 12.5px/1 var(--font); letter-spacing: .16em; text-transform: uppercase; max-width: 460px; }
+.rc-up { display: none; margin-top: 36px; width: fit-content; color: var(--t2); font: 600 14px/1 var(--font); text-decoration: underline; text-underline-offset: 4px; }
+.rc-shots { display: flex; gap: 18px; justify-content: center; align-items: flex-start; }
+.rc-shot { margin: 0; flex: 1 1 0; max-width: 250px; }
+.rc-shot img { display: block; width: 100%; height: auto; border-radius: 26px; box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), 0 30px 60px rgba(0, 0, 0, .5); }
+.rc-shot-b { margin-top: 44px; }
+.rc-shot figcaption { margin-top: 14px; font: 400 13px/18px var(--font); color: var(--t3); text-align: center; }
+@media (hover: hover) and (pointer: fine) and (min-width: 700px) {
+  .rc-more { padding: 112px 72px 128px; }
+  .rc-more-in { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 80px; align-items: center; }
+  .rc-more h2 { font-size: 48px; line-height: 50px; letter-spacing: -1.2px; }
+  .rc-btn2 { display: none; } .rc-up { display: block; }
+  .rc-shots { gap: 26px; } .rc-shot { max-width: 270px; }
+}
+@media (max-width: 767px) { .rc-more { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); } }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

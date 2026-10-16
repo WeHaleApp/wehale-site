@@ -31,6 +31,39 @@
     "scan": "Point your phone's camera at the code. It opens the App Store or Google Play.",
     "noscript": "Turn on JavaScript to get the app link, or find WeHale in the App Store or Google Play."
   },
+  "more": {
+    "_about": "The section under the first screen (only with the hero photo): what WeHale is, the app's screens, three steps. The screens are public/recharge/app-home.webp and app-result.webp (gitignored until Isak approves them; CAMPAIGN_MEDIA_APP_HOME_URL / CAMPAIGN_MEDIA_APP_RESULT_URL in production). Swedish in more_sv.",
+    "eyebrow": "What is WeHale",
+    "title": "Guided breathing, in your pocket.",
+    "text": "WeHale is an app of short guided breathing sessions. Press play, follow the voice, and notice how you feel.",
+    "shot_home": "Your home: the session is waiting",
+    "shot_result": "Afterwards: see how your current changed",
+    "alt_home": "The WeHale app's home screen with the Charge Your Current session",
+    "alt_result": "The app's result screen: Current charged",
+    "steps": [
+      ["Get the app", "From the App Store or Google Play."],
+      ["Press play", "Charge Your Current: a guided breathing session of about seven minutes."],
+      ["Claim your gift", "Your first month of WeHale free, for new members where eligible."]
+    ],
+    "again": "Scan the code at the top",
+    "top": "Back to the top"
+  },
+  "more_sv": {
+    "eyebrow": "Vad är WeHale",
+    "title": "Guidad andning, i fickan.",
+    "text": "WeHale är en app med korta guidade andningssessioner. Tryck på play, följ rösten och känn efter hur du mår.",
+    "shot_home": "Din startsida: sessionen väntar",
+    "shot_result": "Efteråt: se hur din ström förändrats",
+    "alt_home": "WeHale-appens startsida med sessionen Charge Your Current",
+    "alt_result": "Appens resultatskärm: Current charged",
+    "steps": [
+      ["Hämta appen", "Från App Store eller Google Play."],
+      ["Tryck på play", "Charge Your Current: en guidad andningssession på ungefär sju minuter."],
+      ["Hämta din gåva", "Din första månad av WeHale gratis, för nya medlemmar där det är möjligt."]
+    ],
+    "again": "Skanna koden högst upp",
+    "top": "Till toppen"
+  },
   "partner_name": "our partner",
   "hero": {
     "_about": "The target design (the flow review's Landing page): a full-bleed photo under a veil, the lockup on top, the words at the bottom, one white button. The photo is confidential, so like the ink media it is NOT in git: public/recharge/hero.webp (local copy: npm run media:local; production: the signed link in CAMPAIGN_MEDIA_HERO_URL). Without it the page keeps the ink ground. partner_name fills {partner} in made_with: set it to the partner's name when Isak says so (the repo is public).",
