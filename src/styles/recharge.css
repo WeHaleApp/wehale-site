@@ -45,6 +45,7 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
 .rc-legal { white-space: nowrap; } .rc-legal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .rc-fine { margin-top: 12px !important; font: 400 12.5px/17px var(--font); color: var(--t3); }
 .rc-qr { display: none; margin: 0; }
+.rc-scan { display: none; }
 
 /* it arrives in reading order over about a second; the words are in the page from the first byte (no script, no hidden state) */
 @media (prefers-reduced-motion: no-preference) {
@@ -116,8 +117,16 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
   .rc-photo ~ .rc-page .rc-deal { font-size: 20px; margin-top: 22px !important; }
   .rc-photo ~ .rc-page .rc-made { font-size: 18px; line-height: 26px; max-width: 470px; }
   .rc-photo ~ .rc-page .rc-fine { max-width: 470px; }
-  .rc-photo ~ .rc-page .rc-qr { width: 150px; margin: 0; padding: 0; background: none; border: 0; backdrop-filter: none; border-radius: 0; }
-  .rc-photo ~ .rc-page .rc-qrcode { width: 150px; height: 150px; border-radius: 0; padding: 10px; }
+  /* the call to action on a desktop is the code: a larger white tile with corner marks, and the words under it */
+  .rc-photo ~ .rc-page .rc-body { grid-template-columns: minmax(0, 500px) 200px; column-gap: 72px; }
+  .rc-photo ~ .rc-page .rc-qr { position: relative; width: 200px; margin: 0; padding: 0; background: none; border: 0; backdrop-filter: none; border-radius: 0; text-align: left; }
+  .rc-photo ~ .rc-page .rc-qrcode { position: relative; width: 200px; height: 200px; border-radius: 0; padding: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+  .rc-photo ~ .rc-page .rc-qrcode::before { content: ""; position: absolute; inset: -12px; pointer-events: none; opacity: .9;
+    background: linear-gradient(#fff, #fff) top left / 22px 2px, linear-gradient(#fff, #fff) top left / 2px 22px, linear-gradient(#fff, #fff) top right / 22px 2px, linear-gradient(#fff, #fff) top right / 2px 22px,
+      linear-gradient(#fff, #fff) bottom left / 22px 2px, linear-gradient(#fff, #fff) bottom left / 2px 22px, linear-gradient(#fff, #fff) bottom right / 22px 2px, linear-gradient(#fff, #fff) bottom right / 2px 22px; background-repeat: no-repeat; }
+  .rc-photo ~ .rc-page .rc-scan { display: block; margin-top: 26px; }
+  .rc-photo ~ .rc-page .rc-scan b { display: block; font: 700 12.5px/1.2 var(--font); letter-spacing: .16em; text-transform: uppercase; color: #fff; }
+  .rc-photo ~ .rc-page .rc-scan span { display: block; margin-top: 8px; font: 400 14px/20px var(--font); color: var(--t2); }
 }
 
 /* the consent bar on this page: the room it needs is held from the first paint (html.consent-pending is set before anything shows), so when it slides in the words

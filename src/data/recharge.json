@@ -27,7 +27,8 @@
     "cta": "Get the app",
     "trial": "The free month is a trial through the App Store or Google Play, for new members where eligible.",
     "privacy": "Privacy",
-    "terms": "Terms",
+    "scan_title": "Scan to get the app",
+    "scan": "Point your phone's camera at the code. It opens the App Store or Google Play.",
     "noscript": "Turn on JavaScript to get the app link, or find WeHale in the App Store or Google Play."
   },
   "partner_name": "our partner",
@@ -48,7 +49,8 @@
     "cta": "Ladda ner appen",
     "trial": "Den gratis månaden är en provperiod via App Store eller Google Play, för nya medlemmar där det är möjligt.",
     "privacy": "Integritet",
-    "terms": "Villkor",
+    "scan_title": "Skanna för att få appen",
+    "scan": "Rikta mobilens kamera mot koden. Den öppnar App Store eller Google Play.",
     "noscript": "Slå på JavaScript för att få applänken, eller hitta WeHale i App Store eller Google Play."
   },
   "inapp_sv": {
