@@ -7,9 +7,9 @@ import fs from "node:fs"; import path from "node:path";
 const OUT = "public/recharge", LOOP = process.env.CAMPAIGN_MEDIA_LOOP_URL || "", POSTER = process.env.CAMPAIGN_MEDIA_POSTER_URL || "", HERO = process.env.CAMPAIGN_MEDIA_HERO_URL || "", HERO_FILM = process.env.CAMPAIGN_MEDIA_HERO_FILM_URL || "";
 const FILES = ["ink-long.mp4", "ink-poster.webp"], have = (f) => fs.existsSync(path.join(OUT, f));
 // the hero photo (optional, the flow review's landing picture): fetched on its own, independent of the two above
-// the two app screens under the first screen (optional): webp conversions of two signed links
+// the three app screens under the first screen (optional): webp conversions of three signed links
 async function fetchShots() {
-  for (const [env, name] of [["CAMPAIGN_MEDIA_APP_HOME_URL", "app-home.webp"], ["CAMPAIGN_MEDIA_APP_RESULT_URL", "app-result.webp"]]) {
+  for (const [env, name] of [["CAMPAIGN_MEDIA_APP_HOME_URL", "app-home.webp"], ["CAMPAIGN_MEDIA_APP_PLAYER_URL", "app-player.webp"], ["CAMPAIGN_MEDIA_APP_AFTERGLOW_URL", "app-afterglow.webp"]]) {
     const u = process.env[env] || ""; if (!u) continue;
     fs.mkdirSync(OUT, { recursive: true });
     const r = await fetch(u);
