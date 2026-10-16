@@ -26,7 +26,9 @@ const INAPP = lang === "sv" ? { ...DATA.inapp, ...DATA.inapp_sv } : DATA.inapp;
 const LOCAL = fs.existsSync("public" + P.local) && fs.existsSync("public" + P.local_dark);
 const L = LOCAL ? { ...P, src: P.local, src_dark: P.local_dark, width: P.local_width, height: P.local_height } : P;
 const HERO = fs.existsSync("public" + DATA.hero.src);   // the photo ground, only where the file exists (never in git)
-const made = String(T.made_with || "").replace(/\{partner\}/g, DATA.partner_name);
+const HERO_FILM = HERO && fs.existsSync("public" + DATA.hero.film);
+// the partner's name: the PARTNER_NAME build variable (Netlify, not secret) wins over the repo value, so the public repo never has to carry it
+const made = String(T.made_with || "").replace(/\{partner\}/g, process.env.PARTNER_NAME || DATA.partner_name);
 const fill = (t) => String(t || "").replace(/\{minutes\}/g, String(S.minutes)).replace(/\{narrator\}/g, S.narrator);   // the guide and length from the session data
 const meta = fill(T.session_line);   // "With {narrator} · {minutes} min"
 // the button works before the script runs: the default link (the app sets this visit's own channel and code on top)
@@ -42,7 +44,7 @@ const fallback = campaignLink(DATA, { ch: "web", code: DATA.code.default, at: "o
   <!-- the ground: the campaign's ink bloom. The still poster is the first paint, the Reduce Motion picture and the fallback; the loop
        is added after the page has loaded (never for Reduce Motion or Save-Data) and fades in over it. Fixed, so nothing here can move the words. -->
   <div class={HERO ? "rc-ink rc-photo" : "rc-ink"} aria-hidden="true">
-    {HERO ? <img class="rc-poster" src={DATA.hero.src} alt="" width="1080" height="1620" decoding="async" fetchpriority="high" style={`object-position:${DATA.hero.focus}`} /> : <Fragment>
+    {HERO ? <Fragment><img class="rc-poster" src={DATA.hero.src} alt="" width="1080" height="1920" decoding="async" fetchpriority="high" style={`--focus:${DATA.hero.focus}`} />{HERO_FILM && <video class="rc-loop" muted loop playsinline preload="none" data-src={DATA.hero.film} tabindex="-1"></video>}</Fragment> : <Fragment>
     <img class="rc-poster" src="/recharge/ink-poster.webp" alt="" width="540" height="958" decoding="async" fetchpriority="high" />
     <video class="rc-loop" muted loop playsinline preload="none" data-src="/recharge/ink-long.mp4" tabindex="-1"></video></Fragment>}
     <div class="rc-veil"></div>

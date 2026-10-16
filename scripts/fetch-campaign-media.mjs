@@ -4,7 +4,7 @@
 // publishes them under /recharge/, behind the password gate. The poster (a JPEG in storage) is turned into a WebP. Without the variables it does nothing and
 // keeps any local copy (`npm run media:local`). The links are never printed.
 import fs from "node:fs"; import path from "node:path";
-const OUT = "public/recharge", LOOP = process.env.CAMPAIGN_MEDIA_LOOP_URL || "", POSTER = process.env.CAMPAIGN_MEDIA_POSTER_URL || "", HERO = process.env.CAMPAIGN_MEDIA_HERO_URL || "";
+const OUT = "public/recharge", LOOP = process.env.CAMPAIGN_MEDIA_LOOP_URL || "", POSTER = process.env.CAMPAIGN_MEDIA_POSTER_URL || "", HERO = process.env.CAMPAIGN_MEDIA_HERO_URL || "", HERO_FILM = process.env.CAMPAIGN_MEDIA_HERO_FILM_URL || "";
 const FILES = ["ink-long.mp4", "ink-poster.webp"], have = (f) => fs.existsSync(path.join(OUT, f));
 // the hero photo (optional, the flow review's landing picture): fetched on its own, independent of the two above
 async function fetchHero() {
@@ -15,6 +15,12 @@ async function fetchHero() {
   const sharp = (await import("sharp")).default;
   await sharp(Buffer.from(await r.arrayBuffer())).resize({ width: 1080, withoutEnlargement: true }).webp({ quality: 74 }).toFile(path.join(OUT, "hero.webp"));
   console.log("[campaign media] fetched: hero.webp");
+  if (HERO_FILM) {   // the film that fades in over the photo (a small 720 px mp4, no sound)
+    const f = await fetch(HERO_FILM);
+    if (!f.ok) { console.error(`[campaign media] hero film: HTTP ${f.status}`); process.exit(1); }
+    fs.writeFileSync(path.join(OUT, "hero-film.mp4"), Buffer.from(await f.arrayBuffer()));
+    console.log("[campaign media] fetched: hero-film.mp4");
+  }
 }
 await fetchHero();
 if (!LOOP || !POSTER) {

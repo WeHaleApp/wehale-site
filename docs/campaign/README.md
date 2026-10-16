@@ -5,11 +5,12 @@ Target design: the flow review's "Landing page" screen (photo, lockup, one butto
 Link, code and store handoff: `HANDOFF.md`. Tracking, IDs needed, consent, privacy proposal: `TRACKING.md`.
 
 ## Change the words
-`src/data/recharge.json`: `copy` (English), `copy_sv` (Swedish, overrides English word by word), `partner_name` (fills "made with {partner}"; today "our partner", set it when Isak says so).
+`src/data/recharge.json`: `copy` (English), `copy_sv` (Swedish, overrides English word by word), `partner_name`, or the Netlify build variable `PARTNER_NAME` (not secret; wins over the file; fills "made with {partner}"; today "our partner", set it when Isak says so).
 Wording rules: "first month free" only with "for new members where eligible" (the fine print); no price or trial-length claims without Isak's legal OK.
 
 ## Swap the picture or film
 The photo and film are confidential, so they are never in git. Files live in `public/recharge/` (ignored):
+- `hero-film.mp4` (720 px, no sound, about 1.6 MB) fades in over the photo after load, never for Reduce Motion. Variable `CAMPAIGN_MEDIA_HERO_FILM_URL`.
 - `hero.webp` the landing photo (focus point: `hero.focus`). Local: `CAMPAIGN_HERO_SRC=<jpg> npm run media:local`. Production: Netlify variable `CAMPAIGN_MEDIA_HERO_URL` (a signed link, secret, Builds scope).
 - `ink-long.mp4` + `ink-poster.webp` the ink film and its still. Used only when there is no `hero.webp`. Variables `CAMPAIGN_MEDIA_LOOP_URL`, `CAMPAIGN_MEDIA_POSTER_URL`.
 - The partner logo: `public/recharge/partner-logo-white.local.png` (ignored); the committed file is a placeholder.
