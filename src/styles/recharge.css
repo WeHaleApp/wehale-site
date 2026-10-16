@@ -148,7 +148,7 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
 .rc-steps li { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; }
 .rc-n { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(17, 17, 17, .3); font: 700 14px/1 var(--font); }
 .rc-steps b { display: block; font: 700 17px/24px var(--font); }
-.rc-steps li span:not(.rc-n) { display: block; margin-top: 2px; font: 400 15px/22px var(--font); color: var(--mt2); }
+.rc-steps li span:not(.rc-n) { display: block; white-space: nowrap; margin-top: 2px; font: 400 15px/22px var(--font); color: var(--mt2); }
 .rc-btn2 { margin-top: 36px; border-radius: 0; background: #111; color: #fff; height: 52px; font: 700 12.5px/1 var(--font); letter-spacing: .16em; text-transform: uppercase; max-width: 460px; }
 .rc-up { display: none; margin-top: 36px; width: fit-content; color: var(--mt2); font: 600 14px/1 var(--font); text-decoration: underline; text-underline-offset: 4px; }
 .rc-shots { display: flex; gap: 16px; align-items: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 calc(-1 * max(28px, env(safe-area-inset-left, 0px))); padding: 4px max(28px, env(safe-area-inset-left, 0px)) 8px; scrollbar-width: none; }

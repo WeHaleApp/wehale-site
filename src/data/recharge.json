@@ -43,9 +43,9 @@
     "alt_player": "The app's player during the session",
     "alt_afterglow": "The app after the session: You charged your current",
     "steps": [
-      ["Get the app", "From the App Store or Google Play."],
-      ["Press play", "Charge Your Current: a guided breathing session of about seven minutes."],
-      ["Claim your gift", "Your first month of WeHale free, for new members where eligible."]
+      ["Get the app", "On the App Store or Google Play."],
+      ["Press play", "A guided session, about seven minutes."],
+      ["Claim your gift", "First month free, where eligible."]
     ],
     "again": "Scan the code at the top",
     "top": "Back to the top"
@@ -62,8 +62,8 @@
     "alt_afterglow": "Appen efter sessionen: You charged your current",
     "steps": [
       ["Hämta appen", "Från App Store eller Google Play."],
-      ["Tryck på play", "Charge Your Current: en guidad andningssession på ungefär sju minuter."],
-      ["Hämta din gåva", "Din första månad av WeHale gratis, för nya medlemmar där det är möjligt."]
+      ["Tryck på play", "En guidad session, ungefär sju minuter."],
+      ["Hämta din gåva", "Första månaden gratis, där möjligt."]
     ],
     "again": "Skanna koden högst upp",
     "top": "Till toppen"
