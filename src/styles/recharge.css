@@ -42,8 +42,10 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
   font: 700 17px/1 var(--font); letter-spacing: -.17px; text-decoration: none; cursor: pointer; transition: transform 220ms var(--curve-enter), filter .25s ease; }
 @media (hover: hover) { .rc-btn:hover { filter: brightness(1.06); } }
 .rc-btn:active { transform: scale(.97); transition-duration: 100ms; }
+.rc-legal { white-space: nowrap; } .rc-legal a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .rc-fine { margin-top: 12px !important; font: 400 12.5px/17px var(--font); color: var(--t3); }
 .rc-qr { display: none; margin: 0; }
+.rc-scan { display: none; }
 
 /* it arrives in reading order over about a second; the words are in the page from the first byte (no script, no hidden state) */
 @media (prefers-reduced-motion: no-preference) {
@@ -80,3 +82,87 @@ body:has(.rc-page) :focus-visible { outline: 2px solid #fff; outline-offset: 3px
 .rc-inapp[hidden] { display: none; }
 .rc-inapp p { margin: 0; flex: 1; font: 500 13px/17px var(--font); color: var(--t2); }
 .rc-inapp button { flex: none; border: 0; border-radius: 999px; padding: 9px 14px; background: rgba(241, 238, 251, .14); color: var(--ink); font: 700 13px/1 var(--font); cursor: pointer; }
+
+/* the target design (the flow review's Landing page, "Poster" language): with the hero photo present, a full-bleed photo (the film fades in over it) under a
+   veil, the partner left and WeHale right on top, the words at the bottom, one square white button with a spaced upper-case label; on a desktop the words
+   bottom left and the QR code beside them. Without the photo the ink ground above is unchanged. The ritual lines and "Only through this link" are not on
+   this design. The prototype's own fonts (GT Walsheim, Season Sans) are licensed, not ours to publish: Nunito Sans stands in. */
+.rc-made { margin-top: 8px !important; font: 400 16px/22px var(--font); color: var(--t2); max-width: 360px; }
+.rc-photo .rc-poster, .rc-photo .rc-loop { object-position: var(--focus, 50% 28%); }
+.rc-photo .rc-veil { background: linear-gradient(180deg, rgba(8, 10, 12, .42) 0, rgba(8, 10, 12, 0) 22%, rgba(8, 10, 12, 0) 42%, rgba(8, 10, 12, .55) 66%, rgba(8, 10, 12, .88) 100%); }
+.rc-photo ~ .rc-page .rc-lockup { flex-direction: row-reverse; justify-content: space-between; min-height: 30px; }
+.rc-photo ~ .rc-page .rc-lockup img.rc-we { height: 24px; }
+.rc-photo ~ .rc-page .rc-lockup img.rc-partner { height: 28px; max-height: none; }
+.rc-photo ~ .rc-page .rc-partner-word { font-size: 14px; }
+.rc-photo ~ .rc-page .rc-pair i { display: none; }
+.rc-photo ~ .rc-page .rc-line, .rc-photo ~ .rc-page .rc-how { display: none; }
+.rc-photo ~ .rc-page .rc-body h1 { font-weight: 400; font-size: 42px; line-height: 43px; letter-spacing: -1.2px; }
+.rc-photo ~ .rc-page .rc-deal { margin-top: 18px !important; font-size: 17px; }
+.rc-photo ~ .rc-page .rc-btn { border-radius: 0; background: #fff; color: #111; height: 52px; margin-top: 22px; font: 700 12.5px/1 var(--font); letter-spacing: .16em; text-transform: uppercase; }
+@media (hover: hover) and (pointer: fine) and (min-width: 700px) {
+  .rc-photo .rc-veil { background: linear-gradient(90deg, rgba(8, 10, 12, .8) 0, rgba(8, 10, 12, .22) 55%, rgba(8, 10, 12, .05) 100%); }
+  .rc-photo ~ .rc-page { padding: 64px 72px 72px; }
+  .rc-photo ~ .rc-page .rc-lockup { flex-direction: row; justify-content: flex-start; gap: 26px; }
+  .rc-photo ~ .rc-page .rc-lockup img.rc-we { height: 30px; }
+  .rc-photo ~ .rc-page .rc-lockup img.rc-partner { height: 34px; }
+  .rc-photo ~ .rc-page .rc-lockup .rc-pair { order: -1; }
+  .rc-photo ~ .rc-page .rc-lockup { flex-direction: row; }
+  .rc-photo ~ .rc-page .rc-pair { gap: 26px; }
+  .rc-photo ~ .rc-page .rc-pair i { display: block; order: 2; height: 30px; background: rgba(255, 255, 255, .5); }
+  .rc-photo ~ .rc-page .rc-lockup { display: flex; }
+  .rc-photo ~ .rc-page .rc-body { max-width: none; display: grid; grid-template-columns: minmax(0, 500px) 150px; column-gap: 60px; align-items: end; }
+  .rc-photo ~ .rc-page .rc-body > * { grid-column: 1; }
+  .rc-photo ~ .rc-page .rc-body > .rc-qr { grid-column: 2; grid-row: 1 / span 6; align-self: end; }
+  .rc-photo ~ .rc-page .rc-body h1 { font-size: 62px; line-height: 63px; letter-spacing: -1.4px; }
+  .rc-photo ~ .rc-page .rc-deal { font-size: 20px; margin-top: 22px !important; }
+  .rc-photo ~ .rc-page .rc-made { font-size: 18px; line-height: 26px; max-width: 470px; }
+  .rc-photo ~ .rc-page .rc-fine { max-width: 470px; }
+  /* the call to action on a desktop is the code: a larger white tile with corner marks, and the words under it */
+  .rc-photo ~ .rc-page .rc-body { grid-template-columns: minmax(0, 500px) 200px; column-gap: 72px; }
+  .rc-photo ~ .rc-page .rc-qr { position: relative; width: 200px; margin: 0; padding: 0; background: none; border: 0; backdrop-filter: none; border-radius: 0; text-align: left; }
+  .rc-photo ~ .rc-page .rc-qrcode { position: relative; width: 200px; height: 200px; border-radius: 0; padding: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+  .rc-photo ~ .rc-page .rc-qrcode::before { content: ""; position: absolute; inset: -12px; pointer-events: none; opacity: .9;
+    background: linear-gradient(#fff, #fff) top left / 22px 2px, linear-gradient(#fff, #fff) top left / 2px 22px, linear-gradient(#fff, #fff) top right / 22px 2px, linear-gradient(#fff, #fff) top right / 2px 22px,
+      linear-gradient(#fff, #fff) bottom left / 22px 2px, linear-gradient(#fff, #fff) bottom left / 2px 22px, linear-gradient(#fff, #fff) bottom right / 22px 2px, linear-gradient(#fff, #fff) bottom right / 2px 22px; background-repeat: no-repeat; }
+  .rc-photo ~ .rc-page .rc-scan { display: block; margin-top: 26px; }
+  .rc-photo ~ .rc-page .rc-scan b { display: block; font: 700 12.5px/1.2 var(--font); letter-spacing: .16em; text-transform: uppercase; color: #fff; }
+  .rc-photo ~ .rc-page .rc-scan span { display: block; margin-top: 8px; font: 400 14px/20px var(--font); color: var(--t2); }
+}
+
+/* the consent bar on this page: the room it needs is held from the first paint (html.consent-pending is set before anything shows), so when it slides in the words
+   do not move; when it is answered the words glide down as it goes. Nothing jumps. */
+.rc-page { transition: padding-bottom 600ms var(--curve-enter); }
+@media (max-width: 767px) { html.consent-pending .rc-page, body.whc-on .rc-page { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 150px); } }
+.whc { transition-duration: 700ms !important; transition-timing-function: cubic-bezier(.16, 1, .3, 1) !important; transform: translateY(32px); }
+.whc.is-in { transform: none; }
+@media (min-width: 768px) { .whc { left: auto !important; right: 24px; bottom: 24px; } }
+@media (prefers-reduced-motion: reduce) { .rc-page { transition: none; } }
+
+/* under the first screen (only with the hero photo): what WeHale is, the app's screens, three steps. Light, to fit the partner's brand (the flow review's light ground), on its own solid ground over the fixed picture. */
+.rc-more { position: relative; z-index: 2; background: #f1efea; color: #111; --mt2: rgba(17, 17, 17, .68); --mt3: rgba(17, 17, 17, .52); padding: 72px max(28px, env(safe-area-inset-left, 0px)) 96px; }
+.rc-more-in { max-width: 1080px; margin: 0 auto; display: grid; gap: 48px; }
+.rc-eyebrow { margin: 0; font: 700 12px/1.2 var(--font); letter-spacing: .16em; text-transform: uppercase; color: var(--mt3); }
+.rc-more h2 { margin: 14px 0 0; font: 400 34px/36px var(--font); letter-spacing: -.9px; text-wrap: balance; }
+.rc-more-text { margin: 16px 0 0; font: 400 17px/25px var(--font); color: var(--mt2); max-width: 460px; }
+.rc-steps { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 22px; max-width: 460px; }
+.rc-steps li { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; }
+.rc-n { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(17, 17, 17, .3); font: 700 14px/1 var(--font); }
+.rc-steps b { display: block; font: 700 17px/24px var(--font); }
+.rc-steps li span:not(.rc-n) { display: block; white-space: nowrap; margin-top: 2px; font: 400 15px/22px var(--font); color: var(--mt2); }
+.rc-btn2 { margin-top: 36px; border-radius: 0; background: #111; color: #fff; height: 52px; font: 700 12.5px/1 var(--font); letter-spacing: .16em; text-transform: uppercase; max-width: 460px; }
+.rc-up { display: none; margin-top: 36px; width: fit-content; color: var(--mt2); font: 600 14px/1 var(--font); text-decoration: underline; text-underline-offset: 4px; }
+.rc-shots { display: flex; gap: 16px; align-items: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 calc(-1 * max(28px, env(safe-area-inset-left, 0px))); padding: 4px max(28px, env(safe-area-inset-left, 0px)) 8px; scrollbar-width: none; }
+.rc-shots::-webkit-scrollbar { display: none; }
+.rc-shot { margin: 0; flex: 0 0 62%; max-width: 250px; scroll-snap-align: center; }
+.rc-shot img { display: block; width: 100%; height: auto; border-radius: 26px; box-shadow: 0 0 0 1px rgba(17, 17, 17, .08), 0 24px 50px rgba(17, 17, 17, .18); }
+.rc-shot-player { margin-top: 36px; }
+.rc-shot figcaption { margin-top: 14px; font: 400 13px/18px var(--font); color: var(--mt3); text-align: center; }
+@media (hover: hover) and (pointer: fine) and (min-width: 700px) {
+  .rc-more { padding: 112px 72px 128px; }
+  .rc-more-in { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 80px; align-items: center; }
+  .rc-more h2 { font-size: 48px; line-height: 50px; letter-spacing: -1.2px; }
+  .rc-btn2 { display: none; } .rc-up { display: block; }
+  .rc-shots { gap: 20px; overflow: visible; margin: 0; padding: 0; justify-content: center; } .rc-shot { flex: 1 1 0; max-width: 200px; }
+}
+@media (max-width: 767px) { .rc-more { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); } }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

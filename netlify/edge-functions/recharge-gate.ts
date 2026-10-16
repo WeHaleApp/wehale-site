@@ -72,5 +72,5 @@ function protect(res: Response) { const r = new Response(res.body, res); for (co
 
 export default async (req: Request, ctx: Context) => gate(req, (globalThis as any).Netlify?.env.get("RECHARGE_PASS"), () => ctx.next());
 
-// Netlify needs the path as a literal; tests/recharge-gate.test.ts checks it matches `route` in src/data/recharge.json.
-export const config: Config = { path: ["/recharge", "/recharge.html", "/recharge/*"] };
+// Netlify needs the path as a literal; tests/recharge-gate.test.js checks it matches `route` in src/data/recharge.json. /recharge/* is the page's media folder (the bare /recharge is not gated: it only redirects).
+export const config: Config = { path: ["/campaign/charge-your-current", "/campaign/charge-your-current.html", "/campaign/charge-your-current/*", "/recharge/*"] };

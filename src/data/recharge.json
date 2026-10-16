@@ -1,7 +1,7 @@
 {
-  "_about": "The campaign page (wehale.io/<route>, today /recharge) (docs/recharge/README.md): one \"get the app\" page. Everything that changes before or at launch is here. CONFIDENTIAL until launch: the page is behind a server-side password (gate), noindex, out of the sitemap and linked from nowhere.",
-  "route": "recharge",
-  "_about_route": "The page's path, the one place it is set: the page, the sitemap exclusion, the noindex headers (written into dist/_headers at build) and the QR codes all follow it.",
+  "_about": "The campaign page (wehale.io/<route>, today /campaign/charge-your-current) (docs/recharge/README.md): one \"get the app\" page. Everything that changes before or at launch is here. CONFIDENTIAL until launch: the page is behind a server-side password (gate), noindex, out of the sitemap and linked from nowhere.",
+  "route": "campaign/charge-your-current",
+  "_about_route": "The page's path (may have slashes), the one place it is set. The media stays under /recharge/ (public/recharge, also behind the gate); the old /recharge address redirects here (netlify.toml). the page, the sitemap exclusion, the noindex headers (written into dist/_headers at build) and the QR codes all follow it.",
   "gate": {
     "_about": "The one flag. true = the server asks for the shared password (netlify/edge-functions/recharge-gate.ts, password in the Netlify variable RECHARGE_PASS, never in the repo): the page and its files are not sent without it. At launch set on to false. See docs/recharge/README.md.",
     "on": true
@@ -23,9 +23,77 @@
     "offer_1": "Your first month of WeHale free.",
     "offer_how": "Only through this link.",
     "offer_how_desktop": "Scan with your phone to claim it.",
-    "cta": "Start in the app",
-    "trial": "The free month is a trial through the App Store or Google Play.",
+    "made_with": "A guided breathing session, made with {partner}. Seven minutes, just for you.",
+    "cta": "Get the app",
+    "trial": "The free month is a trial through the App Store or Google Play, for new members where eligible.",
+    "privacy": "Privacy",
+    "scan_title": "Scan to get the app",
+    "scan": "Point your phone's camera at the code. It opens the App Store or Google Play.",
     "noscript": "Turn on JavaScript to get the app link, or find WeHale in the App Store or Google Play."
+  },
+  "more": {
+    "_about": "The section under the first screen (only with the hero photo): what WeHale is, the app's screens, three steps. The screens are public/recharge/app-home.webp, app-player.webp and app-afterglow.webp (the screens sent to the partner, 15 Oct) (gitignored until Isak approves them; CAMPAIGN_MEDIA_APP_HOME_URL / _PLAYER_URL / _AFTERGLOW_URL in production). Swedish in more_sv.",
+    "eyebrow": "What is WeHale",
+    "title": "Guided breathing, in your pocket.",
+    "text": "WeHale is an app of short guided breathing sessions. Press play, follow the voice, and notice how you feel.",
+    "shot_home": "Start here",
+    "shot_player": "Breathe",
+    "shot_afterglow": "Feel the difference",
+    "alt_home": "The WeHale app's home screen with the Charge Your Current session",
+    "alt_player": "The app's player during the session",
+    "alt_afterglow": "The app after the session: You charged your current",
+    "steps": [
+      ["Get the app", "On the App Store or Google Play."],
+      ["Press play", "A guided session, about seven minutes."],
+      ["Claim your gift", "First month free, where eligible."]
+    ],
+    "again": "Scan the code at the top",
+    "top": "Back to the top"
+  },
+  "more_sv": {
+    "eyebrow": "Vad är WeHale",
+    "title": "Guidad andning, i fickan.",
+    "text": "WeHale är en app med korta guidade andningssessioner. Tryck på play, följ rösten och känn efter hur du mår.",
+    "shot_home": "Börja här",
+    "shot_player": "Andas",
+    "shot_afterglow": "Känn skillnaden",
+    "alt_home": "WeHale-appens startsida med sessionen Charge Your Current",
+    "alt_player": "Appens spelare under sessionen",
+    "alt_afterglow": "Appen efter sessionen: You charged your current",
+    "steps": [
+      ["Hämta appen", "Från App Store eller Google Play."],
+      ["Tryck på play", "En guidad session, ungefär sju minuter."],
+      ["Hämta din gåva", "Första månaden gratis, där möjligt."]
+    ],
+    "again": "Skanna koden högst upp",
+    "top": "Till toppen"
+  },
+  "partner_name": "our partner",
+  "hero": {
+    "_about": "The target design (the flow review's Landing page): a full-bleed photo under a veil, the lockup on top, the words at the bottom, one white button. The photo is confidential, so like the ink media it is NOT in git: public/recharge/hero.webp (local copy: npm run media:local; production: the signed link in CAMPAIGN_MEDIA_HERO_URL). Without it the page keeps the ink ground. partner_name fills {partner} in made_with: set it to the partner's name when Isak says so (the repo is public).",
+    "src": "/recharge/hero.webp",
+    "film": "/recharge/hero-film.mp4",
+    "focus": "50% 28%"
+  },
+  "copy_sv": {
+    "_about": "Swedish version at <route>/sv. DRAFT for Isak's approval (16 Oct); it overrides the English words one by one, so anything missing here falls back to English. The partner code and the link are the same as in English.",
+    "about": "Guidad andning med Edvin och Philip, på iPhone och Android.",
+    "line": "Häll upp en Blackcurrant.|Tryck på play.|Andas med Philip.",
+    "offer_1": "Din första månad av WeHale gratis.",
+    "offer_how": "Bara via den här länken.",
+    "offer_how_desktop": "Skanna med mobilen för att få den.",
+    "made_with": "En guidad andningssession, gjord med {partner}. Sju minuter, bara för dig.",
+    "cta": "Ladda ner appen",
+    "trial": "Den gratis månaden är en provperiod via App Store eller Google Play, för nya medlemmar där det är möjligt.",
+    "privacy": "Integritet",
+    "scan_title": "Skanna för att få appen",
+    "scan": "Rikta mobilens kamera mot koden. Den öppnar App Store eller Google Play.",
+    "noscript": "Slå på JavaScript för att få applänken, eller hitta WeHale i App Store eller Google Play."
+  },
+  "inapp_sv": {
+    "text": "Öppnad i {app}? Bäst resultat får du om du öppnar sidan i {browser}.",
+    "copy": "Kopiera länk",
+    "copied": "Länken är kopierad. Klistra in den i {browser}."
   },
   "partner_logo": {
     "_about": "One swappable file per ground: src (black, for a light ground; not used on the page today), src_dark (white, on the page's navy). The committed files are dashed PLACEHOLDERS. The partner's real logo (marked wip) is never committed: for local previews put it at local / local_dark (gitignored, public/recharge/*.local.*) and the build uses it; ask the lead before adding it to the repo. Sizes: the wordmark's cap height optically matches WeHale's (real logo trimmed, 26 px tall on an 18 px WeHale logo, one baseline).",
@@ -34,8 +102,8 @@
     "height": 20,
     "local": "/recharge/partner-logo.local.png",
     "local_dark": "/recharge/partner-logo-white.local.png",
-    "local_width": 77,
-    "local_height": 26,
+    "local_width": 75,
+    "local_height": 28,
     "alt": "Campaign partner",
     "wehale_src_dark": "/assets/images/logo.svg"
   },
@@ -51,11 +119,14 @@
     "copy": "Copy link",
     "copied": "Link copied. Paste it in {browser}."
   },
+  "channel_by_medium": { "_about": "Partner UTM scheme (utm_source=salte&utm_medium=<...>&utm_campaign=charge-your-current): when a link has no ?ch=, the channel comes from utm_medium. Anything else (a creator's name) stays web. The code is unaffected.", "email": "newsletter", "pack-qr": "pdp", "website": "pdp", "instagram": "social", "tiktok": "social" },
   "channels": ["newsletter", "pdp", "influencer", "social"],
   "onelink": {
     "_about": "AppsFlyer OneLink, template zcid (the same as /breathe). pid is a CONFIG CHOICE for the lead and the owner of main: the media source this campaign reports under in AppsFlyer.",
     "base": "https://wehale.onelink.me/zcid",
     "pid": "partner_campaign",
-    "c": "recharge"
+    "c": "recharge",
+    "creator_pid": "partner_creators",
+    "_about_creator_pid": "PROPOSED media source for creator links that skip the page (docs/campaign/CREATOR-LINKS.md), so AppsFlyer and the funnel tell them from page customers (pid above). Isak/the measurement lead confirm the name."
   }
 }

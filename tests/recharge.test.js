@@ -20,6 +20,18 @@ describe("readCampaign", () => {
   it("keeps codes that name the partner out of this public repo", () => {
     expect(JSON.stringify(DATA.code)).not.toMatch(/FLYER|PRODUKT/);
   });
+  it("takes the channel from utm_medium when there is no ?ch= (the partner's UTM scheme)", () => {
+    const u = "utm_source=salte&utm_campaign=charge-your-current&utm_medium=";
+    expect(readCampaign("?" + u + "email", "", DATA).ch).toBe("newsletter");
+    expect(readCampaign("?" + u + "pack-qr", "", DATA).ch).toBe("pdp");
+    expect(readCampaign("?" + u + "website&utm_content=product-page", "", DATA).ch).toBe("pdp");
+    expect(readCampaign("?" + u + "tiktok", "", DATA).ch).toBe("social");
+    expect(readCampaign("?" + u + "some-creator", "", DATA).ch).toBe("web");
+    expect(readCampaign("?ch=influencer&" + u + "email", "", DATA).ch).toBe("influencer");
+    const l = params(campaignLink(DATA, { ...readCampaign("?" + u + "instagram&utm_content=a1", "", DATA), at: "offer" }));
+    expect(l).toMatchObject({ af_channel: "salte", af_ad: "a1", deep_link_sub1: "social" });
+    expect(l.af_sub5).toContain("med=instagram"); expect(l.af_sub5).toContain("camp=charge-your-current");
+  });
   it("ignores an unknown channel and cleans the code", () => {
     expect(readCampaign("?ch=spam&c=<x>%20y", "", DATA)).toMatchObject({ ch: "web", code: "XY" });
     expect(cleanCode("", "RECHARGE")).toBe("RECHARGE");
@@ -52,10 +64,10 @@ describe("the copy", () => {
   it("says the decided offer exactly, and nothing it must not", () => {
     expect(DATA.copy.offer_1).toBe("Your first month of WeHale free.");
     expect(JSON.stringify(DATA.copy)).not.toMatch(/499|kr/);
-    expect(DATA.copy.trial).toBe("The free month is a trial through the App Store or Google Play.");   // Isak, 7 Oct: the store line alone (P1); the unverified "Cancel anytime" line is gone (P3)
+    expect(DATA.copy.trial).toBe("The free month is a trial through the App Store or Google Play, for new members where eligible.");   // Isak, 7 Oct: the store line (P1); 16 Oct brief: "for new members where eligible" added, no unconditional promise; the unverified "Cancel anytime" line is gone (P3)
     expect(DATA.copy.offer_2).toBeUndefined();
     expect(DATA.copy.qr).toBeUndefined();   // P5: no desktop caption under the QR code
-    expect(DATA.copy.cta).toBe("Start in the app");   // P4
+    expect(DATA.copy.cta).toBe("Get the app");   // P4, then the flow review's landing page (16 Oct): "Get the app"
     expect(DATA.inapp.on).toBe(true);
     const all = Object.entries(DATA.copy).filter(([k]) => !k.startsWith("_")).map(([, v]) => v).join(" ").toLowerCase();
     expect(all).not.toMatch(/30 days|no card|1 minute|one minute/);

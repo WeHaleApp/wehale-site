@@ -13,7 +13,7 @@ const campaignHeaders = {
   hooks: {
     "astro:build:done": ({ dir }) => {
       const r = "/" + CAMPAIGN.route, page = "  X-Robots-Tag: noindex, nofollow, noarchive\n  Referrer-Policy: same-origin\n  Cache-Control: private, no-store\n";
-      const block = `${r}\n${page}${r}.html\n${page}${r}/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n`;
+      const block = `${r}\n${page}${r}.html\n${page}${r}/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n/recharge/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n`;   // /recharge/* is the page's media folder
       const f = new URL("_headers", dir);
       fs.appendFileSync(f, (fs.existsSync(f) ? "\n" : "") + block);
     },
